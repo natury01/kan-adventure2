@@ -1,0 +1,31 @@
+{
+  // ============================================================
+  // เกมผจญภัยกาญจนบุรี "ภาค 2" — ตั้งค่าแบบเดียวกับภาค 1 ทุกประการ
+  //
+  // โครง repo ที่ต้องมี (ชื่อ repo จะเป็นอะไรก็ได้):
+  //   <repo>/
+  //   ├── wrangler.jsonc        ← ไฟล์นี้ (อยู่ชั้นนอกสุด)
+  //   └── kan-adventure2/       ← ชื่อโฟลเดอร์นี้ = path บนเว็บ ห้ามพิมพ์ผิด
+  //       ├── index.html
+  //       ├── dashboard.html
+  //       └── assets/           ← โฟลเดอร์ภาพ (map_world.webp ฯลฯ)
+  //
+  // ★ ไม่ต้องมี worker.js — โครงโฟลเดอร์ตรงกับ path อยู่แล้ว (เหมือนภาค 1)
+  //   ถ้าเคยอัปโหลด worker.js หรือใส่โค้ดใน Worker ไว้ ให้ลบทิ้ง (ไม่มี "main" = เสิร์ฟไฟล์ล้วน)
+  // ============================================================
+  "$schema": "node_modules/wrangler/config-schema.json",
+
+  "name": "kan-adventure2",
+  "compatibility_date": "2026-08-01",
+
+  "routes": [
+    { "pattern": "gameplearn.com/kan-adventure2", "zone_name": "gameplearn.com" },
+    { "pattern": "gameplearn.com/kan-adventure2/*", "zone_name": "gameplearn.com" }
+  ],
+
+  "assets": {
+    // "./" = root ของ repo (โฟลเดอร์ kan-adventure2 อยู่ข้างใน = path บนเว็บ)
+    "directory": "./",
+    "not_found_handling": "404-page"
+  }
+}
