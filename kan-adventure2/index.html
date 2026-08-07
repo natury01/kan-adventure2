@@ -2183,6 +2183,41 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
 /* [ภาค 2] มีภาพวาดจริงแล้ว — ซ่อนฉากสำรองที่วาดด้วยโค้ด ไม่ให้ลอยทับ */
 #v8stage-root.vk-art-on .dt-bg-fallback { display: none; }
 #v8stage-root.vk-art-on .eco-scene > svg { display: none; }   /* ต้นจามจุรีวาด — จุดซ่อน 8 จุดกับแว่นขยายยังอยู่ครบ */
+
+/* [ภาค 2] ฉากเปิดองก์/รุ่งเช้า — ภาพวาดจริงเป็นพื้นหลัง การ์ดข้อความยังอ่านชัด */
+.cap-act-overlay.has-art { background-size: cover; background-position: center; }
+.cap-act-overlay.has-art::before { content: ''; position: absolute; inset: 0; background: rgba(8, 22, 14, 0.52); }
+.cap-act-overlay.has-art .cap-act-card { position: relative; z-index: 1;
+  background: rgba(255, 252, 240, 0.94); box-shadow: 0 calc(var(--vw)*0.5) calc(var(--vw)*2) rgba(0,0,0,0.5); }
+
+/* [ภาค 2] ฟังเสียงชาวเมือง 2050 */
+.cz-ov .cz-card-wrap { width: min(calc(var(--vw)*62), 94%); max-height: 92%; overflow-y: auto; }
+.cz-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: calc(var(--vw)*0.5); margin-top: calc(var(--vw)*0.9); }
+.cz-card { display: flex; flex-direction: column; align-items: center; gap: calc(var(--vw)*0.22);
+  padding: calc(var(--vw)*0.5) calc(var(--vw)*0.35) calc(var(--vw)*0.6); border-radius: calc(var(--vw)*0.8);
+  background: #fffdf5; border: calc(var(--vw)*0.16) solid #d9cfae; cursor: pointer; font-family: inherit;
+  transition: transform 0.12s, border-color 0.15s; text-align: center; }
+.cz-card:hover { transform: translateY(calc(var(--vw)*-0.16)); border-color: #b58f3c; }
+.cz-card.heard { border-color: #4ea36a; background: #f4fbf3; }
+.cz-card.open { border-color: #b58f3c; box-shadow: 0 0 0 calc(var(--vw)*0.16) rgba(181,143,60,0.3); }
+.cz-card.picked { border-color: #1a7a45; background: #e9f7ec; box-shadow: 0 0 0 calc(var(--vw)*0.2) rgba(26,122,69,0.35); }
+.cz-por { width: 100%; aspect-ratio: 3/4; border-radius: calc(var(--vw)*0.55); display: flex; align-items: center;
+  justify-content: center; font-size: calc(var(--vw)*2.4); background: #efe7cf; background-size: cover; background-position: center top; }
+.cz-por.has-art { font-size: 0; }
+.cz-name { font-weight: 800; font-size: calc(var(--vw)*0.76); color: #22432f; line-height: 1.25; }
+.cz-want { font-size: calc(var(--vw)*0.7); color: #6b5b2e; line-height: 1.3; }
+.cz-tag { font-size: calc(var(--vw)*0.66); color: #8a7c52; font-weight: 700; }
+.cz-card.heard .cz-tag { color: #1a7a45; }
+.cz-detail { min-height: calc(var(--vw)*3.4); margin-top: calc(var(--vw)*0.7); }
+.cz-say { background: #fff8e2; border-radius: calc(var(--vw)*0.6); padding: calc(var(--vw)*0.6) calc(var(--vw)*0.9);
+  font-size: calc(var(--vw)*0.88); color: #3b3320; line-height: 1.6; text-align: left; }
+.cz-q { font-weight: 800; font-size: calc(var(--vw)*0.9); color: #22432f; margin-bottom: calc(var(--vw)*0.35); }
+.cz-reasons { display: flex; flex-wrap: wrap; gap: calc(var(--vw)*0.35); justify-content: center; }
+.cz-done { background: #e9f7ec; border-radius: calc(var(--vw)*0.6); padding: calc(var(--vw)*0.6);
+  font-weight: 700; color: #166534; font-size: calc(var(--vw)*0.9); }
+.cz-foot { margin-top: calc(var(--vw)*0.8); display: flex; align-items: center; justify-content: center; gap: calc(var(--vw)*1); }
+.cz-skip { font-size: calc(var(--vw)*0.78); padding: calc(var(--vw)*0.28) calc(var(--vw)*0.9); opacity: 0.85; }
+.cz-prog { font-weight: 800; color: #8a6a1e; font-size: calc(var(--vw)*0.85); }
 </style>
 </head>
 <body>
@@ -16660,7 +16695,16 @@ Object.assign(StageBalance2050, {
     function drawStar(cx,cy,r,col){x.fillStyle=col;x.beginPath();for(var k=0;k<5;k++){var a=k*1.2566-1.5708;x.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);var a2=a+0.6283;x.lineTo(cx+Math.cos(a2)*r*0.46,cy+Math.sin(a2)*r*0.46);}x.closePath();x.fill();}
     function placed(){ (S._placed||[]).forEach(function(it,i){ var h=24+Math.sin(t*2+i)*4; box1(it.gx,it.gy,0.5,0.5,h,it.col||'#34c77b'); var tp=P(it.gx+0.25,it.gy+0.25,h); x.fillStyle='rgba(255,255,255,0.85)';drawStar(tp[0],tp[1]-6,7,'#fff'); }); }
     // ---------- เต็มเฟรม + เลเยอร์ไกล + วัตถุเคลื่อนไหวละเอียด ----------
-    function frameBg(a,b){var g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,a);g.addColorStop(0.6,b);g.addColorStop(1,shd(b,-0.06));x.fillStyle=g;x.fillRect(0,0,W,H);}
+    var _P2BG={river:'bg_2050_river_problem',city:'bg_2050_city',hall:'bg_2050_council_hall',blueprint:'bg_2050_planning_board',flood:'bg_2050_storm_night'};
+    function frameBg(a,b){
+      /* [ภาค 2] มีภาพวาดจริงของฉากนี้ → ใช้เป็นฉากหลังแทนไล่เฉดสี (ไม่มีภาพ = ตกไปใช้เฉดสีเดิมอัตโนมัติ) */
+      try{ var _k=_P2BG[key], _im=_k&&V8ASSETS._img&&V8ASSETS._img[_k];
+        if(_im&&_im.width){ var _s=Math.max(W/_im.width,H/_im.height), _w=_im.width*_s, _h=_im.height*_s;
+          x.drawImage(_im,(W-_w)/2,(H-_h)/2,_w,_h);
+          var _g2=x.createLinearGradient(0,0,0,H);                       /* ผ้าคลุมบาง ๆ ให้ของด้านหน้าอ่านง่าย */
+          _g2.addColorStop(0,'rgba(255,255,255,0.12)'); _g2.addColorStop(0.55,'rgba(255,255,255,0.03)'); _g2.addColorStop(1,'rgba(20,30,20,0.20)');
+          x.fillStyle=_g2; x.fillRect(0,0,W,H); return; } }catch(e){}
+      var g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,a);g.addColorStop(0.6,b);g.addColorStop(1,shd(b,-0.06));x.fillStyle=g;x.fillRect(0,0,W,H);}
     function hills(col,yb,seed){ x.fillStyle=col; for(var hx=-160;hx<W+240;hx+=300){ var oy=((hx+seed*90)*0.13%60); x.beginPath();x.moveTo(hx,yb+oy);x.quadraticCurveTo(hx+150,yb-140+oy,hx+300,yb+oy);x.lineTo(hx+300,yb+180);x.lineTo(hx,yb+180);x.closePath();x.fill(); } }
     function skyline(col,yb){ for(var bx2=-60;bx2<W+80;bx2+=118){ var hh=120+((bx2*17)%200); x.fillStyle=col; x.fillRect(bx2,yb-hh,88,hh); x.fillStyle='rgba(255,240,180,0.10)'; for(var wy=yb-hh+16;wy<yb-14;wy+=28){for(var wx=bx2+12;wx<bx2+76;wx+=24)x.fillRect(wx,wy,11,15);} } }
     function bird(px,py){x.strokeStyle='rgba(35,45,65,0.65)';x.lineWidth=3;var f=Math.sin(t*7+px*0.05)*7;x.beginPath();x.moveTo(px-13,py+f-4);x.quadraticCurveTo(px,py+f+4,px,py+f);x.moveTo(px+13,py+f-4);x.quadraticCurveTo(px,py+f+4,px,py+f);x.stroke();}
@@ -22102,6 +22146,9 @@ const KAN2050V2 = {
       (this.mode === 'duo' ? '<div class="cap-act-duo">👥 กติกาคู่: ผลัดกันถือเมาส์ · ตกลงกันก่อนกดยืนยันทุกครั้ง</div>' : '') +
       '<button class="dt-btn" style="margin-top:calc(var(--vw)*1.4)">' + (act.n === 3 ? 'พร้อมรับมือ! ⛈️' : 'เริ่มองก์นี้ ➜') + '</button></div>';
     host.appendChild(ov);
+    /* [ภาค 2] ภาพวาดจริงประจำองก์ */
+    try { V8ASSETS.applyBg(ov, ({ 1: 'bg_2050_time_gate', 2: 'bg_2050_council_hall', 3: 'bg_2050_storm_night' })[act.n],
+                           (el) => el.classList.add('has-art')); } catch (e) {}
     try { if (typeof ReadAloud !== 'undefined' && ReadAloud.on) ReadAloud.speak([act.name, act.sub.replace(/<br>/g, ' ')]); } catch (e) {}
     if (act.n === 3) { AUDIO.playImpact && AUDIO.playImpact(1.4); } else { AUDIO.playChime && AUDIO.playChime(); }
     ov.querySelector('.dt-btn').onclick = () => ov.remove();
@@ -22172,6 +22219,8 @@ const KAN2050V2 = {
         '<div class="cap-act-sub">รับมือสำเร็จ ' + saved + (partial ? ' (+' + partial + ' เอาอยู่บางส่วน)' : '') + ' จาก ' + EVENTS.length + ' จุด' +
         (msg ? '<br>' + msg : '') + '<br><br>รุ่งเช้า... นักข่าวทั้งจังหวัดรอฟัง "แถลงข่าวของทีมผู้พิทักษ์"</div>' +
         '<button class="dt-btn" style="margin-top:calc(var(--vw)*1.2)">เข้าสู่การแถลงข่าว 🎤</button></div></div>';
+      /* [ภาค 2] ภาพรุ่งเช้าหลังพายุ */
+      try { V8ASSETS.applyBg(ov.querySelector('.cap-act-overlay'), 'bg_2050_dawn', (el) => el.classList.add('has-art')); } catch (e) {}
       ov.querySelector('.dt-btn').onclick = () => {
         ov.remove();
         KAN2050V2._stormShowing = false;
@@ -22304,11 +22353,142 @@ const KAN2050V2 = {
   stopMeterLoop() { /* คงไว้ให้จุดเรียกเดิมปลอดภัย — มิเตอร์ใช้ของระบบ IX เอง */ }
 };
 
+
+/* ---- [ภาค 2] องก์ 2: ฟังเสียงชาวเมืองก่อนลงมือวางแผน (หลักฐานพลเมือง CZ) ---- */
+Object.assign(KAN2050V2, {
+  CITIZENS: [
+    { k: 'card2050_farmer',    ic: '👨‍🌾', name: 'พี่ต้นข้าว · เกษตรกรรุ่นใหม่',
+      want: 'อยากให้เมืองมี<b>น้ำพอใช้ทำเกษตรตลอดปี</b>',
+      say: 'ผมใช้เครื่องวัดความชื้นช่วยปลูกข้าวครับ แต่ถ้าน้ำในแม่น้ำน้อยลงเรื่อย ๆ ต่อให้มีเทคโนโลยีก็ไม่พอ อยากให้วางแผนเรื่องน้ำเป็นอันดับต้น ๆ' },
+    { k: 'card2050_elder',     ic: '👵', name: 'ยายบัว · ผู้เฝ้าดูแม่น้ำ',
+      want: 'อยากให้<b>แม่น้ำกลับมาใสเหมือนตอนยายเด็ก</b>',
+      say: 'สมัยยายเด็ก ๆ ลงเล่นน้ำได้ มีปลาเยอะแยะ ตอนนี้มันขุ่นไปหมดแล้วลูก ยายไม่ได้ขออะไรมาก ขอแค่ให้หลาน ๆ ได้เห็นแม่น้ำสวย ๆ บ้าง' },
+    { k: 'card2050_engineer',  ic: '👷‍♀️', name: 'พี่แสงเดือน · วิศวกรพลังงานสะอาด',
+      want: 'อยากให้เมืองใช้<b>พลังงานสะอาดแทนการเผา</b>',
+      say: 'ถ้าเราลงทุนโซลาร์กับกังหันลมตอนนี้ ค่าไฟจะถูกลงในระยะยาวและอากาศก็ดีขึ้นด้วยค่ะ แต่ช่วงแรกต้องใช้งบเยอะหน่อย' },
+    { k: 'card2050_kid_mayor', ic: '🧑‍💼', name: 'น้องภูมิ · นายกเทศมนตรีเด็ก',
+      want: 'อยากให้<b>ทุกคนได้พูด ไม่ใช่แค่ผู้ใหญ่</b>',
+      say: 'สภาเยาวชนเก็บความเห็นเพื่อน ๆ มาครับ หลายคนบอกว่าอยากมีที่เล่นปลอดภัยและทางเดินไปโรงเรียนที่ไม่ต้องเสี่ยงรถ อยากให้ผู้ใหญ่ฟังเด็กด้วย' }
+  ],
+  REASONS: [
+    { k: 'common', t: '🤝 เพราะช่วยคนส่วนใหญ่ของเมือง', v: 1 },
+    { k: 'weak',   t: '💚 เพราะคนกลุ่มนี้เดือดร้อนที่สุด', v: 1 },
+    { k: 'future', t: '🌱 เพราะผลจะอยู่ไปถึงรุ่นต่อไป', v: 1 },
+    { k: 'easy',   t: '⚡ เพราะทำง่ายที่สุด', v: 0.5 }
+  ],
+
+  citizenVoices() {
+    const host = document.getElementById('capstone-screen');
+    if (!host || document.getElementById('cz-voices-ov')) return;
+    const heard = {}, picked = [];
+    const ov = document.createElement('div');
+    ov.id = 'cz-voices-ov';
+    ov.className = 'cap-act-overlay cz-ov';
+    const cards = this.CITIZENS.map((c, i) =>
+      '<button class="cz-card" data-i="' + i + '">' +
+        '<span class="cz-por" id="cz-por-' + i + '">' + c.ic + '</span>' +
+        '<span class="cz-name">' + c.name + '</span>' +
+        '<span class="cz-want">' + c.want + '</span>' +
+        '<span class="cz-tag">แตะเพื่อฟัง</span>' +
+      '</button>').join('');
+    ov.innerHTML =
+      '<div class="cap-act-card cz-card-wrap">' +
+        '<div class="cap-act-num">องก์ 2 · ก่อนลงมือวางแผน</div>' +
+        '<div class="cap-act-name">🗣️ ฟังเสียงชาวเมืองกาญจน์</div>' +
+        '<div class="cap-act-sub" id="cz-lead">เมืองนี้ไม่ได้มีเราคนเดียว — <b>ฟังให้ครบทั้ง 4 คน</b>ก่อนตัดสินใจนะ</div>' +
+        '<div class="cz-grid">' + cards + '</div>' +
+        '<div class="cz-detail" id="cz-detail"></div>' +
+        '<div class="cz-foot" id="cz-foot"><span class="cz-prog" id="cz-prog">ฟังแล้ว 0/4</span>' +
+          '<button class="dt-btn ghost cz-skip" id="cz-skip">ข้ามไปก่อน</button></div>' +
+      '</div>';
+    host.appendChild(ov);
+    /* ภาพการ์ดจริง (ไม่มี = ใช้อีโมจิที่ใส่ไว้แล้ว) */
+    this.CITIZENS.forEach((c, i) => {
+      try { V8ASSETS.applyBg(document.getElementById('cz-por-' + i), c.k, (el) => el.classList.add('has-art')); } catch (e) {}
+    });
+    try { AUDIO.playChime && AUDIO.playChime(); } catch (e) {}
+    /* ทางออกเสมอ — เด็กที่งงหรือครูเร่งเวลาต้องไปต่อได้ (บันทึกว่าข้าม ไม่ใช่ทำไม่ได้) */
+    ov.querySelector('#cz-skip').onclick = () => {
+      try {
+        logEvidence('balance2050', 'act', 'CZ-B', 0.3,
+          { act: 2, listened: Object.keys(heard).length, all: false, skipped: true, mode: this.mode, from: 'citizenVoices' });
+        flushEvidence('balance2050');
+      } catch (e) {}
+      ov.remove();
+    };
+
+    const detail = ov.querySelector('#cz-detail');
+    const prog = ov.querySelector('#cz-prog');
+    const foot = ov.querySelector('#cz-foot');
+    const self = this;
+
+    const askPick = () => {
+      ov.querySelector('#cz-lead').innerHTML = 'ฟังครบแล้ว เก่งมาก! <b>ถ้าต้องดูแลก่อน 2 เสียง จะเลือกใคร?</b> (แตะการ์ด 2 ใบ)';
+      ov.classList.add('cz-pick');
+      detail.innerHTML = '';
+      prog.textContent = 'เลือกแล้ว 0/2';
+      ov.querySelectorAll('.cz-card').forEach(b => {
+        b.querySelector('.cz-tag').textContent = 'แตะเพื่อเลือก';
+        b.onclick = () => {
+          const i = +b.dataset.i, at = picked.indexOf(i);
+          if (at >= 0) { picked.splice(at, 1); b.classList.remove('picked'); }
+          else { if (picked.length >= 2) return; picked.push(i); b.classList.add('picked'); }
+          try { AUDIO.playSFX('click'); } catch (e) {}
+          prog.textContent = 'เลือกแล้ว ' + picked.length + '/2';
+          if (picked.length === 2) askReason();
+        };
+      });
+    };
+
+    const askReason = () => {
+      detail.innerHTML = '<div class="cz-q">เลือกเพราะอะไร?</div><div class="cz-reasons">' +
+        self.REASONS.map(r => '<button class="dt-reason-chip" data-r="' + r.k + '">' + r.t + '</button>').join('') + '</div>';
+      detail.querySelectorAll('.dt-reason-chip').forEach(ch => {
+        ch.onclick = () => {
+          const r = self.REASONS.find(z => z.k === ch.dataset.r);
+          const names = picked.map(i => self.CITIZENS[i].name);
+          try {
+            logEvidence('balance2050', 'act', 'CZ-B', 1,
+              { act: 2, listened: 4, all: true, mode: self.mode, from: 'citizenVoices' });
+            logEvidence('balance2050', 'act', 'CZ-C', r.v,
+              { act: 2, picked: names, reason: r.k, mode: self.mode, from: 'citizenVoices' });
+            flushEvidence('balance2050');
+          } catch (e) {}
+          try { AUDIO.playChime && AUDIO.playChime(); } catch (e) {}
+          detail.innerHTML = '<div class="cz-done">💚 บันทึกเสียงของชาวเมืองไว้แล้ว — เอาไปใช้ตอนวางแผนได้เลย</div>';
+          foot.innerHTML = '<button class="dt-btn" id="cz-go">ไปวางแผนกัน ➜</button>';
+          ov.querySelector('#cz-go').onclick = () => ov.remove();
+        };
+      });
+    };
+
+    ov.querySelectorAll('.cz-card').forEach(b => {
+      b.onclick = () => {
+        const i = +b.dataset.i, c = self.CITIZENS[i];
+        try { AUDIO.playSFX('click'); } catch (e) {}
+        ov.querySelectorAll('.cz-card').forEach(z => z.classList.remove('open'));
+        b.classList.add('open', 'heard');
+        b.querySelector('.cz-tag').textContent = '✔ ฟังแล้ว';
+        heard[i] = 1;
+        detail.innerHTML = '<div class="cz-say"><b>' + c.name + '</b><br>' + c.say + '</div>';
+        try { if (typeof ReadAloud !== 'undefined' && ReadAloud.on) ReadAloud.speak([c.say]); } catch (e) {}
+        const n = Object.keys(heard).length;
+        prog.textContent = 'ฟังแล้ว ' + n + '/4';
+        if (n === 4) setTimeout(askPick, 700);
+      };
+    });
+  }
+});
+
 /* ---- ครอบวงจรชีวิตด่านกาญ 2050 (ระบบ IX) — ไม่แตะโค้ดภายใน ---- */
 const _kanStart = StageBalance2050.start;
 StageBalance2050.start = function () {
   KAN2050V2._shownActs = {};
   KAN2050V2._stormShowing = false;
+  KAN2050V2._voicesDone = false;
+  /* [ภาค 2] พรีโหลดภาพวาดชุดกาญ 2050 ไว้ล่วงหน้า */
+  try { ['bg_2050_city','bg_2050_river_problem','bg_2050_council_hall','bg_2050_planning_board',
+         'bg_2050_storm_night','bg_2050_dawn','bg_2050_time_gate'].forEach(k => V8ASSETS.load(k)); } catch (e) {}
   KAN2050V2.pickMode(() => {
     _kanStart.call(StageBalance2050);
     if (StageBalance2050.s) StageBalance2050.s.duoMode = KAN2050V2.mode;
@@ -22323,6 +22503,11 @@ StageBalance2050._ixStartMission = function (n) {
     if (KAN2050V2.mode === 'duo') {
       logEvidence('balance2050', 'collab', 'TW-C', 0.85, { joint: 'act' + act.n, mode: 'duo', from: 'kan2050v2' });
     }
+  }
+  /* [ภาค 2] ก่อนภารกิจวางแผน (SD) — ฟังเสียงชาวเมืองก่อน 1 จังหวะ (หลักฐานพลเมือง CZ) */
+  if (n === 3 && !KAN2050V2._voicesDone) {
+    KAN2050V2._voicesDone = true;
+    setTimeout(() => { try { KAN2050V2.citizenVoices(); } catch (e) {} }, 500);
   }
   return _kanMission.call(this, n);
 };
