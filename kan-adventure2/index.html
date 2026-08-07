@@ -2178,6 +2178,11 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
 .p2-link:hover { background: #fff7ed; }
 .p2-link b { color: #b45309; }
 .loading-title .lt-part { color: #fbbf24; }
+
+
+/* [ภาค 2] มีภาพวาดจริงแล้ว — ซ่อนฉากสำรองที่วาดด้วยโค้ด ไม่ให้ลอยทับ */
+#v8stage-root.vk-art-on .dt-bg-fallback { display: none; }
+#v8stage-root.vk-art-on .eco-scene > svg { display: none; }   /* ต้นจามจุรีวาด — จุดซ่อน 8 จุดกับแว่นขยายยังอยู่ครบ */
 </style>
 </head>
 <body>
@@ -11505,7 +11510,7 @@ const StageRescue = {
   _buildBoard() {
     const scene = VK.shell({
       title: '🚤 กู้ภัยน้ำป่าทองผาภูมิ', steps: ['📡 เรดาร์', '🚤 ขับเรือ', '🗳️ ตัดสินใจร่วม', '🏁 สรุปทีม'], cur: 0,
-      bgClass: 'vk-bg-rescue', bgImage: 'bg_dam_flood',
+      bgClass: 'vk-bg-rescue', bgImage: 'bg_dam_rescue_river',   /* [ภาค 2] มุมเรือระดับน้ำ — เข้ากับกระดานขับเรือ (bg_dam_flood มุมสูงเก็บไว้ใช้ฉากบรีฟ) */
       hint: '', html:
         '<div class="rs-role-banner" id="rs-role"></div>' +
         '<div class="vk-meters" style="top:calc(var(--vw)*6.4)">' + VK.meterHTML('turn', '🌊', 'เทิร์น') + '</div>' +
@@ -21822,8 +21827,13 @@ const VK = {
       '<div class="dt-topbar"><span class="dt-case-title">' + cfg.title + '</span>' + steps + '</div>' +
       (cfg.hint ? '<div class="dt-hint-banner" id="vk-hint">' + cfg.hint + '</div>' : '') +
       '<div class="dt-scene" id="vk-scene">' + (cfg.html || '') + '</div>';
+    r.classList.remove('vk-art-on');
     if (cfg.bgImage) {
-      V8ASSETS.applyBg(document.getElementById('vk-bg-img'), cfg.bgImage, (el) => { el.style.opacity = '1'; });
+      /* [ภาค 2] ภาพจริงติดแล้ว → ติดป้าย vk-art-on ให้ CSS ซ่อนภาพวาดสำรองที่ซ้อนอยู่ */
+      V8ASSETS.applyBg(document.getElementById('vk-bg-img'), cfg.bgImage, (el) => {
+        el.style.opacity = '1';
+        r.classList.add('vk-art-on');
+      });
     }
     return document.getElementById('vk-scene');
   },
