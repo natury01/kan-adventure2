@@ -215,6 +215,40 @@
   .v2-edit{cursor:pointer;background:#eef2ff;border:1px solid #c7d2fe;border-radius:6px;padding:0 6px;font-size:11px;margin-left:4px}
   .v2-edit:hover{background:#e0e7ff}
   .stdot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:middle}
+
+  /* [เฟส 4 · 4.5] แกลเลอรีเมืองของนักเรียน */
+  .cty-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+  .cty-card{border:1px solid var(--line);border-radius:11px;padding:8px 10px;background:#fbfdff;text-align:center;font-size:12.5px}
+  .cty-map{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;margin:6px 0;background:#eef6e8;border-radius:7px;padding:4px}
+  .cty-cell{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;font-size:15px;background:#f7fbf3;border-radius:4px}
+  .cty-sc{font-size:12px;color:#475569;margin-bottom:5px}
+  .cty-vote{width:100%;cursor:pointer}
+  /* ===== [เฟส 4 · 4.3] แผงพัฒนาการ + ยืนยันเป็นชุด + มุมมองมือถือของครู ===== */
+  .d4-panel{border:1px solid var(--line);border-radius:11px;padding:8px 12px;margin:8px 0 12px;background:#fbfaff}
+  .d4-panel>summary{cursor:pointer;font-weight:800;font-size:13px;color:#6d28d9;list-style:none}
+  .d4-panel>summary::-webkit-details-marker{display:none}
+  .d4-panel>summary::before{content:'▸ ';font-weight:800}
+  .d4-panel[open]>summary::before{content:'▾ '}
+  .d4-sec{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line)}
+  .d4-sec:first-child{border-top:none;padding-top:0}
+  .d4-chart{margin:6px 0}
+  .d4-ba td,.d4-ba th{font-size:12.5px}
+  /* --- มุมมองมือถือของครู: เดิมตารางกว้างจนเลื่อนหาไม่เจอ ครูเปิดในคาบด้วยมือถือไม่ได้เลย --- */
+  @media (max-width: 820px){
+    .topbar{flex-wrap:wrap;gap:6px}
+    .topbar .btn-ghost,.topbar .btn-primary{font-size:12px;padding:6px 10px;min-height:40px}
+    .cls-tbl{font-size:12px}
+    .cls-tbl th,.cls-tbl td{padding:5px 6px}
+    .cls-in{min-height:40px;font-size:15px}   /* 15px+ กัน iOS ซูมเองตอนแตะช่องกรอก */
+    button,select{min-height:40px}
+    .d4-panel>summary{font-size:13.5px}
+    /* ตารางกว้าง ๆ ให้เลื่อนแนวนอนได้ในกรอบของตัวเอง แทนที่จะดันทั้งหน้า */
+    .cls-tbl-wrap,#cv8-body>div[style*="overflow-x"]{-webkit-overflow-scrolling:touch}
+  }
+  @media (max-width: 560px){
+    .topbar .btn-ghost span.lbl{display:none}
+    .cls-tbl{font-size:11.5px}
+  }
 </style>
 </head>
 <body>
@@ -267,10 +301,15 @@
       <button id="btn-compare" class="btn-ghost" style="background:#eff6ff;border-color:#93c5fd;color:#1d4ed8" title="เทียบผลการประเมิน 4 แหล่ง: ชิ้นงานจากเกม · ครูประเมิน · เพื่อนประเมิน · นักเรียนประเมินตนเอง — ครบ 6 สมรรถนะ 19 ด้านย่อย แยกเก็บทุกแหล่งและสรุปเทียบตามหลัก CBE Thailand" onclick="clsOpenCompare()">📊 เทียบผลการประเมินสมรรถนะ (ครู/นักเรียน/เพื่อน/ชิ้นงาน)</button>
       <button id="btn-v8" class="btn-ghost" style="background:#f5f3ff;border-color:#c4b5fd;color:#6d28d9" title="เกณฑ์ V.8 ตามข้อกำหนดบ้านอูล่อง: คะแนนหลักต่อสมรรถนะ = ระหว่างเรียน 30% + กาญ 2050 70% · ครู/เพื่อน/ตนเอง แปลงเป็นระดับ T/P/S ใช้เทียบ-ยืนยัน (ไม่รวมคะแนน) · สถานะ 5 แบบพร้อมสี · คำถามยืนยัน + ครูกดยืนยันผล · ตั้งค่าเกณฑ์ได้" onclick="clsOpenV8()">🧪 เกณฑ์ V.8 (เทียบ-ยืนยัน)</button>
       <button id="btn-indicators" class="btn-ghost" style="background:#f5f3ff;border-color:#c4b5fd;color:#6d28d9">📐 ตัวชี้วัด/สมรรถนะ</button>
+      <!-- [เฟส 4 · 4.2] ทางเข้าตั้งค่าเกมแนะนำ (เดิมมีแต่ฟังก์ชัน ไม่มีปุ่มให้กด) -->
+      <button id="btn-featured" class="btn-ghost" title="ตั้งเกมแนะนำบนแถบบน (สูงสุด 3 เกม)" onclick="clsOpenFeatured()">⭐ เกมแนะนำ</button>
+      <!-- [เฟส 4 · 4.5] ฉายเมืองของนักเรียนหน้าห้องแล้วโหวตร่วมกัน -->
+      <button id="btn-cities" class="btn-ghost" title="ดูเมืองที่นักเรียนสร้างและส่งเข้ามา แล้วเปิดโหวตหน้าห้อง" onclick="clsOpenCities()">🏙️ เมืองของนักเรียน</button>
       <a id="lnk-more-lessons" class="btn-ghost" href="https://www.gameplearn.com" target="_blank" rel="noopener"
          style="text-decoration:none;display:inline-block;line-height:1.1">📚 บทเรียนอื่น</a>
-      <!-- [ตามคำขอครู V.7.68 ข้อ 1] เอาปุ่มเกมแนะนำออกจากแถบบน (เข้าดูเกมทั้งหมดที่ "บทเรียนอื่น" ได้อยู่แล้ว) -->
-      <span id="feat-games" style="display:none"></span>
+      <!-- [เฟส 4 · 4.2] เปิดปุ่มเกมแนะนำกลับมา — โค้ดฝั่งเซิร์ฟเวอร์ทำเสร็จตั้งแต่ V.7.67 แต่ถูกปิดไว้เฉย ๆ
+           ครูตั้งได้ 3 ช่องจากปุ่ม ⭐ ในหน้าห้องเรียน · ไม่มีของตั้ง = ขึ้นลิงก์ไป gameplearn.com ให้อัตโนมัติ -->
+      <span id="feat-games"></span>
       <button id="btn-export" class="btn-ghost">⬇ ส่งออกคะแนน (CSV)</button>
       <button id="btn-auth" class="btn-ghost" style="background:rgba(255,255,255,.22);font-weight:800">🔵 เข้าสู่ระบบ</button>
       <!-- ปุ่มของระบบเดิม (Google Sheets) เก็บไว้แบบซ่อน เผื่อโค้ดเก่าเรียกใช้ — ไม่มีทางเข้าจากหน้าจอแล้ว -->
@@ -3632,7 +3671,10 @@ function clsFillKru(){
   var ids=studs.map(function(x){ return x.id; });
   sbEnsure().then(function(){ return sbFetchAll('/rest/v1/surveys?kind=eq.kru_assess&select=student_id,payload,created_at&order=created_at.desc&student_id=in.('+ids.join(',')+')'); })
   .then(function(rows){
-    var by={}; (rows||[]).forEach(function(r){ if(!by[r.student_id]) by[r.student_id]={ dims:((r.payload||{}).dims)||{}, at:r.created_at }; });
+    /* [เฟส 1 · ข้อบกพร่องร้ายแรง] เดิมโหลดมาเฉพาะ dims แล้วตอนบันทึกเขียน payload ใหม่ทั้งก้อน
+       → ผลยืนยันสมรรถนะ V.8 (payload.v8c ที่ครูกด "ยืนยันผล" ไว้) หายทันทีที่ครูแก้คะแนนสังเกต 1 ช่อง
+       ตอนนี้พก v8c ติดมาด้วยเสมอ และ clsKruSave จะผสมกลับลงไปทุกครั้ง */
+    var by={}; (rows||[]).forEach(function(r){ if(!by[r.student_id]) by[r.student_id]={ dims:((r.payload||{}).dims)||{}, v8c:((r.payload||{}).v8c)||null, at:r.created_at }; });
     cls._kru={ studs:studs, by:by, sel:null, form:{} };
     clsKruRenderList();
   })
@@ -3712,10 +3754,14 @@ function clsKruSave(){
   var stEl=$('cls-kru-st');
   if(!Object.keys(K.form).length){ if(stEl) stEl.innerHTML='<span style="color:#b45309">ยังไม่ได้ให้คะแนนด้านใดเลย</span>'; return; }
   if(stEl) stEl.innerHTML='<span class="loading" style="width:12px;height:12px;border-color:#0d9488;border-top-color:transparent"></span> กำลังบันทึก...';
+  var prev=(K.by&&K.by[K.sel])||{};
   var payload={ dims:K.form, by:(cls.teacher&&(cls.teacher.email||cls.teacher.display_name))||'ครู', at:new Date().toISOString(), gameVersion:(typeof GAME_VERSION!=='undefined'?GAME_VERSION:'dashboard') };
+  /* [เฟส 1] ผสมผลยืนยัน V.8 เดิมกลับเข้าไป — ห้ามให้การบันทึกคะแนนสังเกตไปลบผลที่ครูยืนยันแล้ว */
+  if(prev.v8c) payload.v8c=prev.v8c;
   sbEnsure().then(function(){ return sbFetch('/rest/v1/rpc/rpc_kru_assess',{method:'POST',body:JSON.stringify({ p_student:K.sel, p_payload:payload })}); })
   .then(function(){
-    K.by[K.sel]={ dims:Object.assign({},K.form), at:payload.at };
+    K.by[K.sel]={ dims:Object.assign({},K.form), v8c:payload.v8c||null, at:payload.at };
+    if(_cv8Cache && _cv8Cache.by && _cv8Cache.by[K.sel]) _cv8Cache.by[K.sel].kru=Object.assign({},K.form); /* ตารางเทียบผลใช้ค่าล่าสุดทันที */
     if(stEl) stEl.innerHTML='<span style="color:#0d9488;font-weight:700">✅ บันทึกแล้ว — กำลังคิดคะแนนใหม่...</span>';
     toast('บันทึกครูประเมินแล้ว');
     clsKruRenderList();
@@ -5570,8 +5616,49 @@ function clsSignOut(){
   var ib=$('btn-indicators'); if(ib) ib.onclick=openIndicatorsPage;
   var ibk=$('ind-back'); if(ibk) ibk.onclick=function(){ var p=$('page-ind'); if(p)p.classList.add('hidden'); openClassroomPage(); };
   updateAuthBtn();
-  /* [V.7.68 ข้อ 1] ไม่โหลดเกมแนะนำแล้ว */
+  /* [เฟส 4 · 4.2] โหลดเกมแนะนำจากที่ครูตั้งไว้ (พลาดก็ขึ้นลิงก์เว็บกลางแทน ไม่มีทางว่างเปล่า) */
+  try { loadFeaturedGames(); } catch (e) {}
 })();
+
+
+/* [เฟส 4 · 4.5] แกลเลอรีเมืองของนักเรียน — ครูเปิดฉายหน้าห้องแล้วให้ทั้งห้องโหวตด้วยกัน
+   อ่านจากตาราง surveys ที่หน้าครูเข้าถึงได้อยู่แล้ว จึงไม่ต้องเพิ่ม SQL */
+function clsOpenCities(){
+  var old=document.getElementById('cls-city-modal'); if(old) old.remove();
+  var wrap=document.createElement('div');
+  wrap.id='cls-city-modal';
+  wrap.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:999;display:flex;align-items:flex-start;justify-content:center;padding:20px 10px;overflow:auto';
+  wrap.innerHTML='<div style="background:#fff;border-radius:14px;padding:16px 20px 20px;width:min(1100px,98vw)">'+
+    '<div style="display:flex;align-items:center;gap:10px"><b style="font-size:16px;flex:1">🏙️ เมืองของนักเรียน (ฉายหน้าห้องแล้วโหวตร่วมกันได้)</b>'+
+    '<button class="btn-ghost" style="padding:5px 14px" onclick="document.getElementById(\'cls-city-modal\').remove()">ปิด</button></div>'+
+    '<div id="cty-body" class="muted" style="font-size:13px;margin-top:8px">กำลังโหลด...</div></div>';
+  document.body.appendChild(wrap);
+  var ids=(cls.students||[]).filter(function(s){ return !cls.open||s.classroom_id===cls.open; }).map(function(s){ return s.id; });
+  if(!ids.length){ document.getElementById('cty-body').innerHTML='<div class="muted">ยังไม่มีนักเรียนในห้องนี้</div>'; return; }
+  sbEnsure().then(function(){ return sbFetchAll('/rest/v1/surveys?kind=eq.my_city&select=student_id,payload,created_at&order=created_at.desc&student_id=in.('+ids.join(',')+')'); })
+  .then(function(rows){
+    var by={}; (rows||[]).forEach(function(r){ if(!by[r.student_id]) by[r.student_id]=r; });
+    var list=Object.keys(by).map(function(k){ return by[k]; });
+    if(!list.length){ document.getElementById('cty-body').innerHTML='<div class="muted">ยังไม่มีใครส่งเมืองเข้ามา — โหมด 🏙️ เมืองของฉัน เปิดให้เด็กที่พิชิตกาญ 2050 แล้ว</div>'; return; }
+    var votes={};
+    var draw=function(){
+      document.getElementById('cty-body').innerHTML=
+        '<div class="muted" style="font-size:12px;margin-bottom:8px">แตะ ⭐ ใต้เมืองที่ชอบเพื่อนับคะแนนโหวตสด (นับในหน้าจอนี้เท่านั้น ไม่บันทึกลงคะแนนของใคร)</div>'+
+        '<div class="cty-grid">'+list.map(function(r,i){
+          var p=r.payload||{}, sc=p.score||{}, cells=(p.placed||[]);
+          var g=''; for(var y=0;y<4;y++){ for(var x=0;x<6;x++){ var at=cells.filter(function(c){return c.x===x&&c.y===y;})[0];
+            g+='<span class="cty-cell">'+(at?({house:'🏠',market:'🏪',school:'🏫',park:'🌳',farm:'🌾',solar:'☀️',water:'💧',factory:'🏭'}[at.b]||'')  :'')+'</span>'; } }
+          return '<div class="cty-card"><b>'+esc(p.name||'นักสำรวจ')+'</b>'+
+            '<div class="cty-map">'+g+'</div>'+
+            '<div class="cty-sc">💰 '+Math.round(sc.eco||0)+' · 👥 '+Math.round(sc.so||0)+' · 🌿 '+Math.round(sc.env||0)+'</div>'+
+            '<button class="btn-ghost cty-vote" data-i="'+i+'">⭐ โหวต <b>'+(votes[i]||0)+'</b></button></div>';
+        }).join('')+'</div>';
+      document.querySelectorAll('.cty-vote').forEach(function(b){ b.onclick=function(){ var i=+b.dataset.i; votes[i]=(votes[i]||0)+1; draw(); }; });
+    };
+    draw();
+  })
+  .catch(function(e){ document.getElementById('cty-body').innerHTML='<div class="err" style="display:block">โหลดไม่สำเร็จ: '+esc(String(e&&e.message||''))+'</div>'; });
+}
 
 /* ---- ข้อ 6: ปุ่มเกมแนะนำบนแถบบน (ครูตั้งเองได้ 3 ช่อง — ไม่มีก็ลิงก์ไปหน้าเว็บหลัก) ---- */
 var FEAT_FALLBACK_URL='https://www.gameplearn.com';
@@ -5637,10 +5724,28 @@ function clsSaveFeatured(i){
     toast('ส่งออกคะแนน: เปิดหน้า 🏫 ห้องเรียน แล้วกดอีกครั้ง');
   };
 })();
+/* [เฟส 1] เดิมไฟล์ส่งออกมีแต่คะแนนชุด V.2 (A20/B30/C25/D25) — ไม่มีสมรรถนะ 6 ด้านของ V.8 สักคอลัมน์
+   ครูจึงเอาไฟล์ไปทำ ปพ./รายงานประกวดไม่ได้ ต้องจดจากหน้าจอทีละคน · ตอนนี้ดึงชุดเดียวกับตาราง V.8 มาต่อท้ายให้ครบ */
 function clsExportCsv(){
+  var pick0=(cls.openScores||cls.open||(cls.sumFilter&&cls.sumFilter!=='__all__'?cls.sumFilter:''))||'';
+  var ids0=(cls.students||[]).filter(function(s){ return !pick0||s.classroom_id===pick0; }).map(function(s){ return s.id; });
+  if(!ids0.length){ toast('ยังไม่มีข้อมูลนักเรียนให้ส่งออก'); return; }
+  toast('กำลังรวบรวมหลักฐานสมรรถนะ V.8...');
+  /* โหลดไม่สำเร็จ = ยังส่งออกได้ แต่คอลัมน์ V.8 จะว่าง (ไม่ปล่อยให้ครูกดแล้วเงียบ) */
+  clsV8Fetch(ids0).catch(function(){ toast('ดึงหลักฐาน V.8 ไม่สำเร็จ — ส่งออกเฉพาะคะแนนเดิม'); return {}; })
+    .then(function(v8by){ _clsExportCsvGo(v8by||{}); });
+}
+function _clsExportCsvGo(v8by){
   var rooms=cls.rooms||[];
   var pick=(cls.openScores||cls.open||(cls.sumFilter&&cls.sumFilter!=='__all__'?cls.sumFilter:''))||'';
-  var rows=[['โรงเรียน','ห้องเรียน','ปีการศึกษา','เลขที่','ชื่อ','นามสกุล','ชื่อในเกม','คะแนนเก็บ','คะแนนสอบ','A20','B30','C25','D25','รวม100','ระดับ','CTC','STM','CRT','PRB','สถานะข้อมูล']];
+  var head=['โรงเรียน','ห้องเรียน','ปีการศึกษา','เลขที่','ชื่อ','นามสกุล','ชื่อในเกม','คะแนนเก็บ','คะแนนสอบ','A20','B30','C25','D25','รวม100','ระดับ','CTC','STM','CRT','PRB','สถานะข้อมูล'];
+  CBE8.COMPS.forEach(function(cd){ var c=cd[0], nm=cd[1];
+    head.push(c+'_คะแนนหลักM%', c+'_ระดับ', c+'_สถานะ', c+'_ครูT', c+'_เพื่อนP', c+'_ตนเองS', c+'_ชื่อสมรรถนะ_'+nm); });
+  head.push('V8_ครูยืนยันแล้ว(ด้าน)','V8_ต้องตรวจสอบ(ด้าน)','V8_ยังไม่มีหลักฐาน(ด้าน)','V8_ระดับเฉลี่ย','เกณฑ์ที่ใช้','รุ่นเกม','วันที่ส่งออก');
+  var rows=[head];
+  var setTxt='M='+CBE8.set.wMinor+'/'+CBE8.set.wSum+' · ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+' · ±'+CBE8.set.diff+' · ฐาน '+CBE8.set.lvBase;
+  var gvTxt=(typeof GAME_VERSION!=='undefined'?GAME_VERSION:'dashboard');
+  var dTxt=new Date().toLocaleString('th-TH');
   var n=0;
   (cls.students||[]).forEach(function(stu){
     if(pick&&stu.classroom_id!==pick) return;
@@ -5648,16 +5753,26 @@ function clsExportCsv(){
     var sc=(cls.schools||[]).filter(function(x){return x.id===r.school_id;})[0];
     var t=clsStatOf(stu), v=t.v2||{};
     var f=function(x){ return (x==null||x==='')?'':x; };
-    rows.push([sc?sc.name:'', r.name||'', r.academic_year||'', stu.student_number||'', stu.first_name||'', stu.last_name||'',
+    var row=[sc?sc.name:'', r.name||'', r.academic_year||'', stu.student_number||'', stu.first_name||'', stu.last_name||'',
       stu.character_name||'', f(t.collected), f(t.boss), f(v.A), f(v.B), f(v.C), f(v.D), f(v.total), f(v.level),
-      f(v.comp&&v.comp.CTC), f(v.comp&&v.comp.STM), f(v.comp&&v.comp.CRT), f(v.comp&&v.comp.PRB), v.dataStatus||'']);
+      f(v.comp&&v.comp.CTC), f(v.comp&&v.comp.STM), f(v.comp&&v.comp.CRT), f(v.comp&&v.comp.PRB), v.dataStatus||''];
+    var comp=CBE8.compute(v8by[stu.id]||{ evd:[],cap:[],pr:[] });
+    var nFin=0, nRev=0, nNo=0, lvSum=0, lvN=0;
+    CBE8.COMPS.forEach(function(cd){ var c=cd[0], q=comp[c], info=CBE8.ST_INFO[q.status]||{t:q.status};
+      row.push(q.M==null?'':q.M.toFixed(1), q.lv==null?'':q.lv, info.t, f(q.T), f(q.P), f(q.S), cd[1]);
+      if(q.status==='FINALIZED') nFin++;
+      if(q.status==='QUICK_REVIEW') nRev++;
+      if(q.status==='NO_DATA') nNo++;
+      if(q.lv!=null){ lvSum+=q.lv; lvN++; } });
+    row.push(nFin, nRev, nNo, lvN?(lvSum/lvN).toFixed(2):'', setTxt, gvTxt, dTxt);
+    rows.push(row);
     n++;
   });
   if(n===0){ toast('ยังไม่มีข้อมูลนักเรียนให้ส่งออก'); return; }
   var csv=rows.map(function(r){ return r.map(function(c){ var t2=String(c==null?'':c); return /[",\n]/.test(t2)?('"'+t2.replace(/"/g,'""')+'"'):t2; }).join(','); }).join('\r\n');
   var blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
   var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download='คะแนนห้องเรียน_'+(new Date().toISOString().slice(0,10))+'.csv';
+  a.download='คะแนนห้องเรียน_สมรรถนะV8_'+(new Date().toISOString().slice(0,10))+'.csv';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(function(){ URL.revokeObjectURL(a.href); },1000);
   toast('ส่งออก CSV แล้ว ('+n+' คน)');
@@ -6142,19 +6257,16 @@ function clsOpenV8(id){
     '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">'+
     '<b style="font-size:16px;flex:1">🧪 เกณฑ์ V.8 — คะแนนหลัก 30/70 + เทียบ-ยืนยัน ครู/เพื่อน/ตนเอง <span class="cls-chip" style="background:#ede9fe;color:#6d28d9">V.8.0-alpha</span></b>'+
     '<button class="btn-ghost" style="padding:5px 12px" onclick="clsV8Settings()">⚙️ ตั้งค่าเกณฑ์</button>'+
+    '<button class="btn-ghost" style="padding:5px 12px" onclick="clsV8Print()">🖨️ พิมพ์รายงาน</button>'+
     '<button class="btn-ghost" style="padding:5px 14px" onclick="document.getElementById(\'cls-v8-modal\').remove()">ปิด</button></div>'+
     '<div id="cv8-body" class="muted" style="font-size:13px;margin-top:8px">กำลังโหลดหลักฐาน V.8...</div></div>';
   document.body.appendChild(wrap);
   clsV8Load(id);
 }
-function clsV8Load(roomId){
-  var studs=(cls.students||[]).filter(function(x){ return !roomId || x.classroom_id===roomId; });
-  if(!studs.length){ var b0=$('cv8-body'); if(b0) b0.innerHTML='<div class="muted">ยังไม่มีนักเรียนในห้องนี้</div>'; return; }
-  studs.sort(function(a,b){ return (Number(String(a.student_number||'').replace(/\D/g,''))||999)-(Number(String(b.student_number||'').replace(/\D/g,''))||999); });
-  var ids=studs.map(function(x){ return x.id; });
-  CBE8.loadSettings().then(function(){
-    return sbEnsure();
-  }).then(function(){
+/* [เฟส 1] แยก "การดึงหลักฐาน V.8" ออกมาเป็นฟังก์ชันเดี่ยว — ตาราง V.8 · CSV · รายงานพิมพ์ ใช้ชุดเดียวกัน
+   จึงไม่มีทางที่ตัวเลขในไฟล์ส่งออกจะเป็นคนละชุดกับที่ครูเห็นบนจอ */
+function clsV8Fetch(ids){
+  return CBE8.loadSettings().then(function(){ return sbEnsure(); }).then(function(){
     return Promise.all([
       sbFetchAll('/rest/v1/events?kind=in.(evidence,capstone,peer)&select=student_id,kind,stage_id,score,created_at,raw&student_id=in.('+ids.join(',')+')&order=created_at.desc'),
       sbFetchAll('/rest/v1/surveys?kind=eq.kru_assess&select=student_id,payload,created_at&order=created_at.desc&student_id=in.('+ids.join(',')+')'),
@@ -6179,11 +6291,175 @@ function clsV8Load(roomId){
       SELF_DIM_LABEL.forEach(function(d){ var sum=0,n=0; for(var i=1;i<=10;i++){ var v=Number(pl[d[0]+i]); if(!isNaN(v)&&v>0){ sum+=v; n++; } } dims[d[2]]=n?sum/n:null; });
       st.self={ subAns:pl.subAns||null, dims:dims };
     });
+    return by;
+  });
+}
+function clsV8Load(roomId){
+  var studs=(cls.students||[]).filter(function(x){ return !roomId || x.classroom_id===roomId; });
+  if(!studs.length){ var b0=$('cv8-body'); if(b0) b0.innerHTML='<div class="muted">ยังไม่มีนักเรียนในห้องนี้</div>'; return; }
+  studs.sort(function(a,b){ return (Number(String(a.student_number||'').replace(/\D/g,''))||999)-(Number(String(b.student_number||'').replace(/\D/g,''))||999); });
+  var ids=studs.map(function(x){ return x.id; });
+  clsV8Fetch(ids).then(function(by){
     clsV8Render(studs, by);
   }).catch(function(e){
     var b=$('cv8-body'); if(b) b.innerHTML='<div class="err" style="display:block">โหลดไม่สำเร็จ: '+esc(String(e&&e.message||''))+'</div>';
   });
 }
+
+/* ============================================================
+   [เฟส 4 · 4.3] หน้าครูรอบใหม่ — เห็นพัฒนาการ ไม่ใช่เห็นแค่คะแนนวันนี้
+   ปัญหาเดิม: ทุกตัวเลขในหน้าครูเป็น "ภาพนิ่ง ณ วันนี้"
+   ครูตอบไม่ได้ว่าเด็กดีขึ้นไหม ซึ่งเป็นคำถามหลักของการประเมินฐานสมรรถนะ
+   และเวลาต้องยืนยันผล 6 ด้าน × 30 คน = 180 คลิก — ไม่มีใครทำไหวจริง
+   ============================================================ */
+var DASH4 = {
+  WEEKS: 8,
+  /* จัดหลักฐานทั้งห้องเป็นรายสัปดาห์ (ย้อนหลัง 8 สัปดาห์) */
+  series(by) {
+    var now = Date.now(), W = 7 * 864e5, out = [];
+    for (var i = this.WEEKS - 1; i >= 0; i--) out.push({ from: now - (i + 1) * W, to: now - i * W, n: 0, sum: 0, kids: {} });
+    Object.keys(by || {}).forEach(function (sid) {
+      ((by[sid] || {}).evd || []).forEach(function (e) {
+        if (!e.t) return;
+        for (var k = 0; k < out.length; k++) {
+          if (e.t >= out[k].from && e.t < out[k].to) {
+            out[k].n++; out[k].kids[sid] = 1;
+            if (typeof e.val === 'number') out[k].sum += e.val;
+            break;
+          }
+        }
+      });
+    });
+    return out.map(function (w) {
+      return { n: w.n, kids: Object.keys(w.kids).length, avg: w.n ? (w.sum / w.n) : null,
+               label: new Date(w.from).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }) };
+    });
+  },
+  chartHTML(by) {
+    var s = this.series(by);
+    var maxN = Math.max(1, Math.max.apply(null, s.map(function (w) { return w.n; })));
+    if (!s.some(function (w) { return w.n > 0; }))
+      return '<div class="muted" style="font-size:12px">ยังไม่มีหลักฐานพอจะวาดกราฟพัฒนาการ — ให้นักเรียนเล่นสัก 2-3 คาบก่อนนะครับ</div>';
+    var W = 640, H = 150, PAD = 26, bw = (W - PAD * 2) / s.length;
+    var bars = s.map(function (w, i) {
+      var h = Math.round(w.n / maxN * (H - 52));
+      var x = PAD + i * bw, y = H - 26 - h;
+      return '<rect x="' + (x + bw * 0.18) + '" y="' + y + '" width="' + (bw * 0.64) + '" height="' + Math.max(1, h) + '" rx="3" fill="#6d28d9" opacity="' + (0.45 + 0.55 * (w.n / maxN)) + '">' +
+        '<title>' + w.label + ' — หลักฐาน ' + w.n + ' ชิ้น · นักเรียน ' + w.kids + ' คน' + (w.avg != null ? ' · คุณภาพเฉลี่ย ' + Math.round(w.avg * 100) + '%' : '') + '</title></rect>' +
+        '<text x="' + (x + bw / 2) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="10" fill="#64748b">' + w.label + '</text>' +
+        (w.n ? '<text x="' + (x + bw / 2) + '" y="' + (y - 4) + '" text-anchor="middle" font-size="10" font-weight="700" fill="#4c1d95">' + w.n + '</text>' : '');
+    }).join('');
+    /* เส้นคุณภาพเฉลี่ย — บอกว่า "ทำเยอะขึ้น" มาพร้อม "ทำได้ดีขึ้น" หรือเปล่า */
+    var pts = s.map(function (w, i) {
+      if (w.avg == null) return null;
+      return (PAD + i * bw + bw / 2) + ',' + (H - 26 - w.avg * (H - 52));
+    }).filter(Boolean).join(' ');
+    var line = pts ? '<polyline points="' + pts + '" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linejoin="round"/>' : '';
+    return '<div class="d4-chart"><svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:auto">' +
+      '<line x1="' + PAD + '" y1="' + (H - 26) + '" x2="' + (W - PAD) + '" y2="' + (H - 26) + '" stroke="#cbd5e1"/>' +
+      bars + line + '</svg>' +
+      '<div class="muted" style="font-size:11.5px;text-align:center">แท่งม่วง = จำนวนหลักฐานที่เก็บได้ในสัปดาห์นั้น · เส้นส้ม = คุณภาพเฉลี่ย (แตะแท่งเพื่อดูรายละเอียด)</div></div>';
+  },
+
+  /* เทียบ "ครั้งแรก vs ครั้งล่าสุด" ต่อสมรรถนะทั้งห้อง — คำถามที่ครูอยากรู้ที่สุด */
+  beforeAfterHTML(studs, by) {
+    var rows = CBE8.COMPS.map(function (cd) {
+      var c = cd[0], first = [], last = [];
+      studs.forEach(function (s) {
+        var evd = ((by[s.id] || {}).evd || []).filter(function (e) { return (e.sub || '').indexOf(c) === 0 || e.sub === c; })
+          .filter(function (e) { return typeof e.val === 'number'; })
+          .sort(function (a, b2) { return a.t - b2.t; });
+        if (evd.length >= 2) { first.push(evd[0].val); last.push(evd[evd.length - 1].val); }
+      });
+      if (!first.length) return { c: c, nm: cd[1], col: cd[2], n: 0 };
+      var av = function (a) { return a.reduce(function (x, y) { return x + y; }, 0) / a.length; };
+      var f = av(first) * 100, l = av(last) * 100;
+      return { c: c, nm: cd[1], col: cd[2], n: first.length, f: f, l: l, d: l - f };
+    });
+    if (!rows.some(function (r) { return r.n; }))
+      return '<div class="muted" style="font-size:12px">ยังเทียบก่อน-หลังไม่ได้ — ต้องมีนักเรียนที่เล่นด่านเดิมอย่างน้อย 2 ครั้ง</div>';
+    return '<table class="cls-tbl d4-ba"><thead><tr><th>สมรรถนะ</th><th style="text-align:center">ครั้งแรก</th><th style="text-align:center">ครั้งล่าสุด</th><th style="text-align:center">เปลี่ยนแปลง</th><th style="text-align:center">จำนวนที่เทียบได้</th></tr></thead><tbody>' +
+      rows.map(function (r) {
+        if (!r.n) return '<tr><td style="color:' + r.col + ';font-weight:700">' + esc(r.nm) + '</td><td colspan="4" class="muted" style="text-align:center">ยังไม่มีข้อมูลพอ</td></tr>';
+        var up = r.d >= 1, dn = r.d <= -1;
+        return '<tr><td style="color:' + r.col + ';font-weight:700">' + esc(r.nm) + '</td>' +
+          '<td style="text-align:center">' + r.f.toFixed(0) + '%</td>' +
+          '<td style="text-align:center"><b>' + r.l.toFixed(0) + '%</b></td>' +
+          '<td style="text-align:center;font-weight:800;color:' + (up ? '#16a34a' : dn ? '#b91c1c' : '#64748b') + '">' +
+            (up ? '▲ +' : dn ? '▼ ' : '– ') + r.d.toFixed(1) + '</td>' +
+          '<td style="text-align:center">' + r.n + ' คน</td></tr>';
+      }).join('') + '</tbody></table>';
+  },
+
+  /* ยืนยันผลเป็นชุด — เฉพาะด้านที่ระบบสรุปว่า "ยืนยันแล้ว" และครูยังไม่เคยกดยืนยัน */
+  bulkTargets(studs, by) {
+    var out = [];
+    studs.forEach(function (s, si) {
+      var stu = by[s.id] || { evd: [], cap: [], pr: [] };
+      var comp = CBE8.compute(stu);
+      CBE8.COMPS.forEach(function (cd) {
+        var c = cd[0], r = comp[c];
+        if (r.status === 'CONFIRMED' && r.lv != null) out.push({ si: si, sid: s.id, c: c, lv: r.lv, stu: stu });
+      });
+    });
+    return out;
+  },
+  bulkRun(studs, by) {
+    var T = this.bulkTargets(studs, by);
+    if (!T.length) { toast('ไม่มีด้านไหนที่พร้อมยืนยันแบบชุด (ต้องมีสถานะ ✅ ยืนยันแล้ว ก่อน)'); return; }
+    if (!confirm('ยืนยันผลให้อัตโนมัติ ' + T.length + ' ช่อง\n\n' +
+      'ระบบจะยืนยันเฉพาะด้านที่สรุปว่า "✅ ยืนยันแล้ว" (คะแนนหลักกับผลประเมินครู/เพื่อน/ตนเอง สอดคล้องกัน)\n' +
+      'ด้านที่ต้องตรวจสอบหรือรอครูยืนยัน จะไม่ถูกแตะ — ครูยังต้องดูเองทีละคนตามเดิม\n\n' +
+      'ยืนยันผลทั้งหมดนี้เลยไหม?')) return;
+    var st = document.getElementById('d4-bulk-st');
+    var done = 0, fail = 0;
+    var byStu = {};
+    T.forEach(function (t) { (byStu[t.sid] = byStu[t.sid] || { stu: t.stu, items: [] }).items.push(t); });
+    var keys = Object.keys(byStu), chain = sbEnsure();
+    keys.forEach(function (sid) {
+      chain = chain.then(function () {
+        var g = byStu[sid];
+        var payload = { dims: g.stu.kru || {}, v8c: Object.assign({}, g.stu.v8c || {}),
+          by: (cls.teacher && (cls.teacher.email || cls.teacher.display_name)) || 'ครู',
+          at: new Date().toISOString(), bulk: true,
+          gameVersion: (typeof GAME_VERSION !== 'undefined' ? GAME_VERSION : 'dashboard') };
+        g.items.forEach(function (t) {
+          payload.v8c[t.c] = { status: 'FINALIZED', lv: t.lv, ans: '', ai: null, at: payload.at, bulk: true };
+        });
+        return sbFetch('/rest/v1/rpc/rpc_kru_assess', { method: 'POST', body: JSON.stringify({ p_student: sid, p_payload: payload }) })
+          .then(function () { g.stu.v8c = payload.v8c; done += g.items.length; })
+          .catch(function () { fail += g.items.length; });
+      }).then(function () {
+        if (st) st.textContent = 'ยืนยันแล้ว ' + done + '/' + T.length + (fail ? ' · ไม่สำเร็จ ' + fail : '');
+      });
+    });
+    chain.then(function () {
+      toast('ยืนยันผลเป็นชุดแล้ว ' + done + ' ช่อง' + (fail ? ' (ไม่สำเร็จ ' + fail + ')' : ''));
+      if (_cv8Cache) clsV8Render(_cv8Cache.studs, _cv8Cache.by);
+    });
+  },
+
+  panelHTML() {
+    return '<details class="d4-panel" id="d4-panel"><summary>📈 พัฒนาการตามเวลา · เทียบก่อน-หลัง · ยืนยันผลเป็นชุด</summary>' +
+      '<div id="d4-body" class="muted" style="font-size:12px">กำลังสรุป...</div></details>';
+  },
+  fill(studs, by) {
+    var el = document.getElementById('d4-body'); if (!el) return;
+    var T = this.bulkTargets(studs, by);
+    el.innerHTML =
+      '<div class="d4-sec"><b>📈 พัฒนาการของห้องตามเวลา (8 สัปดาห์ล่าสุด)</b>' + this.chartHTML(by) + '</div>' +
+      '<div class="d4-sec"><b>🔁 เทียบครั้งแรก กับ ครั้งล่าสุด (เฉพาะคนที่เล่นซ้ำ)</b>' +
+      '<div class="muted" style="font-size:11.5px;margin:3px 0 6px">ตอบคำถามว่า "เด็กดีขึ้นจริงไหม" — ไม่ใช่แค่ "วันนี้ได้เท่าไร"</div>' +
+      this.beforeAfterHTML(studs, by) + '</div>' +
+      '<div class="d4-sec"><b>✅ ยืนยันผลเป็นชุด</b>' +
+      '<div class="muted" style="font-size:11.5px;margin:3px 0 6px">ยืนยันเฉพาะด้านที่ระบบสรุปว่าสอดคล้องกันแล้ว (' + T.length + ' ช่อง) — ด้านที่ต้องตรวจสอบยังต้องดูเองทีละคน</div>' +
+      '<button class="btn-primary" style="padding:5px 16px;font-size:12.5px" id="d4-bulk-btn">✅ ยืนยันผลที่พร้อมทั้งหมด (' + T.length + ' ช่อง)</button>' +
+      '<span id="d4-bulk-st" style="margin-left:10px;font-size:12px"></span></div>';
+    var b = document.getElementById('d4-bulk-btn');
+    if (b) b.onclick = function () { DASH4.bulkRun(studs, by); };
+  }
+};
+
 var _cv8Cache=null;
 function clsV8Render(studs, by){
   _cv8Cache={ studs:studs, by:by };
@@ -6193,7 +6469,7 @@ function clsV8Render(studs, by){
     return '<span class="cls-chip" style="background:'+s.bg+';color:'+s.c+'">'+s.i+' '+s.t+'</span>'; }).join(' ');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.0-p2-2569.64 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.4-p2-2569.68 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };
@@ -6208,12 +6484,13 @@ function clsV8Render(studs, by){
     return '<tr id="cv8-row-'+si+'"><td style="font-size:12px"><b>'+esc((s.student_number?s.student_number+'. ':'')+nm)+'</b></td>'+cells+'</tr>'+
       '<tr id="cv8-det-'+si+'" style="display:none"><td colspan="7" id="cv8-det-td-'+si+'" style="background:#f8fafc"></td></tr>';
   }).join('');
-  b.innerHTML=head+
+  b.innerHTML=head+ DASH4.panelHTML() +
     '<div style="overflow-x:auto"><table class="cls-tbl"><thead><tr><th style="min-width:150px">นักเรียน</th>'+
     CBE8.COMPS.map(function(cd){ return '<th style="text-align:center;color:'+cd[2]+';font-size:11px">'+esc(cd[1])+'</th>'; }).join('')+
     '</tr></thead><tbody>'+rows+'</tbody></table></div>'+
     '<div class="muted" style="font-size:11.5px;margin-top:8px;line-height:1.7">แตะช่องคะแนนเพื่อดูที่มาของหลักฐาน · ระดับ T/P/S · เหตุผลของสถานะ และคำถามยืนยันสำหรับด้านที่ต้องตรวจสอบ<br>'+
     'ข้อสอบปรนัย/แบบทดสอบหลังเรียน = หลักฐานสนับสนุนและผลสัมฤทธิ์ (ดูที่ตารางคะแนนเดิม) — ไม่รวมในคะแนนหลัก V.8</div>';
+  try { DASH4.fill(studs, by); } catch (e) {}   /* [เฟส 4 · 4.3] */
 }
 function clsV8Detail(si, c){
   var det=$('cv8-det-'+si), td=$('cv8-det-td-'+si);
@@ -6293,7 +6570,9 @@ function clsV8Finalize(si, c){
   var lvSel=$('cv8-lv-'+si+'-'+c), ta=$('cv8-ans-'+si+'-'+c), stEl=$('cv8-fin-st-'+si+'-'+c), aiEl=$('cv8-ai-'+si+'-'+c);
   var lv=Number(lvSel&&lvSel.value)||CBE8.set.lvBase;
   if(stEl) stEl.textContent='กำลังบันทึก...';
-  var payload={ dims: stu.kru||{}, v8c: Object.assign({}, stu.v8c||{}) };
+  var payload={ dims: stu.kru||{}, v8c: Object.assign({}, stu.v8c||{}),
+    by:(cls.teacher&&(cls.teacher.email||cls.teacher.display_name))||'ครู', at:new Date().toISOString(),
+    gameVersion:(typeof GAME_VERSION!=='undefined'?GAME_VERSION:'dashboard') }; /* [เฟส 1] ติดชื่อผู้ยืนยัน+เวลา+รุ่นเกม เหมือนเส้นทางบันทึกอีกทาง */
   payload.v8c[c]={ status:'FINALIZED', lv:lv, ans:String(ta&&ta.value||'').trim(), ai:(aiEl&&aiEl.dataset.ai!=null?Number(aiEl.dataset.ai):null), at:new Date().toISOString() };
   sbEnsure().then(function(){
     return sbFetch('/rest/v1/rpc/rpc_kru_assess',{method:'POST',body:JSON.stringify({ p_student:s.id, p_payload:payload })});
@@ -6305,6 +6584,50 @@ function clsV8Finalize(si, c){
   }).catch(function(e){
     if(stEl) stEl.innerHTML='<span style="color:#b91c1c">บันทึกไม่สำเร็จ: '+esc(String(e&&e.message||''))+'</span>';
   });
+}
+/* [เฟส 1] 🖨️ รายงานสมรรถนะรายห้องสำหรับพิมพ์/บันทึกเป็น PDF — เอาไปแนบแฟ้ม ปพ. หรือแฟ้มประกวดได้ทันที
+   ใช้ข้อมูลชุดเดียวกับตารางบนจอ (ไม่คิดใหม่) และพิมพ์เกณฑ์ที่ใช้กำกับไว้ท้ายรายงานเพื่อการตรวจสอบย้อนหลัง */
+function clsV8Print(){
+  if(!_cv8Cache||!_cv8Cache.studs||!_cv8Cache.studs.length){ toast('ยังไม่มีข้อมูลให้พิมพ์'); return; }
+  var studs=_cv8Cache.studs, by=_cv8Cache.by||{};
+  var rid=studs[0].classroom_id;
+  var room=(cls.rooms||[]).filter(function(x){ return x.id===rid; })[0]||{};
+  var sch=(cls.schools||[]).filter(function(x){ return x.id===room.school_id; })[0]||{};
+  var th=CBE8.COMPS.map(function(cd){ return '<th>'+esc(cd[1])+'</th>'; }).join('');
+  var tally={}; Object.keys(CBE8.ST_INFO).forEach(function(k){ tally[k]=0; });
+  var body=studs.map(function(s){
+    var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
+    var comp=CBE8.compute(by[s.id]||{ evd:[],cap:[],pr:[] });
+    var tds=CBE8.COMPS.map(function(cd){ var q=comp[cd[0]], info=CBE8.ST_INFO[q.status]||{i:'',t:q.status};
+      if(tally[q.status]!=null) tally[q.status]++;
+      return '<td class="c">'+(q.lv==null?'–':('<b>'+q.lv+'</b>'))+'<br><span class="sm">'+(q.M==null?'':q.M.toFixed(0)+'% ')+info.i+'</span></td>'; }).join('');
+    return '<tr><td>'+esc((s.student_number?s.student_number+'. ':'')+nm)+'</td>'+tds+'</tr>';
+  }).join('');
+  var legend=Object.keys(CBE8.ST_INFO).map(function(k){ var s=CBE8.ST_INFO[k];
+    return '<span class="lg">'+s.i+' '+esc(s.t)+' — '+tally[k]+' ช่อง</span>'; }).join('');
+  var html='<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><title>รายงานสมรรถนะ '+esc(room.name||'')+'</title><style>'+
+    'body{font-family:"TH Sarabun New","Sarabun",system-ui,sans-serif;font-size:15px;color:#0f172a;margin:18px}'+
+    'h1{font-size:20px;margin:0 0 2px}h2{font-size:14px;font-weight:400;color:#475569;margin:0 0 12px}'+
+    'table{border-collapse:collapse;width:100%}th,td{border:1px solid #cbd5e1;padding:5px 7px;font-size:13px}'+
+    'th{background:#f1f5f9;font-size:12px}td.c{text-align:center}.sm{font-size:11px;color:#64748b}'+
+    '.lg{display:inline-block;margin:0 10px 4px 0;font-size:12px}.ft{margin-top:12px;font-size:12px;color:#475569;line-height:1.7}'+
+    '.sign{margin-top:26px;display:flex;gap:60px;font-size:13px}@page{size:A4 landscape;margin:12mm}'+
+    '</style></head><body>'+
+    '<h1>รายงานผลการประเมินสมรรถนะหลัก 6 ด้าน</h1>'+
+    '<h2>'+esc(sch.name||'')+' · ห้อง '+esc(room.name||'')+' · ปีการศึกษา '+esc(String(room.academic_year||''))+' · พิมพ์เมื่อ '+esc(new Date().toLocaleString('th-TH'))+'</h2>'+
+    '<table><thead><tr><th style="min-width:150px">นักเรียน</th>'+th+'</tr></thead><tbody>'+body+'</tbody></table>'+
+    '<div class="ft"><b>สรุปสถานะ:</b> '+legend+'<br>'+
+    '<b>เกณฑ์ที่ใช้:</b> คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + ด่านรวบยอดกาญ 2050 '+CBE8.set.wSum+'% · '+
+    'ระดับ '+CBE8.set.lvBase+'–'+(CBE8.set.lvBase+3)+' ที่ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+'% · เกณฑ์ความต่างที่ยอมรับ ±'+CBE8.set.diff+' ระดับ<br>'+
+    '<b>ที่มาของคะแนน:</b> พฤติกรรมการเล่นจริงในเกม (Evidence Ledger) เทียบกับผลประเมินของครู เพื่อน และตนเอง · '+
+    'ข้อสอบปรนัยเป็นผลสัมฤทธิ์ ไม่รวมในคะแนนสมรรถนะ · รุ่นเกม '+esc(typeof GAME_VERSION!=='undefined'?GAME_VERSION:'')+'</div>'+
+    '<div class="sign"><div>ลงชื่อ ..................................................... ครูผู้สอน</div>'+
+    '<div>ลงชื่อ ..................................................... ผู้บริหารสถานศึกษา</div></div>'+
+    '</body></html>';
+  var w=window.open('','_blank');
+  if(!w){ toast('เบราว์เซอร์บล็อกหน้าต่างใหม่ — อนุญาต pop-up แล้วกดใหม่'); return; }
+  w.document.write(html); w.document.close();
+  setTimeout(function(){ try{ w.focus(); w.print(); }catch(e){} }, 400);
 }
 /* ⚙️ ตั้งค่าเกณฑ์ V.8 (ข้อ 14 ของข้อกำหนด — น้ำหนัก/ช่วงระดับ/เกณฑ์ความต่าง แก้ได้ ไม่ฝังตายในโค้ด) */
 function clsV8Settings(){
@@ -6335,6 +6658,26 @@ function clsV8Settings(){
 function clsV8SaveSet(){
   var stEl=$('v8s-st');
   var pairs=[['v8_w_minor','v8s-wm'],['v8_w_sum','v8s-ws'],['v8_r1','v8s-r1'],['v8_r2','v8s-r2'],['v8_r3','v8s-r3'],['v8_diff','v8s-df'],['v8_lv_base','v8s-lb']];
+  /* [เฟส 1] ตรวจค่าก่อนบันทึก — เดิมกรอกอะไรก็บันทึกได้หมด
+     พิมพ์ 30/60 (รวมไม่ถึง 100) คะแนนทั้งห้องจะต่ำลงเงียบ ๆ · พิมพ์ r1 > r2 ระดับจะกระโดดผิดลำดับ
+     ค่าพวกนี้กระทบคะแนนของนักเรียนทุกคนย้อนหลัง จึงต้องกันไว้ตั้งแต่ช่องกรอก */
+  var V={}; pairs.forEach(function(p){ var el=$(p[1]); V[p[0]]=el?Number(el.value):NaN; });
+  var bad=[];
+  function fin(k,lo,hi,lab){ var v=V[k]; if(isNaN(v)) bad.push(lab+': ยังไม่ได้กรอกตัวเลข'); else if(v<lo||v>hi) bad.push(lab+': ต้องอยู่ระหว่าง '+lo+'–'+hi+' (กรอก '+v+')'); }
+  fin('v8_w_minor',0,100,'น้ำหนักหลักฐานระหว่างเรียน');
+  fin('v8_w_sum',0,100,'น้ำหนักด่านรวบยอด');
+  fin('v8_r1',0,100,'ช่วงคะแนนระดับที่ 2'); fin('v8_r2',0,100,'ช่วงคะแนนระดับที่ 3'); fin('v8_r3',0,100,'ช่วงคะแนนระดับที่ 4');
+  fin('v8_diff',0,3,'เกณฑ์ความต่างที่ยอมรับ');
+  if(V.v8_lv_base!==1 && V.v8_lv_base!==3) bad.push('เลขระดับเริ่มต้น: ใส่ได้เฉพาะ 1 หรือ 3');
+  if(!isNaN(V.v8_w_minor)&&!isNaN(V.v8_w_sum)&&Math.round(V.v8_w_minor+V.v8_w_sum)!==100)
+    bad.push('น้ำหนักสองช่องต้องรวมกันได้ 100 พอดี (ตอนนี้รวมได้ '+Math.round(V.v8_w_minor+V.v8_w_sum)+')');
+  if(!isNaN(V.v8_r1)&&!isNaN(V.v8_r2)&&!isNaN(V.v8_r3)&&!(V.v8_r1<V.v8_r2&&V.v8_r2<V.v8_r3))
+    bad.push('ช่วงคะแนนต้องเรียงจากน้อยไปมาก: ระดับที่ 2 < ระดับที่ 3 < ระดับที่ 4 (ตอนนี้ '+V.v8_r1+' / '+V.v8_r2+' / '+V.v8_r3+')');
+  if(bad.length){
+    if(stEl) stEl.innerHTML='<span style="color:#b91c1c;font-weight:700">ยังบันทึกไม่ได้ — แก้ก่อนนะครับ</span>'+
+      '<ul style="margin:4px 0 0 16px;padding:0;color:#b91c1c">'+bad.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('')+'</ul>';
+    return;
+  }
   if(stEl) stEl.textContent='กำลังบันทึก...';
   var chain=Promise.resolve(), err=null;
   pairs.forEach(function(p){
