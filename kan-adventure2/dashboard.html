@@ -2479,14 +2479,28 @@ function clsGoogleSignIn(){
 }
 function clsLinkGoogle(){
   if(!clsIsRealUrl()){ toast('การผูกบัญชี Google ใช้ได้เมื่อเปิด Dashboard จากเว็บจริง (cai-kan.pages.dev)'); return; }
+  /* [แก้ตามครู] เบราว์เซอร์ใหม่จะมีบัญชีชั่วคราวที่ยังไม่มีห้องเรียนเลย — การ "ผูก" ตรงนี้ไม่มีอะไรให้ผูก
+     และจะได้บัญชีคนละใบกับที่เคยใช้ ทำให้ห้องเรียนเดิมหายไปทั้งที่ข้อมูลยังอยู่ครบบนเซิร์ฟเวอร์
+     → ถามก่อน แล้วพาไปทางที่ถูก คือ "เข้าสู่ระบบ" */
+  if(!((cls.rooms||[]).length)){
+    if(confirm('เบราว์เซอร์นี้ยังไม่มีห้องเรียนอยู่เลย\n\nถ้าเคยสร้างห้องเรียนไว้ที่เครื่องอื่นหรือเบราว์เซอร์อื่น\nให้ใช้ "เข้าสู่ระบบด้วย Google" แทน แล้วห้องเรียนเดิมจะกลับมาครบ\n\nกด ตกลง = เข้าสู่ระบบด้วยบัญชีเดิม (แนะนำ)\nกด ยกเลิก = ผูกข้อมูลในเครื่องนี้เป็นบัญชีใหม่')){
+      return clsGoogleSignIn();
+    }
+  }
   sbEnsure().then(function(ok){
     if(!ok){ toast('เริ่มใช้งานก่อน แล้วค่อยผูกบัญชี'); return; }
     return fetch(SB_URL+'/auth/v1/user/identities/authorize?provider=google&skip_http_redirect=true&redirect_to='+encodeURIComponent(location.origin+location.pathname),
       {headers:{'apikey':SB_ANON,'Authorization':'Bearer '+cls.sess.access_token}})
       .then(function(r){ return r.json().catch(function(){return null;}); })
       .then(function(j){
-        if(j&&j.url){ location.href=j.url; }
-        else toast('เปิดหน้า Google ไม่สำเร็จ: '+((j&&(j.msg||j.message||j.error_description))||'ตรวจว่าเปิด Google Provider + Manual linking ใน Supabase แล้ว (ดูคู่มือ)'));
+        if(j&&j.url){ location.href=j.url; return; }
+        var _m=String((j&&(j.msg||j.message||j.error_description||j.error))||'');
+        /* [แก้ตามครู] "บัญชีนี้ถูกใช้ไปแล้ว" = ครูมีบัญชีอยู่จริง ไม่ใช่ข้อผิดพลาดที่ต้องให้ครูแก้เอง */
+        if(/already|exists|registered|duplicate|linked/i.test(_m)){
+          if(confirm('บัญชี Google นี้มีข้อมูลห้องเรียนอยู่แล้ว\n\nกด ตกลง เพื่อเข้าสู่ระบบด้วยบัญชีนั้น แล้วห้องเรียนเดิมจะกลับมาครบ')) return clsGoogleSignIn();
+          return;
+        }
+        toast('เปิดหน้า Google ไม่สำเร็จ: '+(_m||'ตรวจว่าเปิด Google Provider + Manual linking ใน Supabase แล้ว (ดูคู่มือ)'));
       });
   }).catch(function(e){ toast('ผูกบัญชีไม่สำเร็จ: '+(e&&e.message||'')); });
 }
@@ -2561,7 +2575,7 @@ function clsAdminBar(){
     /* [V.7.71 ข้อ 5] เกณฑ์การประเมินสมรรถนะการคิดขั้นสูง */
     /* [V.7.73] ปุ่มผลประเมินตนเองย้ายไปอยู่แถบบนสุดข้างปุ่ม "ห้องเรียน" แล้ว (ครูทุกคนใช้ได้ ไม่จำกัดผู้ดูแล) */
     /* [V.7.71 ข้อ 9] แก้ข้อความผู้ออกแบบพัฒนา + รูป QR */
-    '<button class="btn-ghost" style="padding:4px 10px;font-size:12px;background:#f0fdfa;border-color:#5eead4;color:#0f766e" onclick="clsOpenCredits()" title="แก้ข้อความส่วน &quot;ออกแบบและพัฒนา&quot; ในเกม และใส่รูป QR Code">👨‍🏫 ผู้ออกแบบ / QR</button>';
+    '<button class="btn-ghost" style="padding:4px 10px;font-size:12px;background:#f0fdfa;border-color:#5eead4;color:#0f766e" onclick="clsOpenCredits()" title="ตั้งค่าเฉพาะเกมนี้ — โลโก้ · QR Code · ชื่อเกม · โรงเรียน · ข้อความเครดิต">⚙️ ตั้งค่าเกมนี้ (โลโก้ · QR)</button>';
 }
 function clsOpenAdmins(){
   var old=document.getElementById('cls-admin-modal'); if(old) old.remove();
@@ -2751,11 +2765,46 @@ function clsOpenSurvey(){
 /* [V.7.71 ข้อ 9 · ขยาย V.7.74 ตามที่ครูขอ] แก้ข้อความ 3 จุดของเกม + รูป QR Code (เฉพาะผู้ดูแล)
    ทุกบรรทัดมีช่อง "ลิงก์" ของตัวเอง — ใส่แล้วทั้งบรรทัดกดไปเว็บได้ เช่น www.gameplearn.com/support
    ถ้าพิมพ์ที่อยู่เว็บลงไปในข้อความตรง ๆ ระบบก็ทำให้กดได้เองโดยไม่ต้องกรอกช่องลิงก์ */
+
+/* ============================================================
+   [แก้ตามครู] GSET — ตั้งค่าแยกรายเกม โดยไม่ต้องเพิ่มตารางหรือคอลัมน์ใหม่
+   วิธี: เติมคำนำหน้า "<รหัสเกม>::" ให้ชื่อคีย์
+   อ่าน: คีย์เฉพาะเกม → ถ้าไม่มี ถอยไปคีย์ร่วม → ถ้าไม่มีอีก ใช้ค่าในไฟล์เกม
+   จึงเข้ากันได้ย้อนหลัง 100% กับค่าที่ครูตั้งไว้ก่อนหน้านี้
+   ============================================================ */
+var GSET = {
+  CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
+  NAME: 'ผจญภัยกาญจนบุรี ภาค 2',
+  SCOPE_KEY: 'cls_set_scope',
+  /* ตั้งค่านี้ให้ใช้เฉพาะเกมนี้ หรือใช้ร่วมทุกเกม */
+  scope() { try { return localStorage.getItem(this.SCOPE_KEY) || 'game'; } catch (e) { return 'game'; } },
+  setScope(v) { try { localStorage.setItem(this.SCOPE_KEY, v); } catch (e) {} },
+  pfx() { return this.CODE + '::'; },
+  writeKey(k) { return this.scope() === 'game' ? this.pfx() + k : k; },
+  /* อ่านค่าโดยไล่ลำดับความจำเพาะ */
+  read(map, k) {
+    if (!map) return undefined;
+    var g = this.pfx() + k;
+    if (Object.prototype.hasOwnProperty.call(map, g)) return map[g];
+    if (Object.prototype.hasOwnProperty.call(map, k)) return map[k];
+    return undefined;
+  },
+  /* คีย์นี้ถูกตั้งไว้ "เฉพาะเกมนี้" อยู่แล้วหรือเปล่า */
+  isGameLevel(map, k) { return !!(map && Object.prototype.hasOwnProperty.call(map, this.pfx() + k)); }
+};
+
+/* ตั้งค่าเพิ่มเติมรายเกม — นอกเหนือจากข้อความเครดิตเดิม */
+var CLS_GAME_FIELDS = [
+  { k: 'game_title', t: 'ชื่อเกมที่แสดง', ph: 'ผจญภัยกาญจนบุรี ภาค 2', d: 'ใช้บนหัวรายงานและใบเกียรติบัตร' },
+  { k: 'game_school', t: 'โรงเรียน / หน่วยงาน', ph: 'โรงเรียนบ้านอูล่อง', d: 'พิมพ์ลงใบเกียรติบัตรและรายงานของครู' },
+  { k: 'game_support', t: 'ช่องทางติดต่อ', ph: 'www.GamePlearn.com/support', d: 'แสดงในหน้า 👨‍🏫 ออกแบบและพัฒนา' }
+];
+
 var CLS_CRED_GROUPS=[
   {t:'🏠 ข้อความบนหน้าแรกของเกม', d:'แสดงใต้ปุ่ม "เริ่มเกม" กลางด้านล่างของหน้าแรก · ใส่ได้ 2 บรรทัด',
    rows:[['credits_start','บรรทัดที่ 1','www.GamePlearn.com'],
          ['credits_start2','บรรทัดที่ 2 (ไม่ใส่ก็ได้)','']]},
-  {t:'🖥️ เครดิตท้ายหน้าจอ', d:'แสดงท้ายจอของหน้าเข้าสู่ระบบ · ล็อบบี้ · แผนที่โลก · ใส่ได้ 2 บรรทัด',
+  {t:'🖥️ เครดิตท้ายหน้าจอ', d:'แสดงท้ายจอของหน้าเข้าสู่ระบบ · ห้องพักคอย · แผนที่โลก · ใส่ได้ 2 บรรทัด',
    rows:[['credits_line','บรรทัดที่ 1','www.GamePlearn.com'],
          ['credits_line2','บรรทัดที่ 2 (ไม่ใส่ก็ได้)','']]},
   {t:'👨‍🏫 หน้า "ออกแบบและพัฒนา" (ปุ่ม 👨‍🏫 ในเกม)', d:'ใส่ได้ 6 บรรทัด · เว้นว่างไว้ = ไม่แสดงบรรทัดนั้น',
@@ -2766,13 +2815,21 @@ var CLS_CRED_GROUPS=[
          ['credits_dev5','บรรทัดที่ 5 (ไม่ใส่ก็ได้)',''],
          ['credits_dev6','บรรทัดที่ 6 (ไม่ใส่ก็ได้)','']]}
 ];
-function clsCredKeys(){ var k=[]; CLS_CRED_GROUPS.forEach(function(g){ g.rows.forEach(function(r){ k.push(r[0], r[0]+'_url'); }); }); k.push('credits_qr'); return k; }
+function clsCredKeys(){ var k=[]; CLS_CRED_GROUPS.forEach(function(g){ g.rows.forEach(function(r){ k.push(r[0], r[0]+'_url'); }); });
+  k.push('credits_qr');
+  k.push('game_logo');                                        /* [แก้ตามครู] โลโก้เฉพาะเกม */
+  CLS_GAME_FIELDS.forEach(function(f){ k.push(f.k); });
+  return k; }
 function clsOpenCredits(){
   var old=document.getElementById('cls-cred-modal'); if(old) old.remove();
   sbEnsure().then(function(){ return sbFetch('/rest/v1/rpc/rpc_get_settings',{method:'POST',body:'{}'}); })
   .catch(function(){ return []; })
   .then(function(rows){
-    var cur={}; (rows||[]).forEach(function(r){ cur[r.skey]=r.sval; });
+    var raw={}; (rows||[]).forEach(function(r){ raw[r.skey]=r.sval; });
+    /* [แก้ตามครู] ถ้ามีคีย์ของเกมนี้อยู่แล้วแม้แต่ตัวเดียว = เคยตั้งแบบเฉพาะเกม → เปิดโหมดนั้นให้เลย */
+    var _anyGame=Object.keys(raw).some(function(k){ return k.indexOf(GSET.pfx())===0; });
+    if(_anyGame) GSET.setScope('game');
+    var cur={}; clsCredKeys().forEach(function(k){ var v=GSET.read(raw,k); if(v!==undefined) cur[k]=v; });
     /* ครูที่เคยตั้งค่าไว้ด้วยคีย์รุ่นก่อน — ยกมาใส่ช่องใหม่ให้เห็น จะได้ไม่ต้องพิมพ์ใหม่ */
     [['credits_dev1','credits_name'],['credits_dev2','credits_contact'],['credits_dev3','credits_sub'],['credits_dev4','credits_extra']]
       .forEach(function(m){ if(cur[m[0]]==null && cur[m[1]]!=null) cur[m[0]]=cur[m[1]]; });
@@ -2792,8 +2849,38 @@ function clsOpenCredits(){
         }).join('')+'</div>';
     }).join('');
     wrap.innerHTML='<div style="background:#fff;border-radius:14px;padding:16px 20px 20px;width:min(760px,96vw);box-shadow:0 20px 50px rgba(0,0,0,.3)">'+
-      '<div style="display:flex;align-items:center;gap:10px"><b style="font-size:16px;flex:1">👨‍🏫 ข้อความและลิงก์ในเกม</b>'+
+      '<div style="display:flex;align-items:center;gap:10px"><b style="font-size:16px;flex:1">⚙️ ตั้งค่าเกมนี้ — โลโก้ · QR · ข้อความ</b>'+
       '<button class="btn-ghost" style="padding:5px 14px" onclick="document.getElementById(\'cls-cred-modal\').remove()">ปิด</button></div>'+
+      /* [แก้ตามครู] เลือกได้ว่าค่าชุดนี้ใช้เฉพาะเกมนี้ หรือใช้ร่วมทุกเกมในระบบ */
+      '<div style="border:1px solid #bae6fd;background:#f0f9ff;border-radius:12px;padding:9px 13px;margin-bottom:11px">'+
+        '<div style="font-weight:800;font-size:13px;color:#075985">📦 ค่าชุดนี้ใช้กับอะไร</div>'+
+        '<div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;font-size:12.5px">'+
+          '<label style="display:flex;gap:6px;align-items:center;cursor:pointer"><input type="radio" name="cc-scope" value="game"'+(GSET.scope()==='game'?' checked':'')+' onchange="GSET.setScope(this.value)"> <b>เฉพาะเกมนี้</b> <span class="muted">('+esc(GSET.NAME)+')</span></label>'+
+          '<label style="display:flex;gap:6px;align-items:center;cursor:pointer"><input type="radio" name="cc-scope" value="all"'+(GSET.scope()==='all'?' checked':'')+' onchange="GSET.setScope(this.value)"> ใช้ร่วมทุกเกมในระบบ</label>'+
+        '</div>'+
+        '<div class="muted" style="font-size:11.5px;margin-top:5px;line-height:1.6">เลือก <b>เฉพาะเกมนี้</b> = ตั้งโลโก้/QR/ข้อความของเกมนี้ได้โดยไม่กระทบเกมอื่น (แนะนำ)<br>'+
+        'เกมที่ยังไม่เคยตั้งค่าเฉพาะของตัวเอง จะใช้ค่าร่วมโดยอัตโนมัติ — ของเดิมที่ตั้งไว้แล้วไม่หายไปไหน</div>'+
+      '</div>'+
+      /* โลโก้ประจำเกม */
+      '<div style="border:1px solid var(--line);border-radius:12px;padding:10px 13px;margin-bottom:11px;background:#fcfdff">'+
+        '<div style="font-weight:800;font-size:13.5px">🏷️ โลโก้ประจำเกม</div>'+
+        '<div class="muted" style="font-size:11.5px;margin:1px 0 8px">แสดงบนหัวรายงานของครู ใบเกียรติบัตร และหน้า 👨‍🏫 ออกแบบและพัฒนา</div>'+
+        '<div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">'+
+          '<input class="cls-in" id="cc-game_logo" value="'+esc(cur.game_logo||'')+'" placeholder="https://... หรือกดเลือกไฟล์รูป" style="flex:1;min-width:200px" oninput="clsCredPreview()">'+
+          '<input type="file" id="cc-logo-file" accept="image/*" style="display:none" onchange="clsCredPickFile(this,\'cc-game_logo\')">'+
+          '<button class="btn-ghost" style="padding:6px 12px;font-size:12px" onclick="document.getElementById(\'cc-logo-file\').click()">📁 เลือกไฟล์รูป</button>'+
+          '<button class="btn-ghost" style="padding:6px 12px;font-size:12px;color:#b91c1c" onclick="document.getElementById(\'cc-game_logo\').value=\'\';clsCredPreview()">ลบรูป</button>'+
+        '</div></div>'+
+      /* ข้อมูลประจำเกม */
+      '<div style="border:1px solid var(--line);border-radius:12px;padding:10px 13px 6px;margin-bottom:11px;background:#fcfdff">'+
+        '<div style="font-weight:800;font-size:13.5px">🎮 ข้อมูลประจำเกม</div>'+
+        '<div class="muted" style="font-size:11.5px;margin:1px 0 8px">ใช้บนใบเกียรติบัตรและหัวรายงาน — เว้นว่าง = ใช้ค่าเดิมที่มากับเกม</div>'+
+        CLS_GAME_FIELDS.map(function(f){
+          return '<div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:7px">'+
+            '<span style="font-size:12px;font-weight:700;color:#475569;min-width:132px" title="'+esc(f.d)+'">'+esc(f.t)+'</span>'+
+            '<input class="cls-in" id="cc-'+f.k+'" value="'+esc(cur[f.k]||'')+'" placeholder="'+esc(f.ph)+'" style="flex:2;min-width:190px" oninput="clsCredPreview()">'+
+            '</div>'; }).join('')+
+      '</div>'+
       '<div class="muted" style="font-size:12px;margin:6px 0 12px;line-height:1.6">เว้นว่างไว้ = ใช้ข้อความเดิมที่มากับเกม (บรรทัดที่เคยกรอกแล้วลบออก = ซ่อนบรรทัดนั้น)<br>'+
         'ช่อง <b>ลิงก์</b> ใส่หรือไม่ใส่ก็ได้ — ถ้าพิมพ์ที่อยู่เว็บไว้ในข้อความอยู่แล้ว ระบบทำให้กดได้เอง</div>'+
       groupsHtml+
@@ -2810,6 +2897,7 @@ function clsOpenCredits(){
       '<div style="background:#f8fafc;border:1px solid var(--line);border-radius:11px;padding:10px 13px;margin-top:6px">'+
         '<div class="muted" style="font-size:11.5px;margin-bottom:6px">ตัวอย่างที่นักเรียนจะเห็น (หน้า 👨‍🏫 ออกแบบและพัฒนา)</div>'+
         '<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:#0b3a30;border-radius:10px;padding:11px 14px;color:#ffe9b8">'+
+          '<img id="cc-prev-logo" style="display:none;height:52px;border-radius:7px;background:#fff;padding:4px;flex:none">'+
           '<img id="cc-prev-qr" style="display:none;width:82px;border-radius:7px;background:#fff;padding:4px;flex:none">'+
           '<div id="cc-prev-dev" style="flex:1;min-width:170px;font-size:12.5px;line-height:1.6"></div>'+
         '</div>'+
@@ -2833,6 +2921,9 @@ function clsCredPrevLine(k,dflt,style){
   return '<div style="'+(style||'')+'">'+body+'</div>';
 }
 function clsCredPreview(){
+  /* [แก้ตามครู] พรีวิวโลโก้ประจำเกม */
+  try{ var lg=$('cc-prev-logo'), lv=($('cc-game_logo')||{}).value||'';
+       if(lg){ if(lv){ lg.src=lv; lg.style.display=''; } else { lg.removeAttribute('src'); lg.style.display='none'; } } }catch(e){}
   var dev=$('cc-prev-dev');
   if(dev){
     var g3=CLS_CRED_GROUPS[2];
@@ -2853,7 +2944,7 @@ function clsCredPreview(){
   if(qr){ if(v){ qr.src=v; qr.style.display=''; } else qr.style.display='none'; }
 }
 /* ย่อรูป QR ก่อนเก็บ — QR ขนาด 400px อ่านได้สบายและไฟล์เล็กพอไม่ถ่วงการเปิดเกม */
-function clsCredPickFile(inp){
+function clsCredPickFile(inp, targetId){   /* [แก้ตามครู] รองรับทั้งช่อง QR และช่องโลโก้ */
   var f=inp&&inp.files&&inp.files[0]; if(!f) return;
   var st=$('cc-st'); if(st) st.textContent='กำลังย่อรูป...';
   var fr=new FileReader();
@@ -2864,7 +2955,7 @@ function clsCredPickFile(inp){
       var cv=document.createElement('canvas'); cv.width=W; cv.height=H;
       var cx=cv.getContext('2d'); cx.fillStyle='#fff'; cx.fillRect(0,0,W,H); cx.drawImage(img,0,0,W,H);
       var out=cv.toDataURL('image/png');
-      var el=$('cc-credits_qr'); if(el) el.value=out;
+      var el=$(targetId || 'cc-credits_qr'); if(el) el.value=out;
       if(st) st.textContent='ย่อรูปแล้ว ('+Math.round(out.length/1024)+' KB) — กด 💾 บันทึกเพื่อใช้จริง';
       clsCredPreview();
     };
@@ -2879,12 +2970,13 @@ function clsCredSave(){
   clsCredKeys().forEach(function(k){
     var el=$('cc-'+k); if(!el) return;
     var v=String((el.value)||'').trim();
-    chain=chain.then(function(){ return sbFetch('/rest/v1/rpc/rpc_set_setting',{method:'POST',body:JSON.stringify({p_key:k,p_val:v})}); })
+    /* [แก้ตามครู] เขียนด้วยคีย์ที่ติดคำนำหน้าเกม เมื่อเลือกโหมด "เฉพาะเกมนี้" */
+    chain=chain.then(function(){ return sbFetch('/rest/v1/rpc/rpc_set_setting',{method:'POST',body:JSON.stringify({p_key:GSET.writeKey(k),p_val:v})}); })
       .catch(function(e){ errs.push({f:k, m:String((e&&e.message)||'')}); });
   });
   sbEnsure().then(function(){ return chain; }).then(function(){
     if(!errs.length){
-      if(st) st.innerHTML='<span style="color:#16a34a;font-weight:700">✅ บันทึกแล้ว — นักเรียนจะเห็นเมื่อเปิดเกมครั้งถัดไป</span>';
+      if(st) st.innerHTML='<span style="color:#16a34a;font-weight:700">✅ บันทึกแล้ว ('+(GSET.scope()==='game'?'เฉพาะเกมนี้':'ใช้ร่วมทุกเกม')+') — นักเรียนจะเห็นเมื่อเปิดเกมครั้งถัดไป</span>';
       toast('บันทึกข้อมูลผู้ออกแบบแล้ว'); return;
     }
     /* [แก้ V.7.72 ตามที่ครูแจ้ง ข้อ 1] เดิมโชว์ข้อความ error ภาษาอังกฤษดิบ ๆ ของฐานข้อมูล
@@ -5272,8 +5364,10 @@ function clsRender(){
       (cls.teacher&&cls.teacher.is_anonymous===false
         ?'<span class="cls-chip" style="background:#dcfce7;color:#166534" title="บัญชีที่กำลังใช้อยู่ตอนนี้">✔ กำลังใช้บัญชี'+(cls.teacher.email?' · '+esc(cls.teacher.email):'')+'</span>'+
          '<button class="btn-ghost" style="padding:4px 10px;font-size:12px" title="ออกจากระบบเพื่อเข้าด้วยบัญชีอื่น" onclick="clsSwitchAccount()">🔄 สลับบัญชี</button>'
-        :'<span class="cls-chip" style="background:#fef3c7;color:#92400e">ยังไม่ผูกบัญชี — ผูกไว้เพื่อเข้าจากเครื่องไหนก็ได้</span>'+
-         '<button class="btn-ghost" style="padding:4px 10px;font-size:12px;background:#eff6ff;border-color:#93c5fd;color:#1d4ed8" onclick="clsLinkGoogle()">🔗 ผูกบัญชี Google</button>')+
+        :'<span class="cls-chip" style="background:#fef3c7;color:#92400e">ยังไม่ผูกบัญชี — ข้อมูลอยู่กับเบราว์เซอร์เครื่องนี้เท่านั้น</span>'+
+         /* [แก้ตามครู] แยกให้ชัดว่าจะ "เข้าบัญชีเดิม" หรือ "ทำบัญชีใหม่จากข้อมูลในเครื่องนี้" */
+         '<button class="btn-ghost" style="padding:4px 10px;font-size:12px;background:#eff6ff;border-color:#93c5fd;color:#1d4ed8" title="เคยสร้างห้องเรียนไว้บนเครื่อง/เบราว์เซอร์อื่นแล้ว — เลือกอันนี้" onclick="clsGoogleSignIn()">🔵 เข้าบัญชีเดิมที่มีอยู่แล้ว</button>'+
+         '<button class="btn-ghost" style="padding:4px 10px;font-size:12px" title="ยังไม่เคยมีบัญชี — เอาห้องเรียนที่สร้างไว้ในเครื่องนี้ผูกกับ Google" onclick="clsLinkGoogle()">🔗 ผูกข้อมูลในเครื่องนี้เข้ากับ Google</button>')+
       clsAdminBar()+
       '<span class="muted" style="font-size:12px;flex:1">ห้องเรียนของครู: '+cls.rooms.length+' ห้อง</span>'+
     '</div>');
@@ -5282,8 +5376,10 @@ function clsRender(){
   if(!(cls.teacher&&cls.teacher.is_anonymous===false)){
     h+='<div class="card" style="margin-bottom:14px;background:#eff6ff;border:1px solid #bfdbfe;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px">'+
       '<span style="font-size:20px">💡</span>'+
-      '<span style="flex:1;min-width:220px;font-size:13px;color:#1e3a8a">ตอนนี้ข้อมูลห้องเรียนผูกกับเบราว์เซอร์เครื่องนี้ชั่วคราว — <b>เข้าสู่ระบบด้วย Google เพื่อให้ข้อมูลอยู่ถาวร</b> และเปิดดูได้จากทุกเครื่อง</span>'+
-      '<button class="btn-primary" style="background:#1d4ed8;padding:8px 16px" onclick="clsLinkGoogle()">🔵 เข้าสู่ระบบด้วย Google</button>'+
+      '<span style="flex:1;min-width:220px;font-size:13px;color:#1e3a8a">ตอนนี้ข้อมูลห้องเรียนผูกกับเบราว์เซอร์เครื่องนี้ชั่วคราว — <b>เข้าสู่ระบบด้วย Google เพื่อให้ข้อมูลอยู่ถาวร</b> และเปิดดูได้จากทุกเครื่อง'+
+        '<br><span style="font-size:11.5px;color:#3b5bb5">เคยสร้างห้องเรียนไว้ที่เบราว์เซอร์อื่นแล้ว? กดปุ่มนี้ได้เลย — ห้องเรียนเดิมจะกลับมาครบ ไม่ต้องสร้างใหม่</span></span>'+
+      /* [แก้ตามครู] ปุ่มนี้ต้องเป็น "เข้าสู่ระบบ" จริง ๆ — เดิมเรียก clsLinkGoogle() ซึ่งเป็นคนละเรื่อง */
+      '<button class="btn-primary" style="background:#1d4ed8;padding:8px 16px" onclick="clsGoogleSignIn()">🔵 เข้าสู่ระบบด้วย Google</button>'+
     '</div>';
   }
   // สรุปข้อมูลผู้เรียน (บนสุด)
@@ -6619,9 +6715,14 @@ function clsV8Render(studs, by){
   var b=$('cv8-body'); if(!b) return;
   var st=CBE8.ST_INFO;
   /* [แก้ตามครู] คำอธิบายสีเหลือ 3 อัน อ่านจบในบรรทัดเดียว */
-  var legend=['OK','CHECK','NONE'].map(function(k){ var s=CBE8.ST3_INFO[k];
+  var legend='<b style="color:#334155">พื้นสี่เหลี่ยม =</b> '+['OK','CHECK','NONE'].map(function(k){ var s=CBE8.ST3_INFO[k];
     return '<span class="cls-chip" style="background:'+s.bg+';color:'+s.c+'" title="'+esc(s.d)+'">'+s.i+' '+s.t+'</span>'; }).join(' ')+
-    ' <span class="cls-chip" style="background:#c7d2fe;color:#1e3a8a" title="ครูกดยืนยันผลด้วยตัวเองแล้ว">🔷 ครูยืนยันแล้ว</span>';
+    ' <span class="cls-chip" style="background:#c7d2fe;color:#1e3a8a" title="ครูกดยืนยันผลด้วยตัวเองแล้ว">🔷 ครูยืนยันแล้ว</span>'+
+    '<br><b style="color:#334155">วงกลมตัวเลข =</b> ระดับสมรรถนะ (สีชุดเดียวกับตารางคะแนน) '+
+    [[6,'เหนือความคาดหวัง'],[5,'สามารถ'],[4,'กำลังพัฒนา'],[3,'เริ่มต้น']].map(function(L){
+      return '<span style="display:inline-flex;align-items:center;gap:4px;margin-right:8px">'+
+        '<span style="display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;border-radius:50%;background:'+CLS_LV_CLR[L[0]]+';color:#fff;font-weight:800;font-size:11px">'+L[0]+'</span>'+
+        '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
     '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.5-p2-2569.69 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
@@ -6634,10 +6735,16 @@ function clsV8Render(studs, by){
       var lvTxt=(r.lv==null)?'–':r.lv;
       /* [แก้ตามครู] แสดงเป็น 3 สี · หมุด 🔷 = ครูกดยืนยันผลด้วยตัวเองแล้ว · รายละเอียด 7 สถานะอยู่ใน tooltip และช่องรายละเอียด */
       var i3=CBE8.st3(r.status), fin=CBE8.isFinal(r.status);
-      return '<td style="text-align:center;cursor:pointer" onclick="clsV8Detail('+si+',\''+c+'\')" title="'+esc(cd[1]+' — '+i3.t+' ('+info.t+')'+(r.why?(' · '+r.why):''))+'">'+
-        '<span style="position:relative;display:inline-block;min-width:44px;background:'+i3.bg+';color:'+i3.c+';border-radius:8px;padding:2px 7px;font-weight:800">'+i3.i+' '+lvTxt+
-          (fin?'<span style="position:absolute;top:-5px;right:-5px;font-size:9px" title="ครูยืนยันผลแล้ว">🔷</span>':'')+'</span>'+
-        (r.M!=null?'<div style="font-size:10px;color:#64748b">'+r.M.toFixed(0)+'%</div>':'')+'</td>';
+      /* [แก้ตามครู] อ่านได้ 2 ชั้นในช่องเดียว
+         วงกลม+ตัวเลข = ระดับสมรรถนะ ใช้สีชุดเดิมของตารางคะแนน (3 เทา · 4 ส้ม · 5 เขียว · 6 ม่วง)
+         พื้นสี่เหลี่ยม   = ผลนี้เชื่อได้แค่ไหน (เขียว สอดคล้อง / แดง ต้องตรวจสอบ / เทา ยังไม่มีหลักฐาน) */
+      var lvC=(r.lv!=null&&CLS_LV_CLR[r.lv])?CLS_LV_CLR[r.lv]:'#cbd5e1';
+      var dot='<span style="display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;border-radius:50%;background:'+lvC+';color:#fff;font-weight:800;font-size:12.5px;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.18)">'+lvTxt+'</span>';
+      return '<td style="text-align:center;cursor:pointer" onclick="clsV8Detail('+si+',\''+c+'\')" title="'+esc(cd[1]+' — ระดับ '+lvTxt+' · '+i3.t+' ('+info.t+')'+(r.why?(' · '+r.why):''))+'">'+
+        '<span style="position:relative;display:inline-flex;align-items:center;gap:5px;background:'+i3.bg+';border:1px solid '+i3.c+'55;border-radius:9px;padding:3px 9px 3px 4px">'+dot+
+          '<span style="color:'+i3.c+';font-weight:700;font-size:11px;white-space:nowrap">'+i3.t+'</span>'+
+          (fin?'<span style="position:absolute;top:-6px;right:-6px;font-size:10px" title="ครูยืนยันผลแล้ว">🔷</span>':'')+'</span>'+
+        (r.M!=null?'<div style="font-size:10px;color:#64748b;margin-top:1px">'+r.M.toFixed(0)+'%</div>':'')+'</td>';
     }).join('');
     return '<tr id="cv8-row-'+si+'"><td style="font-size:12px"><b>'+esc((s.student_number?s.student_number+'. ':'')+nm)+'</b></td>'+cells+'</tr>'+
       '<tr id="cv8-det-'+si+'" style="display:none"><td colspan="7" id="cv8-det-td-'+si+'" style="background:#f8fafc"></td></tr>';
