@@ -225,6 +225,94 @@
 .cls-tab-btn.on { background:#fff !important; color:#1d4ed8 !important;
   border-color:#e2e8f0 !important; border-bottom:2px solid #fff !important; }
 @media (max-width:520px){ .cls-tab-btn { padding:7px 10px !important; font-size:12px !important; } }
+
+/* [แก้ตามครู] ป้ายบอกขอบเขตของแท็บเทียบเกณฑ์ (แทนแถบเลือกภาคที่ถอดออก) */
+.cls-part-note-fixed { display:flex; gap:6px; align-items:center; flex-wrap:wrap;
+  background:#f5f3ff; border:1px solid #ddd6fe; color:#5b21b6;
+  border-radius:10px; padding:7px 12px; margin:2px 0 10px; font-size:12.5px; line-height:1.55; }
+
+/* ===== [แก้ตามครู] แถบบนสุด: จัดกลุ่มให้เป็นระเบียบ + ช่องบัญชีที่ใช้อยู่ ===== */
+.top-who{ display:inline-flex; align-items:center; gap:7px; padding:5px 11px; border-radius:999px;
+  background:rgba(255,255,255,.16); font-size:12.5px; line-height:1.2; max-width:340px; }
+.top-who:empty{ display:none; }
+.top-who .tw-ic{ font-size:14px; }
+.top-who .tw-nm{ font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:130px; }
+.top-who .tw-mail{ opacity:.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:190px; }
+.top-who .tw-warn{ background:#fde68a; color:#7c2d12; font-weight:700; border-radius:999px; padding:1px 8px; white-space:nowrap; }
+/* ปุ่มบนแถบบนเรียงเป็นแถวเดียวกัน ไม่กระจายมั่ว — ชิดขวาเสมอ สูงเท่ากันทุกปุ่ม */
+.topbar-in{ align-items:center; row-gap:6px; }
+.topbar-in > button, .topbar-in > a{ height:34px; display:inline-flex; align-items:center; gap:5px; }
+@media (max-width: 900px){
+  .top-who{ max-width:none; order:99; }
+  .top-who .tw-mail{ max-width:150px; }
+}
+
+/* [แก้ตามครู] บีบให้แถบบนอยู่แถวเดียวบนจอโน้ตบุ๊ก 1280px · จอแคบกว่านั้นค่อยขึ้นบรรทัดใหม่แบบชิดขวา */
+.top-who{ max-width:330px; }
+.top-who .tw-mail{ max-width:180px; }
+.top-who .tw-nm{ max-width:130px; }
+.topbar-in{ justify-content:flex-end; }
+.topbar-in > div:first-child{ margin-right:auto; }
+@media (max-width: 1180px){
+  .topbar-in > button, .topbar-in > a{ padding:6px 9px; font-size:12px; }
+  .top-who{ max-width:200px; }
+}
+
+/* [แก้ตามครู] แถวเครื่องมือผู้ดูแล — จัดเป็นระเบียบ ไม่กระจายมั่ว */
+.cls-toolbar-row{ display:flex; align-items:center; gap:7px; flex-wrap:wrap; padding:9px 14px; margin-bottom:12px; }
+.cls-toolbar-lbl{ font-size:12px; font-weight:800; color:#475569; margin-right:2px; }
+.cls-toolbar-count{ font-size:12px; margin-left:auto; white-space:nowrap; }
+.cls-toolbar-row .btn-ghost{ margin:0; }
+/* ช่องบัญชีบนแถบบน: มีตัวคั่นให้อ่านง่าย */
+.top-who .tw-nm::after{ content:'·'; opacity:.6; margin:0 2px 0 6px; font-weight:400; }
+
+/* [แก้ตามครู ข้อ 4] เอกสารเกณฑ์ V.8 ในหน้าตัวชี้วัด/สมรรถนะ */
+.v8doc-formula{ background:#f5f3ff; border:1px solid #ddd6fe; border-radius:10px;
+  padding:10px 14px; font-size:14px; color:#4c1d95; line-height:1.7; }
+.v8doc-lv{ display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px;
+  border-radius:50%; color:#fff; font-weight:800; font-size:13px; }
+.v8doc-sub{ display:inline-block; background:#f1f5f9; color:#334155; border-radius:7px;
+  padding:1px 7px; margin:1px 2px 1px 0; font-size:11px; white-space:nowrap; }
+.v8doc-rules{ margin:4px 0 0 18px; padding:0; font-size:12.5px; line-height:1.85; color:#334155; }
+.v8doc-rules li{ margin-bottom:3px; }
+@media print{ #ind-v8-crit{ break-inside:avoid; } }
+
+/* [แก้ตามครู ข้อ 5] ป้ายบอกว่ายังไม่มีใครเล่นภาค 2 — กันครูเข้าใจผิดว่าระบบพัง */
+.cls-empty-note{ background:#fffbeb; border:1px solid #fcd34d; color:#92400e;
+  border-radius:10px; padding:9px 13px; margin:0 0 10px; font-size:12.5px; line-height:1.65; }
+
+/* [แก้ตามครู ข้อ 6] โหมดข้อมูลตัวอย่าง */
+.cls-demo-bar{ display:flex; align-items:center; gap:9px; flex-wrap:wrap;
+  background:#faf5ff; border:1px solid #d8b4fe; color:#6b21a8;
+  border-radius:11px; padding:9px 14px; margin-bottom:12px; font-size:12.5px; line-height:1.6; }
+.cls-demo-bar .cls-demo-off{ margin-left:auto; padding:4px 12px; font-size:12px;
+  background:#fff; border-color:#c084fc; color:#7c3aed; }
+.cls-demo-safe{ background:#ecfdf5; border:1px solid #6ee7b7; color:#065f46;
+  border-radius:10px; padding:9px 13px; font-size:12.5px; line-height:1.65; }
+
+/* [แก้ตามครู ข้อ 7] ตรวจงานเขียนสมุดนักสำรวจ */
+.nbrev-wrap{ margin-top:16px; padding-top:12px; border-top:2px dashed var(--line); }
+.nbrev-head{ font-size:14px; font-weight:800; display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:6px; }
+.nbrev-warn{ background:#fffbeb; border:1px solid #fcd34d; color:#92400e;
+  border-radius:9px; padding:8px 12px; font-size:12px; line-height:1.6; margin-bottom:10px; }
+.nbrev-item{ border:1px solid var(--line); border-radius:11px; padding:9px 12px; margin-bottom:9px; background:#fff; }
+.nbrev-item.done{ background:#f8fafc; }
+.nbrev-meta{ display:flex; gap:7px; align-items:center; flex-wrap:wrap; margin-bottom:5px; font-size:12.5px; }
+.nbrev-note{ background:#f8fafc; border-left:4px solid #a5b4fc; border-radius:7px;
+  padding:7px 11px; font-size:13px; line-height:1.7; color:#1e293b; white-space:pre-wrap; word-break:break-word; }
+.nbrev-score{ display:flex; gap:7px; align-items:center; flex-wrap:wrap; margin-top:7px; }
+.nbrev-r{ display:inline-flex; align-items:center; gap:3px; font-size:12.5px; font-weight:700;
+  background:#f1f5f9; border-radius:8px; padding:3px 9px; cursor:pointer; min-height:32px; }
+.nbrev-cm{ flex:1; min-width:170px; }
+.nbrev-save{ background:#7c3aed; padding:5px 14px; font-size:12.5px; min-height:32px; }
+.nbrev-st{ font-size:12px; }
+/* จอเล็ก: ปุ่มให้คะแนนต้องกดถูกด้วยนิ้ว (ครูตรวจงานบนมือถือได้จริง) */
+@media (max-width:640px){
+  .nbrev-cm{ min-width:120px; width:100%; flex:1 0 100%; }
+  .nbrev-r{ min-height:40px; padding:5px 13px; font-size:13.5px; }
+  .nbrev-save{ min-height:40px; padding:7px 18px; }
+  .nbrev-score{ gap:8px; }
+}
 .cls-part-bar{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin:8px 0 10px;padding:7px 11px;
     background:#f1f5ff;border:1px solid #c7d2fe;border-radius:11px;font-size:12.5px}
   .cls-part-btn{cursor:pointer;font-size:12.5px;padding:5px 13px;min-height:36px}
@@ -306,25 +394,30 @@
         <div class="ver" id="cfg-ver">—</div>
       </div>
       <div class="spacer"></div>
+      <!-- [แก้ตามครู] ชื่อครู + บัญชีที่กำลังใช้ อยู่บนสุดของหน้า -->
+      <span id="top-who" class="top-who"></span>
       <!-- [ตามคำขอครู V.7.67 ข้อ 5] ลำดับปุ่มบนแถบบน: ห้องเรียน · ตัวชี้วัด/สมรรถนะ · บทเรียนอื่น · ส่งออกคะแนน(CSV) · เข้าสู่ระบบ/ออกจากระบบ
            (ปุ่มเกมแนะนำต่อท้าย "บทเรียนอื่น" เพราะเป็นลิงก์ไปเกมอื่นเหมือนกัน)
            [ข้อ 1] ตัด Dashboard V.2 ออกจากระบบแล้ว · [ข้อ 3] ตัดปุ่มเข้าสู่ระบบผู้ดูแลของระบบเดิมออกแล้ว -->
-      <button id="btn-classroom" class="btn-ghost" style="background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8">🏫 ห้องเรียน</button>
+      <!-- [แก้ตามครู] ถอดปุ่ม ห้องเรียน ออกจากแถบบน -->
       <!-- [V.7.73 ตามที่ครูสั่ง] ปุ่มผลประเมินตนเองย้ายมาอยู่แถบบนสุดข้างปุ่มห้องเรียน · ครูเจ้าของห้องดูได้ ไม่จำกัดเฉพาะผู้ดูแล -->
       <!-- [V.7.80 ตามคำสั่งครู ข้อ 3] เปลี่ยนเป็นหน้าเทียบผล 4 แหล่งตามหลัก CBE · สรุปประเมินตนเองฉบับเต็มเปิดได้จากปุ่มในหน้านั้น -->
-      <button id="btn-compare" class="btn-ghost" style="background:#eff6ff;border-color:#93c5fd;color:#1d4ed8" title="เทียบผลการประเมิน 4 แหล่ง: ชิ้นงานจากเกม · ครูประเมิน · เพื่อนประเมิน · นักเรียนประเมินตนเอง — ครบ 6 สมรรถนะ 19 ด้านย่อย แยกเก็บทุกแหล่งและสรุปเทียบตามหลัก CBE Thailand" onclick="clsOpenCompare()">📊 เทียบผลการประเมินสมรรถนะ (ครู/นักเรียน/เพื่อน/ชิ้นงาน)</button>
-      <button id="btn-v8" class="btn-ghost" style="background:#f5f3ff;border-color:#c4b5fd;color:#6d28d9" title="เกณฑ์ V.8 ตามข้อกำหนดบ้านอูล่อง: คะแนนหลักต่อสมรรถนะ = ระหว่างเรียน 30% + กาญ 2050 70% · ครู/เพื่อน/ตนเอง แปลงเป็นระดับ T/P/S ใช้เทียบ-ยืนยัน (ไม่รวมคะแนน) · สถานะ 5 แบบพร้อมสี · คำถามยืนยัน + ครูกดยืนยันผล · ตั้งค่าเกณฑ์ได้" onclick="clsOpenV8()">🧪 เกณฑ์ V.8 (เทียบ-ยืนยัน)</button>
+      <!-- [แก้ตามครู] ถอดปุ่ม เทียบผลการประเมิน ออกจากแถบบน -->
+      <!-- [แก้ตามครู] ถอดปุ่ม เกณฑ์ V.8 ออกจากแถบบน -->
       <button id="btn-indicators" class="btn-ghost" style="background:#f5f3ff;border-color:#c4b5fd;color:#6d28d9">📐 ตัวชี้วัด/สมรรถนะ</button>
+      <!-- [แก้ตามครู] ย้ายขึ้นมาจากในแท็บเทียบเกณฑ์ — ใช้กับทั้งหน้า ไม่ใช่ของแท็บใดแท็บหนึ่ง -->
+      <button id="btn-v8set" class="btn-ghost hidden" title="ตั้งค่าเกณฑ์การให้ระดับสมรรถนะ (น้ำหนัก 30/70 · ช่วงระดับ 3-6 · เกณฑ์ความต่าง)" onclick="clsV8Settings()">⚙️ ตั้งค่าเกณฑ์</button>
+      <button id="btn-v8print" class="btn-ghost" title="พิมพ์รายงานผลการประเมินสมรรถนะรายห้อง" onclick="clsV8Print()">🖨️ พิมพ์รายงาน</button>
       <!-- [เฟส 4 · 4.2] ทางเข้าตั้งค่าเกมแนะนำ (เดิมมีแต่ฟังก์ชัน ไม่มีปุ่มให้กด) -->
-      <button id="btn-featured" class="btn-ghost" title="ตั้งเกมแนะนำบนแถบบน (สูงสุด 3 เกม)" onclick="clsOpenFeatured()">⭐ เกมแนะนำ</button>
+      <!-- [แก้ตามครู] ถอดปุ่ม เกมแนะนำ ออกจากแถบบน -->
       <!-- [เฟส 4 · 4.5] ฉายเมืองของนักเรียนหน้าห้องแล้วโหวตร่วมกัน -->
-      <button id="btn-cities" class="btn-ghost" title="ดูเมืองที่นักเรียนสร้างและส่งเข้ามา แล้วเปิดโหวตหน้าห้อง" onclick="clsOpenCities()">🏙️ เมืองของนักเรียน</button>
-      <a id="lnk-more-lessons" class="btn-ghost" href="https://www.gameplearn.com" target="_blank" rel="noopener"
-         style="text-decoration:none;display:inline-block;line-height:1.1">📚 บทเรียนอื่น</a>
+      <!-- [แก้ตามครู] ปุ่มเมืองของนักเรียนย้ายไปอยู่ในหน้าห้องเรียนแล้ว -->
+      <!-- [แก้ตามครู] ถอดปุ่ม บทเรียนอื่น ออกจากแถบบน -->
       <!-- [เฟส 4 · 4.2] เปิดปุ่มเกมแนะนำกลับมา — โค้ดฝั่งเซิร์ฟเวอร์ทำเสร็จตั้งแต่ V.7.67 แต่ถูกปิดไว้เฉย ๆ
            ครูตั้งได้ 3 ช่องจากปุ่ม ⭐ ในหน้าห้องเรียน · ไม่มีของตั้ง = ขึ้นลิงก์ไป gameplearn.com ให้อัตโนมัติ -->
-      <span id="feat-games"></span>
-      <button id="btn-export" class="btn-ghost">⬇ ส่งออกคะแนน (CSV)</button>
+      <!-- [แก้ตามครู] ถอดช่องเกมแนะนำออกจากแถบบน -->
+      <span id="feat-games" style="display:none"></span>
+      <button id="btn-export" class="btn-ghost" title="ส่งออกคะแนนทั้งหมดเป็นไฟล์ CSV">⬇ ส่งออก CSV</button>
       <button id="btn-auth" class="btn-ghost" style="background:rgba(255,255,255,.22);font-weight:800">🔵 เข้าสู่ระบบ</button>
       <!-- ปุ่มของระบบเดิม (Google Sheets) เก็บไว้แบบซ่อน เผื่อโค้ดเก่าเรียกใช้ — ไม่มีทางเข้าจากหน้าจอแล้ว -->
       <span id="legacy-tools" style="display:none">
@@ -359,7 +452,7 @@
         <div style="font-size:22px">📐</div>
         <div style="flex:1;min-width:220px">
           <div style="font-weight:800;color:#6d28d9;font-size:15px">ตัวชี้วัดและสมรรถนะหลักของแต่ละด่าน</div>
-          <div style="font-size:12px;color:#5b21b6">ตัวชี้วัดหลักสูตรแกนกลาง ป.4 + สมรรถนะหลัก 6 ด้าน (CBE) รายด่าน · การคิดขั้นสูงใช้หลักฐาน 4 แหล่ง A20 · B30 · C25 · D25 = 100 → 4 ด้านการคิด (CTC/STM/CRT/PRB) → ระดับ 3-6</div>
+          <div style="font-size:12px;color:#5b21b6">ตัวชี้วัดหลักสูตรแกนกลาง ป.4 + สมรรถนะหลัก 6 ด้าน (CBE) รายด่าน · การคิดขั้นสูงใช้หลักฐาน 4 แหล่ง A20 · B30 · C25 · D25 = 100 → ระดับ 3-6<br><b>รวมเกณฑ์ V.8 ของภาค 2 ไว้ในหน้านี้แล้ว</b> — สูตรคะแนนหลัก · ช่วงระดับ · แหล่งหลักฐานรายสมรรถนะ · เกณฑ์การเทียบ (ตารางที่ 5 ด้านล่าง)</div>
         </div>
         <button class="btn-ghost" id="ind-back">← กลับ</button>
       </div>
@@ -368,14 +461,9 @@
 
     <!-- ============ [เฟส 1] หน้าจัดการห้องเรียน (Supabase — ระบบใหม่ แยกจาก Google Sheets) ============ -->
     <div id="page-cls" class="hidden">
-      <div class="v2banner" style="background:linear-gradient(90deg,#eff6ff,#dbeafe);border-color:#93c5fd">
-        <div style="font-size:22px">🏫</div>
-        <div style="flex:1;min-width:220px">
-          <div style="font-weight:800;color:#1d4ed8;font-size:15px">ห้องเรียนของครู</div>
-          <div style="font-size:12px;color:#1e40af">สร้างห้อง · แชร์โค้ดให้นักเรียนเข้าเล่น · ดูรายชื่อและคะแนนของแต่ละห้องได้ในหน้านี้</div>
-        </div>
-        <button class="btn-ghost" id="cls-back" style="background:#fff;display:none">← กลับ</button><!-- [V.7.67] ตัด Dashboard V.2 ออก จึงไม่มีหน้าให้กลับไป -->
-      </div>
+      <!-- [แก้ตามครู] ถอดแบนเนอร์แนะนำออก — อธิบายซ้ำกับสิ่งที่เห็นอยู่แล้วบนหน้าจอ
+           ชื่อครูและบัญชีที่ใช้อยู่ ย้ายขึ้นไปอยู่บนแถบบนสุดแทน -->
+      <button class="btn-ghost" id="cls-back" style="background:#fff;display:none">← กลับ</button>
       <div id="cls-status"></div>
       <div id="cls-main"></div>
     </div>
@@ -2452,16 +2540,7 @@ function clsShowStart(){
 /* [เฟส 3] Google OAuth — ผูกบัญชีถาวร + เข้าสู่ระบบจากเครื่องไหนก็ได้ (ต้องเปิด Google Provider + Manual linking ใน Supabase ก่อน) */
 
 /* [แก้ตามครู] สลับบัญชีครู — ล้าง session ในเครื่องให้หมดก่อน ไม่งั้นข้อมูลบัญชีเดิมค้าง */
-function clsSwitchAccount(){
-  if(!confirm('ออกจากระบบเพื่อเข้าด้วยบัญชีอื่น?\n\nข้อมูลห้องเรียนทั้งหมดอยู่บนเซิร์ฟเวอร์ ไม่หายไปไหน')) return;
-  try{ sbFetch('/auth/v1/logout',{method:'POST',body:'{}'}).catch(function(){}); }catch(e){}
-  try{
-    Object.keys(localStorage).forEach(function(k){
-      if(/^sb-|^cls_sess|^cls_recovery$/.test(k)) localStorage.removeItem(k);
-    });
-  }catch(e){}
-  location.reload();
-}
+/* [แก้ตามครู] ถอดฟังก์ชันสลับบัญชีออก — ใช้ปุ่ม "ออกจากระบบ" บนแถบบนแทน */
 
 function clsJwtClaims(){ try{
   var _b=cls.sess.access_token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
@@ -2557,14 +2636,268 @@ function clsAutoClaim(){
    ครูทั่วไปที่ล็อกอิน = จัดการเฉพาะห้องเรียนของตัวเอง (สร้างห้อง รายชื่อ คะแนน ตรวจงานเขียน ส่งออก CSV)
    ผู้ดูแลกำหนดด้วยอีเมลในตาราง app_admins (ไฟล์ SQL v767 ตั้งอีเมลเจ้าของโครงการไว้ให้แล้ว) */
 function clsLoadAdmin(){
+  /* [แก้ตามครู] ตั้งเป็น "ไม่ใช่ผู้ดูแล" ไว้ก่อนเสมอ แล้วค่อยยกระดับถ้าเซิร์ฟเวอร์ยืนยัน
+     กันค่าเก่าค้างข้ามบัญชี (เดิมถ้าเรียกไม่ถึงกลางทาง ค่าเดิมจะอยู่ต่อ) */
+  cls.isAdmin=false; cls.adminCount=0; cls.myEmail='';
+  if(!(cls.sess&&cls.sess.access_token)) return Promise.resolve();
   return sbFetch('/rest/v1/rpc/rpc_claim_admin',{method:'POST',body:'{}'})
     .catch(function(){ return null; })
     .then(function(){ return sbFetch('/rest/v1/rpc/rpc_admin_status',{method:'POST',body:'{}'}); })
     .then(function(r){ var row=(r&&r[0])||r||{}; cls.isAdmin=!!(row.is_admin); cls.adminCount=Number(row.admin_count)||0; cls.myEmail=row.my_email||''; })
     .catch(function(){ cls.isAdmin=false; }); /* ยังไม่รัน SQL v767 → ถือว่าไม่ใช่ผู้ดูแล (ปุ่มจัดการส่วนกลางจะไม่โผล่) */
 }
+
+/* ============================================================
+   [แก้ตามครู ข้อ 6] DEMO — ข้อมูลตัวอย่างสำหรับดูหน้า Dashboard
+   สร้าง "แถวเหตุการณ์" แบบเดียวกับที่เกมส่งจริง แล้วให้ระบบคิดคะแนนเอง
+   (ผ่าน _clsPubEventsToStats + CV2 + CORE6ENG + CBE8 ตัวจริง)
+   จึงเชื่อได้ว่าหน้าจอที่เห็น = หน้าจอที่จะเห็นตอนเด็กเล่นจริง
+   ⚠️ ไม่เขียนลงฐานข้อมูล — เป็นภาพจำลองบนเครื่องนี้เท่านั้น
+   ============================================================ */
+var DEMO = {
+  on: false, _backup: null,
+  STAGES: ['1','3','4','5','6','7'],
+  /* โปรไฟล์นักเรียน — ออกแบบให้ครอบคลุมทุกสถานะที่ครูจะเจอจริง */
+  PROFILES: [
+    { nm:['ปิยะดา','ทองใบ'],  q:0.95, play:6, boss:28, cap:22, kru:4, self:4, peer:4, note:'เก่งมาก · ทุกแหล่งสอดคล้อง' },
+    { nm:['ธนกฤต','แสนดี'],   q:0.82, play:6, boss:24, cap:19, kru:4, self:3, peer:4, note:'เก่ง' },
+    { nm:['ศิรินทร์','พูลสุข'], q:0.68, play:5, boss:19, cap:15, kru:2, self:4, peer:3, note:'กลาง · ครูให้ต่ำกว่าเกม → ต้องตรวจสอบ' },
+    { nm:['อนุชา','ใจกล้า'],   q:0.52, play:4, boss:14, cap:11, kru:4, self:5, peer:2, note:'กำลังพัฒนา · ประเมินตนเองสูงเกิน → ต้องตรวจสอบ' },
+    { nm:['กมลชนก','อยู่ดี'],  q:0.74, play:2, boss:0,  cap:0,  kru:null, self:null, peer:null, note:'เพิ่งเริ่ม · หลายด้านยังไม่มีหลักฐาน' },
+    { nm:['วีรภัทร','มั่นคง'],  q:0,    play:0, boss:0,  cap:0,  kru:null, self:null, peer:null, note:'ยังไม่ได้เล่น' }
+  ],
+  SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
+          TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
+  _ver: 'V.8.5-p2-2569.69',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
+  /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
+  _qidsFor(stage){
+    try{
+      var m=(CV2&&CV2.ITEM_MAP)||{};
+      var pre='q'+stage+'_';
+      var ks=Object.keys(m).filter(function(k){ return k.indexOf(pre)===0; });
+      if(ks.length) return ks;
+    }catch(e){}
+    return [];
+  },
+
+  /* สร้างแถวเหตุการณ์ของนักเรียน 1 คน ตามโปรไฟล์ */
+  rowsFor(sid, pf, seed){
+    var self=this, evs=[], V=this._ver;
+    var R=function(k){ var x=Math.sin((seed+1)*97.3 + k*31.7)*10000; return x-Math.floor(x); };
+    var raw=function(o){ o=o||{}; o.gameVersion=V; o._demo=true; return o; };
+    if(pf.play<=0) return evs;
+
+    this.STAGES.slice(0, pf.play).forEach(function(sg, si){
+      var day=20-si*3;
+      /* ข้อสอบในด่าน — ต้องใช้รหัสข้อจริงจาก ITEM_MAP ไม่งั้นตัวคิดคะแนนไม่รู้จักข้อ
+         (เคยใช้รหัสสมมติแล้วระดับสมรรถนะติดอยู่ที่ 3 ทุกคน ดูไม่ออกว่าหน้าจอทำงานถูกไหม) */
+      var qids=self._qidsFor(sg);
+      qids.forEach(function(qid, qi){
+        var ok = R(si*10+qi) < pf.q;
+        evs.push({ student_id:sid, kind:'question', stage_id:sg, question_id:qid,
+          correct: ok, credit: ok?1:0, created_at:self._iso(day),
+          raw:raw({ attemptNo:1, sessionId:'demo'+seed, creditWeight: ok?1:0 }) });
+      });
+      /* คะแนนด่าน */
+      var sc=Math.round((6+pf.q*4)*10)/10;
+      evs.push({ student_id:sid, kind:'progress', stage_id:sg, score:sc, created_at:self._iso(day),
+        raw:raw({ attemptNo:1, completed:true, isFirstAttempt:true }) });
+      /* หลักฐานสมรรถนะจากพฤติกรรม — กระจายให้ครบทุกด้าน */
+      /* หลักฐานสมรรถนะ — ด่านละ 3 ด้านย่อย หมุนไปเรื่อย ๆ ให้ครบทุกด้านเมื่อเล่นครบ
+         (เดิมออกทุกด้านทุกด่าน = 18 แถว/ด่าน ทำให้ "จำนวนครั้ง" พุ่งจนดูไม่สมจริง) */
+      var comps=Object.keys(self.SUBS);
+      var allSubs=[]; comps.forEach(function(c){ allSubs=allSubs.concat(self.SUBS[c]); });
+      for(var pick2=0; pick2<3; pick2++){
+        var sub=allSubs[(si*3+pick2) % allSubs.length];
+        var v=Math.max(0.15, Math.min(1, pf.q + (R(si*40+pick2*7)-0.5)*0.22));
+        evs.push({ student_id:sid, kind:'evidence', stage_id:sg, score:null, created_at:self._iso(day),
+          raw:raw({ et:(pick2===0?'artifact':pick2===1?'act':'reflect'), sub:sub, val:Math.round(v*100)/100,
+                    ctx:{ demo:true, stage:sg } }) });
+      }
+      /* คำตอบเขียนในสมุดนักสำรวจ */
+      if(pf.q>0.4){
+        evs.push({ student_id:sid, kind:'evidence', stage_id:sg, score:null, created_at:self._iso(day),
+          raw:raw({ et:'artifact', sub:'CM-B', val:Math.round(pf.q*100)/100,
+            ctx:{ demo:true, from:'notebook', starter:'obs',
+                  note:'หนูสังเกตว่าที่ด่านนี้มีสิ่งที่เปลี่ยนไปจากเดิม และคิดว่าน่าจะเกิดจากการกระทำของคนในพื้นที่' } }) });
+      }
+    });
+    /* ด่านบอส */
+    if(pf.boss>0) evs.push({ student_id:sid, kind:'boss', stage_id:'8', score:pf.boss, created_at:this._iso(4),
+      raw:raw({ attemptNo:1 }) });
+    /* กาญ 2050 + คำตอบเขียน 3 ข้อ */
+    if(pf.cap>0){
+      var g=function(k){ return Math.max(0, Math.min(4, Math.round(pf.q*4 + (R(k)-0.5)))); };
+      evs.push({ student_id:sid, kind:'capstone', stage_id:'balance2050', score:pf.cap, created_at:this._iso(2),
+        raw:raw({ attemptNo:1, isFirstAttempt:true, completed:true, rawTotal24:pf.cap, sessionId:'demo'+seed,
+          problemDecomposition:g(1), evidenceEvaluation:g(2), systemsThinking:g(3),
+          solutionDesign:g(4), creativeDevelopment:g(5), planAdaptation:g(6),
+          reflection1:'ถ้าเป็นหนู หนูจะเลือกทำเรื่องน้ำก่อน เพราะถ้าน้ำเสียแล้วปลาตาย คนก็หาปลาไม่ได้',
+          reflection2:'หนูคิดว่าต้องบอกคนในเมืองให้ช่วยกัน เพราะคนเดียวทำไม่ไหว',
+          reflection3:'ถ้าทำแล้วไม่ได้ผล หนูจะลองวิธีอื่นแล้วดูว่าตัวเลขดีขึ้นไหม' }) });
+    }
+    /* เพื่อนประเมิน */
+    if(pf.peer!=null){
+      evs.push({ student_id:sid, kind:'peer', stage_id:'peer', score:pf.peer*3, created_at:this._iso(1),
+        raw:raw({ peerBy:'demo-peer', peerTeam:pf.peer, peerRole:pf.peer, peerListen:pf.peer,
+                  peerHT:pf.peer, peerSM:pf.peer, peerCM:pf.peer, peerCZ:pf.peer, peerNS:pf.peer }) });
+    }
+    return evs;
+  },
+
+  /* แบบประเมินของครู/ตนเอง (คนละตารางกับ events) */
+  surveysFor(sid, pf){
+    var out={ kru:null, self:null };
+    if(pf.kru!=null){
+      var dims={}; Object.keys(this.SUBS).forEach(function(c){ DEMO.SUBS[c].forEach(function(sb){ dims[sb]=pf.kru; }); });
+      out.kru={ student_id:sid, created_at:this._iso(1), payload:{ dims:dims, _demo:true } };
+    }
+    if(pf.self!=null){
+      var sa={}; Object.keys(this.SUBS).forEach(function(c){ DEMO.SUBS[c].forEach(function(sb){ sa[sb]=pf.self; }); });
+      out.self={ student_id:sid, created_at:this._iso(1), payload:{ subAns:sa, _demo:true } };
+    }
+    return out;
+  },
+
+  /* เปิดโหมดตัวอย่าง — คิดคะแนนด้วยเครื่องคิดตัวจริงทั้งหมด */
+  start(roomId){
+    if(!roomId){ toast('เลือกห้องก่อนนะครับ'); return; }
+    var room=(cls.rooms||[]).filter(function(r){ return r.id===roomId; })[0];
+    if(!room){ toast('ไม่พบห้องนี้'); return; }
+    if(!this._backup){
+      this._backup={ students:cls.students, stats:cls.stats, statsReady:cls.statsReady,
+                     v8fetch:window.clsV8Fetch, sumFilter:cls.sumFilter,
+                     counts:JSON.parse(JSON.stringify(cls.counts||{})) };
+    }
+    var existing=(this._backup.students||[]).filter(function(x){ return x.classroom_id===roomId; });
+    var studs=[], evs=[], krus=[], selfs=[];
+    this.PROFILES.forEach(function(pf, i){
+      var src=existing[i];
+      var sid = src ? src.id : ('demo-'+roomId+'-'+i);
+      studs.push({ id:sid, classroom_id:roomId,
+        student_number: src ? src.student_number : String(i+1),
+        first_name: src ? src.first_name : pf.nm[0],
+        last_name:  src ? src.last_name  : pf.nm[1],
+        character_name: pf.nm[0], _demo:true, _demoNote:pf.note });
+      evs=evs.concat(DEMO.rowsFor(sid, pf, i));
+      var sv=DEMO.surveysFor(sid, pf);
+      if(sv.kru) krus.push(sv.kru);
+      if(sv.self) selfs.push(sv.self);
+    });
+
+    /* คิดคะแนนด้วยตัวรวมข้อมูลจริงของระบบ
+       ⚠️ ต้องเดินขั้นตอนสรุปให้ครบเหมือน clsLoadStats ไม่งั้นคะแนนเก็บเป็น NaN และคะแนนสอบเป็น 0 */
+    var stats=_clsPubEventsToStats(evs, {});
+    Object.keys(stats).forEach(function(id){
+      var st=stats[id];
+      /* คะแนนเก็บ = ผลรวมคะแนนดีที่สุดต่อด่าน */
+      var sum=0; for(var k2 in st.pb) sum+=st.pb[k2];
+      st.collected=Math.round(sum*100)/100;
+      /* คะแนนสอบ = สูตรเดียวกับของจริง (เฉพาะครั้งที่ 1-2 เลือกสูงสุด) */
+      var bl=(st.ev&&st.ev.b)||[]; st.bossN=bl.length; st.boss=0;
+      var bA=bl.filter(function(r){ return r.att!=null&&r.att!==''&&!isNaN(Number(r.att)); });
+      var pick=bA.length?bA.filter(function(r){ var n2=Number(r.att); return n2===1||n2===2; })
+                        :bl.slice().sort(function(a,b){ return (a.t||0)-(b.t||0); }).slice(0,2);
+      /* [ตรวจระบบ รอบ 17 · A6] เลขครั้งอาจเริ่มที่ 3 ได้ ถ้าเด็กเคยเปิดด่านดูแล้วปิดไป
+         เดิมกรณีนี้ตัวกรองคืนค่าว่าง → คะแนนสอบกลายเป็น 0 ทั้งที่เด็กสอบผ่านจริง
+         ถอยไปใช้กติกาเดียวกับแถวเก่า: 2 แถวแรกที่ "มีผลจริง" เรียงตามเวลา */
+      if(!pick.length) pick=bl.slice().sort(function(a,b){ return (a.t||0)-(b.t||0); }).slice(0,2);
+      pick.forEach(function(r){ if(r.sc>st.boss) st.boss=r.sc; });
+      try{ st.v2=CV2.compute(st.ev); }catch(e){ st.v2=null; }
+      try{ st.c6=CORE6ENG.compute(st.ev, st.v2, st); }catch(e){ st.c6=null; }
+      st.capPend=((st.ev&&st.ev.c)||[]).length>0;
+      delete st.ev;
+    });
+    studs.forEach(function(s){ if(!stats[s.id]) stats[s.id]={ pb:{},collected:0,boss:0,bossN:0,cap:0,plays:0,last:0,v2:null,c6:null }; });
+
+    cls.students=studs; cls.stats=stats; cls.statsReady=true;
+    cls.counts=cls.counts||{}; cls.counts[roomId]=studs.length;   /* การ์ดห้องต้องนับจำนวนให้ตรงด้วย */
+    cls.sumFilter=roomId; cls.openScores=roomId;
+    this.on=true; this.roomId=roomId;
+
+    /* หน้าเทียบเกณฑ์อ่านข้อมูลคนละชุด — ป้อนชุดจำลองให้ด้วยรูปแบบเดียวกับของจริง */
+    window.clsV8Fetch=function(){
+      var by={};
+      function S(sid){ return by[sid]||(by[sid]={ evd:[],cap:[],pr:[],kru:null,self:null,v8c:null }); }
+      evs.forEach(function(e){
+        var raw=e.raw||{}, st=S(e.student_id), t=Date.parse(e.created_at)||0;
+        if(e.kind==='evidence') st.evd.push({ sid:String(e.stage_id||''), et:String(raw.et||''), sub:String(raw.sub||''),
+          /* [แก้ตามครู ข้อ 7] ครูตรวจแล้ว = ใช้คะแนนครู · ยังไม่ตรวจ = ใช้คะแนนอัตโนมัติไปก่อน */
+          val:(raw.teacherVal!=null?Number(raw.teacherVal):(raw.val!=null?Number(raw.val):null)),
+          byTeacher:(raw.teacherVal!=null), ctx:raw.ctx, gv:String(raw.gameVersion||''), t:t });
+        else if(e.kind==='capstone') st.cap.push({ t:t, PD:raw.problemDecomposition, EE:raw.evidenceEvaluation, ST:raw.systemsThinking, SD:raw.solutionDesign, CD:raw.creativeDevelopment, PA:raw.planAdaptation, cw1:raw.commScore1, cw2:raw.commScore2, cw3:raw.commScore3 });
+        else if(e.kind==='peer') st.pr.push({ by:String(raw.peerBy||'?'), p1:raw.peerTeam,p2:raw.peerRole,p3:raw.peerListen,p4:raw.peerHT,p5:raw.peerSM,p6:raw.peerCM,p7:raw.peerCZ,p8:raw.peerNS, t:t });
+      });
+      krus.forEach(function(r){ var st=S(r.student_id); st.kru=(r.payload||{}).dims||{}; });
+      selfs.forEach(function(r){ var st=S(r.student_id); st.self={ subAns:(r.payload||{}).subAns||null, dims:{} }; });
+      studs.forEach(function(s){ S(s.id); });
+      return Promise.resolve(by);
+    };
+    clsRender();
+    try{ if(CLSTAB.get()==='v8') clsV8Load(roomId); }catch(e){}
+    toast('เปิดโหมดข้อมูลตัวอย่างแล้ว — ไม่ได้เขียนลงฐานข้อมูล');
+  },
+
+  stop(){
+    if(!this._backup){ this.on=false; return; }
+    cls.students=this._backup.students; cls.stats=this._backup.stats;
+    cls.statsReady=this._backup.statsReady; cls.sumFilter=this._backup.sumFilter;
+    cls.counts=this._backup.counts||{};
+    window.clsV8Fetch=this._backup.v8fetch;
+    this._backup=null; this.on=false; this.roomId=null;
+    clsRender();
+    toast('ปิดโหมดข้อมูลตัวอย่างแล้ว — กลับมาเป็นข้อมูลจริง');
+  },
+
+  bannerHTML(){
+    if(!this.on) return '';
+    var r=(cls.rooms||[]).filter(function(x){ return x.id===DEMO.roomId; })[0];
+    return '<div class="cls-demo-bar">🧪 <b>กำลังดูข้อมูลตัวอย่าง</b> ('+esc(r?r.name:'')+') — '+
+      'ตัวเลขทุกช่องคิดด้วยสูตรจริงของระบบ แต่ <b>ไม่ได้เขียนลงฐานข้อมูล</b> ปิดหน้านี้แล้วหายไปเอง'+
+      '<button class="btn-ghost cls-demo-off" onclick="DEMO.stop()">✕ ออกจากโหมดตัวอย่าง</button></div>';
+  },
+
+  openPicker(){
+    var old=document.getElementById('cls-demo-modal'); if(old) old.remove();
+    var rooms=(cls.rooms||[]);
+    if(!rooms.length){ toast('ยังไม่มีห้องเรียน — สร้างห้องก่อนนะครับ'); return; }
+    var guess=rooms.filter(function(r){ return /test|ทดสอบ/i.test(r.name||''); })[0]||rooms[0];
+    var wrap=document.createElement('div');
+    wrap.id='cls-demo-modal';
+    wrap.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:999;display:flex;align-items:flex-start;justify-content:center;padding:22px 12px;overflow:auto';
+    wrap.innerHTML='<div style="background:#fff;border-radius:14px;padding:16px 20px 20px;width:min(640px,96vw);box-shadow:0 20px 50px rgba(0,0,0,.3)">'+
+      '<div style="display:flex;align-items:center;gap:10px"><b style="font-size:16px;flex:1">🧪 ข้อมูลตัวอย่างสำหรับดูหน้าจอ</b>'+
+      '<button class="btn-ghost" style="padding:5px 14px" onclick="document.getElementById(\'cls-demo-modal\').remove()">ปิด</button></div>'+
+      '<div class="cls-demo-safe">🔒 <b>ไม่เขียนอะไรลงฐานข้อมูลเลยแม้แต่แถวเดียว</b> — เป็นภาพจำลองบนเครื่องนี้เท่านั้น '+
+        'ปิดโหมดหรือรีเฟรชหน้า ข้อมูลจำลองหายทันที ข้อมูลวิจัยของนักเรียนจริงไม่ถูกแตะต้อง</div>'+
+      '<div style="margin-top:11px"><label style="font-size:12.5px;font-weight:700;color:#334155">เลือกห้องที่จะดู</label>'+
+        '<select class="cls-in" id="demo-room" style="width:100%;margin-top:4px">'+
+        rooms.map(function(r){ return '<option value="'+esc(r.id)+'"'+(r.id===guess.id?' selected':'')+'>'+esc(r.name)+'</option>'; }).join('')+
+        '</select>'+
+        '<div class="muted" style="font-size:11.5px;margin-top:4px">ถ้าห้องนั้นมีรายชื่อนักเรียนอยู่แล้ว จะใช้ชื่อจริงของเด็ก (สูงสุด 6 คนแรก) · ถ้ายังไม่มีจะใช้ชื่อสมมติให้</div></div>'+
+      '<div style="margin-top:12px"><b style="font-size:13px">จะได้เห็นอะไรบ้าง</b>'+
+        '<table class="cls-tbl" style="width:100%;margin-top:5px"><thead><tr><th style="width:34%">นักเรียน</th><th>ลักษณะข้อมูล</th></tr></thead><tbody>'+
+        DEMO.PROFILES.map(function(pf){ return '<tr><td style="font-weight:700">'+esc(pf.nm[0]+' '+pf.nm[1])+'</td>'+
+          '<td style="font-size:12px">'+esc(pf.note)+'</td></tr>'; }).join('')+
+        '</tbody></table>'+
+        '<div class="muted" style="font-size:11.5px;margin-top:6px">ครอบคลุมทุกสถานะที่ครูจะเจอจริง — ทั้งสีเขียว สีแดง และสีเทา '+
+        'รวมถึงคำตอบเขียนสำหรับลองใช้หน้า 📝 ตรวจสอบอัตนัย</div></div>'+
+      '<div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">'+
+        '<button class="btn-primary" style="background:#7c3aed;padding:8px 18px" onclick="var v=(document.getElementById(\'demo-room\')||{}).value;document.getElementById(\'cls-demo-modal\').remove();DEMO.start(v);">🧪 เปิดดูข้อมูลตัวอย่าง</button>'+
+        (DEMO.on?'<button class="btn-ghost" style="padding:8px 16px" onclick="document.getElementById(\'cls-demo-modal\').remove();DEMO.stop();">✕ ออกจากโหมดตัวอย่าง</button>':'')+
+      '</div>'+
+      '<div class="muted" style="font-size:11.5px;margin-top:10px;line-height:1.7">'+
+        '<b>อยากได้ข้อมูลจริงในห้อง ป.4/Test?</b> ให้เปิดเกมแล้วเข้าห้องนั้นด้วยโค้ดห้อง แล้วเล่นจริง 1-2 ด่าน '+
+        'ข้อมูลจะเข้าระบบตามปกติ · อย่าใช้ปุ่ม 🎮 เล่นสาธิต เพราะโหมดนั้นตั้งใจไม่ให้บันทึกคะแนน</div>'+
+      '</div>';
+    document.body.appendChild(wrap);
+  }
+};
+
 function clsAdminBar(){
-  if(!cls.isAdmin) return '';
+  /* [แก้ตามครู] ต้องยังล็อกอินอยู่จริงด้วย ไม่ใช่แค่เคยเป็นผู้ดูแล */
+  if(!cls.isAdmin || !(cls.sess&&cls.sess.access_token)) return '';
   return '<button class="btn-ghost" style="padding:4px 10px;font-size:12px;background:#f5f3ff;border-color:#c4b5fd;color:#6d28d9" onclick="clsOpenMedia()" title="ใส่ลิงก์รูปภาพ/วิดีโอ และที่มาของสื่อ ให้แสดงในห้องเรียนรู้ของเกม">🖼️ สื่อห้องเรียนรู้</button>'+
     /* [V.7.68 ข้อ 1] ถอดปุ่มเกมแนะนำออกตามคำขอ (โค้ด clsOpenFeatured ยังอยู่ เผื่ออยากเปิดคืน) */
     '<button class="btn-ghost" style="padding:4px 10px;font-size:12px;background:#eef2ff;border-color:#a5b4fc;color:#3730a3" onclick="clsOpenAdmins()" title="ผู้ดูแลระบบ: ใครแก้สื่อ/เกมแนะนำ/ตัวชี้วัดได้บ้าง">🛡️ ผู้ดูแลระบบ</button>'+
@@ -2575,7 +2908,9 @@ function clsAdminBar(){
     /* [V.7.71 ข้อ 5] เกณฑ์การประเมินสมรรถนะการคิดขั้นสูง */
     /* [V.7.73] ปุ่มผลประเมินตนเองย้ายไปอยู่แถบบนสุดข้างปุ่ม "ห้องเรียน" แล้ว (ครูทุกคนใช้ได้ ไม่จำกัดผู้ดูแล) */
     /* [V.7.71 ข้อ 9] แก้ข้อความผู้ออกแบบพัฒนา + รูป QR */
-    '<button class="btn-ghost" style="padding:4px 10px;font-size:12px;background:#f0fdfa;border-color:#5eead4;color:#0f766e" onclick="clsOpenCredits()" title="ตั้งค่าเฉพาะเกมนี้ — โลโก้ · QR Code · ชื่อเกม · โรงเรียน · ข้อความเครดิต">⚙️ ตั้งค่าเกมนี้ (โลโก้ · QR)</button>';
+    '<button class="btn-ghost" style="padding:4px 10px;font-size:12px;background:#f0fdfa;border-color:#5eead4;color:#0f766e" onclick="clsOpenCredits()" title="ตั้งค่าเฉพาะเกมนี้ — โลโก้ · QR Code · ชื่อเกม · โรงเรียน · ข้อความเครดิต">⚙️ ตั้งค่าเกมนี้ (โลโก้ · QR)</button>'+
+    /* [แก้ตามครู ข้อ 6] ดูหน้าจอตอนมีข้อมูลจริง โดยไม่ต้องรอเด็กเล่นและไม่แตะฐานข้อมูล */
+    '<button class="btn-ghost" style="padding:4px 10px;font-size:12px;background:#faf5ff;border-color:#d8b4fe;color:#7c3aed" onclick="DEMO.openPicker()" title="สร้างข้อมูลจำลองไว้ดูหน้าจอ — ไม่เขียนลงฐานข้อมูล">🧪 ข้อมูลตัวอย่าง (ดูหน้าจอ)</button>';
 }
 function clsOpenAdmins(){
   var old=document.getElementById('cls-admin-modal'); if(old) old.remove();
@@ -3667,6 +4002,8 @@ function clsFillReview(){
     var groups={}, order=[];
     (rows||[]).forEach(function(rr){
       var raw=rr.raw||{};
+      /* [แก้ตามครู ข้อ 7] เดิมดึงมาทุกภาค — ดูภาค 2 อยู่แต่เห็นคำตอบของภาค 1 ปนมาด้วย */
+      if(!CLSPART.keep(raw.gameVersion)) return;
       var key=String(raw.sessionId||'')+'|'+String(raw.attemptNo||'')+'|'+String(raw.reflection1||'').slice(0,40);
       if(!groups[key]){ groups[key]={ids:[],names:[],raw:raw,evId:rr.id,t:Date.parse(rr.created_at)||0}; order.push(key); }
       groups[key].ids.push(rr.id);
@@ -3696,10 +4033,22 @@ function clsFillReview(){
     });
     cls._review=list;
     var b=box(); if(!b) return;
-    if(!list.length){ b.innerHTML='<div class="muted" style="font-size:13px">ยังไม่มีนักเรียนคนไหนทำด่านกาญ 2050 ในห้องนี้</div>'; return; }
+    /* [แก้ตามครู ข้อ 7] โหลดงานเขียนสมุดนักสำรวจมาต่อท้ายเสมอ — แม้ยังไม่มีใครทำกาญ 2050 */
+    var _renderNotes=function(){ try{
+      NBREV.load(cls.openReview).then(function(){
+        var host=document.getElementById('cls-review-box'); if(!host) return;
+        var old=host.querySelector('.nbrev-wrap'); if(old) old.remove();
+        host.insertAdjacentHTML('beforeend', NBREV.html());
+      });
+    }catch(e){} };
+    if(!list.length){
+      b.innerHTML='<div class="muted" style="font-size:13px">ยังไม่มีนักเรียนคนไหนทำด่านกาญ 2050 ในห้องนี้</div>';
+      _renderNotes(); return;
+    }
     var pending=list.filter(function(x){ return !x.reviewed; }).length;
     var h='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px">'+
-      '<b style="font-size:14px">📝 ตรวจสอบอัตนัย — คำตอบเขียนด่านกาญ 2050</b>'+
+      '<b style="font-size:14px">📝 ตรวจสอบอัตนัย — งานเขียนทั้งหมดของภาค 2</b>'+
+      '<span class="cls-chip" style="background:#ede9fe;color:#5b21b6">ส่วนที่ 1 · คำตอบเขียนกาญ 2050</span>'+
       '<span class="cls-chip" style="background:#fef3c7;color:#92400e">รอยืนยัน '+pending+' / '+list.length+'</span>'+
       '<span class="muted" style="font-size:11.5px">[V.7.80] คะแนน AI <b>ถูกบันทึกเป็นคะแนนชั่วคราวของนักเรียนแล้ว</b> (ขึ้นป้าย \"รอครูยืนยัน\") — ครูตรวจซ้ำแล้วกด 💾 เพื่อยืนยัน/ปรับ คะแนนครูจะทับคะแนน AI ทันที · ครูให้คะแนนจริง 0-4 ต่อข้อ · '+
       '<b style="color:#7c3aed">🧠 การคิด</b> เข้าสมรรถนะการคิดขั้นสูง (รวม 36 = เล่นเกม 24 + เขียน 12) · '+
@@ -3737,10 +4086,148 @@ function clsFillReview(){
       '</div>';
     }).join('');
     b.innerHTML=h;
+    _renderNotes();   /* [แก้ตามครู ข้อ 7] ต่อท้ายด้วยงานเขียนสมุดนักสำรวจ */
   })
   .catch(function(e){ var b=box(); if(b) b.innerHTML='<div class="err" style="display:block">โหลดคำตอบไม่สำเร็จ: '+esc(e&&e.message||'')+'</div>'; });
 }
+
+/* ============================================================
+   [แก้ตามครู ข้อ 7] งานเขียน "สมุดนักสำรวจ" ของภาค 2
+   เด็กเขียนในด่านเรือธงทุกด่าน เก็บเป็น events kind=evidence · raw.ctx.note
+   เดิมให้คะแนนอัตโนมัติจากความยาวตัวอักษรเท่านั้น (q = 1 / 0.7 / 0.4)
+   → เขียนยาวแต่ไม่ตรงประเด็นได้เต็ม · เขียนสั้นแต่คมได้น้อย
+   ตอนนี้ครูตรวจได้จริง และคะแนนครูทับคะแนนอัตโนมัติทุกที่ที่ระบบอ่านหลักฐาน
+   ============================================================ */
+var NBREV = {
+  rows: [],
+  STARTER: { obs:'👀 สิ่งที่สังเกตเห็น', q:'❓ คำถามที่อยากรู้', why:'🤔 เหตุผลที่คิดแบบนี้',
+             learn:'💡 สิ่งที่ได้เรียนรู้', plan:'🗺️ สิ่งที่จะลองทำต่อ' },
+  /* คะแนนอัตโนมัติเดิมมาจากความยาวล้วน — บอกครูตรง ๆ ว่ามันหมายถึงอะไร */
+  autoLabel(v, hint){
+    if(v==null) return 'ยังไม่มีคะแนน — รอครูตรวจ';
+    var p=Math.round(Number(v)*100);
+    /* [ตรวจระบบ รอบ 17] แถวใหม่ไม่นับคะแนนอัตโนมัติแล้ว ต้องบอกครูให้ตรงความจริง */
+    return hint ? ('ประมาณจากความยาว '+p+'% — ยังไม่นับเป็นคะแนน')
+                : (p+'% (จากความยาวข้อความ · ของเดิมก่อนรอบแก้)');
+  },
+  t04(v){ return v==null?null:Math.max(0,Math.min(4,Math.round(Number(v)*4))); },
+
+  load(roomId){
+    var studs=(cls.students||[]).filter(function(x){ return x.classroom_id===roomId; });
+    var byId={}; studs.forEach(function(x){ byId[x.id]=x; });
+    var ids=studs.map(function(x){ return x.id; });
+    NBREV.rows=[];
+    if(!ids.length) return Promise.resolve([]);
+    return sbFetchAll('/rest/v1/events?kind=eq.evidence&select=id,student_id,stage_id,created_at,raw&student_id=in.('+ids.join(',')+')&order=created_at.desc')
+      .then(function(rows){
+        var out=[];
+        (rows||[]).forEach(function(r){
+          var raw=r.raw||{}, ctx=raw.ctx||{};
+          var note=String(ctx.note||'').trim();
+          if(!note) return;                                  /* เอาเฉพาะแถวที่มีงานเขียนจริง */
+          /* [ตรวจระบบ รอบ 17 · C2] บันทึก 1 ครั้งของเด็กสร้างหลักฐาน 2 แถว (CM-B + NS-A ข้อความเดียวกัน)
+             เดิมครูเห็นเป็นงาน 2 ชิ้นต้องตรวจ 2 รอบ — เอาเฉพาะแถวงานเขียนจริง */
+          if(ctx.pairedWith) return;
+          if(!CLSPART.keep(raw.gameVersion)) return;          /* ตามภาคที่ครูเลือกดู */
+          var st=byId[r.student_id]; if(!st) return;
+          out.push({
+            id:r.id, sid:r.student_id,
+            name:((st.first_name||'')+' '+(st.last_name||'')).trim()||st.character_name||('เลขที่ '+(st.student_number||'?')),
+            no:Number(String(st.student_number||'').replace(/\D/g,''))||999,
+            stage:String(r.stage_id||''), sub:String(raw.sub||''),
+            starter:String(ctx.starter||''), note:note,
+            /* คะแนนที่ระบบประมาณจากความยาว — ตั้งแต่รอบ 17 ไม่นับเป็นคะแนนแล้ว เก็บไว้ใน ctx.autoLen */
+            auto:(raw.val!=null?Number(raw.val):(ctx.autoLen!=null?Number(ctx.autoLen):null)),
+            autoHint:(raw.val==null&&ctx.autoLen!=null),
+            teacher:(raw.teacherVal!=null?Number(raw.teacherVal):null),
+            comment:String(raw.teacherNoteComment||''),
+            at:r.created_at, rawFull:raw
+          });
+        });
+        out.sort(function(a,b){
+          var ar=(a.teacher==null)?0:1, br=(b.teacher==null)?0:1;
+          if(ar!==br) return ar-br;                           /* ที่ยังไม่ตรวจขึ้นก่อน */
+          return a.no-b.no;
+        });
+        NBREV.rows=out;
+        return out;
+      })
+      .catch(function(){ NBREV.rows=[]; return []; });
+  },
+
+  html(){
+    var rows=NBREV.rows;
+    if(!rows.length){
+      return '<div class="nbrev-wrap"><div class="nbrev-head">📓 งานเขียนในสมุดนักสำรวจ (ด่านเรือธง)</div>'+
+        '<div class="muted" style="font-size:12.5px">ยังไม่มีนักเรียนคนไหนเขียนสมุดนักสำรวจในภาคที่เลือกดูอยู่</div></div>';
+    }
+    var pend=rows.filter(function(r){ return r.teacher==null; }).length;
+    var h='<div class="nbrev-wrap"><div class="nbrev-head">📓 งานเขียนในสมุดนักสำรวจ (ด่านเรือธง) '+
+      '<span class="cls-chip" style="background:#fef3c7;color:#92400e">รอตรวจ '+pend+' / '+rows.length+'</span></div>'+
+      '<div class="nbrev-warn">⚠️ <b>งานเขียนจะยังไม่เป็นคะแนนจนกว่าครูจะตรวจ</b> — '+
+      'ระบบประมาณจากความยาวข้อความให้ดูเป็นตัวช่วยเท่านั้น (เขียนยาวแต่ไม่ตรงประเด็นก็ได้ตัวเลขสูง จึงเชื่อไม่ได้)<br>'+
+      'ครูให้คะแนนแล้ว <b>คะแนนของครูจะถูกใช้ทันที</b> และมีผลกับสมรรถนะ <b>การสื่อสาร</b> ของนักเรียนคนนั้น</div>';
+    h+=rows.map(function(r,i){
+      /* ยังไม่ตรวจ = ไม่ติ๊กอะไรไว้เลย
+         ถ้าเผลอเอาคะแนน "ความยาวข้อความ" มาติ๊กรอไว้ ครูกดบันทึกผ่าน ๆ
+         คะแนนที่นับตัวอักษรจะกลายเป็นคะแนนของครูทันที — ซึ่งคือปัญหาที่กำลังแก้อยู่พอดี */
+      var t=(r.teacher!=null)?NBREV.t04(r.teacher):null;
+      var done=(r.teacher!=null);
+      return '<div class="nbrev-item'+(done?' done':'')+'">'+
+        '<div class="nbrev-meta"><b>'+esc(r.name)+'</b>'+
+          '<span class="cls-chip" style="background:#eef2ff;color:#3730a3">ด่าน '+esc(r.stage)+'</span>'+
+          (NBREV.STARTER[r.starter]?'<span class="cls-chip" style="background:#f1f5f9;color:#334155">'+esc(NBREV.STARTER[r.starter])+'</span>':'')+
+          '<span class="muted" style="font-size:11px'+(done?';text-decoration:line-through;opacity:0.65':'')+'">'+
+            esc(NBREV.autoLabel(r.auto, r.autoHint))+'</span>'+
+          (done?'<span class="cls-chip" style="background:#dcfce7;color:#166534">✅ ครูให้ '+t+'/4 (ใช้คะแนนนี้)</span>'
+               :'<span class="cls-chip" style="background:#fee2e2;color:#b91c1c">รอตรวจ</span>')+
+        '</div>'+
+        '<div class="nbrev-note">'+esc(r.note)+'</div>'+
+        '<div class="nbrev-score">'+
+          '<span style="font-size:12px;font-weight:700;color:#475569">คะแนนครู (0-4)</span>'+
+          [0,1,2,3,4].map(function(v){
+            return '<label class="nbrev-r"><input type="radio" name="nb-'+i+'" value="'+v+'"'+(t===v?' checked':'')+'> '+v+'</label>';
+          }).join('')+
+          '<input class="cls-in nbrev-cm" id="nb-cm-'+i+'" value="'+esc(r.comment)+'" placeholder="ความเห็นครู (ไม่ใส่ก็ได้)">'+
+          '<button class="btn-primary nbrev-save" onclick="NBREV.save('+i+')">💾 บันทึก</button>'+
+          '<span class="nbrev-st" id="nb-st-'+i+'"></span>'+
+        '</div></div>';
+    }).join('');
+    h+='<div class="muted" style="font-size:11.5px;margin-top:8px;line-height:1.7">'+
+      '<b>เกณฑ์แนะนำ</b> — 4: เขียนสิ่งที่สังเกตได้จริงพร้อมเหตุผลของตัวเอง · 3: เขียนได้ตรงประเด็นแต่ยังไม่ให้เหตุผล · '+
+      '2: เขียนสั้น ๆ พอเข้าใจ · 1: เขียนไม่ตรงกับสิ่งที่ทำ · 0: ไม่ได้เขียนอะไรที่สื่อความ</div></div>';
+    return h;
+  },
+
+  save(i){
+    if(typeof demoBlocked==='function'&&demoBlocked('บันทึกคะแนนงานเขียนไม่ได้')) return;
+    var r=NBREV.rows[i]; if(!r) return;
+    var sel=document.querySelector('input[name="nb-'+i+'"]:checked');
+    if(!sel){ var st0=$('nb-st-'+i); if(st0) st0.innerHTML='<span style="color:#b91c1c">เลือกคะแนนก่อนนะครับ</span>'; return; }
+    var t=Math.max(0,Math.min(4,Number(sel.value)));
+    var cm=String((($('nb-cm-'+i)||{}).value)||'').slice(0,400);
+    var merged=Object.assign({}, r.rawFull, {
+      teacherVal: Math.round((t/4)*100)/100,       /* แปลงเป็นสเกล 0-1 ชุดเดียวกับหลักฐานอื่น */
+      teacherVal04: t,
+      teacherNoteComment: cm,
+      teacherNoteAt: new Date().toISOString(),
+      teacherNoteBy: (cls.teacher&&(cls.teacher.email||cls.teacher.display_name))||'ครู',
+      autoVal: (r.rawFull.autoVal!=null?r.rawFull.autoVal:r.auto)   /* เก็บคะแนนอัตโนมัติเดิมไว้ตรวจย้อนหลัง */
+    });
+    var stEl=$('nb-st-'+i);
+    if(stEl) stEl.innerHTML='<span class="loading" style="width:12px;height:12px;border-color:#16a34a;border-top-color:transparent"></span>';
+    sbEnsure().then(function(){ return sbFetch('/rest/v1/events?id=eq.'+encodeURIComponent(r.id),{method:'PATCH',body:JSON.stringify({raw:merged})}); })
+      .then(function(){
+        r.teacher=merged.teacherVal; r.comment=cm; r.rawFull=merged;
+        if(stEl) stEl.innerHTML='<span style="color:#16a34a;font-weight:700">✅ บันทึกแล้ว</span>';
+        toast('บันทึกคะแนนงานเขียนของ '+r.name+' แล้ว');
+      })
+      .catch(function(e){ if(stEl) stEl.innerHTML='<span style="color:#b91c1c">บันทึกไม่สำเร็จ: '+esc(e&&e.message||'')+'</span>'; });
+  }
+};
+
 function clsSaveReview(i){
+  if(demoBlocked('บันทึกผลตรวจอัตนัยไม่ได้')) return;
   var e=cls._review&&cls._review[i]; if(!e) return;
   var g04=function(id){ var v=Number(($(id)||{}).value); if(isNaN(v)) v=0; return Math.max(0,Math.min(4,Math.round(v))); };
   var t1=g04('cvw-t0-'+i), t2=g04('cvw-t1-'+i), t3=g04('cvw-t2-'+i);
@@ -3931,7 +4418,15 @@ var CLSPART = {
   KEY: 'cls_part_view',
   get(){ try{ return localStorage.getItem(this.KEY) || 'p2'; }catch(e){ return 'p2'; } },
   set(v){ try{ localStorage.setItem(this.KEY, v); }catch(e){}
-    cls.stats=null; cls.statsReady=false; clsRender(); clsLoadStats(); },
+    cls.stats=null; cls.statsReady=false; clsRender();
+    /* [แก้ตามครู ข้อ 5] มุมมองห้องครูท่านอื่นใช้คนละเส้นทางโหลดข้อมูล — ต้องสั่งโหลดให้ถูกอัน */
+    try{
+      if(typeof clsPubActive==='function' && clsPubActive()){
+        if(typeof clsIsPublicRoom==='function' && clsIsPublicRoom()){ if(typeof clsLoadPublicRoom==='function') return clsLoadPublicRoom(true); }
+        if(typeof clsLoadPublicRooms==='function') return clsLoadPublicRooms(true);
+      }
+    }catch(e){}
+    clsLoadStats(); },
   /* แถวนี้เป็นของภาคไหน — ดูจากป้ายรุ่นที่ติดมากับข้อมูล */
   keep(gv){
     var p=this.get(); if(p==='all') return true;
@@ -3963,6 +4458,8 @@ var CLSTAB = {
   KEY:'cls_room_tab',
   get(){ try{ return localStorage.getItem(this.KEY)||'scores'; }catch(e){ return 'scores'; } },
   set(v,rid){ try{ localStorage.setItem(this.KEY,v); }catch(e){}
+    /* [แก้ตามครู] แท็บเทียบเกณฑ์เป็นของภาค 2 — บังคับมุมมองให้ตรงกันเสมอ กันตัวเลขเพี้ยน */
+    if(v==='v8'){ try{ CLSPART.set('p2'); }catch(e){} }
     clsRender();
     if(v==='v8'){ try{ clsV8Load(rid||cls.openScores||null); }catch(e){} }
   },
@@ -4055,6 +4552,8 @@ function clsLoadStats(){
       var bA=bl.filter(function(r){ return r.att!=null&&r.att!==''&&!isNaN(Number(r.att)); });
       var pick=bA.length?bA.filter(function(r){ var n=Number(r.att); return n===1||n===2; })
                         :bl.slice().sort(function(a,b){ return (a.t||0)-(b.t||0); }).slice(0,2);
+      /* [ตรวจระบบ รอบ 17 · A6] ดูคำอธิบายที่ตัวรวมอีกตัว — เลขครั้งเริ่มที่ 3 ได้ */
+      if(!pick.length) pick=bl.slice().sort(function(a,b){ return (a.t||0)-(b.t||0); }).slice(0,2);
       pick.forEach(function(r){ if(r.sc>s.boss) s.boss=r.sc; });
       try{ s.v2=CV2.compute(s.ev); }catch(e){ s.v2=null; }
       try{ s.c6=CORE6ENG.compute(s.ev,s.v2,s); }catch(e){ s.c6=null; }
@@ -4252,6 +4751,9 @@ function _clsPubEventsToStats(evs, stats){
   function S(id){ return stats[id]||(stats[id]={pb:{},boss:0,bossN:0,cap:0,plays:0,last:0,ev:{q:[],p:[],c:[],k:[],b:[],pr:[],kru:[]}}); }
   (evs||[]).forEach(function(e){
       var raw=e.raw||{}, st=S(e.student_id), t=Date.parse(e.created_at)||0;
+      /* [แก้ตามครู ข้อ 5] เส้นทางนี้ (ห้องของครูท่านอื่น/ภาพรวมโรงเรียน) เคยไม่กรองภาคเลย
+         ทำให้เปิดดูในมุมมอง "ภาค 2" แล้วเห็นคะแนนของภาค 1 ทั้งที่ยังไม่มีใครเล่นภาค 2 */
+      try{ if(!CLSPART.keep(raw.gameVersion)) return; }catch(e2){}
       if(t>st.last) st.last=t;
       var att=(raw.attemptNo!=null&&raw.attemptNo!=='')?raw.attemptNo:raw.AttemptNo;
       if(e.kind==='question'){
@@ -5164,6 +5666,8 @@ function clsSummaryHtml(){
 /* [ตรวจสอบข้อ 2] เทียบคะแนนจากประวัติการเล่น (events) กับคะแนนสรุปที่ย้ายจากชีต Users เดิม — ต่างเกิน 1 = ย้ายไม่ครบ/บัญชีซ้ำ */
 function clsDiagHtml(){
   if(!cls.statsReady) return '';
+  /* [แก้ตามครู ข้อ 5] คำเตือนนี้เทียบกับยอดสรุปที่ย้ายมาจากภาค 1 — ไม่เกี่ยวกับมุมมองภาค 2 */
+  if(CLSPART.get()==='p2') return '';
   var mism=[];
   (cls.students||[]).forEach(function(stu){
     var s=cls.stats&&cls.stats[stu.id]; if(!s||!(s.plays>0)||s.shared) return;
@@ -5270,7 +5774,8 @@ function clsScoresHtml(r){
     } else det+='<div class="muted" style="font-size:12.5px">ยังไม่มีข้อมูลการเล่นพอสรุปสมรรถนะ</div>';
     det+=clsCore6Detail(t); /* [V.7.69 ข้อ 8] สมรรถนะหลัก 6 ด้านรายคน */
     /* [เทียบข้อมูลเดิม] แถวอ้างอิงจากระบบ Google Sheet — โชว์เสมอ (สำคัญที่สุดตอนข้อมูลใหม่หาย/ย้ายไม่ครบ) */
-    if(t.legacy){ var L=t.legacy, nv=function(x){ return x==null?'–':(Math.round(Number(x)*10)/10); };
+    /* [แก้ตามครู ข้อ 5] ค่าอ้างอิงชุดนี้มาจาก Google Sheet ของภาค 1 — ไม่ควรโผล่ตอนดูมุมมองภาค 2 */
+    if(t.legacy && CLSPART.get()!=='p2'){ var L=t.legacy, nv=function(x){ return x==null?'–':(Math.round(Number(x)*10)/10); };
       var hasNew=(v&&v.dataStatus!=='NO_DATA');
       var dTot=(L.total!=null&&hasNew)?Math.round((v.total-Number(L.total))*10)/10:null;
       det+='<div style="font-size:11.5px;color:#475569;margin-top:8px;background:#f1f5f9;border:1px solid #cbd5e1;border-left:4px solid #94a3b8;border-radius:8px;padding:6px 10px">'+
@@ -5292,11 +5797,10 @@ function clsScoresHtml(r){
   /* [แก้ตามครู] แท็บ "เทียบเกณฑ์" — เนื้อหาถูกเติมโดย clsV8Load/clsV8Render ที่เดิมทุกอย่าง */
   if(CLSTAB.get()==='v8'){
     return '<div style="border-top:1px dashed var(--line);margin-top:12px;padding-top:12px">'+
-      CLSTAB.barHTML(r.id)+ CLSPART.barHTML()+
-      '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px">'+
-        '<button class="btn-ghost" style="padding:4px 12px;font-size:12px" onclick="clsV8Settings()">⚙️ ตั้งค่าเกณฑ์</button>'+
-        '<button class="btn-ghost" style="padding:4px 12px;font-size:12px" onclick="clsV8Print()">🖨️ พิมพ์รายงาน</button>'+
-      '</div>'+
+      CLSTAB.barHTML(r.id)+
+      /* [แก้ตามครู] แท็บนี้เป็นของภาค 2 เท่านั้น — ไม่มีปุ่มเลือกภาค (ภาค 1 ไม่มีหลักฐานชุดนี้)
+         ปุ่มตั้งค่าเกณฑ์/พิมพ์รายงาน ย้ายขึ้นไปอยู่แถบบนของหน้าแล้ว */
+      '<div class="cls-part-note-fixed">📖 <b>เกณฑ์นี้ใช้กับภาค 2 เท่านั้น</b> — คิดจากหลักฐานพฤติกรรมที่เก็บในเกมภาค 2 (ภาค 1 เป็นคนละเครื่องมือวัด ไม่มีข้อมูลชุดนี้)</div>'+
       '<div id="cv8-body" class="muted" style="font-size:13px">กำลังโหลดหลักฐาน V.8...</div>'+
     '</div>';
   }
@@ -5307,6 +5811,18 @@ function clsScoresHtml(r){
        เดิม 18 คอลัมน์ทำให้ต้องเลื่อนตลอด — ย้าย A/B/C/D (4 คอลัมน์) ลงไปอยู่ใน "แถวรายละเอียด"
        ที่กดเปิดจากแถวนักเรียน ซึ่งแสดงข้อมูลชุดเดียวกันอยู่แล้ว เหลือ 14 คอลัมน์ + ล็อกสัดส่วนด้วย table-layout:fixed */
     CLSPART.barHTML()+   /* [แก้ตามครู] เลือกดูข้อมูลของภาคไหน — ค่าเริ่มต้นคือภาค 2 */
+    /* [แก้ตามครู ข้อ 5] ถ้ายังไม่มีใครเล่นภาค 2 เลย บอกตรง ๆ ว่าเพราะอะไร ไม่ใช่ปล่อยให้เห็นตาราง 0 เปล่า ๆ */
+    (function(){
+      if(CLSPART.get()!=='p2' || !cls.statsReady) return '';
+      var anyP2=studs.some(function(s0){ return clsStatOf(s0).has; });
+      if(anyP2) return '';
+      var anyP1=false;
+      try{ anyP1=studs.some(function(s0){ var st0=cls.stats&&cls.stats[s0.id];
+        return !!(st0 && (Number(s0.collected_score)>0 || Number(s0.boss_score)>0)); }); }catch(e){}
+      return '<div class="cls-empty-note">📭 <b>ยังไม่มีนักเรียนคนไหนเล่นเกมภาค 2 ในห้องนี้</b> — ตัวเลขทั้งหมดจึงเป็น 0 ตามความจริง'+
+        (anyP1?'<br><span class="muted">ห้องนี้มีข้อมูลของ <b>ภาค 1</b> อยู่ — กดปุ่ม "ภาค 1 (V.7.80)" ด้านบนเพื่อดู</span>':'')+
+        '</div>';
+    })()+
     '<table class="cls-tbl cls-scores-tbl" style="width:100%;table-layout:fixed">'+
       '<colgroup><col style="width:5%"><col style="width:19%">'+
         '<col style="width:8.5%"><col style="width:8.5%">'+
@@ -5356,14 +5872,41 @@ function clsListedWarnHtml(v){
 function clsListedWarn(sel, boxId){
   var b=document.getElementById(boxId); if(b) b.innerHTML=clsListedWarnHtml(sel&&sel.value);
 }
+/* [แก้ตามครู] ชื่อครู + บัญชี ขึ้นไปอยู่บนแถบบนสุด (ที่เดียว ไม่ซ้ำกับในหน้า) */
+/* [ตรวจระบบ รอบ 17 · C1] ปุ่มตั้งค่าเกณฑ์โผล่เฉพาะผู้ดูแล — เรียกคู่กับ clsTopWho ทุกครั้งที่วาดใหม่ */
+function clsTopAdminBtns(){
+  try{ var b=$('btn-v8set'); if(b) b.classList.toggle('hidden', !cls.isAdmin); }catch(e){}
+}
+function clsTopWho(){
+  var el=document.getElementById('top-who'); if(!el) return;
+  if(!(cls.teacher)){ el.innerHTML=''; return; }
+  var nm=esc(cls.teacher.display_name||'ครู');
+  var linked=(cls.teacher.is_anonymous===false);
+  el.innerHTML='<span class="tw-ic">👩‍🏫</span><b class="tw-nm">'+nm+'</b>'+
+    (linked
+      ? '<span class="tw-mail" title="บัญชีที่กำลังใช้อยู่ตอนนี้">'+esc(cls.teacher.email||'')+'</span>'
+      : '<span class="tw-warn" title="ข้อมูลอยู่กับเบราว์เซอร์เครื่องนี้เท่านั้น">ยังไม่ผูกบัญชี</span>');
+}
 function clsRender(){
+  try{ clsTopWho(); }catch(e){}
+  try{ clsTopAdminBtns(); }catch(e){}   /* [ตรวจระบบ รอบ 17 · C1] */
+  var _linked=!!(cls.teacher&&cls.teacher.is_anonymous===false);
+  var _tools=clsAdminBar();
+  /* ล็อกอินแล้ว: ชื่อ/บัญชีอยู่บนแถบบนแล้ว เหลือแค่แถวเครื่องมือ (ถ้ามี) */
+  if(_linked){
+    clsStatus(_tools
+      ? '<div class="card cls-toolbar-row">'+
+          '<span class="cls-toolbar-lbl">🛠️ เครื่องมือผู้ดูแลระบบ</span>'+_tools+
+          '<span class="muted cls-toolbar-count">ห้องเรียนของครู: '+cls.rooms.length+' ห้อง</span>'+
+        '</div>'
+      : '<div class="card cls-toolbar-row"><span class="muted cls-toolbar-count">ห้องเรียนของครู: '+cls.rooms.length+' ห้อง</span></div>');
+  } else
   clsStatus(
     '<div class="card" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px">'+
       '<span style="font-size:20px">👩‍🏫</span>'+
       '<b>'+esc((cls.teacher&&cls.teacher.display_name)||'ครู')+'</b>'+
-      (cls.teacher&&cls.teacher.is_anonymous===false
-        ?'<span class="cls-chip" style="background:#dcfce7;color:#166534" title="บัญชีที่กำลังใช้อยู่ตอนนี้">✔ กำลังใช้บัญชี'+(cls.teacher.email?' · '+esc(cls.teacher.email):'')+'</span>'+
-         '<button class="btn-ghost" style="padding:4px 10px;font-size:12px" title="ออกจากระบบเพื่อเข้าด้วยบัญชีอื่น" onclick="clsSwitchAccount()">🔄 สลับบัญชี</button>'
+      (false
+        ?''
         :'<span class="cls-chip" style="background:#fef3c7;color:#92400e">ยังไม่ผูกบัญชี — ข้อมูลอยู่กับเบราว์เซอร์เครื่องนี้เท่านั้น</span>'+
          /* [แก้ตามครู] แยกให้ชัดว่าจะ "เข้าบัญชีเดิม" หรือ "ทำบัญชีใหม่จากข้อมูลในเครื่องนี้" */
          '<button class="btn-ghost" style="padding:4px 10px;font-size:12px;background:#eff6ff;border-color:#93c5fd;color:#1d4ed8" title="เคยสร้างห้องเรียนไว้บนเครื่อง/เบราว์เซอร์อื่นแล้ว — เลือกอันนี้" onclick="clsGoogleSignIn()">🔵 เข้าบัญชีเดิมที่มีอยู่แล้ว</button>'+
@@ -5372,6 +5915,7 @@ function clsRender(){
       '<span class="muted" style="font-size:12px;flex:1">ห้องเรียนของครู: '+cls.rooms.length+' ห้อง</span>'+
     '</div>');
   var h='';
+  try{ h+=DEMO.bannerHTML(); }catch(e){}   /* [แก้ตามครู ข้อ 6] เตือนตลอดเวลาว่ากำลังดูข้อมูลจำลอง */
   // [ตามคำขอ] แนะนำผูก Google เมื่อยังไม่ผูก — ข้อมูลจะได้อยู่ถาวรและเปิดได้ทุกเครื่อง
   if(!(cls.teacher&&cls.teacher.is_anonymous===false)){
     h+='<div class="card" style="margin-bottom:14px;background:#eff6ff;border:1px solid #bfdbfe;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px">'+
@@ -5414,6 +5958,8 @@ function clsRender(){
     var n=cls.counts[r.id]||0;
     /* [V.7.80] จำนวนนักเรียนที่มีคำตอบเขียนแล้วแต่ครูยังไม่ยืนยัน (AI บันทึกชั่วคราวอยู่) */
     var pendAi=0; (cls.students||[]).forEach(function(st0){ if(st0.classroom_id===r.id){ var s0=cls.stats&&cls.stats[st0.id]; if(s0&&s0.capPend) pendAi++; } });
+    /* [แก้ตามครู ข้อ 7] นับงานเขียนสมุดนักสำรวจที่ครูยังไม่ได้ตรวจด้วย (โหลดแล้วจึงจะมีเลข) */
+    try{ if(cls.openReview===r.id) pendAi+=(NBREV.rows||[]).filter(function(x){ return x.teacher==null; }).length; }catch(e){}
     h+='<div class="cls-room'+(r.is_active?'':' inactive')+'">'+
       '<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">'+
         '<div style="flex:1;min-width:180px"><b style="font-size:16px">'+esc(r.name)+'</b>'+
@@ -5817,9 +6363,17 @@ function updateAuthBtn(){
   }
 }
 function clsSignOut(){
+  /* [แก้ตามครู] ล้างช่องบัญชีบนแถบบนทันทีเมื่อออกจากระบบ */
+  try{ var _tw=document.getElementById('top-who'); if(_tw) _tw.innerHTML=''; }catch(e){}
   if(!confirm('ออกจากระบบห้องเรียนของครูใช่ไหม?\n(ข้อมูลทั้งหมดยังอยู่ครบ — เข้าสู่ระบบด้วย Google เดิมเมื่อไรก็กลับมาเหมือนเดิม)')) return;
   try{ localStorage.removeItem('sb_cls_sess'); }catch(e){}
+  /* [แก้ตามครู] ล้าง session ของ Supabase ให้หมดจริง ไม่งั้นเปิดใหม่ยังเจอบัญชีเดิม */
+  try{ sbFetch('/auth/v1/logout',{method:'POST',body:'{}'}).catch(function(){}); }catch(e){}
+  try{ Object.keys(localStorage).forEach(function(k){ if(/^sb-|^cls_sess$/.test(k)) localStorage.removeItem(k); }); }catch(e){}
   cls.sess=null; cls.teacher=null; cls.rooms=[]; cls.students=[]; cls.counts={}; clsAll.rows=null;
+  /* [แก้ตามครู] สิทธิ์ผู้ดูแลต้องหายไปพร้อมบัญชี — เดิมค้างอยู่ เมนูผู้ดูแลจึงยังโผล่ */
+  cls.isAdmin=false; cls.adminCount=0; cls.myEmail='';
+  cls.stats=null; cls.statsReady=false; cls.open=null; cls.openScores=null; cls.openReview=null; cls.openKru=null;
   updateAuthBtn();
   openClassroomPage();
 }
@@ -5995,9 +6549,12 @@ function _clsExportCsvGo(v8by){
   });
   if(n===0){ toast('ยังไม่มีข้อมูลนักเรียนให้ส่งออก'); return; }
   var csv=rows.map(function(r){ return r.map(function(c){ var t2=String(c==null?'':c); return /[",\n]/.test(t2)?('"'+t2.replace(/"/g,'""')+'"'):t2; }).join(','); }).join('\r\n');
+  /* [ตรวจระบบ รอบ 17 · A1] ไฟล์ที่ออกจากโหมดตัวอย่างต้องแยกออกจากไฟล์จริงตั้งแต่ชื่อไฟล์ */
+  var _dm=demoStamp();
+  if(_dm) csv=_dm+'\r\n'+csv;
   var blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
   var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download='คะแนนห้องเรียน_สมรรถนะV8_'+(new Date().toISOString().slice(0,10))+'.csv';
+  a.download=(_dm?'ตัวอย่างหน้าจอ_ไม่ใช่ผลจริง_':'')+'คะแนนห้องเรียน_สมรรถนะV8_'+(new Date().toISOString().slice(0,10))+'.csv';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(function(){ URL.revokeObjectURL(a.href); },1000);
   toast('ส่งออก CSV แล้ว ('+n+' คน)');
@@ -6295,8 +6852,100 @@ function indRender(){
     '<div class="card" style="margin-bottom:12px" id="ind-hots-crit">'+
       '<h2>เกณฑ์การประเมินสมรรถนะการคิดขั้นสูง (โดยละเอียด)</h2>'+
       clsHotsCriteriaHtml()+
+    '</div>'+
+    /* [แก้ตามครู ข้อ 4] เกณฑ์ของภาค 2 ทั้งชุด — เดิมกระจายอยู่ตาม tooltip พิมพ์ส่งตรวจไม่ได้ */
+    '<div class="card" style="margin-bottom:12px" id="ind-v8-crit">'+
+      '<h2>ตารางที่ 5 · เกณฑ์การวัดและประเมินสมรรถนะ V.8 (ภาค 2)</h2>'+
+      '<div class="muted" style="font-size:12px;margin-bottom:10px">ตัวเลขในหน้านี้อ่านจากค่าที่ตั้งไว้ในระบบจริง — ปรับเกณฑ์เมื่อไร เอกสารนี้เปลี่ยนตามทันที'+
+        (cls.isAdmin?' · <button class="btn-ghost" style="padding:3px 11px;font-size:12px" onclick="clsV8Settings()">⚙️ ตั้งค่าเกณฑ์</button>':'')+'</div>'+
+      clsV8CriteriaHtml()+
     '</div>';
 }
+
+/* ============================================================
+   [แก้ตามครู ข้อ 4] เอกสารเกณฑ์ V.8 (ภาค 2) — วางไว้ในหน้าตัวชี้วัด/สมรรถนะ
+   อ่านค่าจริงจาก CBE8.set ทุกครั้ง → ครูปรับเกณฑ์แล้วเอกสารเปลี่ยนตามทันที
+   ไม่มีตัวเลขไหนถูกพิมพ์ค้างไว้ในหน้า (กันเอกสารกับระบบไม่ตรงกัน)
+   ============================================================ */
+/* แหล่งหลักฐานของแต่ละสมรรถนะในภาค 2 — อธิบายเป็นภาษาที่ครูใช้อ้างอิงได้ */
+var V8_EVIDENCE_SRC = {
+  HT: 'ด่านนักสืบสะพาน · ด่านช่างภาพ · เลือกหลักฐานและให้เหตุผล · ปริศนาสายน้ำ · คำตอบเขียน 3 ข้อในกาญ 2050 (ครูตรวจ)',
+  CM: 'สมุดนักสำรวจทุกด่าน · การอธิบายเหตุผลให้บัดดี้ · คำตอบเขียนในกาญ 2050 (ช่องคะแนนการสื่อสารแยกจากช่องการคิด)',
+  SM: 'การตั้งเป้าหมายก่อนเข้าด่าน · การทบทวนหลังจบด่าน · การเล่นซ้ำเพื่อพัฒนาผล · สรุปท้ายคาบ',
+  TW: 'โหมดเล่นเป็นคู่ในกาญ 2050 · การแบ่งบทบาทในภารกิจกลุ่ม · เพื่อนประเมินเพื่อน',
+  CZ: 'การเลือกมาตรการในสภาเมือง · การจัดลำดับความต้องการของคนในเมือง · การตัดสินใจที่กระทบส่วนรวม',
+  NS: 'ด่านนิเวศ (สังเกตสิ่งมีชีวิต/โยงความสัมพันธ์) · การจัดการน้ำและขยะ · มิเตอร์สิ่งแวดล้อมในกาญ 2050'
+};
+function clsV8CriteriaHtml(){
+  var st = (typeof CBE8!=='undefined' && CBE8.set) ? CBE8.set : {wMinor:30,wSum:70,r1:50,r2:65,r3:80,diff:1,lvBase:3};
+  var lb = Number(st.lvBase)||3;
+  var byComp={}; SELF_SUB_LABEL.forEach(function(r){ (byComp[r[2]]=byComp[r[2]]||[]).push(r); });
+
+  /* 5.1 สูตรคะแนนหลัก */
+  var h='<h3 style="margin:2px 0 5px;font-size:14px">5.1 คะแนนหลักของแต่ละสมรรถนะ (M)</h3>'+
+    '<div class="v8doc-formula"><b>M</b> = หลักฐานระหว่างเรียน × <b>'+st.wMinor+'%</b> + ภารกิจรวบยอด กาญจนบุรี 2050 × <b>'+st.wSum+'%</b></div>'+
+    '<div class="muted" style="font-size:12px;margin:5px 0 12px;line-height:1.7">'+
+      '<b>หลักฐานระหว่างเรียน</b> = พฤติกรรมที่ระบบบันทึกจากการเล่นด่านเรือธง 6 ด่าน (ไม่ใช่คะแนนข้อสอบ)<br>'+
+      '&nbsp;&nbsp;&nbsp;ประกอบด้วย <b>คุณภาพรวมของด่าน '+Math.round(CBE8.MIX_OVERALL*100)+'%</b> (ครั้งที่ดีที่สุด) '+
+      '+ <b>หลักฐานด้านย่อย '+Math.round(CBE8.MIX_SUB*100)+'%</b> (รวมงานเขียนที่ครูตรวจให้คะแนนเอง)<br>'+
+      '<b>ภารกิจรวบยอด</b> = กาญจนบุรี 2050 สามองก์ ซึ่งใช้เกณฑ์ PD · EE · ST · SD · CD · PA ชุดเดิมของโครงการ<br>'+
+      '⚠️ <b>ข้อสอบปรนัยไม่รวมในคะแนนหลัก</b> — อยู่ฝั่งผลสัมฤทธิ์และหอคอยท้าประลอง เพื่อไม่ให้ความรู้เนื้อหาปนกับสมรรถนะ</div>';
+
+  /* 5.2 ช่วงระดับ */
+  h+='<h3 style="margin:12px 0 5px;font-size:14px">5.2 การแปลงคะแนนเป็นระดับ (ช่วงชั้น ป.4-6 ตาม CBE)</h3>'+
+    '<table class="cls-tbl" style="width:100%;max-width:620px"><thead><tr>'+
+      '<th style="width:74px;text-align:center">ระดับ</th><th>ความหมาย</th><th style="width:120px;text-align:center">ช่วงคะแนน M</th></tr></thead><tbody>'+
+    [[lb+3,'เหนือความคาดหวัง','≥ '+st.r3],
+     [lb+2,'สามารถ',st.r2+' – '+(st.r3-1)],
+     [lb+1,'กำลังพัฒนา',st.r1+' – '+(st.r2-1)],
+     [lb,'เริ่มต้น','< '+st.r1]].map(function(r){
+      return '<tr><td style="text-align:center"><span class="v8doc-lv" style="background:'+(CLS_LV_CLR[r[0]]||'#64748b')+'">'+r[0]+'</span></td>'+
+        '<td style="font-weight:700">'+esc(r[1])+'</td><td style="text-align:center;font-weight:800">'+esc(String(r[2]))+'</td></tr>'; }).join('')+
+    '</tbody></table>';
+
+  /* 5.3 แหล่งหลักฐานรายสมรรถนะ */
+  h+='<h3 style="margin:14px 0 5px;font-size:14px">5.3 หลักฐานที่ใช้วัดแต่ละสมรรถนะ และด้านย่อยที่บันทึก</h3>'+
+    '<div style="overflow-x:auto"><table class="cls-tbl" style="width:100%"><thead><tr>'+
+      '<th style="min-width:150px">สมรรถนะหลัก</th><th style="min-width:230px">เก็บหลักฐานจากอะไรในเกม</th>'+
+      '<th style="min-width:210px">ด้านย่อยที่บันทึกแยก</th></tr></thead><tbody>'+
+    CBE8.COMPS.map(function(cd){
+      var subs=(byComp[cd[0]]||[]).map(function(r){
+        return '<span class="v8doc-sub">'+esc(r[0])+' '+esc(r[1])+'</span>'; }).join(' ');
+      return '<tr><td style="font-weight:800;color:'+cd[2]+'">'+esc(cd[1])+'</td>'+
+        '<td style="font-size:12px;line-height:1.65">'+esc(V8_EVIDENCE_SRC[cd[0]]||'—')+'</td>'+
+        '<td style="font-size:11.5px;line-height:1.9">'+(subs||'—')+'</td></tr>'; }).join('')+
+    '</tbody></table></div>'+
+    '<div class="muted" style="font-size:12px;margin-top:7px">รวม '+SELF_SUB_LABEL.length+' ด้านย่อย — ทุกด้านย่อยเก็บแยกกัน ใช้ทั้งกับครูประเมิน เพื่อนประเมิน และนักเรียนประเมินตนเอง จึงเทียบกันได้ตรงช่อง</div>';
+
+  /* 5.4 เกณฑ์การเทียบ */
+  h+='<h3 style="margin:14px 0 5px;font-size:14px">5.4 เกณฑ์การเทียบ-ยืนยัน (สีในตารางเทียบเกณฑ์)</h3>'+
+    '<div class="muted" style="font-size:12px;margin-bottom:7px;line-height:1.7">ระบบเทียบ <b>คะแนนหลัก M</b> กับผลประเมินอีก 3 แหล่ง (ครู T · เพื่อน P · ตนเอง S) '+
+      'ถ้าห่างกันไม่เกิน <b>±'+st.diff+' ระดับ</b> ถือว่าสอดคล้อง · <b>ผลประเมินไม่ถูกนำมาบวกเป็นคะแนน</b> ใช้เพื่อยืนยันความน่าเชื่อถือเท่านั้น</div>'+
+    '<table class="cls-tbl" style="width:100%;max-width:760px"><thead><tr>'+
+      '<th style="width:150px">สีที่เห็น</th><th>หมายถึง</th><th style="min-width:210px">ครูควรทำอะไรต่อ</th></tr></thead><tbody>'+
+    [['OK','ใช้ผลนี้ได้เลย'],['CHECK','ถามยืนยันตัวต่อตัวแล้วกด 🔷 ยืนยันผล'],['NONE','ยังไม่ต้องตรวจ — ให้เด็กเล่นเก็บหลักฐานก่อน']]
+      .map(function(r){ var s3=CBE8.ST3_INFO[r[0]];
+        return '<tr><td><span class="cls-chip" style="background:'+s3.bg+';color:'+s3.c+'">'+s3.i+' '+s3.t+'</span></td>'+
+          '<td style="font-size:12px">'+esc(s3.d)+'</td><td style="font-size:12px">'+esc(r[1])+'</td></tr>'; }).join('')+
+    '</tbody></table>'+
+    '<div class="muted" style="font-size:11.5px;margin-top:8px;line-height:1.7">'+
+      '<b>สถานะละเอียดที่ระบบเก็บไว้เบื้องหลัง (7 แบบ)</b> — ใช้ตรวจสอบย้อนหลังและอ้างอิงในรายงานวิจัย: '+
+      Object.keys(CBE8.ST_INFO).map(function(k){ var s7=CBE8.ST_INFO[k];
+        return '<span class="cls-chip" style="background:'+s7.bg+';color:'+s7.c+'">'+s7.i+' '+esc(s7.t)+'</span>'; }).join(' ')+
+      '<br>สีทั้ง 3 ด้านบนเป็นการ<b>ย่อเพื่อให้อ่านเร็ว</b> ไม่ได้ลบสถานะละเอียดออกจากฐานข้อมูล</div>';
+
+  /* 5.5 ความน่าเชื่อถือของหลักฐาน */
+  h+='<h3 style="margin:14px 0 5px;font-size:14px">5.5 กติกาที่ทำให้หลักฐานเชื่อถือได้</h3>'+
+    '<ul class="v8doc-rules">'+
+      '<li><b>ตัวช่วยชี้คำตอบใช้ได้เฉพาะสนามที่ไม่คิดคะแนนสมรรถนะ</b> (หอคอยท้าประลอง) — ด่านเรือธงไม่มีไอเทมช่วยตอบ</li>'+
+      '<li><b>ด่านพิเศษไม่นับเป็นตราผู้พิทักษ์</b> — ประตูกาญ 2050 จึงเปิดจากด่านเรือธง 6 ด่านเท่านั้น</li>'+
+      '<li><b>สิ่งที่สุ่ม (การ์ดผู้พิทักษ์ ฯลฯ) เปลี่ยนแค่บริบท ไม่เปลี่ยนสิ่งที่วัด</b> และบันทึกรหัสการ์ดไว้ในทุกแถวหลักฐานเพื่อตรวจย้อนหลัง</li>'+
+      '<li><b>ทุกแถวข้อมูลติดป้ายรุ่นเกม</b> — แยกภาค 1 / ภาค 2 ได้เสมอ ข้อมูลสองเครื่องมือวัดจึงไม่ปนกัน</li>'+
+      '<li><b>โหมดแขกและโหมดสาธิตไม่ส่งข้อมูลขึ้นระบบ</b> — ข้อมูลวิจัยมีเฉพาะการเล่นจริงของนักเรียนที่เข้าห้องเรียน</li>'+
+    '</ul>';
+  return h;
+}
+
 function indSave(k){
   var el=document.getElementById('ind-i-'+k), sel=document.getElementById('ind-c-'+k), st=document.getElementById('ind-st-'+k);
   var v=String((el||{}).value||'').trim();
@@ -6405,7 +7054,12 @@ var CBE8 = {
         if(!srcs.length){ status='NO_SOURCES'; }
         else {
           var near=0, far=0, names=[];
-          srcs.forEach(function(x){ var d=Math.abs(x[1]-mLv); if(d<=self.set.diff) near++; if(d>=2){ far++; names.push(x[0]+' (ต่าง '+d+' ระดับ)'); } });
+          /* [ตรวจระบบ รอบ 17 · B4] เดิมสองเงื่อนไขคาบเกี่ยวกัน
+             ตั้ง ±2 แล้วต่าง 2 ระดับ → ถูกนับเป็นทั้ง "ตรงกัน" และ "ต่างมาก" พร้อมกัน → ขึ้นแดงทั้งที่อยู่ในเกณฑ์
+             ตั้ง ±0 แล้วต่าง 1 ระดับ → ไม่ถูกนับฝั่งไหนเลย → ขึ้นเขียวพร้อมเหตุผลที่ขัดกับความจริง
+             เขียนเป็นคู่ตรงข้ามให้ชัด: อยู่ในเกณฑ์ = near · นอกเกณฑ์ = far */
+          srcs.forEach(function(x){ var d=Math.abs(x[1]-mLv);
+            if(d<=self.set.diff) near++; else { far++; names.push(x[0]+' (ต่าง '+d+' ระดับ)'); } });
           var vals=srcs.map(function(x){ return x[1]; });
           var spread=Math.max.apply(null,vals)-Math.min.apply(null,vals);
           if(far>=2){ status='QUICK_REVIEW'; why='แหล่งประกอบ ≥2 แหล่งต่างจากคะแนนหลักตั้งแต่ 2 ระดับ: '+names.join(', '); }
@@ -6420,6 +7074,10 @@ var CBE8 = {
     });
     return out;
   },
+  /* [ตรวจระบบ รอบ 17 · B2] สัดส่วนผสมของหลักฐานระหว่างเรียน
+     คุณภาพรวมของด่าน (ระบบให้จากพฤติกรรมการเล่น) กับ ด้านย่อย (รวมงานเขียนที่ครูตรวจ) */
+  MIX_OVERALL: 0.6,
+  MIX_SUB: 0.4,
   _minor(c, stu){
     var evd=(stu.evd||[]).filter(function(r){ return (r.sub||'').indexOf(c)===0 || r.sub===c; });
     if(!evd.length) return { pct:null, parts:[], src:'รอด่านเรือธง '+c+' (BUILD 2)' };
@@ -6440,17 +7098,41 @@ var CBE8 = {
       parts.push({ label:'หลักฐานด้านย่อย '+s2+' ('+a.length+' ชิ้น)', txt:Math.round(av*100)+'%' });
       subAvgs.push(av);
     });
-    if(pct==null&&subAvgs.length){ var sS=0; subAvgs.forEach(function(x){ sS+=x; }); pct=sS/subAvgs.length*100; }
+    /* [ตรวจระบบ รอบ 17 · B2] รวมสองแหล่งเข้าด้วยกัน แทนที่จะให้แถวสรุปด่านกินรวบ
+       เดิม: มีแถวสรุปด่าน = ค่าเฉลี่ยด้านย่อยถูกทิ้ง → คะแนนที่ครูตรวจไม่มีผลใด ๆ
+       ตอนนี้: คุณภาพรวมด่าน 60% + หลักฐานด้านย่อย (รวมคะแนนที่ครูตรวจ) 40% */
+    var subPct=null;
+    if(subAvgs.length){ var sS=0; subAvgs.forEach(function(x){ sS+=x; }); subPct=sS/subAvgs.length*100; }
+    if(pct!=null&&subPct!=null){
+      pct=pct*CBE8.MIX_OVERALL + subPct*CBE8.MIX_SUB;
+      parts.push({ label:'รวมสองแหล่ง (คุณภาพรวมด่าน '+Math.round(CBE8.MIX_OVERALL*100)+'% + ด้านย่อย '+Math.round(CBE8.MIX_SUB*100)+'%)',
+        txt:Math.round(pct)+'%' });
+    } else if(pct==null){ pct=subPct; }
     return { pct:(pct==null?null:Math.round(pct*10)/10), parts:parts, n:evd.length,
       src:'บัญชีหลักฐานพฤติกรรม (Evidence Ledger) '+evd.length+' รายการ' };
   },
   _summative(c, stu){
-    var cap=(stu.cap||[]).slice().sort(function(a,b){ return (b.t||0)-(a.t||0); })[0];
+    /* [ตรวจระบบ รอบ 17 · B3] เดิมใช้ "ครั้งล่าสุด" แต่ช่องกาญ 2050 ในตารางคะแนนใช้ "ครั้งที่ดีที่สุด"
+       เด็กที่เล่นซ้ำแล้วทำเล่น ๆ จะเห็นตัวเลขสองช่องบนหน้าเดียวกันมาจากคนละครั้ง
+       และคะแนนหลักตกทันที ซึ่งขัดกับเจตนาของเกมที่ชวนให้เล่นซ้ำเพื่อพัฒนาผล
+       ใช้ "ครั้งที่ดีที่สุด" ให้ตรงกันทั้งหน้า */
+    var caps=(stu.cap||[]).slice();
+    var _score=function(r){ var n=0, k=['PD','EE','ST','SD','CD','PA'];
+      k.forEach(function(x){ var v=Number(r[x]); if(!isNaN(v)) n+=v; }); return n; };
+    caps.sort(function(a,b){ var d=_score(b)-_score(a); return d!==0?d:((b.t||0)-(a.t||0)); });
+    var cap=caps[0];
     if(!cap) return { pct:null, parts:[], src:'ยังไม่ได้เล่นด่านรวบยอดกาญจนบุรี 2050' };
     if(c==='CM'){
       var s=0,n=0; ['cw1','cw2','cw3'].forEach(function(k){ var v=Number(cap[k]); if(cap[k]!=null&&cap[k]!==''&&!isNaN(v)){ s+=v; n++; } });
-      if(!n) return { pct:null, parts:[], src:'รอครูตรวจคำตอบเขียน (ช่อง 💬 การสื่อสาร)' };
-      return { pct:Math.round(s/(n*4)*1000)/10, parts:[{label:'คำตอบเขียน '+n+' ข้อ (ครูตรวจ)', txt:s+'/'+(n*4)}], src:'กาญ 2050 — คำตอบเขียน' };
+      if(n) return { pct:Math.round(s/(n*4)*1000)/10, parts:[{label:'คำตอบเขียน '+n+' ข้อ (ครูตรวจ)', txt:s+'/'+(n*4)}], src:'กาญ 2050 — คำตอบเขียน' };
+      /* [ตรวจระบบ รอบ 17 · B5] ยังไม่มีคะแนนครู แต่ AI ตรวจไว้แล้ว → ใช้ไปก่อนแบบติดป้ายว่าชั่วคราว
+         เดิมคืน null ทำให้สูตรเปลี่ยนรูปเงียบ ๆ (M กลายเป็นหลักฐานระหว่างเรียนล้วน)
+         แล้วตัวเลขกระโดดในวันที่ครูกดตรวจ ทั้งที่ตัวเด็กไม่ได้เปลี่ยนอะไรเลย */
+      var sa=0,na=0; ['ai1','ai2','ai3'].forEach(function(k){ var v=Number(cap[k]); if(cap[k]!=null&&cap[k]!==''&&!isNaN(v)){ sa+=v; na++; } });
+      if(na) return { pct:Math.round(sa/(na*4)*1000)/10, provisional:true,
+        parts:[{label:'คำตอบเขียน '+na+' ข้อ (AI ตรวจชั่วคราว — รอครูยืนยัน)', txt:sa+'/'+(na*4)}],
+        src:'กาญ 2050 — คำตอบเขียน (ยังรอครูตรวจ)' };
+      return { pct:null, parts:[], src:'รอครูตรวจคำตอบเขียน (ช่อง 💬 การสื่อสาร)' };
     }
     var keys=this.CAP_MAP[c];
     if(!keys) return { pct:null, parts:[], src:'กาญ 2050 v2 (สามองก์) จะเก็บหลักฐานด้านนี้โดยตรง — BUILD 3' };
@@ -6515,6 +7197,16 @@ function clsOpenV8(id){
 /* [เฟส 1] แยก "การดึงหลักฐาน V.8" ออกมาเป็นฟังก์ชันเดี่ยว — ตาราง V.8 · CSV · รายงานพิมพ์ ใช้ชุดเดียวกัน
    จึงไม่มีทางที่ตัวเลขในไฟล์ส่งออกจะเป็นคนละชุดกับที่ครูเห็นบนจอ */
 function clsV8Fetch(ids){
+  /* [ตรวจระบบ รอบ 17 · C4] แบ่งชุดละ 150 คนเหมือน clsLoadStats
+     400 คนในคำขอเดียว = URL ~15 KB ซึ่งเกินเพดานของ gateway หลายเจ้า */
+  if((ids||[]).length>150){
+    var chunks=[]; for(var ci=0; ci<ids.length; ci+=150) chunks.push(ids.slice(ci, ci+150));
+    return chunks.reduce(function(pr, part){
+      return pr.then(function(acc){
+        return clsV8Fetch(part).then(function(r){ return Object.assign(acc, r||{}); });
+      });
+    }, Promise.resolve({}));
+  }
   return CBE8.loadSettings().then(function(){ return sbEnsure(); }).then(function(){
     return Promise.all([
       sbFetchAll('/rest/v1/events?kind=in.(evidence,capstone,peer)&select=student_id,kind,stage_id,score,created_at,raw&student_id=in.('+ids.join(',')+')&order=created_at.desc'),
@@ -6527,7 +7219,14 @@ function clsV8Fetch(ids){
     function S(sid){ return by[sid]||(by[sid]={ evd:[], cap:[], pr:[], kru:null, self:null, v8c:null }); }
     evs.forEach(function(e){
       var raw=e.raw||{}, st=S(e.student_id), t=Date.parse(e.created_at)||0;
-      if(e.kind==='evidence'){ st.evd.push({ sid:String(e.stage_id||''), et:String(raw.et||''), sub:String(raw.sub||''), val:(raw.val!=null?Number(raw.val):null), ctx:raw.ctx, gv:String(raw.gameVersion||''), t:t }); }
+      /* [ตรวจระบบ รอบ 17 · A5] เส้นทางนี้เป็นเส้นที่ 4 ที่ตกหล่นตอนแก้ตัวกรองภาครอบก่อน
+         (แท็บเทียบเกณฑ์ · ไฟล์ CSV · รายงานพิมพ์ ใช้ตัวโหลดนี้ร่วมกันทั้งหมด)
+         ผลคือดูมุมมองภาค 2 อยู่ แต่ capstone/peer ของภาค 1 ถูกนับเข้าคะแนนหลัก 70% */
+      try{ if(!CLSPART.keep(raw.gameVersion)) return; }catch(e2){}
+      if(e.kind==='evidence'){ st.evd.push({ sid:String(e.stage_id||''), et:String(raw.et||''), sub:String(raw.sub||''),
+        /* [แก้ตามครู ข้อ 7] คะแนนครูทับคะแนนอัตโนมัติ (เหมือนที่คำตอบเขียนกาญ 2050 ทำอยู่แล้ว) */
+        val:(raw.teacherVal!=null?Number(raw.teacherVal):(raw.val!=null?Number(raw.val):null)),
+        byTeacher:(raw.teacherVal!=null), ctx:raw.ctx, gv:String(raw.gameVersion||''), t:t }); }
       else if(e.kind==='capstone'){ st.cap.push({ t:t, PD:raw.problemDecomposition, EE:raw.evidenceEvaluation, ST:raw.systemsThinking, SD:raw.solutionDesign, CD:raw.creativeDevelopment, PA:raw.planAdaptation, cw1:raw.commScore1, cw2:raw.commScore2, cw3:raw.commScore3 }); }
       else if(e.kind==='peer'){ var pk=String(raw.peerBy||'?'); var ex=null;
         st.pr.forEach(function(x){ if(x.by===pk) ex=x; });
@@ -6654,6 +7353,7 @@ var DASH4 = {
     return out;
   },
   bulkRun(studs, by) {
+    if(demoBlocked('ยืนยันผลเป็นชุดไม่ได้')) return;
     var T = this.bulkTargets(studs, by);
     if (!T.length) { toast('ไม่มีด้านไหนที่พร้อมยืนยันแบบชุด (ต้องมีสถานะ ✅ ยืนยันแล้ว ก่อน)'); return; }
     if (!confirm('ยืนยันผลให้อัตโนมัติ ' + T.length + ' ช่อง\n\n' +
@@ -6735,16 +7435,10 @@ function clsV8Render(studs, by){
       var lvTxt=(r.lv==null)?'–':r.lv;
       /* [แก้ตามครู] แสดงเป็น 3 สี · หมุด 🔷 = ครูกดยืนยันผลด้วยตัวเองแล้ว · รายละเอียด 7 สถานะอยู่ใน tooltip และช่องรายละเอียด */
       var i3=CBE8.st3(r.status), fin=CBE8.isFinal(r.status);
-      /* [แก้ตามครู] อ่านได้ 2 ชั้นในช่องเดียว
-         วงกลม+ตัวเลข = ระดับสมรรถนะ ใช้สีชุดเดิมของตารางคะแนน (3 เทา · 4 ส้ม · 5 เขียว · 6 ม่วง)
-         พื้นสี่เหลี่ยม   = ผลนี้เชื่อได้แค่ไหน (เขียว สอดคล้อง / แดง ต้องตรวจสอบ / เทา ยังไม่มีหลักฐาน) */
-      var lvC=(r.lv!=null&&CLS_LV_CLR[r.lv])?CLS_LV_CLR[r.lv]:'#cbd5e1';
-      var dot='<span style="display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;border-radius:50%;background:'+lvC+';color:#fff;font-weight:800;font-size:12.5px;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.18)">'+lvTxt+'</span>';
-      return '<td style="text-align:center;cursor:pointer" onclick="clsV8Detail('+si+',\''+c+'\')" title="'+esc(cd[1]+' — ระดับ '+lvTxt+' · '+i3.t+' ('+info.t+')'+(r.why?(' · '+r.why):''))+'">'+
-        '<span style="position:relative;display:inline-flex;align-items:center;gap:5px;background:'+i3.bg+';border:1px solid '+i3.c+'55;border-radius:9px;padding:3px 9px 3px 4px">'+dot+
-          '<span style="color:'+i3.c+';font-weight:700;font-size:11px;white-space:nowrap">'+i3.t+'</span>'+
-          (fin?'<span style="position:absolute;top:-6px;right:-6px;font-size:10px" title="ครูยืนยันผลแล้ว">🔷</span>':'')+'</span>'+
-        (r.M!=null?'<div style="font-size:10px;color:#64748b;margin-top:1px">'+r.M.toFixed(0)+'%</div>':'')+'</td>';
+      return '<td style="text-align:center;cursor:pointer" onclick="clsV8Detail('+si+',\''+c+'\')" title="'+esc(cd[1]+' — '+i3.t+' ('+info.t+')'+(r.why?(' · '+r.why):''))+'">'+
+        '<span style="position:relative;display:inline-block;min-width:44px;background:'+i3.bg+';color:'+i3.c+';border-radius:8px;padding:2px 7px;font-weight:800">'+i3.i+' '+lvTxt+
+          (fin?'<span style="position:absolute;top:-5px;right:-5px;font-size:9px" title="ครูยืนยันผลแล้ว">🔷</span>':'')+'</span>'+
+        (r.M!=null?'<div style="font-size:10px;color:#64748b">'+r.M.toFixed(0)+'%</div>':'')+'</td>';
     }).join('');
     return '<tr id="cv8-row-'+si+'"><td style="font-size:12px"><b>'+esc((s.student_number?s.student_number+'. ':'')+nm)+'</b></td>'+cells+'</tr>'+
       '<tr id="cv8-det-'+si+'" style="display:none"><td colspan="7" id="cv8-det-td-'+si+'" style="background:#f8fafc"></td></tr>';
@@ -6829,7 +7523,24 @@ function clsV8AiCheck(si, c){
   out.dataset.ai=sc;
 }
 /* บันทึกผลยืนยันของครู — เก็บใน payload ของ kru_assess (merge, additive — ไม่ต้องแก้ SQL) */
+
+/* [ตรวจระบบ รอบ 17 · A1] ยามกลางของโหมดข้อมูลตัวอย่าง
+   โหมดนี้ยืมรหัสนักเรียนจริงมาแสดงผล ถ้าปล่อยให้ปุ่มบันทึกทำงาน = เขียนทับผลจริงของเด็ก
+   ทุกเส้นทางที่ "เขียน" ต้องผ่านยามนี้ก่อนเสมอ */
+function demoBlocked(what){
+  var on=false; try{ on=!!(window.DEMO&&DEMO.on); }catch(e){}
+  if(!on) return false;
+  try{ toast('🧪 อยู่ในโหมดข้อมูลตัวอย่าง — '+(what||'บันทึกไม่ได้')+' (ปิดโหมดก่อนจึงจะบันทึกได้จริง)'); }catch(e){}
+  return true;
+}
+/* ป้ายกำกับที่ต้องติดไปกับทุกเอกสารที่ออกจากโหมดตัวอย่าง — กันเอกสารปลอมหลุดไปถึงผู้บริหาร */
+function demoStamp(){
+  var on=false; try{ on=!!(window.DEMO&&DEMO.on); }catch(e){}
+  return on?'⚠️ ข้อมูลตัวอย่างสำหรับดูหน้าจอเท่านั้น — ไม่ใช่ผลจริงของนักเรียน':'';
+}
+
 function clsV8Finalize(si, c){
+  if(demoBlocked('ยืนยันผลไม่ได้')) return;
   if(!_cv8Cache) return;
   var s=_cv8Cache.studs[si], stu=_cv8Cache.by[s.id]||{};
   var lvSel=$('cv8-lv-'+si+'-'+c), ta=$('cv8-ans-'+si+'-'+c), stEl=$('cv8-fin-st-'+si+'-'+c), aiEl=$('cv8-ai-'+si+'-'+c);
@@ -6852,6 +7563,14 @@ function clsV8Finalize(si, c){
 }
 /* [เฟส 1] 🖨️ รายงานสมรรถนะรายห้องสำหรับพิมพ์/บันทึกเป็น PDF — เอาไปแนบแฟ้ม ปพ. หรือแฟ้มประกวดได้ทันที
    ใช้ข้อมูลชุดเดียวกับตารางบนจอ (ไม่คิดใหม่) และพิมพ์เกณฑ์ที่ใช้กำกับไว้ท้ายรายงานเพื่อการตรวจสอบย้อนหลัง */
+/* [ตรวจระบบ รอบ 17 · A1] เอกสารที่ออกจากโหมดตัวอย่างต้องมีป้ายกำกับเสมอ
+   ตอน audit พบว่ารายงานพิมพ์ในโหมดตัวอย่างมีชื่อจริงนักเรียน + ช่องลงชื่อผู้บริหาร
+   แต่ไม่มีคำว่า "ตัวอย่าง" อยู่ในเอกสารเลย */
+function _demoPrintBanner(){
+  var s=demoStamp(); if(!s) return '';
+  return '<div style="background:#fef3c7;border:2px solid #f59e0b;color:#92400e;border-radius:10px;'+
+    'padding:10px 14px;margin:0 0 12px;font-weight:800;font-size:15px;text-align:center">'+s+'</div>';
+}
 function clsV8Print(){
   if(!_cv8Cache||!_cv8Cache.studs||!_cv8Cache.studs.length){ toast('ยังไม่มีข้อมูลให้พิมพ์'); return; }
   var studs=_cv8Cache.studs, by=_cv8Cache.by||{};
@@ -6878,7 +7597,8 @@ function clsV8Print(){
     '.lg{display:inline-block;margin:0 10px 4px 0;font-size:12px}.ft{margin-top:12px;font-size:12px;color:#475569;line-height:1.7}'+
     '.sign{margin-top:26px;display:flex;gap:60px;font-size:13px}@page{size:A4 landscape;margin:12mm}'+
     '</style></head><body>'+
-    '<h1>รายงานผลการประเมินสมรรถนะหลัก 6 ด้าน</h1>'+
+    _demoPrintBanner()+
+    '<h1>รายงานผลการประเมินสมรรถนะหลัก 6 ด้าน'+(demoStamp()?' (ตัวอย่าง)':'')+'</h1>'+
     '<h2>'+esc(sch.name||'')+' · ห้อง '+esc(room.name||'')+' · ปีการศึกษา '+esc(String(room.academic_year||''))+' · พิมพ์เมื่อ '+esc(new Date().toLocaleString('th-TH'))+'</h2>'+
     '<table><thead><tr><th style="min-width:150px">นักเรียน</th>'+th+'</tr></thead><tbody>'+body+'</tbody></table>'+
     '<div class="ft"><b>สรุปสถานะ:</b> '+legend+'<br>'+
@@ -6921,6 +7641,9 @@ function clsV8Settings(){
   document.body.appendChild(wrap);
 }
 function clsV8SaveSet(){
+  if(demoBlocked('บันทึกเกณฑ์ไม่ได้')) return;
+  /* [ตรวจระบบ รอบ 17 · C1] กันสิทธิ์ให้ตรงกับปุ่มแฝดในหน้าตัวชี้วัด */
+  if(!cls.isAdmin){ toast('เฉพาะผู้ดูแลระบบเท่านั้นที่แก้เกณฑ์ได้'); return; }
   var stEl=$('v8s-st');
   var pairs=[['v8_w_minor','v8s-wm'],['v8_w_sum','v8s-ws'],['v8_r1','v8s-r1'],['v8_r2','v8s-r2'],['v8_r3','v8s-r3'],['v8_diff','v8s-df'],['v8_lv_base','v8s-lb']];
   /* [เฟส 1] ตรวจค่าก่อนบันทึก — เดิมกรอกอะไรก็บันทึกได้หมด
@@ -6944,11 +7667,32 @@ function clsV8SaveSet(){
     return;
   }
   if(stEl) stEl.textContent='กำลังบันทึก...';
-  var chain=Promise.resolve(), err=null;
+  /* [ตรวจระบบ รอบ 17 · A7] จำค่าเดิมของทุกช่องไว้ก่อน
+     ถ้าล้มกลางคัน ต้องเขียนคืนให้ครบ ไม่งั้นฐานข้อมูลค้างครึ่ง ๆ กลาง ๆ
+     (เคสจริง: ล้มที่ค่าที่ 2 → น้ำหนักกลายเป็น 40+70 = 110% เด็กที่ได้เต็มจะได้ M = 110) */
+  var _prevSet=Object.assign({}, CBE8.set||{});
+  var _prevVal={ v8_w_minor:_prevSet.wMinor, v8_w_sum:_prevSet.wSum, v8_r1:_prevSet.r1,
+                 v8_r2:_prevSet.r2, v8_r3:_prevSet.r3, v8_diff:_prevSet.diff, v8_lv_base:_prevSet.lvBase };
+  var chain=Promise.resolve(), err=null, done=[];
   pairs.forEach(function(p){
     var el=$(p[1]); if(!el) return;
-    chain=chain.then(function(){ return sbFetch('/rest/v1/rpc/rpc_set_setting',{method:'POST',body:JSON.stringify({p_key:p[0],p_val:String(el.value||'')})}); })
-      .catch(function(e){ err=e; });
+    chain=chain.then(function(){
+      if(err) return null;                       /* ล้มแล้วหยุดทันที ไม่เขียนต่อให้เละไปกว่าเดิม */
+      return sbFetch('/rest/v1/rpc/rpc_set_setting',{method:'POST',body:JSON.stringify({p_key:p[0],p_val:String(el.value||'')})})
+        .then(function(r){ done.push(p[0]); return r; });
+    }).catch(function(e){ err=e; });
+  });
+  /* ล้มแล้วเขียนค่าเดิมคืนทุกช่องที่เผลอเขียนไปแล้ว */
+  chain=chain.then(function(){
+    if(!err || !done.length) return null;
+    if(stEl) stEl.innerHTML='<span style="color:#b45309">บันทึกไม่สำเร็จ — กำลังย้อนค่าเดิมกลับ...</span>';
+    var back=Promise.resolve();
+    done.forEach(function(k){
+      back=back.then(function(){
+        return sbFetch('/rest/v1/rpc/rpc_set_setting',{method:'POST',body:JSON.stringify({p_key:k,p_val:String(_prevVal[k]==null?'':_prevVal[k])})});
+      }).catch(function(){});
+    });
+    return back;
   });
   sbEnsure().then(function(){ return chain; }).then(function(){
     if(err){ if(stEl) stEl.innerHTML='<span style="color:#b91c1c">บันทึกไม่สำเร็จ: '+esc(String(err.message||''))+'</span>'; return; }
