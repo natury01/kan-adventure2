@@ -1644,7 +1644,10 @@ button, .btn { touch-action: manipulation; } /* ตัดดีเลย์แ�
   opacity: 0; transition: opacity 0.8s ease; pointer-events: none; }
 body.v8-art-on .wm-art-bg { opacity: 1; }
 /* [V.8] เส้นทางซิกแซก+แท่น iso ของผังเก่า ไม่ตรงตำแหน่งจุดด่านแบบ 3 โซนแล้ว — ปิดถาวร (แผนที่ภาพวาดมีเส้นทางในตัว) */
-#worldmap-screen .worldmap-path-svg, #worldmap-iso-canvas { display: none; }
+/* [ระยะ 3.1] เส้นทางซิกแซกของผังเก่ายังปิดถาวร (ไม่ตรงจุดด่านแบบ 3 โซนแล้ว)
+   แต่ชั้นแท่น/เงาใต้หมุดเปิดใช้ได้ — มันอ่านตำแหน่งหมุดจาก DOM จริงจึงตรงเสมอ */
+#worldmap-screen .worldmap-path-svg { display: none; }
+#worldmap-iso-canvas { display: block; }
 body.v8-art-on #worldmap-screen .worldmap-terrain,
 body.v8-art-on #worldmap-screen .worldmap-tree { display: none; }
 body.v8-art-on #worldmap-screen .worldmap-fog { opacity: 0.35; }
@@ -2663,6 +2666,136 @@ body.lowfx .vk-actor { opacity: 0.96; }
 .cn-ballot .cn-ballot-lab { display: block; font-size: max(11px, calc(var(--vw)*0.8)); font-weight: 800;
   color: #fff8e6; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
 .cn-ballot.in { transform: scale(1.16); }
+
+/* ============================================================
+   [ระยะ 3.2] ชั้นความลึกของฉาก (ครูเลือก "เน้นแสงเงาให้ลึกขึ้น")
+   หลักเดียวกับที่ฉากกาญ 2050 ใช้อยู่แล้ว: แสงมาจากบนซ้าย · ไกลออกไปจางลง · ขอบจอมืดกว่ากลาง
+   ============================================================ */
+/* ต้องเจาะจงกว่ากฎ `#v8stage-root > * { pointer-events: auto }` ที่มีอยู่เดิม
+   ไม่งั้นชั้นความลึกจะกลายเป็นแผ่นใสบังปุ่มทั้งฉาก */
+#v8stage-root > .vk-depth,
+.vk-depth { position: absolute; inset: 0; pointer-events: none !important; z-index: 4; overflow: hidden; }
+.vk-depth i { position: absolute; display: block; }
+/* หมอกตามระยะ — ยิ่งลึกเข้าไปในฉาก (ด้านบน) ยิ่งจาง เหมือนอากาศบังระยะไกล */
+.vk-depth .vkd-fog { left: 0; right: 0; top: 0; height: 46%;
+  background: linear-gradient(180deg, rgba(226,240,248,0.30) 0%, rgba(226,240,248,0.12) 45%, rgba(226,240,248,0) 100%); }
+/* แสงอุ่นจากดวงอาทิตย์มุมบนซ้าย — ทิศเดียวกับเงาของตัวละครและกล่องใน ISO */
+.vk-depth .vkd-sun { left: -8%; top: -14%; width: 62%; height: 74%;
+  background: radial-gradient(closest-side, rgba(255,238,190,0.26), rgba(255,238,190,0.10) 55%, rgba(255,238,190,0) 100%); }
+/* ขอบจอมืดลงนิดเดียว — ดึงสายตาเข้ากลางฉาก */
+.vk-depth .vkd-vig { inset: 0;
+  background: radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 52%, rgba(10,20,16,0.16) 82%, rgba(10,20,16,0.30) 100%); }
+/* โหมดประหยัดพลัง: เหลือแค่ขอบจอ ตัดชั้นที่เหลือทิ้ง */
+body.lowfx .vk-depth .vkd-fog, body.lowfx .vk-depth .vkd-sun { display: none; }
+
+/* ---- เงาสัมผัสพื้นของวัตถุในฉาก ----
+   ของที่ "วางอยู่บนพื้น" ต้องมีเงาติดพื้น ไม่งั้นดูลอย — นี่คือตัวบอกความลึกที่ถูกที่สุด */
+#v8stage-root .rd-plank,
+#v8stage-root .rs-tile.land,
+#v8stage-root .cp-tier .cp-fall,
+#v8stage-root .st-site,
+#v8stage-root .mc-cell.on,
+#v8stage-root .wt-gate,
+#v8stage-root .cn-card,
+#v8stage-root .vk-pick-card,
+#v8stage-root .cz-card {
+  box-shadow: 0 calc(var(--vw)*0.22) calc(var(--vw)*0.5) rgba(12,26,18,0.30),
+              0 calc(var(--vw)*0.06) 0 rgba(255,255,255,0.35) inset;
+}
+/* การ์ด/แผงลอยเหนือฉาก — เงาฟุ้งกว่าเพราะอยู่สูงจากพื้นมากกว่า */
+#v8stage-root .dt-conclude-panel,
+#v8stage-root .rd-msg-panel,
+#v8stage-root .cap-act-card,
+#v8stage-root .vk-meters,
+#v8stage-root .st-teams {
+  box-shadow: 0 calc(var(--vw)*0.7) calc(var(--vw)*1.6) rgba(8,18,14,0.36);
+}
+/* แสงขอบบนของวัตถุ (rim light) — ขอบที่หันเข้าหาดวงอาทิตย์สว่างกว่าอีกด้าน */
+#v8stage-root .rd-plank::before,
+#v8stage-root .st-site::before {
+  content: ''; position: absolute; left: 6%; right: 6%; top: 0; height: calc(var(--vw)*0.14);
+  background: linear-gradient(90deg, rgba(255,248,220,0.55), rgba(255,248,220,0.12));
+  border-radius: 999px; pointer-events: none;
+}
+body.lowfx #v8stage-root .rd-plank::before,
+body.lowfx #v8stage-root .st-site::before { display: none; }
+
+/* ---- พารัลแลกซ์เบา ๆ: ภาพพื้นหลังขยายนิดหน่อยแล้วขยับช้ากว่าฉากหน้า ----
+   ใช้ท่าเดียวกับฉากกาญ 2050 ที่ขยับพื้นหลัง 25% ของฉากหน้า */
+#v8stage-root .dt-bg { transform: scale(1.06); transition: transform 0.6s ease-out; will-change: transform; }
+#v8stage-root.vk-parallax-l .dt-bg { transform: scale(1.06) translateX(calc(var(--vw)*0.5)); }
+#v8stage-root.vk-parallax-r .dt-bg { transform: scale(1.06) translateX(calc(var(--vw)*-0.5)); }
+body.lowfx #v8stage-root .dt-bg { transform: none; }
+
+/* ===== [ระยะ 4 · Co-op] โหวตลับสองที่นั่ง + กระดานสภาเมืองของห้อง ===== */
+.cop-ov{position:absolute;inset:0;z-index:88;display:flex;align-items:center;justify-content:center;
+  background:rgba(8,15,30,0.88);padding:calc(var(--vw)*0.9);pointer-events:auto !important;}
+#v8stage-root > .cop-ov{pointer-events:auto !important;}
+.cop-card{width:min(96%,calc(var(--vw)*54));max-height:94%;overflow:auto;background:#fffdf7;
+  border-radius:calc(var(--vw)*1.1);border:calc(var(--vw)*0.26) solid #f97316;
+  padding:calc(var(--vw)*1);box-shadow:0 calc(var(--vw)*0.8) calc(var(--vw)*2) rgba(0,0,0,0.5);
+  pointer-events:auto !important;}
+.cop-turn{display:block;text-align:center;color:#fff;font-weight:800;border-radius:999px;
+  padding:max(8px,calc(var(--vw)*0.4)) calc(var(--vw)*0.8);font-size:max(13px,calc(var(--vw)*1));}
+.cop-h{text-align:center;font-weight:800;color:#0f172a;margin-top:calc(var(--vw)*0.55);
+  font-size:max(14px,calc(var(--vw)*1.15));line-height:1.3;}
+.cop-q{text-align:center;color:#334155;margin:calc(var(--vw)*0.35) 0;
+  font-size:max(12px,calc(var(--vw)*0.95));line-height:1.45;}
+.cop-opt{display:flex;align-items:center;gap:calc(var(--vw)*0.5);width:100%;min-height:44px;
+  margin:calc(var(--vw)*0.22) 0;padding:max(8px,calc(var(--vw)*0.42)) calc(var(--vw)*0.6);
+  border:2px solid #cbd5e1;background:#fff;border-radius:calc(var(--vw)*0.7);cursor:pointer;
+  font-size:max(12px,calc(var(--vw)*0.95));text-align:left;line-height:1.35;font-family:inherit;color:#0f172a;}
+.cop-opt .ic{font-size:max(18px,calc(var(--vw)*1.4));flex:0 0 auto;}
+.cop-opt.on{border-color:#16a34a;background:#ecfdf5;box-shadow:0 0 0 3px rgba(22,163,74,0.18);}
+.cop-rh{margin-top:calc(var(--vw)*0.5);font-weight:800;color:#0f172a;font-size:max(12px,calc(var(--vw)*0.95));}
+.cop-chip{display:inline-block;min-height:44px;margin:calc(var(--vw)*0.18);
+  padding:max(8px,calc(var(--vw)*0.36)) calc(var(--vw)*0.7);border:2px solid #cbd5e1;background:#fff;
+  border-radius:999px;cursor:pointer;font-size:max(12px,calc(var(--vw)*0.9));font-family:inherit;color:#0f172a;}
+.cop-chip.on{border-color:#7c3aed;background:#f5f3ff;box-shadow:0 0 0 3px rgba(124,58,237,0.16);}
+.cop-hand{text-align:center;}
+.cop-hand .big{font-size:max(42px,calc(var(--vw)*4));line-height:1.1;}
+.cop-eyes{color:#b45309;font-weight:800;font-size:max(12px,calc(var(--vw)*0.92));margin-top:calc(var(--vw)*0.3);}
+.cop-vs{display:flex;gap:calc(var(--vw)*0.5);flex-wrap:wrap;margin-top:calc(var(--vw)*0.5);}
+.cop-side{flex:1 1 44%;min-width:min(100%,calc(var(--vw)*17));border-radius:calc(var(--vw)*0.7);
+  padding:calc(var(--vw)*0.6);background:#f8fafc;border:2px solid #e2e8f0;
+  font-size:max(12px,calc(var(--vw)*0.9));line-height:1.45;}
+.cop-both{display:flex;gap:calc(var(--vw)*0.6);margin-top:calc(var(--vw)*0.7);}
+.cop-both button{flex:1;min-height:56px;border:0;border-radius:calc(var(--vw)*0.8);color:#fff;font-weight:800;
+  cursor:pointer;font-size:max(13px,calc(var(--vw)*1));font-family:inherit;line-height:1.3;}
+.cop-both button.done{filter:grayscale(0.45);opacity:0.8;}
+.cop-badge{display:inline-block;padding:3px 10px;border-radius:999px;color:#fff;font-weight:800;
+  font-size:max(11px,calc(var(--vw)*0.8));}
+.cop-seatgrid{display:flex;flex-wrap:wrap;gap:calc(var(--vw)*0.4);justify-content:center;margin-top:calc(var(--vw)*0.5);}
+.cop-seat{min-height:44px;min-width:max(96px,calc(var(--vw)*9));padding:calc(var(--vw)*0.5);
+  border-radius:calc(var(--vw)*0.7);border:3px solid #e2e8f0;background:#fff;cursor:pointer;
+  font-size:max(12px,calc(var(--vw)*0.9));font-weight:700;font-family:inherit;color:#0f172a;}
+.cop-seat .e{display:block;font-size:max(26px,calc(var(--vw)*2));}
+.cop-seat.taken{opacity:0.3;pointer-events:none;}
+.cop-blur{filter:blur(7px);opacity:0.5;}
+.ixJoint{margin:calc(var(--vw)*0.3) 0;padding:max(8px,calc(var(--vw)*0.4)) calc(var(--vw)*0.6);
+  border-radius:calc(var(--vw)*0.6);background:linear-gradient(90deg,#fde68a,#fecaca);color:#7c2d12;
+  font-weight:800;text-align:center;font-size:max(12px,calc(var(--vw)*0.92));line-height:1.4;}
+/* กระดานสภาเมืองของห้อง */
+.rcb-board{display:flex;flex-direction:column;gap:calc(var(--vw)*0.28);max-height:min(46vh,calc(var(--vw)*24));
+  overflow:auto;margin-top:calc(var(--vw)*0.4);}
+.rcb-row{display:flex;align-items:center;gap:calc(var(--vw)*0.4);background:#fff;border:2px solid #e2e8f0;
+  border-radius:calc(var(--vw)*0.6);padding:max(7px,calc(var(--vw)*0.32)) calc(var(--vw)*0.55);
+  font-size:max(12px,calc(var(--vw)*0.88));}
+.rcb-row.me{border-color:#f59e0b;background:#fffbeb;}
+.rcb-row .nm{flex:1 1 auto;font-weight:700;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rcb-m{flex:0 0 auto;font-weight:800;}
+.rcb-ico{flex:0 0 auto;letter-spacing:1px;font-size:max(14px,calc(var(--vw)*1.05));}
+.rcb-idea{display:inline-block;min-height:44px;margin:calc(var(--vw)*0.18);
+  padding:max(8px,calc(var(--vw)*0.36)) calc(var(--vw)*0.7);border:2px dashed #0ea5e9;background:#f0f9ff;
+  border-radius:calc(var(--vw)*0.7);cursor:pointer;font-size:max(12px,calc(var(--vw)*0.9));
+  font-family:inherit;color:#075985;font-weight:700;}
+/* ตัวเลือกโหมดเครือข่าย (ในหน้า ตั้งค่า) */
+.netmode-chips{display:flex;flex-wrap:wrap;gap:6px;width:100%;margin-top:6px;}
+.netmode-chips button{flex:1 1 30%;min-height:44px;border-radius:10px;cursor:pointer;font-family:inherit;
+  font-weight:800;font-size:max(12px,calc(var(--vw)*0.85));border:2px solid rgba(255,255,255,0.35);
+  background:rgba(255,255,255,0.08);color:#ffe9b8;padding:6px 4px;line-height:1.25;}
+.netmode-chips button.on{background:#ffd76a;border-color:#ffd76a;color:#4a2c00;}
+.netmode-note{width:100%;margin-top:5px;font-size:max(11px,calc(var(--vw)*0.78));color:#dbeafe;line-height:1.4;opacity:0.95;}
 </style>
 </head>
 <body>
@@ -3609,6 +3742,13 @@ body.lowfx .vk-actor { opacity: 0.96; }
             <span id="toggle-2050bg-val" class="volume-val">ปิด (ใช้ภาพวาดในเกม)</span>
           </div>
           <!-- [เฟส 4 · 4.6] ครูปิดโหมดกล้องทั้งเครื่องได้ (บางโรงเรียนมีนโยบายห้ามใช้กล้อง) -->
+          <!-- [ระยะ 4C] โหมดเครือข่าย — โรงเรียนที่เน็ตช้าเลือกโหมดเบาได้ โดยยังส่งผลขึ้นเซิร์ฟเวอร์ครบเหมือนเดิม -->
+          <div class="volume-row" style="flex-wrap:wrap; margin-top:calc(var(--vw) * 0.5); border-top:calc(var(--vw)*0.12) solid rgba(255,255,255,0.15); padding-top:calc(var(--vw)*0.6);">
+            <label style="width:100%">🌐 โหมดเครือข่ายของเครื่องนี้</label>
+            <div id="netmode-chips" class="netmode-chips"></div>
+            <div id="netmode-note" class="netmode-note"></div>
+            <button onclick="v8NetProbe()" style="margin-top:6px;min-height:44px;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:800;font-size:max(12px,calc(var(--vw)*0.85));border:2px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.08);color:#ffe9b8;padding:6px 14px">📶 วัดความเร็วเน็ตแล้วแนะนำให้</button>
+          </div>
           <div class="volume-row">
             <label for="toggle-ar">🔭 อนุญาตโหมดสำรวจจริง (เปิดกล้องในด่านนิเวศ)</label>
             <input id="toggle-ar" type="checkbox" style="width:max(calc(var(--vw) * 2.4),22px); height:max(calc(var(--vw) * 2.4),22px); cursor:pointer;">
@@ -18500,7 +18640,7 @@ Object.assign(StageBalance2050, {
     var sceneInner=(m.crit==='EE')?this._ixNewsHtml(s.bi):''; // [ภ.2] ป้ายข่าวคลิกได้ในฉากเมือง (ป้ายที่ตรงกับ beat จะเรืองแสง)
     var fxTop=(m.crit==='SD'); // [จุด 2] ภ.4 (SD): ช่องผลลัพธ์+คำตอบที่เลือก ไว้บนสุด
     var body=this._ixMeters()+(fxTop?'<div class="ixFx ixFxTop" id="ixfx"></div>':'')+this._ixSceneHtml(m.scene,sceneInner)
-      +'<div class="ixSay"><div class="w">'+b.who+' 🗣️</div>'+b.say+'</div><div class="ixPr">❓ '+prompt+'</div><div class="ixOpts">';
+      +this._ixJointBanner()+'<div class="ixSay"><div class="w">'+b.who+' 🗣️</div>'+b.say+'</div><div class="ixPr">❓ '+prompt+'</div><div class="ixOpts">';
     order.forEach(function(oi){var o=b.opts[oi];body+='<button class="ixOpt" data-i="'+oi+'"><span class="ic">'+o.i+'</span><span>'+o.t+'</span></button>';});
     body+='</div>'+(fxTop?'':'<div class="ixFx" id="ixfx"></div>')+'<button class="ixGo" id="ixgo" disabled>ตกลง ✓</button>';
     var wrap=document.getElementById('cap-body');wrap.innerHTML='<div class="ix2050">'+body+'</div>';
@@ -18511,7 +18651,61 @@ Object.assign(StageBalance2050, {
       if(mlim){ var k=s.pick.indexOf(oi); if(k>=0){s.pick.splice(k,1);btn.classList.remove('sel');} else { if(s.pick.length>=mlim) return; s.pick.push(oi);btn.classList.add('sel'); } go.disabled=(s.pick.length===0); }
       else { wrap.querySelectorAll('.ixOpt').forEach(function(x){x.classList.remove('sel');});btn.classList.add('sel');s.pick=[oi];go.disabled=false; }
     };});
-    go.onclick=function(){try{AUDIO.playSFX('click');}catch(e){}self._ixGrade();};
+    go.onclick=function(){try{AUDIO.playSFX('click');}catch(e){}
+      /* [ระยะ 4A] ข้อที่เป็นจุดตัดสินใจร่วม ต้องผ่านการโหวตลับสองที่นั่งก่อนจึงตรวจคำตอบ */
+      if(self._ixJointHere()){ return self._ixJointVote(b, function(){ self._ixGrade(); }); }
+      self._ixGrade();};
+  },
+  /* ---------- [ระยะ 4A] จุดตัดสินใจร่วมของทีม ----------
+     แผนที่จุด: โหมดคู่ = องก์ละ 1 จุด (ภ.ข่าว beat2 · ภ.ระบบเมือง beat4 · ภ.คืนพายุ beat2)
+                โหมดเดี่ยว = 1 จุดที่ภารกิจระบบเมือง โดยสวมสองบทบาทแทนสองคน (ท่าเดียวกับด่าน 5)
+     ทำไมไม่ใส่ทุก beat: จุดตัดสินใจร่วมมีต้นทุนเวลา ถ้าใส่ทุกข้อคาบเรียนจะไม่พอ
+     และการวัดจะกลายเป็น "ความอดทน" แทน "การทำงานเป็นทีม" */
+  _ixJointMap() {
+    let duo = false; try { duo = V8COOP.on(); } catch (e) {}
+    return duo ? { 1: 1, 2: 3, 5: 1 } : { 2: 3 };
+  },
+  _ixJointHere() {
+    const s = this.s.ix; if (!s) return false;
+    if (!this.s.ixJoint) this.s.ixJoint = {};
+    if (this.s.ixJoint[s.mi + '_' + s.bi]) return false;
+    return this._ixJointMap()[s.mi] === s.bi;
+  },
+  _ixJointBanner() {
+    if (!this._ixJointHere()) return '';
+    let duo = false; try { duo = V8COOP.on(); } catch (e) {}
+    if (duo) {
+      let a = '', b = ''; try { a = V8COOP.tag(0); b = V8COOP.tag(1); } catch (e) {}
+      return '<div class="ixJoint">🗳️ จุดตัดสินใจร่วมขององก์นี้ — ' + a + ' เลือกก่อน แล้วส่งเครื่องให้ ' + b + ' 🙈</div>';
+    }
+    return '<div class="ixJoint">🗳️ จุดตัดสินใจร่วม — รอบนี้สวม 2 บทบาท: คิดแบบ 🧑‍💼 นักวางแผนเมือง แล้วคิดใหม่แบบ 👵 ตัวแทนชาวบ้าน</div>';
+  },
+  _ixJointVote(b, after) {
+    const self = this, s = this.s.ix;
+    const mlim = b.multi || ((b.opts.filter((o) => o.pt >= 2).length >= 2) ? b.opts.filter((o) => o.pt >= 2).length : 0);
+    let duo = false; try { duo = V8COOP.on(); } catch (e) {}
+    if (typeof V8COOP === 'undefined') { after(); return; }
+    V8COOP.joint({
+      head: 'จุดตัดสินใจร่วมขององก์นี้', q: b.prompt, opts: b.opts, multi: mlim,
+      order: ((s._ord || {})[s.mi + '_' + s.bi] || null),
+      firstPicks: s.pick.slice(), solo: !duo
+    }, (res) => {
+      if (res.picks && res.picks.length) s.pick = res.picks.slice();
+      if (!self.s.ixJoint) self.s.ixJoint = {};
+      self.s.ixJoint[s.mi + '_' + s.bi] = 1;
+      try {
+        let actN = 1; try { actN = KAN2050V2.actOfMission(s.mi).n; } catch (e) {}
+        /* สเกลเดียวกับด่าน 5 เป๊ะ: ตรงกัน = 1 · ตกลงกันได้หลังฟังเหตุผล = 0.9
+           (ทำให้ TW-C ของสองด่านเทียบกันได้ในงานวิจัย) */
+        logEvidence('balance2050', 'collab', 'TW-C', res.agree ? 1 : 0.9, {
+          joint: 'act' + actN, mode: duo ? 'duo' : 'solo-2hats', from: 'kan2050v2', scored: true,
+          seats: res.seats,
+          vote: { p1: res.p1t, p2: res.p2t, r1: res.r1, r2: res.r2, agree: res.agree, final: res.pickT, changedMind: res.changed },
+          mission: s.mi, beat: s.bi
+        });
+      } catch (e) {}
+      after();
+    });
   },
   _ixGrade(){var self=this,s=this.s.ix,m=this._ixM[s.mi],b=m.beats[s.bi];
     var picks=s.pick.slice(),mlim=b.multi||((b.opts.filter(function(o){return o.pt>=2;}).length>=2)?b.opts.filter(function(o){return o.pt>=2;}).length:0),multi=mlim>0,pt,good,fx;
@@ -22989,6 +23183,8 @@ function drawWorldmapIsoLayer() {
   ctx.clearRect(0, 0, 1920, 1080);
 
   // 1) กริดเพชร isometric จางๆ ทั่วพื้นสนาม (ใช้พิกัดจาก ISO.toScreen โดยตรง)
+  /* [ระยะ 3.1] ข้ามกริดเมื่อใช้แผนที่ภาพวาด — เส้นกริดเวกเตอร์ทับภาพวาดแล้วดูขัดกัน */
+  if (!document.body.classList.contains('v8-art-on')) {
   ctx.save();
   ctx.strokeStyle = 'rgba(60,110,80,0.10)';
   ctx.lineWidth = 1.5;
@@ -23005,6 +23201,7 @@ function drawWorldmapIsoLayer() {
   }
   ISO.originX = saveOx; ISO.originY = saveOy;
   ctx.restore();
+  }
 
   // 2) แท่นกระเบื้องยกระดับใต้จุดด่าน — เรียงวาดตาม depth (row+col ~ ตำแหน่ง y) ด้วย ISO.depthSort
   const data = getSaveData();
@@ -23021,6 +23218,32 @@ function drawWorldmapIsoLayer() {
       gridRow: Math.round(parseFloat(el.style.top) / 8)
     };
   });
+  /* [ระยะ 3.1] บนแผนที่ภาพวาด ใช้เงาสัมผัสพื้น + แสงขอบอุ่น แทนแท่นบล็อกสี
+     ให้หมุดรู้สึก "ตั้งอยู่บนพื้น" โดยไม่ไปทับภาพวาดด้วยของคนละภาษาศิลป์ */
+  const _artMap = document.body.classList.contains('v8-art-on');
+  if (_artMap) {
+    ISO.depthSort(nodes).forEach(n => {
+      const cx = n.x, cy = n.y + 52;
+      const strong = n.unlocked || n.cleared;
+      ctx.save();
+      /* เงาสัมผัสพื้น — เข้มตรงกลาง จางออกรอบนอก (ยิ่งใกล้พื้นยิ่งคม) */
+      const g = ctx.createRadialGradient(cx, cy, 2, cx, cy, 74);
+      g.addColorStop(0, 'rgba(18,32,20,' + (strong ? 0.34 : 0.2) + ')');
+      g.addColorStop(0.55, 'rgba(18,32,20,' + (strong ? 0.16 : 0.09) + ')');
+      g.addColorStop(1, 'rgba(18,32,20,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.ellipse(cx, cy, 74, 26, 0, 0, Math.PI * 2); ctx.fill();
+      /* แสงขอบอุ่นด้านบน — ดวงอาทิตย์บนซ้ายชุดเดียวกับฉากอื่นทั้งเกม */
+      if (strong) {
+        ctx.globalAlpha = n.cleared ? 0.5 : 0.32;
+        ctx.strokeStyle = n.cleared ? 'rgba(255,226,150,0.95)' : 'rgba(255,248,225,0.85)';
+        ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.ellipse(cx, cy - 3, 44, 15, 0, Math.PI * 1.06, Math.PI * 1.94); ctx.stroke();
+      }
+      ctx.restore();
+    });
+    return;
+  }
   ISO.depthSort(nodes).forEach(n => {
     const cx = n.x, cy = n.y + 46; // แท่นอยู่ใต้ไอคอนด่านเล็กน้อย เหมือนด่านตั้งอยู่บนแท่น
     const w = 82, h = 41, d = n.boss ? 22 : 15; // กว้าง/สูงของหน้าเพชร (สัดส่วน iso 2:1) + ความหนา extrude
@@ -23394,7 +23617,10 @@ const VK = {
       (cfg.bgImage ? '<div class="dt-bg" id="vk-bg-img" style="opacity:0"></div>' : '') +
       '<div class="dt-topbar"><span class="dt-case-title">' + cfg.title + '</span>' + steps + '</div>' +
       (cfg.hint ? '<div class="dt-hint-banner" id="vk-hint">' + cfg.hint + '</div>' : '') +
-      '<div class="dt-scene" id="vk-scene">' + (cfg.html || '') + '</div>';
+      '<div class="dt-scene" id="vk-scene">' + (cfg.html || '') + '</div>' +
+      /* [ระยะ 3.2] ชั้นความลึก — หมอกตามระยะที่ขอบฟ้า · แสงอุ่นจากมุมบนซ้าย · ขอบจอมืดลงเล็กน้อย
+         ทั้งหมดเป็น CSS ล้วน ไม่มี rAF ไม่กินแรงเครื่อง และไม่บังการกดปุ่ม */
+      '<div class="vk-depth" aria-hidden="true"><i class="vkd-fog"></i><i class="vkd-sun"></i><i class="vkd-vig"></i></div>';
     r.classList.remove('vk-art-on');
     if (cfg.bgImage) {
       /* [ภาค 2] ภาพจริงติดแล้ว → ติดป้าย vk-art-on ให้ CSS ซ่อนภาพวาดสำรองที่ซ้อนอยู่ */
@@ -23403,6 +23629,23 @@ const VK = {
         r.classList.add('vk-art-on');
       });
     }
+    /* [ระยะ 3.2] พารัลแลกซ์เบา ๆ — พื้นหลังขยับสวนทางฝั่งที่ผู้เล่นแตะ ให้รู้สึกมีระยะลึก
+       ใช้ CSS transition ล้วน ไม่เปิด rAF · หน่วงด้วยธงกันสั่นถี่ · ปิดสนิทในโหมดประหยัดพลัง */
+    try {
+      if (!document.body.classList.contains('lowfx')) {
+        let _plx = 0;
+        r.addEventListener('pointermove', (e) => {
+          const now = performance.now();
+          if (now - _plx < 220) return;
+          _plx = now;
+          const b2 = r.getBoundingClientRect();
+          if (!b2.width) return;
+          const k = (e.clientX - b2.left) / b2.width;
+          r.classList.toggle('vk-parallax-l', k < 0.38);
+          r.classList.toggle('vk-parallax-r', k > 0.62);
+        }, { passive: true });
+      }
+    } catch (e) {}
     /* [เฟส 2 · 2.1] จุดต่อจุดเดียวที่ทำให้ตัวละคร+สัตว์เลี้ยง+ออร่าโผล่ครบทั้ง 6 ด่านเรือธง */
     try { VKBUDDY.mount(r); } catch (e) {}
     /* [เฟส 2 · 2.5] เสียงบรรยากาศตามฉาก — อ่านจากคลาสพื้นหลังที่ด่านตั้งมาอยู่แล้ว ไม่ต้องแก้ด่านสักบรรทัด */
@@ -23501,6 +23744,27 @@ const VK = {
 /* ============================================================
    [ระยะ 2.2] VKACTOR — ตัวละครผู้เล่นที่ "อยู่ในฉาก" และสั่งเดินได้
    ============================================================ */
+
+/* [ระยะ 3.3] ปรับความละเอียดแคนวาสตัวละครให้ตรงกับจอจริง
+   ต่ำกว่า 1 เท่า = เบลอ · สูงเกินจำเป็น = เปลืองแรงเครื่องเปล่า ๆ
+   จำกัดไม่เกิน 2 เท่า เพราะเกิน 2 ตาคนแยกไม่ออกแล้วแต่แรงเครื่องเพิ่มเป็นกำลังสอง */
+const V8DPR = {
+  k() {
+    try {
+      if (document.body.classList.contains('lowfx')) return 1;
+      return Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    } catch (e) { return 1; }
+  },
+  /* ตั้งขนาดจริงของแคนวาสตามจอ แล้วคืนสเกลที่ต้องคูณเข้า context
+     ระบบพิกัดที่โค้ดวาดใช้ยังเป็น w x h เท่าเดิมทุกประการ */
+  fit(cv, w, h) {
+    const k = this.k();
+    const W = Math.round(w * k), H = Math.round(h * k);
+    if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
+    return k;
+  }
+};
+
 const VKACTOR = {
   _list: [],
 
@@ -23511,7 +23775,7 @@ const VKACTOR = {
     const o = opts || {};
     const cv = document.createElement('canvas');
     cv.className = 'vk-actor';
-    cv.width = 300; cv.height = 420;
+    V8DPR.fit(cv, 300, 420);   /* [ระยะ 3.3] คมตามจอจริง ไม่เบลอบนแท็บเล็ต Retina */
     cv.setAttribute('aria-hidden', 'true');
     cv.style.left = (o.x == null ? 50 : o.x) + '%';
     cv.style.top = (o.y == null ? 70 : o.y) + '%';
@@ -23602,6 +23866,9 @@ const VKACTOR = {
   _draw(a, now) {
     const c = a.ctx; if (!c) return;
     if (a.until && now > a.until) { a.pose = 'idle'; a.until = 0; }
+    /* [ระยะ 3.3] ระบบพิกัดยังเป็น 300x420 เหมือนเดิม แค่ backing store ใหญ่ขึ้นตามจอ */
+    const k = V8DPR.fit(a.cv, 300, 420);
+    c.setTransform(k, 0, 0, k, 0, 0);
     c.clearRect(0, 0, 300, 420);
     let cfg; try { cfg = getPlayerConfig(); } catch (e) { return; }
     if (!cfg) return;
@@ -23665,6 +23932,8 @@ const VKBUDDY = {
   _draw(now) {
     const c = this.ctx; if (!c) return;
     if (this.until && now > this.until) { this.state = 'idle'; this.until = 0; }
+    /* [ระยะ 3.3] บัดดี้คมตามจอเช่นกัน */
+    try { const k = V8DPR.fit(this.cv, 440, 600); c.setTransform(k, 0, 0, k, 0, 0); } catch (e) {}
     c.clearRect(0, 0, 440, 600);
     let cfg; try { cfg = getPlayerConfig(); } catch (e) { return; }
     if (!cfg) return;
@@ -24177,6 +24446,9 @@ const LIVEROOM = {
   on: false, timer: null, fails: 0, ok: 0, ms: [], prev: {},
   KEY: 'cai_live_on',
   INTERVAL: 6000,
+  /* [ระยะ 4C] ช่วงถามซ้ำจริงขึ้นกับโหมดเครือข่ายของเครื่องนั้น
+     ออนไลน์เต็ม 6 วิ · ส่งแล้วดูทีหลัง 20 วิ · ในเครื่องล้วน = เปิดไม่ได้ (บอกครูตรง ๆ) */
+  interval() { let m = 'full'; try { m = V8NET.get(); } catch (e) {} return m === 'async' ? 20000 : this.INTERVAL; },
   supported() { const b = (typeof SBTee !== 'undefined' && SBTee.bind) ? SBTee.bind() : null; return !!(b && b.join_key); },
   start() {
     /* [ตรวจระบบ รอบ 17 · C3] เดิมเรียก toast() ซึ่งไม่มีในหน้าเกม → ReferenceError ถูกกลืน
@@ -24185,11 +24457,18 @@ const LIVEROOM = {
       try { VK.toast('📡 ยังใช้โหมดนี้ไม่ได้', 'ต้องเข้าห้องเรียนด้วยโค้ดห้องก่อนนะ', 2600); } catch (e) {}
       return;
     }
+    /* [ระยะ 4C] โรงเรียนที่ตั้งโหมด 'ในเครื่องล้วน' ไว้ = ตั้งใจไม่ให้ยิงเน็ตระหว่างคาบ */
+    try {
+      if (V8NET.get() === 'off') {
+        VK.toast('📵 อยู่ในโหมดในเครื่องล้วน', 'เปลี่ยนโหมดเครือข่ายที่ ⚙️ ตั้งค่า ก่อนถึงจะเปิดห้องเรียนสดได้', 3000);
+        return;
+      }
+    } catch (e) {}
     this.on = true; this.fails = 0; this.ok = 0; this.ms = []; this.prev = {};
     try { localStorage.setItem(this.KEY, '1'); } catch (e) {}
     this.render();
     this.tick();
-    this.timer = setInterval(() => this.tick(), this.INTERVAL);
+    this.timer = setInterval(() => this.tick(), this.interval());
   },
   stop(reason) {
     this.on = false;
@@ -24421,6 +24700,316 @@ const V8MODE = {
      · องก์ 3 คืนพายุ (PA + ช่วงป้องกันเมืองเรียลไทม์ก่อนแถลงข่าว)
    · โหมดเล่นเป็นคู่ (collab ในด่านรวบยอด — ตามแผนแม่บท) · ฉากจบเมือง 10 ปี + ประกาศนียบัตรผู้พิทักษ์
    ============================================================ */
+
+/* ============================================================
+   [ระยะ 4A] V8COOP — เล่นด้วยกันจริงบนเครื่องเดียว
+
+   หัวใจ: หลักฐาน "ทำงานเป็นทีม" ต้องมาจากพฤติกรรม ไม่ใช่จากการกดปุ่มเลือกโหมด
+   จึงยกแม่แบบของด่าน 5 (โหวตลับเรียงคน) มาใช้ที่จุดตัดสินใจจริงของกาญ 2050:
+     1) คนแรกเลือกบนจอหลัก แล้วบอกเหตุผล (เลือกจากชิป ไม่มีการพิมพ์)
+     2) คำตอบถูกเบลอ + การ์ดส่งเครื่องเต็มจอ — คนที่สองยังไม่เห็นอะไรทั้งสิ้น
+     3) คนที่สองเลือกเอง + เหตุผลของตัวเอง
+     4) ตรงกัน = ไปต่อ · ไม่ตรงกัน = เห็นเหตุผลของกันและกัน แล้วตกลงร่วมกัน
+   ค่าที่บันทึกใช้สเกลเดียวกับด่าน 5 เป๊ะ (ตรงกัน 1 · ตกลงกันได้หลังฟังเหตุผล 0.9)
+   เพื่อให้ TW-C ของสองด่านเทียบกันได้ในงานวิจัย
+
+   ความเป็นส่วนตัวของเด็ก: ที่นั่งใช้สัญลักษณ์สำเร็จรูป (ไม่มีช่องพิมพ์ชื่อ)
+   ============================================================ */
+const V8COOP = {
+  SEATS: [
+    { k: 'fox',  ic: '🦊', nm: 'ผู้พิทักษ์ส้ม',  col: '#ea580c' },
+    { k: 'turt', ic: '🐢', nm: 'ผู้พิทักษ์เขียว', col: '#15803d' },
+    { k: 'owl',  ic: '🦉', nm: 'ผู้พิทักษ์ม่วง',  col: '#6d28d9' },
+    { k: 'dolp', ic: '🐬', nm: 'ผู้พิทักษ์ฟ้า',   col: '#0369a1' }
+  ],
+  REASONS: [
+    ['people', '👥 เพราะช่วยคนได้มากที่สุด'],
+    ['nature', '🌿 เพราะดีต่อธรรมชาติ'],
+    ['future', '🌱 เพราะผลอยู่ไปถึงรุ่นต่อไป'],
+    ['data',   '🔎 เพราะมีข้อมูลรองรับชัดที่สุด']
+  ],
+  seat: [null, null],
+  reset() { this.seat = [null, null]; },
+  on() { try { return KAN2050V2.mode === 'duo' && !!this.seat[0] && !!this.seat[1]; } catch (e) { return false; } },
+  who(i) { return this.seat[i] || this.SEATS[i]; },
+  tag(i) { const s = this.who(i); return '<span class="cop-badge" style="background:' + s.col + '">' + s.ic + ' ' + s.nm + '</span>'; },
+  reasonText(k) { const f = this.REASONS.filter((r) => r[0] === k)[0]; return f ? f[1] : '—'; },
+  host() { return document.getElementById('capstone-screen') || document.getElementById('v8stage-root') || document.body; },
+
+  _card(host, col, inner) {
+    const ov = document.createElement('div');
+    ov.className = 'cop-ov';
+    ov.innerHTML = '<div class="cop-card" style="border-color:' + col + '">' + inner + '</div>';
+    (host || this.host()).appendChild(ov);
+    return ov;
+  },
+  _chips() { return this.REASONS.map((r) => '<button class="cop-chip" data-r="' + r[0] + '">' + r[1] + '</button>').join(''); },
+  _wireChips(ov, onPick) {
+    ov.querySelectorAll('.cop-chip').forEach((bt) => {
+      bt.onclick = () => {
+        ov.querySelectorAll('.cop-chip').forEach((x) => x.classList.remove('on'));
+        bt.classList.add('on');
+        try { AUDIO.playSFX('pick'); } catch (e) {}
+        onPick(bt.dataset.r);
+      };
+    });
+  },
+  _blur(on) {
+    try {
+      document.querySelectorAll('#cap-body .ixOpt').forEach((x) => {
+        if (on) { x.classList.remove('sel'); x.classList.add('cop-blur'); } else x.classList.remove('cop-blur');
+      });
+    } catch (e) {}
+  },
+
+  /* เลือกที่นั่งตอนเลือกโหมดคู่ — ไม่มีการพิมพ์ชื่อจริงใด ๆ */
+  pickSeats(host, cb) {
+    const self = this;
+    this.reset();
+    const step = (i) => {
+      const taken = self.seat[0] ? self.seat[0].k : '';
+      const cards = self.SEATS.map((s) =>
+        '<button class="cop-seat' + (s.k === taken ? ' taken' : '') + '" data-k="' + s.k + '" style="border-color:' + s.col + '">' +
+        '<span class="e">' + s.ic + '</span>' + s.nm + '</button>').join('');
+      const ov = self._card(host, '#0ea5e9',
+        '<div class="cop-h">👥 ทีมผู้พิทักษ์คู่ — ใครนั่งที่นั่งไหน?</div>' +
+        '<div class="cop-q">คนที่ <b>' + (i + 1) + '</b> เลือกสัญลักษณ์ของตัวเอง<br>' +
+        '<span style="font-size:0.92em;color:#64748b">ใช้แทนชื่อ — เกมนี้ไม่เก็บชื่อจริงของใครทั้งนั้น</span></div>' +
+        '<div class="cop-seatgrid">' + cards + '</div>');
+      ov.querySelectorAll('.cop-seat').forEach((bt) => {
+        bt.onclick = () => {
+          self.seat[i] = self.SEATS.filter((s) => s.k === bt.dataset.k)[0];
+          try { AUDIO.playSFX('pick'); } catch (e) {}
+          ov.remove();
+          if (i === 0) step(1); else cb();
+        };
+      });
+    };
+    step(0);
+  },
+
+  /* การ์ดขอเหตุผลของคนแรก (เลือกไว้แล้วบนจอหลัก) */
+  _askReason(host, seat, cb) {
+    const ov = this._card(host, seat.col,
+      '<div class="cop-turn" style="background:' + seat.col + '">' + seat.ic + ' ' + seat.nm + '</div>' +
+      '<div class="cop-h">🗳️ ล็อกคำตอบของคนแรก</div>' +
+      '<div class="cop-q">เลือกไว้แล้ว — บอกหน่อยว่า <b>เพราะอะไร</b><br>' +
+      '<span style="font-size:0.92em;color:#64748b">อีกคนยังไม่เห็นคำตอบของเราเลย</span></div>' +
+      '<div>' + this._chips() + '</div>' +
+      '<div class="dt-btn-row"><button class="dt-btn cop-ok" disabled style="background:' + seat.col + '">ล็อกคำตอบของฉัน 🔒</button></div>');
+    let pr = null;
+    const ok = ov.querySelector('.cop-ok');
+    this._wireChips(ov, (r) => { pr = r; ok.disabled = false; });
+    ok.onclick = () => { ov.remove(); cb(pr); };
+  },
+
+  /* การ์ดส่งเครื่อง — บังคำตอบของคนแรกไว้จริง ๆ */
+  _handover(host, seat, solo, cb) {
+    this._blur(true);
+    const ov = this._card(host, seat.col,
+      '<div class="cop-hand"><div class="big">' + (solo ? '🔄' : '🤝') + '</div>' +
+      '<div class="cop-h">' + (solo ? 'เปลี่ยนมุมมองเป็น ' : 'ส่งเครื่องให้ ') + seat.ic + ' ' + seat.nm + '</div>' +
+      '<div class="cop-q">' + (solo
+        ? 'คราวนี้ลองคิดใหม่ในมุมของ <b>' + seat.nm + '</b> — คนกลุ่มนี้จะเลือกอะไร?'
+        : 'คำตอบของคนแรกถูกปิดไว้แล้ว ยังไม่มีใครเห็น') + '</div>' +
+      '<div class="cop-eyes">' + (solo ? '💭 ไม่จำเป็นต้องเลือกเหมือนเดิมนะ' : '🙈 คนแรกหันไปทางอื่นก่อน') + '</div>' +
+      '<div class="dt-btn-row"><button class="dt-btn cop-ok" style="background:' + seat.col + '">พร้อมแล้ว ➜</button></div></div>');
+    ov.querySelector('.cop-ok').onclick = () => { ov.remove(); cb(); };
+  },
+
+  /* การ์ดให้คนที่สองเลือกเอง (เห็นตัวเลือกครบ แต่ไม่เห็นของคนแรก) */
+  _askPick(host, seat, o, cb) {
+    const mlim = o.multi > 1 ? o.multi : 0;
+    /* [ระยะ 4A] ต้องเรียงตัวเลือกให้ "เหมือนที่คนแรกเห็น" เป๊ะ
+       เพราะจอหลักสุ่มลำดับตัวเลือกไว้ ถ้าการ์ดนี้เรียงอีกแบบ สองคนจะพูดคนละภาษา
+       ("ข้อสอง" ของคนหนึ่งไม่ใช่ "ข้อสอง" ของอีกคน) — และการโหวตลับจะไม่ยุติธรรม */
+    const seq = (o.order && o.order.length === o.opts.length) ? o.order : o.opts.map((_, i) => i);
+    const opts = seq.map((i) => {
+      const x = o.opts[i];
+      return '<button class="cop-opt" data-i="' + i + '"><span class="ic">' + x.i + '</span><span>' + x.t + '</span></button>';
+    }).join('');
+    const ov = this._card(host, seat.col,
+      '<div class="cop-turn" style="background:' + seat.col + '">' + seat.ic + ' ' + seat.nm + '</div>' +
+      '<div class="cop-h">🗳️ ' + o.head + '</div>' +
+      '<div class="cop-q">' + o.q + (mlim ? ' <b>(เลือกได้ถึง ' + mlim + ' ข้อ)</b>' : '') + '</div>' +
+      '<div>' + opts + '</div>' +
+      '<div class="cop-rh">เพราะอะไร?</div><div>' + this._chips() + '</div>' +
+      '<div class="dt-btn-row"><button class="dt-btn cop-ok" disabled style="background:' + seat.col + '">ล็อกคำตอบของฉัน 🔒</button></div>');
+    let pk = [], pr = null;
+    const ok = ov.querySelector('.cop-ok');
+    const upd = () => { ok.disabled = !(pk.length && pr); };
+    ov.querySelectorAll('.cop-opt').forEach((bt) => {
+      bt.onclick = () => {
+        const i = Number(bt.dataset.i);
+        if (mlim) {
+          const k = pk.indexOf(i);
+          if (k >= 0) { pk.splice(k, 1); bt.classList.remove('on'); }
+          else { if (pk.length >= mlim) return; pk.push(i); bt.classList.add('on'); }
+        } else {
+          ov.querySelectorAll('.cop-opt').forEach((x) => x.classList.remove('on'));
+          bt.classList.add('on'); pk = [i];
+        }
+        try { AUDIO.playSFX('click'); } catch (e) {}
+        upd();
+      };
+    });
+    this._wireChips(ov, (r) => { pr = r; upd(); });
+    ok.onclick = () => { ov.remove(); cb(pk.slice(), pr); };
+  },
+
+  /* ==== ท่าหลัก: จุดตัดสินใจร่วม ==== */
+  joint(o, cb) {
+    const self = this;
+    const host = this.host();
+    const solo = !!o.solo;
+    const HATS = [
+      { k: 'planner',  ic: '🧑‍💼', nm: 'นักวางแผนเมือง', col: '#0369a1' },
+      { k: 'villager', ic: '👵',   nm: 'ตัวแทนชาวบ้าน',  col: '#b45309' }
+    ];
+    const who = (i) => (solo ? HATS[i] : self.who(i));
+    const label = (ps) => ps.map((i) => (o.opts[i] ? o.opts[i].t : '')).filter(Boolean).join(' + ');
+    const same = (a, b) => a.slice().sort().join(',') === b.slice().sort().join(',');
+    const out = {};
+    const finish = (picks, changed, agree) => {
+      self._blur(false);
+      cb({ picks: picks, agree: agree, changed: !!changed,
+        p1: out.p1, p2: out.p2, r1: out.r1, r2: out.r2,
+        p1t: label(out.p1), p2t: label(out.p2), pickT: label(picks),
+        seats: [who(0).k, who(1).k] });
+    };
+    self._askReason(host, who(0), (r1) => {
+      out.p1 = (o.firstPicks || []).slice(); out.r1 = r1;
+      self._handover(host, who(1), solo, () => {
+        self._askPick(host, who(1), o, (p2, r2) => {
+          out.p2 = p2; out.r2 = r2;
+          const agree = same(out.p1, out.p2);
+          if (agree) {
+            const ov = self._card(host, '#16a34a',
+              '<div class="cop-hand"><div class="big">🤝</div>' +
+              '<div class="cop-h">คิดตรงกันเลย!</div>' +
+              '<div class="cop-q">' + (solo ? 'สองมุมมองให้คำตอบเดียวกัน — แปลว่าเหตุผลนี้หนักแน่นจริง'
+                : 'ทั้งสองคนเลือกเหมือนกันโดยไม่ได้เห็นของกันและกัน — ทีมนี้เข้าใจเมืองตรงกัน') + '</div>' +
+              '<div class="dt-btn-row"><button class="dt-btn cop-ok">ไปต่อ ➜</button></div></div>');
+            try { AUDIO.playChime(); } catch (e) {}
+            ov.querySelector('.cop-ok').onclick = () => { ov.remove(); finish(out.p1.slice(), false, true); };
+            return;
+          }
+          const A = who(0), B = who(1);
+          const ov2 = self._card(host, '#7c3aed',
+            '<div class="cop-h">💬 เห็นไม่ตรงกัน — ฟังเหตุผลกันก่อน</div>' +
+            '<div class="cop-vs">' +
+            '<div class="cop-side" style="border-color:' + A.col + '"><span class="cop-badge" style="background:' + A.col + '">' + A.ic + ' ' + A.nm + '</span>' +
+            '<div style="margin-top:6px">เลือก: <b>' + label(out.p1) + '</b></div><div>' + self.reasonText(out.r1) + '</div></div>' +
+            '<div class="cop-side" style="border-color:' + B.col + '"><span class="cop-badge" style="background:' + B.col + '">' + B.ic + ' ' + B.nm + '</span>' +
+            '<div style="margin-top:6px">เลือก: <b>' + label(out.p2) + '</b></div><div>' + self.reasonText(out.r2) + '</div></div></div>' +
+            '<div class="cop-q" style="margin-top:calc(var(--vw)*0.6)"><b>ฟังกันแล้ว ทีมสรุปว่าเอาชุดไหน?</b><br>' +
+            '<span style="font-size:0.92em;color:#64748b">เปลี่ยนใจเพราะเหตุผลดี ไม่ใช่การแพ้นะ</span></div>' +
+            '<button class="cop-opt" data-s="1"><span class="ic">' + A.ic + '</span><span>ชุดของ ' + A.nm + ' — ' + label(out.p1) + '</span></button>' +
+            '<button class="cop-opt" data-s="2"><span class="ic">' + B.ic + '</span><span>ชุดของ ' + B.nm + ' — ' + label(out.p2) + '</span></button>');
+          ov2.querySelectorAll('.cop-opt').forEach((bt) => {
+            bt.onclick = () => {
+              const s = bt.dataset.s;
+              ov2.remove();
+              try { VK.toast('🤝 ทีมตกลงกันได้!', 'ฟังเหตุผลของกันและกันแล้วค่อยตัดสินใจ — นี่แหละทีมจริง', 1800); } catch (e) {}
+              finish(s === '1' ? out.p1.slice() : out.p2.slice(), true, false);
+            };
+          });
+        });
+      });
+    });
+  },
+
+  /* ==== ยืนยันพร้อมกันทั้งสองคน (ไม่ให้คะแนน — เป็นกติกาของทีมล้วน ๆ) ==== */
+  bothPress(host, label, cb) {
+    if (!this.on()) { cb(); return false; }
+    const A = this.who(0), B = this.who(1), done = {};
+    const ov = this._card(host, '#f59e0b',
+      '<div class="cop-h">✋✋ ยืนยันพร้อมกันทั้งสองคน</div>' +
+      '<div class="cop-q">' + label + '<br><span style="font-size:0.92em;color:#64748b">ต้องกดทั้งคู่ถึงจะไปต่อ — ตกลงกันก่อนนะ</span></div>' +
+      '<div class="cop-both">' +
+      '<button data-s="0" style="background:' + A.col + '">' + A.ic + '<br>' + A.nm + '</button>' +
+      '<button data-s="1" style="background:' + B.col + '">' + B.ic + '<br>' + B.nm + '</button></div>' +
+      '<div class="cop-q" id="cop-bp-st" style="margin-top:calc(var(--vw)*0.45)">ยังไม่มีใครกด</div>');
+    ov.querySelectorAll('.cop-both button').forEach((bt) => {
+      bt.onclick = () => {
+        if (done[bt.dataset.s]) return;
+        done[bt.dataset.s] = 1;
+        bt.classList.add('done'); bt.textContent = '✅ พร้อม';
+        try { AUDIO.playSFX('pick'); } catch (e) {}
+        const n = Object.keys(done).length;
+        const st = ov.querySelector('#cop-bp-st');
+        if (st) st.textContent = n >= 2 ? 'พร้อมทั้งคู่แล้ว! 🎉' : 'รออีกคน…';
+        if (n >= 2) setTimeout(() => { ov.remove(); cb(); }, 420);
+      };
+    });
+    return true;
+  }
+};
+
+/* ============================================================
+   [ระยะ 4C] V8NET — โหมดเครือข่าย 3 ระดับ สำหรับโรงเรียนที่เน็ตต่างกัน
+
+   ครูสั่งไว้ตรง ๆ: "โรงเรียนส่วนมากเน็ตรับไหว ส่วนโรงเรียนที่เน็ตช้าจริง ๆ ให้เลือกโหมดอื่น"
+   จึงไม่บล็อกฟีเจอร์ข้ามเครื่องไว้รอผลทดลอง แต่เพิ่ม "ทางเลือกที่ยังเล่นได้เต็ม" ให้แทน
+
+   สำคัญ: ทั้ง 3 โหมด "ส่งผลการเรียนรู้ขึ้นเซิร์ฟเวอร์เหมือนกันหมด" — ต่างกันแค่การ "ดึง" ข้อมูลมาแสดง
+   (ถ้าโหมดไหนหยุดส่งด้วย ข้อมูลวิจัยจะหายเมื่อเด็กปิดเครื่อง ซึ่งรับไม่ได้)
+   ============================================================ */
+const V8NET = {
+  KEY: 'v8_netmode_v1',
+  MODES: [
+    ['full',  '🛰️ ออนไลน์เต็ม',   'กระดาน/อันดับ/ห้องเรียนสด อัปเดตให้เอง — เหมาะกับโรงเรียนที่เน็ตไหลลื่น'],
+    ['async', '📮 ส่งแล้วดูทีหลัง', 'ยังส่งผลขึ้นเซิร์ฟเวอร์ปกติ แต่ไม่ดึงข้อมูลมาเองบ่อย ๆ — กดดูเมื่ออยากดู ประหยัดเน็ตมาก'],
+    ['off',   '📵 ในเครื่องล้วน',  'ระหว่างเล่นไม่ดึงข้อมูลจากเซิร์ฟเวอร์เลย · เล่นคู่ในเครื่องเดียวได้เต็มที่ · ผลยังถูกเก็บและทยอยส่งให้อัตโนมัติ']
+  ],
+  get() {
+    try { const v = localStorage.getItem(this.KEY); if (v === 'full' || v === 'async' || v === 'off') return v; } catch (e) {}
+    return 'full';
+  },
+  set(m) {
+    try { localStorage.setItem(this.KEY, m); } catch (e) {}
+    try { if (m !== 'full') { _lbCache = null; _lbCacheAt = 0; } } catch (e) {}
+    try { if (m === 'off' && typeof LIVEROOM !== 'undefined' && LIVEROOM.on) LIVEROOM.stop(''); } catch (e) {}
+    try { v8NetRenderChips(); } catch (e) {}
+  },
+  info(m) { const f = this.MODES.filter((x) => x[0] === (m || this.get()))[0]; return f || this.MODES[0]; },
+  /* ดึงข้อมูลอัตโนมัติได้ไหม */
+  pull() { return this.get() === 'full'; },
+  /* อายุแคชกระดานอันดับ — โหมดประหยัดยืดออกไปแทนที่จะปิดตาย */
+  lbAge(base) { const m = this.get(); return m === 'full' ? base : (m === 'async' ? Math.max(base, 600000) : 86400000); },
+  /* วัดเน็ตจริงหนึ่งครั้ง แล้ว "แนะนำ" — ไม่เปลี่ยนให้เอง ครูเป็นคนตัดสิน */
+  probe() {
+    const t0 = Date.now();
+    return fetch(SB_URL + '/rest/v1/rpc/rpc_rooms_public', {
+      method: 'POST',
+      headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON, 'Content-Type': 'application/json' },
+      body: '{}'
+    }).then(() => Date.now() - t0).catch(() => -1);
+  },
+  suggest(ms) { return ms < 0 ? 'off' : (ms < 900 ? 'full' : (ms < 3000 ? 'async' : 'off')); }
+};
+
+/* แถวเลือกโหมดเครือข่ายในหน้า ⚙️ ตั้งค่า */
+function v8NetRenderChips() {
+  const box = document.getElementById('netmode-chips');
+  if (!box) return;
+  const cur = V8NET.get();
+  box.innerHTML = V8NET.MODES.map((m) =>
+    '<button class="' + (m[0] === cur ? 'on' : '') + '" onclick="V8NET.set(' + "'" + m[0] + "'" + ')">' + m[1] + '</button>').join('');
+  const note = document.getElementById('netmode-note');
+  if (note) note.innerHTML = V8NET.info()[2];
+}
+function v8NetProbe() {
+  const note = document.getElementById('netmode-note');
+  if (note) note.textContent = 'กำลังวัดความเร็วเน็ต...';
+  V8NET.probe().then((ms) => {
+    const s = V8NET.suggest(ms);
+    const nm = V8NET.info(s)[1];
+    if (note) note.innerHTML = (ms < 0 ? 'ต่อเซิร์ฟเวอร์ไม่ได้เลย' : 'ตอบกลับใน <b>' + ms + ' มิลลิวินาที</b>') +
+      ' → แนะนำโหมด <b>' + nm + '</b>' + (s === V8NET.get() ? ' (ใช้อยู่แล้ว)' : ' — กดเลือกด้านบนได้เลย');
+  });
+}
+
 const KAN2050V2 = {
   mode: 'solo', _shownActs: {}, _stormShowing: false,
   ACTS: [
@@ -24449,7 +25038,16 @@ const KAN2050V2 = {
       '<div class="pk-desc">รับภารกิจคนเดียวเต็มตัว<br>ทุกการตัดสินใจคือของเรา</div></button></div></div>';
     host.appendChild(ov);
     ov.querySelectorAll('.vk-pick-card').forEach(b => {
-      b.onclick = () => { this.mode = b.dataset.m; ov.remove(); cb(); };
+      b.onclick = () => {
+        this.mode = b.dataset.m; ov.remove();
+        /* [ระยะ 4A] โหมดคู่ต้องรู้ว่าใครนั่งที่นั่งไหน ก่อนเริ่มเล่นจริง
+           (ใช้สัญลักษณ์สำเร็จรูป ไม่มีช่องพิมพ์ชื่อ — กติกาความปลอดภัยเด็กของโครงการ) */
+        try {
+          if (this.mode === 'duo') return V8COOP.pickSeats(host, cb);
+          V8COOP.reset();
+        } catch (e) {}
+        cb();
+      };
     });
   },
 
@@ -24536,7 +25134,21 @@ const KAN2050V2 = {
         drawKit();
       };
     });
-    ov.querySelector('#pp-go').onclick = () => { ov.remove(); onReady(plan); };
+    ov.querySelector('#pp-go').onclick = () => {
+      /* [ระยะ 4A] โหมดคู่: แผนรับมือพายุคือจุดที่ต้องตกลงกันจริง ๆ ก่อนกด
+         ตั้งใจไม่ให้คะแนนจากการกดสองปุ่ม — บทเรียนรอบ 17 คือ 'การกดปุ่มไม่ใช่หลักฐานสมรรถนะ'
+         บันทึกไว้เป็นบริบทให้ครูเห็นว่าแผนนี้มาจากการตกลงร่วมเท่านั้น */
+      const goNow = () => {
+        try {
+          if (V8COOP.on()) logEvidence('balance2050', 'collab', 'TW-B', null,
+            { act: 3, stormPlan: plan, jointConfirm: true, mode: 'duo', scored: false });
+        } catch (e) {}
+        ov.remove(); onReady(plan);
+      };
+      try { if (V8COOP.on()) return V8COOP.bothPress(document.getElementById('capstone-screen'),
+        'ยืนยัน “แผนรับมือพายุ” ของทีม', goNow); } catch (e) {}
+      goNow();
+    };
   },
   runStorm(stage, onDone) {
     this._stormShowing = true;
@@ -24738,7 +25350,9 @@ const KAN2050V2 = {
   closeOverlays() {
     try { StageBalance2050._bgCache = null; } catch (e) {}   /* [เฟส 3 · 3.3] คืนหน่วยความจำแคชฉากเมื่อออกจากด่าน */
     this._stormShowing = false;
-    document.querySelectorAll('.cap-act-overlay, .cap-storm, #cap-cert-ov').forEach(el => el.remove());
+    /* [ระยะ 4A] .cop-ov = การ์ดโหวตลับสองที่นั่ง — ต้องถูกกวาดพร้อมกันเสมอ */
+    document.querySelectorAll('.cap-act-overlay, .cap-storm, #cap-cert-ov, .cop-ov').forEach(el => el.remove());
+    try { document.querySelectorAll('.cop-blur').forEach(el => el.classList.remove('cop-blur')); } catch (e) {}
   },
   stopMeterLoop() { /* คงไว้ให้จุดเรียกเดิมปลอดภัย — มิเตอร์ใช้ของระบบ IX เอง */ }
 };
@@ -25468,12 +26082,108 @@ const MyCity = {
         '<div class="mc-grid" id="mc-grid"></div>' +
         '<div class="mc-shop" id="mc-shop"></div>' +
         '<div class="dt-btn-row"><button class="dt-btn" id="mc-send">📮 ส่งเมืองเข้าห้องเรียน</button>' +
+        '<button class="dt-btn ghost" id="mc-board">🏛️ สภาเมืองของห้อง</button>' +
         '<button class="dt-btn ghost" id="mc-out">เก็บไว้ก่อน</button></div>' +
         '<div class="mc-st" id="mc-st"></div></div>'
     });
     document.getElementById('mc-out').onclick = () => { this.save(); VK.close(); document.getElementById('v8stage-root').style.zIndex = ''; AUDIO.stopBGM(); showScreen('worldmap-screen'); refreshWorldMap(); };
     document.getElementById('mc-send').onclick = () => this.send();
+    document.getElementById('mc-board').onclick = () => this.board();
     this.draw();
+  },
+
+  /* ---------- [ระยะ 4B] 🏛️ สภาเมืองของห้อง — เห็นเมืองของเพื่อนแล้วหยิบไอเดียมาใช้ ----------
+     นี่คือ Co-op ข้ามเครื่องแบบที่เน็ตโรงเรียนรับไหวจริง: ส่งครั้งเดียว อ่านครั้งเดียว ไม่มีการถามซ้ำ
+     ถ้าเซิร์ฟเวอร์ยังไม่มี rpc_room_board (ยังไม่ได้รัน SQL เสริม) จะถอยไปโหมด "ครูฉายกระดานหน้าห้อง"
+     ซึ่งใช้ได้ทันทีอยู่แล้วจากหน้าครู 🏙️ เมืองของห้อง — ไม่มีทางตัน */
+  board() {
+    const self = this;
+    const st = document.getElementById('mc-st');
+    let b = null; try { b = SBTee.bind(); } catch (e) {}
+    if (!b || !b.join_key) { st.innerHTML = 'โหมดนี้ต้องเข้าห้องเรียนด้วยโค้ดของครูก่อนนะ'; return; }
+    let net = 'full'; try { net = V8NET.get(); } catch (e) {}
+    if (net === 'off') { st.innerHTML = '📵 ตอนนี้อยู่โหมด “ในเครื่องล้วน” — เปลี่ยนได้ที่ ⚙️ ตั้งค่า ถ้าอยากดูกระดานของห้อง'; return; }
+    st.textContent = 'กำลังเปิดกระดานของห้อง...';
+    SBTee._rpc('rpc_room_board', { p_join_key: b.join_key, p_kind: 'my_city', p_limit: 40 })
+      .then((t) => { try { return JSON.parse(t || '[]'); } catch (e) { return null; } })
+      .catch(() => null)
+      .then((rows) => { st.textContent = ''; self._showBoard(Array.isArray(rows) ? rows : null); });
+  },
+  _showBoard(rows) {
+    const self = this;
+    const host = document.getElementById('v8stage-root') || document.body;
+    const mk = (inner) => {
+      const ov = document.createElement('div');
+      ov.className = 'cop-ov';
+      ov.innerHTML = '<div class="cop-card" style="border-color:#0ea5e9">' + inner +
+        '<div class="dt-btn-row"><button class="dt-btn cop-ok">ปิด</button></div></div>';
+      host.appendChild(ov);
+      ov.querySelector('.cop-ok').onclick = () => ov.remove();
+      return ov;
+    };
+    if (rows === null) {
+      mk('<div class="cop-h">🏛️ สภาเมืองของห้อง</div>' +
+        '<div class="cop-q">กระดานฝั่งเครื่องนักเรียนยังไม่ได้เปิดในห้องนี้<br>' +
+        'ครูเปิดกระดานรวมของทั้งห้องได้จากหน้าครู → <b>🏙️ เมืองของห้อง</b> แล้วฉายขึ้นจอหน้าชั้นเรียน<br>' +
+        '<span style="font-size:0.9em;color:#64748b">(เมืองของเราส่งขึ้นไปเรียบร้อยแล้ว ไม่ต้องส่งซ้ำ)</span></div>');
+      return;
+    }
+    if (!rows.length) {
+      mk('<div class="cop-h">🏛️ สภาเมืองของห้อง</div>' +
+        '<div class="cop-q">ยังไม่มีเพื่อนคนไหนส่งเมืองเข้ามาเลย — เราเป็นคนแรก! 🎉<br>ชวนเพื่อนส่งแล้วกลับมาดูใหม่นะ</div>');
+      return;
+    }
+    let myName = ''; try { const d = getSaveData(); myName = (d.profile && d.profile.characterName) || d.username || ''; } catch (e) {}
+    const num = (v) => Math.round(Number(v) || 0);
+    const list = rows.slice(0, 40).map((r) => {
+      const p = r.payload || r;
+      const sc = p.score || {};
+      const nm = String(p.name || 'นักสำรวจ');
+      const ics = (p.placed || []).slice(0, 8).map((x) => {
+        const bd = self.BUILDS.filter((z) => z.id === x.b)[0]; return bd ? bd.ico : '';
+      }).join('');
+      return { nm: nm, eco: num(sc.eco), so: num(sc.so), env: num(sc.env), ics: ics,
+        ids: (p.placed || []).map((x) => x.b), me: nm === myName };
+    });
+    const mine = {}; this.placed.forEach((p) => { mine[p.b] = 1; });
+    const seen = {};
+    list.forEach((r) => { if (!r.me) r.ids.forEach((id) => { if (!mine[id]) seen[id] = (seen[id] || 0) + 1; }); });
+    const ideas = Object.keys(seen).sort((a, b) => seen[b] - seen[a]).slice(0, 4);
+    const rowsHtml = list.map((r) =>
+      '<div class="rcb-row' + (r.me ? ' me' : '') + '"><span class="nm">' + (r.me ? '⭐ ' : '') + r.nm + '</span>' +
+      '<span class="rcb-ico">' + r.ics + '</span>' +
+      '<span class="rcb-m" style="color:#b45309">💰' + r.eco + '</span>' +
+      '<span class="rcb-m" style="color:#7c3aed">👥' + r.so + '</span>' +
+      '<span class="rcb-m" style="color:#15803d">🌿' + r.env + '</span></div>').join('');
+    const ideaHtml = ideas.length
+      ? '<div class="cop-rh">💡 ไอเดียจากเพื่อนที่เมืองเรายังไม่มี — แตะเพื่อหยิบมาลองใช้</div><div>' +
+        ideas.map((id) => {
+          const bd = self.BUILDS.filter((z) => z.id === id)[0];
+          return bd ? '<button class="rcb-idea" data-b="' + id + '">' + bd.ico + ' ' + bd.nm + ' <span style="opacity:.7">(' + seen[id] + ' คนใช้)</span></button>' : '';
+        }).join('') + '</div>'
+      : '<div class="cop-q">เมืองของเรามีครบทุกอย่างที่เพื่อน ๆ มีแล้ว เก่งมาก! 🎉</div>';
+    const ov = mk('<div class="cop-h">🏛️ สภาเมืองของห้อง</div>' +
+      '<div class="cop-q">เมืองของเพื่อนร่วมห้อง <b>' + list.length + '</b> เมือง — ดูว่าใครทำสมดุลได้ยังไง' +
+      '<br><span style="font-size:0.9em;color:#64748b">แสดงชื่อในเกมเท่านั้น ไม่มีชื่อจริงของใคร</span></div>' +
+      '<div class="rcb-board">' + rowsHtml + '</div>' + ideaHtml);
+    ov.querySelectorAll('.rcb-idea').forEach((bt) => {
+      bt.onclick = () => {
+        const id = bt.dataset.b;
+        self.sel = id;
+        try {
+          /* บริบทล้วน ไม่ใช่คะแนน — โหมดเมืองของฉันไม่วัดสมรรถนะมาตั้งแต่ต้น
+             แต่ครูควรได้เห็นว่าเด็กคนไหน "ดูงานเพื่อนแล้วเอามาปรับของตัวเอง" */
+          logEvidence('mycity', 'collab', 'TW-A', null,
+            { from: 'roomCouncilBoard', adopted: id, peers: list.length, scored: false });
+          flushEvidence('mycity');
+        } catch (e) {}
+        ov.remove();
+        const st = document.getElementById('mc-st');
+        const bd = self.BUILDS.filter((z) => z.id === id)[0];
+        if (st) st.innerHTML = '💡 หยิบไอเดีย <b>' + (bd ? bd.ico + ' ' + bd.nm : id) + '</b> มาแล้ว — แตะช่องว่างในเมืองเพื่อวางได้เลย';
+        self.draw();
+      };
+    });
   },
   score() {
     let eco = 30, so = 30, env = 40;
@@ -25954,6 +26664,9 @@ function renderLbScopeBar() {
 }
 function getLeaderboardCached(maxAgeMs) {
   maxAgeMs = maxAgeMs == null ? 45000 : maxAgeMs;
+  /* [ระยะ 4C] โหมดเครือข่ายเบา = ยืดอายุแคช ไม่ใช่ปิดกระดาน
+     เด็กยังเปิดดูได้ทุกเมื่อ แค่ไม่ยิงเน็ตซ้ำถี่ ๆ (โรงเรียนเน็ตช้าจะไม่ค้างทั้งห้อง) */
+  try { maxAgeMs = V8NET.lbAge(maxAgeMs); } catch (e) {}
   const now = Date.now();
   if (_lbCache && now - _lbCacheAt < maxAgeMs) return Promise.resolve(_lbCache);
   if (_lbInflight) return _lbInflight; // มีคำขอกำลังวิ่งอยู่ — เกาะไปด้วย ไม่ยิงซ้ำ
@@ -27397,6 +28110,7 @@ function wireEvents() {
     if (_lfCb) { _lfCb.checked = !!window.LOWFX; const v = document.getElementById('toggle-lowfx-val'); if (v) v.textContent = window.LOWFX ? 'เปิด' : 'ปิด'; }
     renderUiScaleChips(); refreshDisplayModeUI(); /* [V.7.75] */
     document.getElementById('audio-settings-modal').classList.remove('hidden');
+  try { v8NetRenderChips(); } catch (e) {}   /* [ระยะ 4C] */
     /* [เฟส 2 · 2.6] รายชื่อเสียงของเครื่องมาแบบ asynchronous — เรนเดอร์ทุกครั้งที่เปิดเมนู */
     try { VOICEPICK.init(); } catch (e) {}
     try {
