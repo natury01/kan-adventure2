@@ -2969,6 +2969,192 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
 .cert-status { flex: 0 0 auto; text-align: center; color: #ffe9a8;
   height: max(16px, calc(var(--vw)*1.5)); overflow: hidden; white-space: nowrap;
   font-size: max(12px, calc(var(--vw)*0.9)); line-height: 1.25; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   [ข้อ 5 · บล็อก F1] หมุดแผนที่ยึด "ตัวภาพ" ไม่ใช่กรอบจอ + ป้ายไม่ทับกัน
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* กรอบภาพแผนที่ — V8PIN.place() ตั้ง left/top/width/height ให้เท่ากับ
+   สี่เหลี่ยมของภาพหลังครอบตัดแบบ cover เป๊ะ ๆ แล้วยืดพื้นหลังเต็มกรอบนั้น
+   ผลคือ "กรอบภาพ" กับ "ระบบพิกัดของหมุด" เป็นก้อนเดียวกัน ไม่มีทางเพี้ยนจากกัน
+   (ใช้ #id.active ตามบทเรียนบล็อก E — .screen{display:none} มี specificity 0,1,0) */
+#worldmap-screen.active .wm-art-bg { background-size: 100% 100%; background-position: 0 0; }
+/* ชั้นภาพสูงกว่ากรอบจอ (cover) — ตัดส่วนเกินที่ขอบหน้า ไม่ให้ไปดันความสูงของเวทีเกม */
+#worldmap-screen.active { overflow: hidden; }
+
+/* หมุด = "วงกลมล้วน" — กล่องของปุ่มมีแค่วงกลม จุด translate(-50%,-50%) จึงตรงกลางวงกลมจริง
+   ป้ายชื่อ/ดาว/ป้ายผ่าน/ตราประตู ถูกย้ายไปอยู่ในก้อนลอย .wm-nodelab (position:absolute)
+   → ขนาดกล่องไม่เปลี่ยนอีกแล้วเมื่อเด็กเล่นผ่านด่าน หมุดจึงไม่ขยับเอง */
+#worldmap-screen.active .stage-node {
+  flex-direction: row; align-items: center; justify-content: center; gap: 0;
+  min-width: 44px; min-height: 44px;               /* เป้ากดจอสัมผัส (ข้อ 6 ของกติกา) */
+  padding: 0; border: none; background: none;
+}
+#worldmap-screen.active .wm-nodelab {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; gap: calc(var(--vw) * 0.12);
+  width: max-content; max-width: calc(var(--vw) * 15);
+  pointer-events: none; z-index: 4;
+}
+#worldmap-screen.active .wm-nodelab.wm-lab-tight { max-width: calc(var(--vw) * 9.5); }
+#worldmap-screen.active .stage-node-label {
+  white-space: normal; word-break: break-word; text-align: center; line-height: 1.18;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  max-width: 100%;
+  /* บนภาพวาด พื้นป้ายเป็นสีเข้ม (body.v8-art-on) แต่สีตัวอักษรยังเป็นเขียวเข้ม #1a3a2a
+     = ตัวหนังสือเข้มบนพื้นเข้ม อ่านไม่ออกเลย (เห็นชัดในภาพหน้าจอที่ครูส่งมา) */
+  color: #fff8e6; background: rgba(14,24,18,0.86);
+  border: 1px solid rgba(255,235,170,0.45);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.95);
+}
+#worldmap-screen.active .wm-nodelab.wm-lab-tight .stage-node-label { -webkit-line-clamp: 3; }
+/* ป้าย "★ พิเศษ / มินิเกม" ของด่านพิเศษเดิมลอยเหนือกล่อง — กล่องเล็กลงแล้วต้องยกขึ้นตาม */
+#worldmap-screen.active .stage-node-special::after,
+#worldmap-screen.active .stage-node-mini::after { top: calc(var(--vw) * -1.15); }
+
+/* [F6] กล่องโปรไฟล์มุมซ้ายบน — เดิมข้อความชวนสะสมตัดบรรทัดจนกล่องสูง 49% ของจอบนมือถือ
+   กินพื้นที่แผนที่ทั้งไตรมาสบนซ้าย ทับหมุด/ป้าย 5 จุด · บีบเหลือบรรทัดเดียว + เพดานความสูง */
+#worldmap-screen.active #worldmap-status-bar { max-height: calc(var(--vw) * 6); overflow: hidden; }
+#worldmap-screen.active .wm-status-badges-hint {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   [ครู ข้อ 1+2 · บล็อก G1] จัดของที่ล้นออกนอกจอให้พอดีทั้ง 3 ขนาดจอ
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── G1a · บัดดี้ (ตัวละครคู่หูในด่าน) ──────────────────────────────────
+   ของเดิม <canvas width="440" height="600"> **ไม่มี CSS กำหนดขนาดเลยสักบรรทัด**
+   จึงกางเต็มขนาดจริง 440×600 px ตายตัวไม่ว่าจอเล็กแค่ไหน
+   วัดจริงบนมือถือแนวนอน 844×390: กล่องบัดดี้สูง 602 px → พ้นขอบจอล่าง 212 px
+   ตัวนี้ตัวเดียวทำให้ตก 18 จุด (ด่าน 3·4·5·6·7·สายน้ำ ด่านละ 2 จังหวะ +
+   การ์ดผู้พิทักษ์ + เลือกโหมดทีม + โหมดคู่หู + เมืองของฉัน)
+
+   แก้โดยผูกความสูงกับกรอบเกม (--vh) และยึดมุมซ้ายล่างของเวทีด่าน
+   → สูงสุด 74% ของกรอบเกมเสมอ ไม่มีทางพ้นจอได้อีกไม่ว่าจอไหน
+   z-index 5 = ต่ำกว่า .dt-scene (8) เหมือนเดิมเป๊ะ ๆ ลำดับการกดจึงไม่เปลี่ยน */
+.vk-buddy-wrap {
+  position: absolute; left: max(4px, calc(var(--vw) * 0.8)); bottom: 0; z-index: 5;
+  height: max(min(calc(var(--vh) * 74), calc(var(--vw) * 26)), 96px);
+  aspect-ratio: 440 / 600; width: auto;
+}
+.vk-buddy { display: block; width: 100%; height: 100%; }
+/* คำพูดของบัดดี้ — เดิมไม่มี CSS เลยเช่นกัน จึงโผล่เป็นข้อความเปล่าพาดหัวเวทีด่าน
+   ทำเป็นลูกโป่งคำพูดเหนือหัวบัดดี้ · pointer-events:none เพราะเป็นของประดับล้วน */
+.vk-buddy-say {
+  position: absolute; left: 50%; bottom: 100%; transform: translateX(-50%) translateY(6px);
+  opacity: 0; pointer-events: none; transition: opacity 0.2s ease, transform 0.2s ease;
+  width: max-content; max-width: max(120px, calc(var(--vw) * 18)); text-align: center;
+  background: rgba(255,253,242,0.96); color: #2b2a1e; font-weight: 700;
+  font-size: max(12px, calc(var(--vw) * 0.9)); line-height: 1.25;
+  padding: max(4px, calc(var(--vw) * 0.4)) max(8px, calc(var(--vw) * 0.8));
+  border: max(1px, calc(var(--vw) * 0.14)) solid #d8c48a;
+  border-radius: max(8px, calc(var(--vw) * 0.8));
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+}
+.vk-buddy-say.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── G1b · ภาพพื้นหลังของด่าน ────────────────────────────────────────
+   .dt-bg ตั้งใจขยาย 106% ไว้เผื่อพารัลแลกซ์เลื่อนซ้าย-ขวา (ดู .vk-parallax-l/r)
+   ส่วนเกิน 3% แต่ละข้างจึงยื่นพ้นกรอบจอโดยตั้งใจ และถูก #v8stage-root ตัดทิ้งอยู่แล้ว
+   มันเป็น "ชั้นภาพพื้นหลัง" ล้วน ๆ ไม่มีอะไรให้กด แต่เดิมยังกินคลิกอยู่
+   (เพราะกฎ #v8stage-root > * { pointer-events:auto }) เครื่องตรวจจึงนับเป็นของที่พ้นจอ
+   ประกาศให้ชัดว่าเป็นของประดับเหมือน .vk-depth — ตรงกับความจริงและถูกต้องกว่าเดิม
+   (ตัวรับพารัลแลกซ์คือ #v8stage-root ไม่ใช่ .dt-bg จึงไม่กระทบพารัลแลกซ์เลย) */
+#v8stage-root .dt-bg, #v8stage-root .dt-bg-fallback,
+#detective-root .dt-bg, #detective-root .dt-bg-fallback { pointer-events: none; }
+
+/* ── G1c · เมืองของฉัน ────────────────────────────────────────────────
+   วัดจริงบนมือถือแนวนอน: เนื้อหาเรียงลงมาคอลัมน์เดียวสูงรวม 506 px ในจอสูง 390
+   → ปุ่ม 📮 ส่งเมือง / 🏛️ สภาเมือง / เก็บไว้ก่อน อยู่ใต้ขอบจอ 99 px กดไม่ได้เลย
+   เวทีเกมกว้าง 16:9 มีที่ว่างด้านข้างเหลือเฟือ — ย้ายร้าน+ปุ่มไปคอลัมน์ขวา
+   สูงรวมเหลือ ~240 px พอดีจอทุกขนาด และไม่ต้องย่อเป้ากดสักปุ่ม */
+.mc-wrap {
+  width: min(calc(var(--vw) * 78), 98%);
+  display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+  grid-template-areas: "meters meters" "grid shop" "grid btns" "grid st";
+  gap: max(4px, calc(var(--vw) * 0.45));
+  align-content: start;
+}
+.mc-wrap > .mc-meters { grid-area: meters; }
+.mc-wrap > .mc-grid { grid-area: grid; margin: 0; align-self: start; }
+.mc-wrap > .mc-shop { grid-area: shop; align-content: start; }
+.mc-wrap > .dt-btn-row { grid-area: btns; margin: 0; }
+.mc-wrap > .mc-st { grid-area: st; margin: 0; }
+
+/* ── G1d · สมุดนักสำรวจ — แบ่งหน้าแทนแถบเลื่อน (โค้ดอยู่บล็อก G2) ──────
+   เดิม .nb-book มี overflow-y:auto แล้วยัด 14 บันทึกลงไปทั้งหมด
+   วัดจริง: เลื่อนลงได้อีก 250 px (คอม) · 210 (แท็บเล็ต) · 166 (มือถือ) */
+.nb-book { overflow-y: visible; display: flex; flex-direction: column; }
+.nb-head { display: flex; align-items: center; gap: calc(var(--vw) * 0.6); flex: 0 0 auto; }
+.nb-list { flex: 1 1 auto; min-height: 0; }
+.nb-pager { display: flex; align-items: center; justify-content: center; flex: 0 0 auto;
+  gap: max(6px, calc(var(--vw) * 0.8)); margin-top: max(6px, calc(var(--vw) * 0.7)); }
+.nb-pager .nb-pg { font-weight: 800; color: #6b5a2a; font-size: max(12px, calc(var(--vw) * 0.9));
+  min-width: max(64px, calc(var(--vw) * 7)); text-align: center; }
+
+/* ── G1e · กล่องตั้งค่า — แท็บแทนแถบเลื่อน (โค้ดอยู่บล็อก G3) ──────────
+   วัดจริง: กล่องมี 12 แถว แถวละ 44 px (เป้ากดจอสัมผัสขั้นต่ำ ห้ามย่อ)
+   รวมสูง 717 px (มือถือ) / 911 (แท็บเล็ต) / 970 (คอม) แต่ที่ว่างมีแค่
+   357 / 528 / 660 px → ปุ่ม "ปิด" อยู่ใต้ขอบจอ 337 / 239 / 249 px กดไม่ได้
+   12 แถว × 44 px ยัดในจอสูง 390 ไม่ได้จริง ๆ ไม่ว่าจะจัดคอลัมน์อย่างไร
+   → แบ่งเป็น 3 แท็บ ทุกปุ่มยังอยู่ครบ กดถึงทุกตัว ไม่มีอะไรถูกซ่อนถาวร */
+.audio-settings-box { display: flex; flex-direction: column; overflow: visible; }
+.as-tabs { display: flex; gap: max(4px, calc(var(--vw) * 0.4)); flex: 0 0 auto;
+  margin-bottom: max(5px, calc(var(--vw) * 0.5)); }
+.as-tab { flex: 1 1 0; min-width: 0; font-family: inherit; cursor: pointer;
+  min-height: max(44px, calc(var(--vh) * 6.4));
+  font-size: max(12px, calc(var(--vw) * 0.95)); font-weight: 800; line-height: 1.15;
+  border: max(1px, calc(var(--vw) * 0.12)) solid rgba(255,255,255,0.35);
+  border-radius: max(8px, calc(var(--vw) * 0.7));
+  background: rgba(255,255,255,0.08); color: #ffe9b8; padding: 2px 4px; }
+.as-tab.on { background: linear-gradient(180deg,#ffca4a,#ff9d2e); color: #4a2a00; border-color: #ffd54a; }
+.as-pane { display: none; flex: 1 1 auto; min-height: 0; }
+.as-pane.on { display: block; }
+/* แถวโหมดเครือข่าย — เดิม label กินเต็มบรรทัด + ชิป + คำอธิบาย + ปุ่มวัดเน็ต = สูง 170 px
+   จัดเป็น 2 บรรทัด (ป้าย+ชิป / คำอธิบาย+ปุ่มวัด) เหลือ ~94 px โดยไม่ย่อเป้ากดเลย */
+/* หมายเหตุ: **ไม่ตัดข้อความคำอธิบายทิ้ง** (ไม่ใช้ line-clamp) — ข้อความอธิบายว่าโหมดไหน
+   ทำอะไรบ้าง ครูต้องอ่านครบถึงจะเลือกถูก · แก้ด้วยการขยายกล่องให้กว้างขึ้นแทน */
+#netmode-row { display: flex; flex-wrap: wrap; align-items: center;
+  gap: max(4px, calc(var(--vw) * 0.5)); }
+#netmode-row > .nm-lab { flex: 0 0 auto; max-width: 38%; }
+#netmode-row .netmode-chips { flex: 1 1 auto; width: auto; margin-top: 0; }
+#netmode-row .netmode-note { flex: 1 1 62%; width: auto; margin-top: 0; }
+#netmode-row .nm-probe { flex: 0 0 auto; margin-top: 0; }
+/* กล่องกว้างขึ้น: ชิป 3 อันอยู่บรรทัดเดียวโดยตัวอักษรไม่ตัดคำ และคำอธิบายโหมดแสดงครบ */
+.mobile-fit .audio-settings-box { width: calc(var(--vw) * 66); max-width: calc(var(--vw) * 68); }
+
+/* ── G1f · ขนาดตัวอักษร/เป้ากดของปุ่มใหม่บนมือถือ-แท็บเล็ต ─────────────
+   ต้องเขียนเป็น `.mobile-fit #game-wrapper .xxx` + !important ตามแบบที่โครงการใช้อยู่แล้ว
+   เพราะกฎเดิม `.mobile-fit #game-wrapper button { font-size: calc(var(--vw)*1.04) }`
+   มี specificity (1,1,1) ชนะ selector คลาสเปล่าทุกแบบ — วัดจริงแล้วปุ่มแท็บได้ตัวอักษร
+   7.2 px ทั้งที่เขียน max(12px,…) ไว้ (บทเรียนเดียวกับที่เฟส 1 เคยเจอกับปุ่มด่าน)
+
+   [เก็บของเก่าที่พบระหว่างทาง] ชิปโหมดเครือข่ายกับคำอธิบายโหมดก็โดนกฎเดียวกันทับอยู่
+   ตัวอักษรเหลือ 7.2 px บนมือถือมาตลอด — ครูอ่านไม่ออกจริง ๆ แก้ให้พร้อมกันเลย */
+.mobile-fit #game-wrapper .as-tab,
+.mobile-fit #game-wrapper .netmode-chips button,
+.mobile-fit #game-wrapper .nm-probe,
+.mobile-fit #game-wrapper .nb-pager .dt-btn {
+  min-height: 44px !important;
+  font-size: max(12.5px, calc(var(--vw) * 1.1)) !important;
+  line-height: 1.25;
+}
+.mobile-fit #game-wrapper .netmode-note,
+.mobile-fit #game-wrapper .nb-pager .nb-pg { font-size: max(12px, calc(var(--vw) * 0.9)) !important; }
+.mobile-fit #game-wrapper .nb-pager .dt-btn,
+.mobile-fit #game-wrapper #nb-close { min-width: 44px !important; }
+/* [เก็บของเก่าที่พบระหว่างทาง] ตัวบันทึกในสมุดนักสำรวจเป็น calc(var(--vw)*0.95) ล้วน
+   บนมือถือแนวนอน --vw = 6.9 px → ตัวหนังสือ 6.6 px เด็ก ป.4 อ่านไม่ออกเลย
+   ยกให้ถึงเกณฑ์ ≥12 px · ตัวแบ่งหน้าคิดจำนวนต่อหน้าจากที่ว่างจริงอยู่แล้ว จึงพอดีเองต่อ */
+.mobile-fit #game-wrapper .nb-entry { font-size: max(12.5px, calc(var(--vw) * 1.05)) !important; }
+.mobile-fit #game-wrapper .nb-entry .nb-meta { font-size: max(12px, calc(var(--vw) * 0.88)) !important; }
+.mobile-fit #game-wrapper .nb-head h3 { font-size: max(13.5px, calc(var(--vw) * 1.25)); }
+/* [เก็บของเก่าที่พบระหว่างทาง] ป้ายกำกับในกล่องตั้งค่าเป็น calc(var(--vw)*0.95) ล้วนเช่นกัน
+   → 6.6 px บนมือถือแนวนอน (ดูภาพ /tmp/shots_dev/of_mb_ตั้งค่า_*.png ก่อนแก้)
+   ยกให้ถึงเกณฑ์ ≥12 px · แถวยังสูง 44 px เท่าเดิมเพราะป้าย 12 px ยังเตี้ยกว่าเป้ากด */
+.mobile-fit #game-wrapper .audio-settings-box .volume-row label,
+.mobile-fit #game-wrapper .audio-settings-box .volume-val {
+  font-size: max(12px, calc(var(--vw) * 0.95)) !important; line-height: 1.25; }
 </style>
 </head>
 <body>
@@ -3496,10 +3682,14 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
       <div id="worldmap-screen" class="screen">
         <!-- [V.8] ชั้นภาพวาดแผนที่จริง (map_world) — โหลดสำเร็จค่อยเฟดขึ้น ฉากสำรอง SVG เดิมอยู่ใต้เสมอ -->
         <div id="wm-art-bg" class="wm-art-bg"></div>
-        <div class="wm-zone-chip" style="left:62%; bottom:4%">🏘️ โซนเมืองมรดกริมแคว</div>
-        <div class="wm-zone-chip z2" style="left:20%; top:72%">🌊 โซนสายน้ำตะวันตก</div>
-        <div class="wm-zone-chip z3" style="left:44%; top:9%">⛰️ โซนขุนเขาชายแดน</div>
-        <div class="wm-zone-chip zf" style="left:73%; top:13%">🌏 ประตูกาญจน์ 2050</div>
+        <!-- [ข้อ 5 · บล็อก F5] ย้ายป้ายโซนไปช่องว่างที่ตรวจแล้วว่าไม่ชนหมุดใหม่ทั้ง 3 ขนาดจอ
+             (เดิมทับแถบตราผู้พิทักษ์ · ทับหมุดด่าน 2050 · ทับหมุดด่านบอส)
+             ป้ายพวกนี้กว้าง 12% ของจอบนคอมแต่ 21.5% บนมือถือ (ตัวอักษรมีพื้นขั้นต่ำ 12 px)
+             ตำแหน่งจึงต้องเผื่อกรณีมือถือเป็นหลัก -->
+        <div class="wm-zone-chip" style="left:58%; top:42.5%">🏘️ โซนเมืองมรดกริมแคว</div>
+        <div class="wm-zone-chip z2" style="left:11%; top:56%">🌊 โซนสายน้ำตะวันตก</div>
+        <div class="wm-zone-chip z3" style="left:30%; top:9%">⛰️ โซนขุนเขาชายแดน</div>
+        <div class="wm-zone-chip zf" style="left:61%; top:1%">🌏 ประตูกาญจน์ 2050</div>
         <!-- จัดกลุ่มปุ่มมุมบนซ้าย/ขวาเป็น "ด็อก" เดียวกันแบบ flex-column แทนการวาง corner-tl/tr แยกทีละปุ่มพร้อม top เป็นตัวเลขเอง (เดิมเสี่ยงเรียงชนกันเวลาปรับ/เพิ่มปุ่มทีหลัง) -->
         <div class="worldmap-dock worldmap-dock-tl">
           <button id="btn-worldmap-home" class="btn btn-icon" title="หน้าแรก">🏠</button>
@@ -3891,6 +4081,13 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
       <div id="audio-settings-modal" class="modal-overlay hidden">
         <div class="modal-box audio-settings-box">
           <div class="media-modal-title">⚙️ ตั้งค่า</div>
+          <!-- [ครู ข้อ 1 · บล็อก G3] แบ่ง 12 แถวเป็น 3 แท็บ — ทุกแถวยังกดถึงครบ ไม่มีแถบเลื่อน -->
+          <div class="as-tabs" role="tablist">
+            <button type="button" class="as-tab on" data-as="sound" onclick="_asTab('sound',this)">🔊 เสียง</button>
+            <button type="button" class="as-tab" data-as="read" onclick="_asTab('read',this)">🗣️ ช่วยอ่าน · ภาพ</button>
+            <button type="button" class="as-tab" data-as="dev" onclick="_asTab('dev',this)">🌐 เน็ต · เครื่อง</button>
+          </div>
+          <div class="as-pane on" data-as="sound">
           <div class="volume-row">
             <label for="slider-master">เสียงรวม</label>
             <input id="slider-master" type="range" min="0" max="100" value="100">
@@ -3906,6 +4103,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
             <input id="slider-sfx" type="range" min="0" max="100" value="60">
             <span id="slider-sfx-val" class="volume-val">60%</span>
           </div>
+          </div><div class="as-pane" data-as="read">
           <!-- [Audit VIS-01] โหมดลดเอฟเฟกต์ภาพ — สำหรับคอมพิวเตอร์/แท็บเล็ตโรงเรียนที่เครื่องช้า ลดเอฟเฟกต์หนักบางส่วนให้ลื่นขึ้น ไม่กระทบการเล่น/คะแนน -->
           <div class="volume-row" style="margin-top:calc(var(--vw) * 0.5); border-top:calc(var(--vw)*0.12) solid rgba(255,255,255,0.15); padding-top:calc(var(--vw)*0.6);">
             <label for="toggle-lowfx">⚡ ลดเอฟเฟกต์ (เครื่องช้า/ลื่นขึ้น)</label>
@@ -3931,13 +4129,15 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
             <input id="toggle-2050bg" type="checkbox" style="width:max(calc(var(--vw) * 2.4),22px); height:max(calc(var(--vw) * 2.4),22px); cursor:pointer;">
             <span id="toggle-2050bg-val" class="volume-val">ปิด (ใช้ภาพวาดในเกม)</span>
           </div>
+          </div><div class="as-pane" data-as="dev">
           <!-- [เฟส 4 · 4.6] ครูปิดโหมดกล้องทั้งเครื่องได้ (บางโรงเรียนมีนโยบายห้ามใช้กล้อง) -->
           <!-- [ระยะ 4C] โหมดเครือข่าย — โรงเรียนที่เน็ตช้าเลือกโหมดเบาได้ โดยยังส่งผลขึ้นเซิร์ฟเวอร์ครบเหมือนเดิม -->
-          <div class="volume-row" style="flex-wrap:wrap; margin-top:calc(var(--vw) * 0.5); border-top:calc(var(--vw)*0.12) solid rgba(255,255,255,0.15); padding-top:calc(var(--vw)*0.6);">
-            <label style="width:100%">🌐 โหมดเครือข่ายของเครื่องนี้</label>
+          <!-- [ครู ข้อ 1 · บล็อก G3] เดิมแถวนี้สูง 170 px (4 บรรทัด) — จัดเหลือ 2 บรรทัด ~94 px โดยไม่ย่อเป้ากด -->
+          <div class="volume-row" id="netmode-row" style="margin-top:calc(var(--vw) * 0.5); border-top:calc(var(--vw)*0.12) solid rgba(255,255,255,0.15); padding-top:calc(var(--vw)*0.6);">
+            <label class="nm-lab">🌐 โหมดเครือข่าย</label>
             <div id="netmode-chips" class="netmode-chips"></div>
             <div id="netmode-note" class="netmode-note"></div>
-            <button onclick="v8NetProbe()" style="margin-top:6px;min-height:44px;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:800;font-size:max(12px,calc(var(--vw)*0.85));border:2px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.08);color:#ffe9b8;padding:6px 14px">📶 วัดความเร็วเน็ตแล้วแนะนำให้</button>
+            <button class="nm-probe" onclick="v8NetProbe()" style="min-height:44px;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:800;font-size:max(12px,calc(var(--vw)*0.85));border:2px solid rgba(255,255,255,0.35);background:rgba(255,255,255,0.08);color:#ffe9b8;padding:6px 14px">📶 วัดเน็ต</button>
           </div>
           <div class="volume-row">
             <label for="toggle-ar">🔭 อนุญาตโหมดสำรวจจริง (เปิดกล้องในด่านนิเวศ)</label>
@@ -3957,6 +4157,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
             <div id="uiscale-chips" class="uiscale-chips"></div>
           </div>
           <div id="a2hs-hint" class="a2hs-hint hidden"></div>
+          </div><!-- /as-pane dev -->
           <!-- [ใหม่ Task #95] ปุ่มเครดิตต่อท้ายด้านล่างเมนูตั้งค่าเสียง — เปิด modal เดียวกับปุ่มเครดิตหน้าแรก -->
           <!-- [รอบ 45 ตามคำขอ #2+#5] เหลือแค่ไอคอน 👨‍🏫 (ไม่มีข้อความ) และจัดปุ่มเป็นแถวเดียว: เครดิตชิดซ้าย / ปิดชิดขวา -->
           <div class="modal-buttons" style="margin-top:calc(var(--vw) * 0.8); display:flex; justify-content:space-between; align-items:center; gap:calc(var(--vw) * 1);">
@@ -4103,7 +4304,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
    ด่านที่ผ่านในภาคหนึ่งจะไปโผล่ว่า 'ผ่านแล้ว' ในอีกภาค (ตราหลุด/ประตูเปิดเอง/คะแนนเพี้ยน) */
 const GAME_PART = 2;
 const PART1_URL = 'https://www.gameplearn.com/kan-adventure';
-const GAME_VERSION = 'V.8.7-p2-2569.71'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
+const GAME_VERSION = 'V.8.10-p2-2569.74'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
     ฝั่งเกม (1) ลบปุ่มวิ่ง ◀▶ + ป้ายสอนปัดของ V.7 ที่ชี้ผิดด่าน (2) แว่นขยายด่านนิเวศแตะครั้งเดียวติด
     (3) ซ่อนหมวดไอเทมที่ยังต่อเข้าด่านเรือธงไม่ได้ (ของที่ซื้อแล้วยังอยู่ในเซฟครบ)
     (4) หรี่เพลงอัตโนมัติระหว่างอ่านออกเสียงแล้วคืนเมื่ออ่านจบ (5) หน้าเข้าระบบแยกช่องโค้ดห้องออกจากชื่อในเกมชัดเจน + เตือนเมื่อพิมพ์สลับ
@@ -4981,7 +5182,7 @@ const Cinematic = {
       ctx.restore();
     } catch (err) {
       console.error('[Cinematic._loop] ข้อผิดพลาดไม่คาดคิดระหว่างเฟรม กู้คืนอัตโนมัติไม่ให้คัทซีนค้าง:', err);
-      try { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1920, 1080); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
+      try { V8DPR.reset(ctx); ctx.clearRect(0, 0, 1920, 1080); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
     }
     this.animFrame = requestAnimationFrame((t) => this._loop(t));
   },
@@ -5212,7 +5413,7 @@ const Victory = {
       Env.drawVignette(ctx);
     } catch (err) {
       console.error('[Victory._loop] ข้อผิดพลาดไม่คาดคิดระหว่างเฟรม กู้คืนอัตโนมัติไม่ให้ฉากชัยชนะค้าง:', err);
-      try { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1920, 1080); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
+      try { V8DPR.reset(ctx); ctx.clearRect(0, 0, 1920, 1080); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
     }
     this.animFrame = requestAnimationFrame((t) => this._loop(t));
   },
@@ -5912,7 +6113,7 @@ function startLoginBackgroundScene() {
       _drawLoginFantasyScene(ctx, now);
     } catch (err) {
       console.error('[LoginBackgroundScene] ข้อผิดพลาดไม่คาดคิดระหว่างเฟรม กู้คืนอัตโนมัติไม่ให้ฉากพื้นหลังค้าง:', err);
-      try { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1920, 1080); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
+      try { V8DPR.reset(ctx); ctx.clearRect(0, 0, 1920, 1080); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
     }
     _loginSceneAnimFrame = requestAnimationFrame(loop);
   };
@@ -6037,7 +6238,7 @@ function startStartScreenFx() {
       _drawStartScreenFx(ctx, now);
     } catch (err) {
       console.error('[StartScreenFx] ข้อผิดพลาดไม่คาดคิดระหว่างเฟรม กู้คืนอัตโนมัติไม่ให้เอฟเฟกต์หน้าแรกค้าง:', err);
-      try { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1920, 1080); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
+      try { V8DPR.reset(ctx); ctx.clearRect(0, 0, 1920, 1080); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
     }
     _startFxAnimFrame = requestAnimationFrame(loop);
   };
@@ -11698,7 +11899,7 @@ const Stage2 = {
     if (this.bannerUntil && now < this.bannerUntil) this._drawBanner(ctx, now);
     } catch (err) {
       console.error('[Stage2._loop] ข้อผิดพลาดไม่คาดคิดระหว่างเฟรม กู้คืนอัตโนมัติไม่ให้ด่านค้าง:', err);
-      try { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1920, 1080); this._drawBackground(ctx, now); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
+      try { V8DPR.reset(ctx); ctx.clearRect(0, 0, 1920, 1080); this._drawBackground(ctx, now); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
     }
 
     this.animFrame = requestAnimationFrame(t => this._loop(t));
@@ -13146,8 +13347,39 @@ const Stage5 = StageRescue;
    ============================================================ */
 const ARLITE = {
   stream: null, on: false,
-  allowed() { try { return localStorage.getItem('cai_ar_off') !== '1'; } catch (e) { return true; } },
+  /* [บล็อก K] เข้มสุดชนะ: ห้องสั่งปิด (ค่าจากครูระดับห้อง) หรือเครื่องสั่งปิด = ปิด
+     ค่าห้อง "ปิดได้อย่างเดียว" — ไม่มีทางที่ค่าห้องจะบังคับเปิดเครื่องที่ปิดไว้เอง */
+  allowed() { try { if (this.roomOff()) return false; return localStorage.getItem('cai_ar_off') !== '1'; } catch (e) { return true; } },
   setAllowed(v) { try { localStorage.setItem('cai_ar_off', v ? '0' : '1'); } catch (e) {} },
+  /* [บล็อก K] ค่าระดับห้อง — แคชในเครื่อง (คีย์ตระกูลเดียวกับ cai_ar_off)
+     เด็กแก้แคชได้ก็จริง แต่ syncRoom ดึงค่าจริงทับทุกครั้งที่เข้าเกม/เข้าสู่ระบบ/ผูกห้อง */
+  ROOM_KEY: 'cai_ar_room_off',
+  roomOff() { try { return localStorage.getItem(this.ROOM_KEY) === '1'; } catch (e) { return false; } },
+  /* [บล็อก K] ดึงค่าห้องจากเซิร์ฟเวอร์มาทับแคช — fallback ท่า P2SAVE ทุกชั้น:
+       · โหมดสาธิต DEMO_MODE → ไม่ยิงอะไรเลย (ประตูเดียวกับ SBTee.tee)
+       · ไม่ผูกห้อง (แขก) → ไม่ยิงอะไรเลย พฤติกรรมเหมือนเดิมทุกอย่าง
+       · ดึงสำเร็จ → เขียนแคช '1'/'0' (ห้องไม่เคยตั้งค่า = '0' — ถือว่าไม่ได้ปิด)
+       · ดึงไม่สำเร็จ (ออฟไลน์ / ยังไม่รัน SQL — PGRST) → คงแคชล่าสุดไว้ เงียบ ๆ */
+  syncRoom() {
+    try {
+      if (typeof DEMO_MODE !== 'undefined' && DEMO_MODE) return Promise.resolve(false);
+      const b = (typeof SBTee !== 'undefined' && SBTee.bind) ? SBTee.bind() : null;
+      if (!b || !b.join_key) return Promise.resolve(false);
+      if (this._roomBusy) return Promise.resolve(false);
+      this._roomBusy = true;
+      return SBTee._rpc('rpc_get_room_settings', { p_join_key: b.join_key })
+        .then((t) => {
+          let rows = []; try { rows = JSON.parse(t || '[]') || []; } catch (e) { rows = []; }
+          if (!Array.isArray(rows)) rows = [];
+          const row = rows.find((r) => r && r.skey === 'ar_off');
+          const off = !!(row && String(row.sval) === '1');
+          try { localStorage.setItem(this.ROOM_KEY, off ? '1' : '0'); } catch (e) {}
+          return off;
+        })
+        .catch(() => false)
+        .then((r) => { this._roomBusy = false; return r; });
+    } catch (e) { return Promise.resolve(false); }
+  },
   /* [แก้ตามครู] ใช้ได้เฉพาะเครื่องที่ "ถือแล้วหันได้จริง" — มือถือ/แท็บเล็ตที่มีกล้องหลัง
      คอมพิวเตอร์/โน้ตบุ๊กมีแต่กล้องหน้า ยกจอหันไปมาไม่ได้ และไม่ควรเปิดกล้องส่องหน้าเด็ก */
   isHandheld() {
@@ -13190,7 +13422,7 @@ const ARLITE = {
     ov.querySelector('#ar-ok').onclick = () => { ov.remove(); this.start(sceneEl, btn); };
   },
   start(sceneEl, btn) {
-    if (!this.supported()) return;
+    if (!this.supported() || !this.allowed()) return; /* [บล็อก K] เข้มสุดชนะ — ปุ่มค้างก็เปิดไม่ได้ */
     navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false })
       .then((st) => {
         this.stream = st; this.on = true;
@@ -13229,6 +13461,16 @@ const ARLITE = {
     } catch (e) {}
   }
 };
+
+/* [บล็อก K] เปิดเกมมาแล้วเครื่องนี้ผูกห้องอยู่ → ดึงค่าห้องทับแคชหนึ่งครั้ง (ไม่บล็อกจอ)
+   ครอบเคสเด็กรีเฟรชหน้ากลางคัน/เปิดเกมใหม่โดยไม่ผ่านหน้าเข้าสู่ระบบ */
+(function () {
+  const go = () => setTimeout(() => { try { ARLITE.syncRoom(); } catch (e) {} }, 1500);
+  try {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go);
+    else go();
+  } catch (e) {}
+})();
 
 const StageEco = {
   lv: 2, goal: null, startTime: 0, found: [], obsVals: [], links: [], careVal: 0,
@@ -14047,7 +14289,7 @@ const Stage8 = {
     if (this.enemyState === 'hurt' && now - this.enemyStateStart > 300) this._setEnemyState('idle');
     } catch (err) {
       console.error('[Stage8._loop] ข้อผิดพลาดไม่คาดคิดระหว่างเฟรม กู้คืนอัตโนมัติไม่ให้ด่านบอสค้าง:', err);
-      try { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1920, 1080); this._drawBackground(ctx, now); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
+      try { V8DPR.reset(ctx); ctx.clearRect(0, 0, 1920, 1080); this._drawBackground(ctx, now); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
     }
 
     this.animFrame = requestAnimationFrame((t) => this._loop(t));
@@ -14802,7 +15044,7 @@ const Minigame1 = {
     if (this.enemyState === 'hurt' && now - this.enemyStateStart > 300) this._setEnemyState('idle');
     } catch (err) {
       console.error('[Minigame1._loop] ข้อผิดพลาดไม่คาดคิดระหว่างเฟรม กู้คืนอัตโนมัติไม่ให้ด่านค้าง:', err);
-      try { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1920, 1080); this._drawBackground(ctx, now); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
+      try { V8DPR.reset(ctx); ctx.clearRect(0, 0, 1920, 1080); this._drawBackground(ctx, now); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
     }
 
     this.animFrame = requestAnimationFrame((t) => this._loop(t));
@@ -15081,7 +15323,7 @@ const Minigame2 = {
     Env.drawVignette(ctx);
     } catch (err) {
       console.error('[Minigame2._loop] ข้อผิดพลาดไม่คาดคิดระหว่างเฟรม กู้คืนอัตโนมัติไม่ให้ด่านค้าง:', err);
-      try { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1920, 1080); this._drawBackground(ctx, now); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
+      try { V8DPR.reset(ctx); ctx.clearRect(0, 0, 1920, 1080); this._drawBackground(ctx, now); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
     }
 
     this.animFrame = requestAnimationFrame((t) => this._loop(t));
@@ -15413,7 +15655,7 @@ const Minigame3 = {
     Env.drawVignette(ctx);
     } catch (err) {
       console.error('[Minigame3._loop] ข้อผิดพลาดไม่คาดคิดระหว่างเฟรม กู้คืนอัตโนมัติไม่ให้ด่านค้าง:', err);
-      try { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1920, 1080); this._drawMap(ctx, now); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
+      try { V8DPR.reset(ctx); ctx.clearRect(0, 0, 1920, 1080); this._drawMap(ctx, now); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
     }
     this.animFrame = requestAnimationFrame((t) => this._loop(t));
   },
@@ -19589,7 +19831,7 @@ const StageHellfire = {
     }
     } catch (err) {
       console.error('[StageHellfire._loop] ข้อผิดพลาดไม่คาดคิดระหว่างเฟรม กู้คืนอัตโนมัติไม่ให้ด่านค้าง:', err);
-      try { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1920, 1080); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
+      try { V8DPR.reset(ctx); ctx.clearRect(0, 0, 1920, 1080); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
     }
     this.animFrame = requestAnimationFrame((t) => this._loop(t));
   },
@@ -20216,7 +20458,7 @@ const StagePilok = {
     if (this.playerState === 'attack' && now - this.playerStateStart > 420) { this.playerState = 'idle'; this.playerStateStart = now; }
     } catch (err) {
       console.error('[StagePilok._loop] ข้อผิดพลาดไม่คาดคิดระหว่างเฟรม กู้คืนอัตโนมัติไม่ให้ด่านค้าง:', err);
-      try { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, 1920, 1080); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
+      try { V8DPR.reset(ctx); ctx.clearRect(0, 0, 1920, 1080); } catch (err2) { /* เอาไม่อยู่จริงๆ ก็ปล่อยเฟรมก่อนหน้าไว้ ดีกว่าค้าง loop ถาวร */ }
     }
     this.animFrame = requestAnimationFrame((t) => this._loop(t));
   },
@@ -20989,6 +21231,7 @@ function _startCharGridLiveLoop(gridId, screenId, getOverrides) {
     const id = cv.dataset.charId; const base = CHAR_CONFIG[id]; if (!base) return;
     const ov = getOverrides ? getOverrides(id) : null;
     const cfg = ov && Object.keys(ov).length ? Object.assign({}, base, ov) : base;
+    V8DPR.fitPart(cv); /* [บล็อก J] ตระกูล 2: โค้ดล่างคิดทุกพิกัดจาก w,h เป็นสัดส่วนอยู่แล้ว — ห้ามใส่ tf */
     const w = cv.width, h = cv.height; const ctx = cv.getContext('2d');
     ctx.clearRect(0, 0, w, h);
     // ปกติ idle (หายใจ) แล้วแทรกท่าเด่นสุ่มเป็นระยะ — คนละจังหวะทุกใบ ให้ดูมีชีวิตหลากหลายไม่จำเจ
@@ -21039,7 +21282,7 @@ function _startAuraGridLiveLoop(gridId, screenId) {
   const myGen = ++_auraOrbGen;
   const canvases = Array.from(grid.querySelectorAll('canvas[data-aura]'));
   const start = performance.now();
-  const drawAll = (now) => canvases.forEach(cv => { try { _drawAuraOrb(cv.getContext('2d'), cv.width, cv.height, cv.dataset.aura || '#ffd54a', now - start); } catch (e) {} });
+  const drawAll = (now) => canvases.forEach(cv => { try { V8DPR.fitPart(cv); _drawAuraOrb(cv.getContext('2d'), cv.width, cv.height, cv.dataset.aura || '#ffd54a', now - start); } catch (e) {} }); /* [บล็อก J] ตระกูล 2 — ขยายบัฟเฟอร์อย่างเดียว */
   if (window.LOWFX) { drawAll(performance.now()); return; }
   const _thr = { last: 0 };
   const step = (now) => {
@@ -21176,6 +21419,7 @@ function renderShopPets() {
         requestAnimationFrame(drawPreview);
         if (!_previewCanDraw(now, _thr, canvas)) return; // [รอบ39 Perf] จำกัด ~30fps + ข้ามเมื่อแท็บสัตว์เลี้ยงถูกซ่อน
         try {
+          V8DPR.fitPart(canvas, true); /* [บล็อก J] สเปซตรรกะ 64 ตายตัว (วาดที่ 32,36 สเกล 1) */
           pctx.clearRect(0, 0, 64, 64);
           PetRenderer.draw(pctx, item.id, 32, 36, 1, _petPreviewT(item.id, now - previewStart)); // [รอบ37 #7] offset เฟสต่อชนิด — ไม่กระโดดพร้อมกัน
         } catch (err) {
@@ -21838,25 +22082,48 @@ function peerRenderPick(){
   var me=_peerState.me||{}, list=_peerState.roster.filter(function(m){ return m.id!==String(me.id); });
   if(!list.length){ b.innerHTML='<div class="sat-intro">ยังไม่มีเพื่อนคนอื่นในห้องนี้เลย</div><button class="sat-submit" style="background:#94a3b8;max-width:220px;margin:16px auto 0" onclick="peerClose()">ปิด</button>'; return; }
   var nSel=list.filter(function(m){ return _peerState.sel[m.id]; }).length;
+  /* [บล็อก I] เดิมรายชื่อกองในกล่อง max-height:46vh + overflow:auto — วัดจริงห้อง 38 คน:
+     เลื่อนภายใน 1,660–1,812 px และปุ่มรายชื่อพ้นจอล่างถึง 1,710 px (จุดบอดของบล็อก G)
+     ใหม่: แถวละ 2 ชื่อเป็นชิ้นตรง ๆ ของ #sat-body — SATPAGE (G4) ไล่ใส่ทีละหน้าให้เอง
+     เหมือนข้อของแบบประเมิน ทุกปุ่มยังอยู่ใน DOM ครบ สถานะเลือกอยู่ใน _peerState.sel */
+  var rows='';
+  for(var ri=0;ri<list.length;ri+=2){
+    rows+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:7px">'+
+      peerStuBtn(list[ri])+(list[ri+1]?peerStuBtn(list[ri+1]):'<span></span>')+'</div>';
+  }
   b.innerHTML='<div class="sat-intro">เลือกเพื่อนที่ทำงานกลุ่มหรือเล่นด้วยกัน แล้วตอบตามที่เห็นจริง — แบบนี้ไม่มีถูกผิด<br><b>คำตอบไม่มีผลต่อคะแนนเกมและอันดับ</b></div>'+
     '<div style="display:flex;gap:8px;justify-content:center;margin:6px 0">'+
       '<button class="sat-submit" style="margin:0;max-width:180px;background:#0e7490" onclick="peerSelAll(1)">✅ เลือกทั้งห้อง</button>'+
       '<button class="sat-submit" style="margin:0;max-width:150px;background:#94a3b8" onclick="peerSelAll(0)">ล้างที่เลือก</button>'+
     '</div>'+
-    '<div style="display:flex;flex-direction:column;gap:7px;margin-top:8px;max-height:46vh;overflow:auto">'+
-      list.map(function(m){ var on=!!_peerState.sel[m.id];
-        return '<button type="button" onclick="peerSelOne(\''+m.id+'\')" style="display:flex;align-items:center;gap:10px;padding:10px 13px;border-radius:12px;cursor:pointer;font-family:inherit;text-align:left;'+
-          'border:2px solid '+(on?'#0e7490':'#cbd5e1')+';background:'+(on?'#cffafe':'#fff')+'">'+
-          '<span style="font-size:19px">'+(on?'✅':'⬜')+'</span><span style="font-weight:700;font-size:14.5px;color:#0f172a">'+(m.no?('เลขที่ '+escapeHtml(m.no)+' · '):'')+escapeHtml(m.name)+'</span></button>'; }).join('')+
-    '</div>'+
+    rows+
     '<button class="sat-submit" id="peer-start" style="margin-top:12px'+(nSel?'':';opacity:.55')+'" onclick="peerStart()">▶️ เริ่มประเมิน ('+nSel+' คน · คนละ 8 ข้อ)</button>'+
     '<button class="sat-submit" style="background:#94a3b8;max-width:220px;margin:10px auto 0" onclick="peerClose()">ยังไม่ทำตอนนี้</button>';
 }
-function peerSelOne(id){ _peerState.sel[id]=!_peerState.sel[id]; peerRenderPick(); }
+function peerStuBtn(m){
+  /* [บล็อก I] ปุ่มรายชื่อ 1 คน — min-height:44px ให้ถึงเกณฑ์เป้ากดจอสัมผัสเสมอ */
+  var on=!!_peerState.sel[m.id];
+  return '<button type="button" id="peerstu-'+m.id+'" onclick="peerSelOne(\''+m.id+'\')" style="display:flex;align-items:center;gap:8px;min-height:44px;padding:8px 11px;border-radius:12px;cursor:pointer;font-family:inherit;text-align:left;'+
+    'border:2px solid '+(on?'#0e7490':'#cbd5e1')+';background:'+(on?'#cffafe':'#fff')+'">'+
+    '<span class="pstu-ic" style="font-size:19px">'+(on?'✅':'⬜')+'</span><span style="font-weight:700;font-size:14.5px;color:#0f172a">'+(m.no?('เลขที่ '+escapeHtml(m.no)+' · '):'')+escapeHtml(m.name)+'</span></button>';
+}
+function peerSelPaint(id){
+  var on=!!_peerState.sel[id], b=document.getElementById('peerstu-'+id);
+  if(b){ b.style.borderColor=on?'#0e7490':'#cbd5e1'; b.style.background=on?'#cffafe':'#fff';
+    var ic=b.querySelector('.pstu-ic'); if(ic) ic.textContent=on?'✅':'⬜'; }
+}
+function peerSelCount(){
+  var me=_peerState.me||{}, n=_peerState.roster.filter(function(m){ return m.id!==String(me.id)&&_peerState.sel[m.id]; }).length;
+  var st=document.getElementById('peer-start');
+  if(st){ st.style.opacity=n?'':'.55'; st.textContent='▶️ เริ่มประเมิน ('+n+' คน · คนละ 8 ข้อ)'; }
+}
+/* [บล็อก I] แก้ DOM ตรงจุดแทนการ re-render ทั้งก้อน — ไม่งั้น SATPAGE เด้งกลับหน้า 1 ทุกแตะ
+   (ปุ่มที่อยู่หน้าอื่นก็อัปเดตได้ เพราะ .satpg-off แค่ซ่อน ยังอยู่ใน DOM ครบ) */
+function peerSelOne(id){ _peerState.sel[id]=!_peerState.sel[id]; peerSelPaint(id); peerSelCount(); }
 function peerSelAll(on){
   var me=_peerState.me||{};
-  _peerState.roster.forEach(function(m){ if(m.id!==String(me.id)) _peerState.sel[m.id]=!!on; });
-  peerRenderPick();
+  _peerState.roster.forEach(function(m){ if(m.id!==String(me.id)){ _peerState.sel[m.id]=!!on; peerSelPaint(m.id); } });
+  peerSelCount();
 }
 function peerStart(){
   var me=_peerState.me||{};
@@ -21876,11 +22143,11 @@ function peerRenderTarget(){
         '<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">'+
           PEER_FACE.map(function(f,v){
             var on=(sc[q.k]===v);
-            return '<button type="button" onclick="peerSet(\''+cur.id+'\',\''+q.k+'\','+v+')" '+
+            return '<button type="button" id="peerface-'+q.k+'-'+v+'" onclick="peerSet(\''+cur.id+'\',\''+q.k+'\','+v+')" '+
               'style="flex:1;min-width:60px;min-height:60px;border-radius:12px;cursor:pointer;font-family:inherit;'+
               'border:2px solid '+(on?'#0e7490':'#cbd5e1')+';background:'+(on?'#cffafe':'#fff')+';">'+
               '<div style="font-size:21px;line-height:1.1">'+f[0]+'</div>'+
-              '<div style="font-size:10.5px;font-weight:700;color:'+(on?'#0b5566':'#64748b')+'">'+f[1]+'</div></button>'; }).join('')+
+              '<div style="font-size:12px;font-weight:700;color:'+(on?'#0b5566':'#64748b')+'">'+f[1]+'</div></button>'; }).join('')+
         '</div></div>';
     }).join('')+
     '<div style="display:flex;gap:8px;margin-top:14px">'+
@@ -21890,7 +22157,18 @@ function peerRenderTarget(){
     '<div id="peer-err" style="color:#b91c1c;font-size:13px;text-align:center;margin-top:8px"></div>';
   b.scrollTop=0;
 }
-function peerSet(id,k,v){ (_peerState.scores[id]=_peerState.scores[id]||{})[k]=v; peerRenderTarget(); }
+function peerSet(id,k,v){
+  (_peerState.scores[id]=_peerState.scores[id]||{})[k]=v;
+  /* [บล็อก I] วาดเฉพาะแถวหน้ายิ้มของข้อที่แตะ — re-render ทั้งหน้าจะทำให้ SATPAGE
+     เด้งกลับหน้า 1 ทุกแตะ (พิสูจน์แล้ว) · บรรทัดเก็บคะแนนข้างบนคงเดิมทุกไบต์ */
+  for(var i=0;i<PEER_FACE.length;i++){
+    var bt=document.getElementById('peerface-'+k+'-'+i); if(!bt) continue;
+    var on=(v===i);
+    bt.style.borderColor=on?'#0e7490':'#cbd5e1';
+    bt.style.background=on?'#cffafe':'#fff';
+    var lb=bt.lastElementChild; if(lb) lb.style.color=on?'#0b5566':'#64748b';
+  }
+}
 function peerPrev(){ if(_peerState.idx>0){ _peerState.idx--; peerRenderTarget(); } }
 function peerNext(){
   var tg=_peerState.targets, cur=tg[_peerState.idx], sc=_peerState.scores[(cur||{}).id]||{};
@@ -22594,6 +22872,7 @@ function _startWmAvatarLoop() {
     if (myId !== _wmAvatarLoopId) return;
     // [FIX M24] หยุดเมื่อออกจากหน้าแผนที่โลก — เดิมเช็คว่า canvas หลุดจาก DOM ซึ่งไม่มีวันเกิด ทำให้ loop นี้วิ่ง 60fps ตลอดชีวิตเกม (กินเฟรม/แบตแท็บเล็ตฟรีๆ)
     if (!document.getElementById('worldmap-screen').classList.contains('active')) return;
+    V8DPR.fitPart(canvas, true); /* [บล็อก J] สเปซตรรกะ 80 — สูตรขยายเฉพาะเมื่อ css×dpr > 80 จริง (จอทดสอบทั้งสามได้ s=1 คงเดิม) */
     ctx.clearRect(0, 0, 80, 80);
     try {
       ctx.save();
@@ -22700,6 +22979,10 @@ function _startCsMirrorLoop() {
     if (!_previewCanDraw(now, _thr, canvas)) return;
     const t = now - start;
     const cfg = getPlayerConfig();
+    /* [บล็อก J] คมตามจอ: กระจก = สเปซตรรกะ 360 ตายตัว (tf) · ช่องสวมใส่ทั้งสามอ่าน
+       cv.width เป็นสเปซวาดอยู่แล้ว — ขยายบัฟเฟอร์อย่างเดียว ห้ามตั้งทรานส์ฟอร์ม (s²) */
+    V8DPR.fitPart(canvas, true);
+    V8DPR.fitPart(cvChar); V8DPR.fitPart(cvAura); V8DPR.fitPart(cvPet);
     ctx.clearRect(0, 0, 360, 360);
     try {
       ctx.save();
@@ -22793,6 +23076,7 @@ function _startLobbyAvatarLoop() {
   const step = (now) => {
     if (myId !== _lobbyAvatarLoopId) return;
     if (!document.getElementById('lobby-screen').classList.contains('active')) return;
+    V8DPR.fitPart(canvas, true); /* [บล็อก J] สเปซตรรกะ 360 ตายตัว — ทางสำรอง drawImage(60,30,240,327) ก็ตรรกะ จึงถูกด้วย */
     ctx.clearRect(0, 0, 360, 360);
     try {
       ctx.save();
@@ -22831,7 +23115,7 @@ function _startWmNodeShimmerLoop() {
        ประกายไอคอนเป็นของประดับ ไม่ควรกินแรงเครื่องเท่าตัวด่าน */
     if (!_previewCanDraw(now, _wmThr, live[0])) { requestAnimationFrame(step); return; }
     try {
-      live.forEach(canvas => WorldMapArt.draw(canvas.getContext('2d'), canvas.dataset.key, now));
+      live.forEach(canvas => { V8DPR.fitPart(canvas, true); WorldMapArt.draw(canvas.getContext('2d'), canvas.dataset.key, now); }); /* [บล็อก J] เช็ก epoch แล้วเท่านั้น — ไม่วัด rect ทุกเฟรม */
     } catch (err) {
       console.error('[WmNodeShimmer] ข้อผิดพลาดไม่คาดคิดระหว่างเฟรม กู้คืนอัตโนมัติไม่ให้ประกายไอคอนด่านค้าง:', err);
     }
@@ -23474,9 +23758,12 @@ const HowToPlay = {
     document.getElementById('htp-lines').innerHTML = pg.lines.map(([icon, text]) =>
       `<div class="htp-line"><span class="htp-line-icon">${icon}</span><span class="htp-line-text">${text}</span></div>`).join('');
     const cv = document.getElementById('htp-canvas');
+    /* [บล็อก J] สเปซวาดมาจากขนาดตรรกะ (V8DPR.w/h) ไม่ใช่บัฟเฟอร์ — ที่ dpr=1 ค่าเท่าเดิมเป๊ะ */
+    V8DPR.fitPart(cv, true);
     const ctx = cv.getContext('2d');
-    ctx.clearRect(0, 0, cv.width, cv.height);
-    try { pg.draw(ctx, cv.width, cv.height); } catch (e) { console.error('[HowToPlay] วาดภาพประกอบไม่สำเร็จ:', e); }
+    const HW = V8DPR.w(cv), HH = V8DPR.h(cv);
+    ctx.clearRect(0, 0, HW, HH);
+    try { pg.draw(ctx, HW, HH); } catch (e) { console.error('[HowToPlay] วาดภาพประกอบไม่สำเร็จ:', e); }
     const dots = document.getElementById('htp-dots');
     dots.innerHTML = this.PAGES.map((_, i) => `<div class="htp-dot${i === this.page ? ' active' : ''}"></div>`).join('');
     document.getElementById('btn-htp-prev').disabled = this.page === 0;
@@ -23900,29 +24187,203 @@ function flushEvidence(stageId) {
 }
 
 /* ---------- ผังจุดด่านบนแผนที่ภาพวาด (ตำแหน่งอิงภาพ map_world จริง) ---------- */
+/* [ข้อ 5 · บล็อก F2] พิกัดหมุด = % ของ "ตัวภาพ map_world" (0–100 ทั้งสองแกน)
+   **ไม่ใช่ % ของกรอบจอ** — V8PIN.place() แปลงเป็น % ของกรอบจอให้เองตามการครอบตัดจริง
+   ตัวเลขทุกตัวมาจากการวัดแผ่นฐานวงกลมสีทรายในไฟล์ภาพ (คลาดเคลื่อน <0.5%)
+   ลำดับเล่น/ตรรกะปลดล็อกไม่เปลี่ยน — ย้ายเฉพาะตำแหน่งบนจอให้ตรงฐานที่วาดไว้
+
+     หมุด            ฐานในภาพ            สถานที่ในภาพวาด
+     1               B14 (61.9,81.5)     ลานข้างสะพานเหล็กข้ามแม่น้ำแคว
+     6               B12 (67.1,66.3)     ลานเมืองใกล้หัวรถจักร
+     3               B13 (30.9,70.9)     ปลายสะพานไม้เลียบผา (ถ้ำกระแซ)
+     hellfire        B15 (44.7,84.1)     ทางเดินริมน้ำแนวทางรถไฟ
+     mg1             B10 (75.7,58.0)     หน้าสถานีรถไฟ/พิพิธภัณฑ์
+     4               B11 (40.2,58.9)     ข้างน้ำตกใหญ่
+     mg2             B16 (51.6,85.8)     ริมแม่น้ำด้านใต้
+     5               B5  (22.8,31.2)     ใต้สันเขื่อน
+     pilok           B4  (16.7,28.3)     ทางขึ้นเขาฝั่งตะวันตก
+     7               B6  (58.9,31.6)     หัวสะพานไม้ยาว (สะพานมอญ)
+     mg3             B7  (52.9,36.8)     ที่ราบกลางแผนที่
+     8               B9  (84.3,53.4)     อาคารใหญ่ในตัวเมือง
+     water           B8  (43.9,45.5)     กลางแผนที่ริมทางน้ำ
+     balance2050     — ไม่มีฐาน          ผืนป่าเหนือหมู่บ้านชายน้ำ (ประตูมิติ ไม่ใช่สถานที่จริง)
+     learn           — ไม่มีฐาน          โขดหินริมน้ำมุมซ้ายล่าง (ห้องเรียน ไม่ใช่สถานที่ในเรื่อง)
+
+   ภาพเดิมมีแผ่นฐาน 16 จุด ใช้ได้จริง 13 จุด — อีก 3 จุด (14.1,19.6 · 16.2,21.0 · 15.0,25.0)
+   เป็นกระจุกบนทางขึ้นเขา ห่างกันแค่ 2.5–4% วางหมุดแล้วซ้อนกันแน่นอน
+   ภาพแผนที่รอบหน้าให้ใช้ตารางใน KAN2_PROMPT_WORLDMAP.md ซึ่งเว้นที่รอบหมุดไว้ให้แล้ว */
 const V8MAP_NODES = {
-  1: [71.5, 80], mg1: [82, 47], 6: [59.5, 69],
-  3: [16, 62.5], hellfire: [10, 47.5], 4: [28.5, 45.5], mg2: [45, 58],
-  5: [31, 22], pilok: [11, 31], 7: [56, 25.5], mg3: [69, 18.5],
-  balance2050: [83.5, 31], 8: [91, 45], learn: [6, 86],
-  water: [40, 33]   /* [เฟส 4 · 4.4] ด่านพิเศษปริศนาสายน้ำ — วางแถวคลองส่งน้ำกลางแผนที่ */
+  1: [61.9, 81.5], mg1: [75.7, 58.0], 6: [67.1, 66.3],
+  3: [30.9, 70.9], hellfire: [44.7, 84.1], 4: [40.2, 58.9], mg2: [51.6, 85.8],
+  5: [22.8, 31.2], pilok: [16.7, 28.3], 7: [58.9, 31.6], mg3: [52.9, 36.8],
+  balance2050: [74.0, 21.5], 8: [84.3, 53.4], learn: [16.0, 86.0],
+  water: [43.9, 45.5]   /* [เฟส 4 · 4.4] ด่านพิเศษปริศนาสายน้ำ — แผ่นฐานกลางแผนที่ */
+};
+
+/* [ข้อ 5 · บล็อก F3] ตัววางหมุด + ตัวกันป้ายทับ
+   หน้าที่เดียว: แปลง "% ของภาพ" → "% ของกรอบจอ" ให้ตรงกับภาพที่เห็นจริง แล้วจัดป้ายไม่ให้ชนกัน
+   ไม่ยุ่งกับ data/ลำดับด่าน/การปลดล็อกเลยแม้แต่บรรทัดเดียว */
+const V8PIN = {
+  AR: 1536 / 1024,   /* สัดส่วนไฟล์ map_world.webp — ถ้าเปลี่ยนภาพต้องแก้ตัวนี้ด้วย */
+  PAN: 0.72,         /* จุดยึดแนวตั้งตอนครอบตัด (0=ชิดบน 1=ชิดล่าง)
+                        0.72 = ดันภาพขึ้นเล็กน้อย ให้แผ่นฐานแถวล่างสุดพ้นแถบตราผู้พิทักษ์ */
+  _pass: 0,
+  /* สี่เหลี่ยมของภาพจริงในกรอบจอ (หน่วย px เทียบมุมซ้ายบนของ #worldmap-screen) */
+  frame() {
+    const scr = document.getElementById('worldmap-screen');
+    if (!scr) return null;
+    const r = scr.getBoundingClientRect();
+    let W = r.width, H = r.height;
+    if (!(W > 0 && H > 0)) {          /* หน้ายังไม่ active — คำนวณจากเวทีแทน */
+      const wr = document.getElementById('game-wrapper');
+      if (!wr) return null;
+      const q = wr.getBoundingClientRect();
+      H = q.height; W = Math.min(q.width, H * 16 / 9);
+    }
+    if (!(W > 0 && H > 0)) return null;
+    let w = W, h = W / this.AR;       /* cover: ยึดความกว้างก่อน */
+    if (h < H - 0.01) { h = H; w = H * this.AR; }
+    return { x: (W - w) / 2, y: (H - h) * this.PAN, w: w, h: h, W: W, H: H };
+  },
+  /* วางทั้งภาพและหมุดบนกรอบเดียวกัน */
+  place() {
+    const f = this.frame(); if (!f) return false;
+    const bg = document.getElementById('wm-art-bg');
+    if (bg) {
+      bg.style.left = (f.x / f.W * 100).toFixed(4) + '%';
+      bg.style.top = (f.y / f.H * 100).toFixed(4) + '%';
+      bg.style.width = (f.w / f.W * 100).toFixed(4) + '%';
+      bg.style.height = (f.h / f.H * 100).toFixed(4) + '%';
+      bg.style.right = 'auto'; bg.style.bottom = 'auto';
+    }
+    Object.keys(V8MAP_NODES).forEach((k) => {
+      const el = document.getElementById('stage-node-' + k);
+      if (!el) return;
+      const p = V8MAP_NODES[k];
+      /* เขียนเป็น % ธรรมดา (ไม่ใช้ calc) เพราะชั้นเงาใต้หมุดอ่านค่าด้วย parseFloat(el.style.left) */
+      el.style.left = ((f.x + f.w * p[0] / 100) / f.W * 100).toFixed(3) + '%';
+      el.style.top = ((f.y + f.h * p[1] / 100) / f.H * 100).toFixed(3) + '%';
+      el.dataset.imgx = p[0]; el.dataset.imgy = p[1];
+    });
+    /* ชั้นเงา/แท่นใต้หมุดอ่านตำแหน่งจาก DOM — ถูกวาดไปก่อนหน้านี้ตอนหมุดยังอยู่ที่เก่า
+       (refreshWorldMap เรียก drawWorldmapIsoLayer ก่อน V8Map.refresh) ต้องวาดซ้ำให้ตรงหมุดใหม่ */
+    try { if (typeof drawWorldmapIsoLayer === 'function') drawWorldmapIsoLayer(); } catch (e) { }
+    return true;
+  },
+  _ov(a, b) {
+    const w = Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x);
+    const h = Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y);
+    return (w > 0 && h > 0) ? w * h : 0;
+  },
+  /* ลำดับความสำคัญ: ด่านเนื้อหาหลักได้เลือกที่ก่อน มินิเกม/ด่านเสริมหลบให้ */
+  PRI: ['1', '3', '4', '5', '6', '7', '8', 'balance2050', 'hellfire', 'pilok', 'water', 'learn', 'mg1', 'mg2', 'mg3'],
+  /* จัดป้ายชื่อไม่ให้ทับกันเอง · ไม่ทับหมุดอื่น · ไม่โดนกล่อง UI บัง */
+  labels() {
+    const scr = document.getElementById('worldmap-screen');
+    if (!scr || !scr.classList.contains('active')) return false;
+    const sr = scr.getBoundingClientRect();
+    if (!(sr.width > 10 && sr.height > 10)) return false;
+    const nodes = [...scr.querySelectorAll('.stage-node')];
+    if (!nodes.length) return false;
+    /* ห่อป้าย/ดาว/ตรา เป็นก้อนเดียว (ทำครั้งเดียวต่อหมุด) */
+    nodes.forEach((el) => {
+      if (el.querySelector('.wm-nodelab')) return;
+      const box = document.createElement('div');
+      box.className = 'wm-nodelab';
+      ['.stage-node-stars', '.stage-node-passed', '.stage-node-label', '.wm-gate-tag', '.wm-comp-tag']
+        .forEach((s) => { const c = el.querySelector(':scope > ' + s); if (c) box.appendChild(c); });
+      el.appendChild(box);
+    });
+    /* กล่อง UI ที่ห้ามให้หมุด/ป้ายไปอยู่ใต้ */
+    const block = [];
+    ['.worldmap-dock-tl', '.worldmap-dock-tr', '#worldmap-status-bar', '.worldmap-title',
+      '#wm-protector-bar', '.screen-credit-line', '#btn-open-satisfaction', '#btn-open-selfassess',
+      '#btn-worldmap-peer', '#wm-compass-btn', '.wm-zone-chip'].forEach((s) => {
+        scr.querySelectorAll(s).forEach((e) => {
+          if (e.classList.contains('hidden')) return;
+          const r = e.getBoundingClientRect();
+          if (r.width > 0 && r.height > 0) block.push({ x: r.x, y: r.y, width: r.width, height: r.height });
+        });
+      });
+    const pinRect = new Map();
+    nodes.forEach((el) => { const r = el.getBoundingClientRect(); pinRect.set(el, { x: r.x, y: r.y, width: r.width, height: r.height }); });
+    const pad = Math.max(2, sr.width * 0.004);
+    const placed = [];
+    const order = nodes.slice().sort((a, b) => {
+      const ka = a.id.replace('stage-node-', ''), kb = b.id.replace('stage-node-', '');
+      const ia = this.PRI.indexOf(ka), ib = this.PRI.indexOf(kb);
+      return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+    });
+    order.forEach((el) => {
+      const lab = el.querySelector('.wm-nodelab'); if (!lab) return;
+      lab.style.transform = ''; lab.classList.remove('wm-lab-tight');
+      const nr = pinRect.get(el);
+      const cx = nr.x + nr.width / 2, cy = nr.y + nr.height / 2;
+      let best = null;
+      for (let pass = 0; pass < 2; pass++) {
+        if (pass === 1) {
+          if (best && best.bad < 100) break;   /* <100 = ไม่ทับอะไรเลย (ค่าปรับระยะล้วน) */
+          lab.classList.add('wm-lab-tight');
+        }
+        const m = lab.getBoundingClientRect();
+        const lw = m.width, lh = m.height;
+        if (!(lw > 0 && lh > 0)) break;
+        const gy = nr.height / 2 + lh / 2 + pad, gx = nr.width / 2 + lw / 2 + pad;
+        const dirs = [[0, 1], [0, -1], [1, 0], [-1, 0], [0.72, 0.72], [-0.72, 0.72], [0.72, -0.72], [-0.72, -0.72]];
+        const cands = [];
+        [1, 1.5, 2.05].forEach((ring, ri) => {
+          dirs.forEach((d, i) => cands.push([d[0] * gx * ring, d[1] * gy * ring, ri * 16 + i * 0.8]));
+        });
+        for (let i = 0; i < cands.length; i++) {
+          let x = cx + cands[i][0] - lw / 2, y = cy + cands[i][1] - lh / 2;
+          x = Math.min(Math.max(x, sr.x + pad), sr.x + sr.width - lw - pad);
+          y = Math.min(Math.max(y, sr.y + pad), sr.y + sr.height - lh - pad);
+          const box = { x: x, y: y, width: lw, height: lh };
+          let hitArea = 0;
+          block.forEach((b) => { hitArea += this._ov(box, b) * 1.6; });
+          /* ไม่นับวงกลมของตัวเอง — ป้ายต้องอยู่ติดหมุดตัวเองอยู่แล้ว */
+          pinRect.forEach((b, k) => { if (k !== el) hitArea += this._ov(box, b); });
+          placed.forEach((b) => { hitArea += this._ov(box, b) * 1.6; });
+          /* การทับกันสำคัญกว่าความสวยเสมอ — คูณ 100 ให้ชนะค่าปรับระยะทุกกรณี */
+          const bad = hitArea * 100 + cands[i][2];
+          if (!best || bad < best.bad) best = { bad: bad, x: x, y: y, w: lw, h: lh, tight: pass === 1 };
+          if (hitArea <= 0 && i < 8) break;   /* วางท่าใกล้ที่สุดที่ไม่ทับอะไรเลยได้แล้ว จบ */
+        }
+      }
+      if (!best) return;
+      if (!best.tight) lab.classList.remove('wm-lab-tight'); else lab.classList.add('wm-lab-tight');
+      lab.style.transform = 'translate(calc(-50% + ' + Math.round(best.x + best.w / 2 - cx) + 'px), calc(-50% + ' +
+        Math.round(best.y + best.h / 2 - cy) + 'px))';
+      placed.push({ x: best.x, y: best.y, width: best.w, height: best.h });
+    });
+    this._pass++;
+    scr.dataset.wmPins = String(this._pass);
+    return true;
+  },
+  /* เรียกได้บ่อยเท่าไรก็ได้ — ผลลัพธ์เหมือนเดิมทุกครั้ง (idempotent) */
+  apply() {
+    if (!this.place()) return;
+    this.labels();
+    requestAnimationFrame(() => { this.labels(); });
+    setTimeout(() => { this.labels(); }, 180);
+    setTimeout(() => { this.labels(); }, 620);
+  }
 };
 const V8Map = {
   artApplied: false,
   ensureArt() {
     const bg = document.getElementById('wm-art-bg');
     if (!bg) return;
-    V8ASSETS.applyBg(bg, 'map_world', () => { document.body.classList.add('v8-art-on'); });
+    V8ASSETS.applyBg(bg, 'map_world', () => {
+      document.body.classList.add('v8-art-on');
+      /* [ข้อ 5 · บล็อก F4] ขนาดตัวอักษร/ป้ายเปลี่ยนตอนคลาสภาพวาดติด — จัดป้ายใหม่ */
+      try { V8PIN.apply(); } catch (e) { }
+    });
   },
   refresh() {
     this.ensureArt();
-    // ตำแหน่งจุดด่านตามภาพวาด
-    Object.keys(V8MAP_NODES).forEach((k) => {
-      const el = document.getElementById('stage-node-' + k);
-      if (!el) return;
-      el.style.left = V8MAP_NODES[k][0] + '%';
-      el.style.top = V8MAP_NODES[k][1] + '%';
-    });
+    // [ข้อ 5 · บล็อก F3] ตำแหน่งจุดด่าน — แปลง % ของภาพ → % ของกรอบจอ แล้วจัดป้ายไม่ให้ทับกัน
+    V8PIN.apply();
     // แถบตรา 6 ดวง
     const bar = document.getElementById('wm-protector-bar');
     if (bar) {
@@ -24142,6 +24603,94 @@ const V8DPR = {
     const W = Math.round(w * k), H = Math.round(h * k);
     if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
     return k;
+  },
+
+  /* ── [บล็อก H · รอบ 73] ผืนหลักเต็มจอ 5 ผืน (สเปซตรรกะ 1920×1080 ตายตัว) ──
+     โค้ดวาดหลายพันบรรทัดคิดพิกัดในสเปซ 1920×1080 — ห้ามเปลี่ยนสเปซนั้นเด็ดขาด
+     เราขยายเฉพาะ "ผืนพิกเซลจริง" เป็น 1920s×1080s แล้วตั้งทรานส์ฟอร์มฐาน s ให้
+     โค้ดวาดเดิมทุกบรรทัดทำงานต่อได้โดยไม่รู้ตัวว่าคมขึ้น */
+  SCREEN_IDS: ['game-canvas', 'start-fx-canvas', 'worldmap-iso-canvas', 'cap-scene-canvas', 'cap-fx-canvas'],
+  cap3() {
+    /* เพดาน 3 กันแท็บเล็ตแรมน้อยสร้างผืนยักษ์แล้วค้าง (เกมนี้ใช้กับเครื่องโรงเรียน)
+       เครื่องที่เปิดโหมดประหยัด (lowfx) ไม่ต้องจ่ายเพิ่มเลย — ได้ภาพเท่ารุ่นเดิมเป๊ะ */
+    try {
+      if (document.body.classList.contains('lowfx')) return 1;
+      return Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+    } catch (e) { return 1; }
+  },
+  fitScreen(cv, cssW) {
+    /* s = สัดส่วนผืนจริงต่อสเปซตรรกะ = d × (ขนาดที่ตาเห็น/1920) โดย 1 ≤ s ≤ d
+       - d=1 → s=1 เสมอ: บัฟเฟอร์ยัง 1920×1080 + ทรานส์ฟอร์ม identity = รุ่นเดิมทุกไบต์
+       - จอเล็ก dpr สูง → บัฟเฟอร์ ≈ cssW×d พอดีจอจริง ไม่บวมเกิน (มือถือ 844×390 dpr3
+         ได้ ~2528×1422 ไม่ใช่ 5760×3240)
+       ปัด s เป็นขั้นละ 1/60 → 1920s และ 1080s ลงตัวเป็นจำนวนเต็มคู่กันเสมอ
+       (กัน dpr เศษส่วน 1.5/2.625 สร้างบัฟเฟอร์เศษพิกเซลแล้ว clearRect เต็มสเปซตรรกะ
+        เหลือคราบขอบขวา/ล่างครึ่งพิกเซล) */
+    const d = this.cap3();
+    let s = Math.max(1, Math.min(d, d * (cssW || 0) / 1920));
+    s = Math.round(s * 60) / 60;
+    const BW = Math.round(1920 * s), BH = Math.round(1080 * s);
+    if (cv.width !== BW || cv.height !== BH) { cv.width = BW; cv.height = BH; }
+    cv._v8s = s; /* จำสเกลฐานไว้ที่ตัวผืน — reset()/w()/h() อ่านจากตรงนี้ */
+    try { cv.getContext('2d').setTransform(s, 0, 0, s, 0, 0); } catch (e) {}
+    return s;
+  },
+  fitScreens(cssW) {
+    /* เรียกจาก updateWrapperUnits ทุกครั้งที่กรอบเกมเปลี่ยน (เปิดเกม/ย่อขยาย/หมุนจอ/เต็มจอ)
+       ใช้ขนาดกรอบเกมตัวเดียวกับที่วัดไว้แล้ว — 5 ผืนนี้ CSS ยืดเต็มกรอบเท่ากันหมด
+       จึงไม่ต้องวัด rect รายผืน (และผืนในหน้าจอที่ยังซ่อนอยู่ก็ได้ขนาดถูกรอไว้เลย) */
+    for (let i = 0; i < this.SCREEN_IDS.length; i++) {
+      const cv = document.getElementById(this.SCREEN_IDS[i]);
+      if (cv) { try { this.fitScreen(cv, cssW); } catch (e) {} }
+    }
+    /* [บล็อก J] ผืนเล็กรับรู้ว่าจอเปลี่ยน — ลูปวาดของแต่ละผืนจะ fitPart ใหม่เฟรมถัดไป */
+    this._ep++;
+    try {
+      const hs = document.getElementById('howtoplay-screen');
+      if (hs && hs.classList.contains('active') && typeof HowToPlay !== 'undefined' && HowToPlay.render) HowToPlay.render();
+    } catch (e) { }
+  },
+  reset(g) {
+    /* ใช้แทนการรีเซ็ตทรานส์ฟอร์มเป็น identity ตรง ๆ ทุกจุดในโซนเกม — กลับสู่ "ฐานของผืนนั้น"
+       ผืนที่ผ่าน fitScreen ได้ฐาน s ของมัน · ผืนอื่น (_v8s ไม่มี) ได้ identity เท่าเดิมเป๊ะ */
+    const s = (g && g.canvas && g.canvas._v8s) || 1;
+    g.setTransform(s, 0, 0, s, 0, 0);
+  },
+  w(cv) { return cv._v8s ? cv.width / cv._v8s : cv.width; },  /* ขนาดตรรกะ — ใช้แทนการอ่าน cv.width ตรง ๆ */
+  h(cv) { return cv._v8s ? cv.height / cv._v8s : cv.height; },
+
+  /* ── [บล็อก J · รอบ 74] ผืนเล็กคมตามจอจริง (กลุ่มที่บล็อก H ตัดออกโดยตั้งใจ) ──
+     ผืนเล็กแต่ละผืนมี "supersample แบบคนจน" อยู่แล้ว (บัฟเฟอร์ใหญ่กว่าที่ตาเห็น 1.1–2.5 เท่า)
+     fitPart ทำให้มันรู้จัก dpr จริง: s = clamp(d·css/ตรรกะเดิม, 1, d) → บัฟเฟอร์ = ตรรกะ×s
+     = สเกลรวม max(supersample เดิม, d) พอดี ไม่ใช่ supersample×dpr (ห้ามคูณซ้ำ — แรมบวมฟรี)
+       · d=1 → s=1 เสมอ (supersample เดิม ≥1 ทุกผืน) = บัฟเฟอร์/ทรานส์ฟอร์มเท่าฐานเดิมทุกไบต์
+       · lowfx → cap3()=1 → no-op เต็มตัว เครื่องช้าไม่จ่ายอะไรเพิ่ม
+     tf=true = ผืนที่โค้ดวาดคิดในสเปซตรรกะตายตัว (กระจก 360 · lobby 360 · avatar 80 ·
+     หมุด 90 · สัตว์เลี้ยง 64 · วิธีเล่น 640×440) — ตั้งทรานส์ฟอร์มฐาน s ให้โค้ดวาดเดิม
+     ทำงานต่อโดยไม่รู้ตัวว่าคมขึ้น · tf ว่าง = ผืนที่อ่าน cv.width เป็นสเปซวาดอยู่แล้ว
+     (portrait/ช่องสวมใส่/วงออร่า — ทุกพิกัดคิดจาก w,h เป็นสัดส่วน) แค่ขยายบัฟเฟอร์พอ
+     **ห้ามตั้งทรานส์ฟอร์มให้กลุ่มนี้เด็ดขาด — จะขยายซ้ำเป็น s²**
+     ประหยัดแรง: เช็ก epoch ก่อน (fitScreens ขยับตอนกรอบเกมเปลี่ยน) — วัด rect เฉพาะ
+     เฟรมแรกหลังจอเปลี่ยน ไม่ใช่ทุกเฟรม · ผืนที่ยังซ่อน (rect 0) ข้ามไว้ลองใหม่เฟรมหน้า */
+  _ep: 1,
+  fitPart(cv, tf) {
+    try {
+      if (!cv || cv._v8ep === this._ep) return (cv && cv._v8ps) || 1;
+      const r = cv.getBoundingClientRect();
+      if (!(r.width > 0)) return cv._v8ps || 1;
+      cv._v8ep = this._ep;
+      if (!cv._v8w0) { cv._v8w0 = cv.width; cv._v8h0 = cv.height; } /* ขนาดตรรกะ = ขนาดแรกเกิดของผืน (attribute เดิม) */
+      const d = this.cap3();
+      let s = Math.max(1, Math.min(d, d * r.width / cv._v8w0));
+      s = Math.round(s * 60) / 60;   /* ขั้น 1/60 — กัน dpr เศษส่วนสร้างบัฟเฟอร์สั่นไปมา (เหตุผลเดียวกับ fitScreen) */
+      const BW = Math.round(cv._v8w0 * s), BH = Math.round(cv._v8h0 * s);
+      if (cv.width !== BW || cv.height !== BH) { cv.width = BW; cv.height = BH; }
+      cv._v8ps = s;
+      /* เงื่อนไข (s!==1 || เคยตั้ง _v8s): ที่ dpr=1 ตลอดชีวิตผืน = ไม่แตะทรานส์ฟอร์ม/_v8s เลย
+         (no-op แท้จริง) แต่ถ้าเคยขยายแล้วหดกลับ s=1 (ย่อหน้าต่าง) ต้องตั้งกลับให้ถูก */
+      if (tf && (s !== 1 || cv._v8s)) { cv._v8s = s; cv.getContext('2d').setTransform(s, 0, 0, s, 0, 0); }
+      return s;
+    } catch (e) { return (cv && cv._v8ps) || 1; }
   }
 };
 
@@ -24259,6 +24808,15 @@ const VKACTOR = {
     c.restore();
   }
 };
+
+/* [ครู ข้อ 1 · บล็อก G3] สลับแท็บในกล่องตั้งค่า — ทุกแถวยังอยู่ในหน้าเดียวกัน
+   แค่แสดงทีละกลุ่มให้พอดีจอ (ดูเหตุผลเต็ม ๆ ใน patch_part3.py บล็อก G3) */
+function _asTab(name, btn) {
+  const box = btn.closest('.audio-settings-box'); if (!box) return;
+  box.querySelectorAll('.as-tab').forEach((b) => b.classList.toggle('on', b === btn));
+  box.querySelectorAll('.as-pane').forEach((p) => p.classList.toggle('on', p.dataset.as === name));
+  try { AUDIO.playSFX && AUDIO.playSFX('click'); } catch (e) {}
+}
 
 const VKBUDDY = {
   cv: null, ctx: null, raf: 0, born: 0, state: 'idle', until: 0, lastReact: 0, sayT: null, hidden: false,
@@ -25475,17 +26033,54 @@ const V8NOTE = {
     const list = (data.notebook || []).slice().reverse();
     const m = document.createElement('div');
     m.className = 'nb-modal';
-    m.innerHTML = '<div class="nb-book"><div style="display:flex;align-items:center;gap:calc(var(--vw)*0.6)">' +
-      '<h3 style="margin:0;flex:1;color:#22432f">📓 สมุดนักสำรวจของเรา</h3>' +
-      '<button class="dt-btn ghost" id="nb-close">ปิด</button></div>' +
-      (list.length ? list.map(e =>
-        '<div class="nb-entry"><div class="nb-meta">' + VK.esc(e.stage || '') + ' · ' + new Date(e.t).toLocaleDateString('th-TH') + '</div>' +
-        VK.esc(e.note) + '</div>').join('')
-        : '<div style="margin-top:calc(var(--vw)*0.8);color:#8a7a4a">ยังไม่มีบันทึก — จบด่านเรือธงแต่ละด่านจะมีชวนจดสั้น ๆ 1 บรรทัดนะ</div>') +
-      '</div>';
+    /* [ครู ข้อ 1 · บล็อก G2] แบ่งหน้าแทนแถบเลื่อน — บันทึกทุกชิ้นยังอยู่ครบ
+       แค่แสดงทีละหน้าให้พอดีจอ (เดิมเลื่อนลงได้อีก 250 px บนคอม และบันทึกท้าย ๆ
+       อยู่ใต้ขอบจอ 176 px) · จำนวนต่อหน้าคำนวณจากที่ว่างจริงของกล่อง จึงพอดีทุกขอนาดจอ */
+    let per = 6, pg = 0, fitted = false;
+    const pageN = () => Math.max(1, Math.ceil(list.length / per));
+    const paint = () => {
+      const part = list.slice(pg * per, pg * per + per);
+      const npg = pageN();
+      m.innerHTML = '<div class="nb-book">' +
+        '<div class="nb-head">' +
+        '<h3 style="margin:0;flex:1;color:#22432f">📓 สมุดนักสำรวจของเรา</h3>' +
+        '<button class="dt-btn ghost" id="nb-close">ปิด</button></div>' +
+        '<div class="nb-list">' +
+        (list.length ? part.map(e =>
+          '<div class="nb-entry"><div class="nb-meta">' + VK.esc(e.stage || '') + ' · ' + new Date(e.t).toLocaleDateString('th-TH') + '</div>' +
+          VK.esc(e.note) + '</div>').join('')
+          : '<div style="margin-top:calc(var(--vw)*0.8);color:#8a7a4a">ยังไม่มีบันทึก — จบด่านเรือธงแต่ละด่านจะมีชวนจดสั้น ๆ 1 บรรทัดนะ</div>') +
+        '</div>' +
+        (npg > 1 ? '<div class="nb-pager">' +
+          '<button class="dt-btn ghost" id="nb-prev"' + (pg <= 0 ? ' disabled' : '') + '>‹ ก่อนหน้า</button>' +
+          '<span class="nb-pg">หน้า ' + (pg + 1) + ' / ' + npg + '</span>' +
+          '<button class="dt-btn ghost" id="nb-next"' + (pg >= npg - 1 ? ' disabled' : '') + '>ถัดไป ›</button>' +
+          '</div>' : '') +
+        '</div>';
+      m.querySelector('#nb-close').onclick = () => m.remove();
+      const pv = m.querySelector('#nb-prev'); if (pv) pv.onclick = () => { if (pg > 0) { pg--; paint(); } };
+      const nx = m.querySelector('#nb-next'); if (nx) nx.onclick = () => { if (pg < pageN() - 1) { pg++; paint(); } };
+      if (!fitted) { fitted = true; fit(); }
+    };
+    /* วัดที่ว่างจริงครั้งเดียวหลังวาดรอบแรก แล้วปรับจำนวนต่อหน้าให้พอดี
+       (ความสูงในเกมคิดจาก --vw/--vh ที่ JS คำนวณ จึงต้องวัดของจริง ไม่ใช่เดา) */
+    const fit = () => {
+      try {
+        const book = m.querySelector('.nb-book'), one = m.querySelector('.nb-entry');
+        if (!book || !one) return;
+        const cs = getComputedStyle(book);
+        const eh = one.getBoundingClientRect().height + parseFloat(getComputedStyle(one).marginTop || 0);
+        if (!(eh > 4)) return;
+        const head = m.querySelector('.nb-head'), pager = m.querySelector('.nb-pager');
+        const avail = book.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) -
+          (head ? head.offsetHeight : 0) - (pager ? pager.offsetHeight + 8 : 0);
+        const n = Math.max(2, Math.min(10, Math.floor(avail / eh)));
+        if (n !== per) { per = n; if (pg >= pageN()) pg = pageN() - 1; paint(); }
+      } catch (e) {}
+    };
     m.onclick = (ev) => { if (ev.target === m) m.remove(); };
     document.getElementById('worldmap-screen').appendChild(m);
-    m.querySelector('#nb-close').onclick = () => m.remove();
+    paint();
   }
 };
 
@@ -27264,6 +27859,12 @@ function refreshWorldMap() {
   });
   drawWorldmapIsoLayer(); // [ISO] วาดหลังอัปเดตสถานะล็อก/ผ่านด่านครบแล้ว (สีแท่นสะท้อนสถานะจริง)
   V8Map.refresh(); // [V.8] ภาพวาดแผนที่ · ตำแหน่งจุดด่าน 3 โซน · แถบตรา 6 ดวง · ป้ายประตู · เข็มทิศ
+  /* [บล็อก J] หมุดคมตามจอ — fit หลัง V8Map.refresh ตอนป้ายถูกย้ายเข้า .wm-nodelab แล้วเท่านั้น
+     (fit ก่อนหน้านั้น = วัดตอนป้ายยาวยังเบียดช่องแคนวาสในแถว flex ได้ s ผิด) แล้ววาดทับทันที */
+  document.querySelectorAll('.stage-node-canvas').forEach(canvas => {
+    V8DPR.fitPart(canvas, true);
+    WorldMapArt.draw(canvas.getContext('2d'), canvas.dataset.key);
+  });
 }
 
 /* ============================================================
@@ -28066,6 +28667,9 @@ function afterAuthSuccess() {
   /* [ภาค 2] ดึงเซฟของภาค 2 จากคลาวด์ทุกครั้งที่เข้าสู่ระบบ — เด็กย้ายเครื่องแล้วความคืบหน้าตามไปด้วย
      ทำเบื้องหลัง ไม่หน่วงจอ (กว่าเด็กจะเลือกตัวละคร→ล็อบบี้→แผนที่ ก็ผสานเสร็จแล้ว) */
   if (typeof GAME_PART !== 'undefined' && GAME_PART === 2) { try { P2SAVE.pull(); } catch (e) {} }
+  /* [บล็อก K] ค่าระดับห้อง (เช่นครูปิดกล้อง AR ทั้งห้อง) ดึงทับแคชทุกครั้งที่เข้าสู่ระบบ/ผูกห้อง
+     แขกไม่ผูกห้อง → syncRoom เงียบ ไม่ยิง RPC (ท่า P2SAVE เดียวกับบรรทัดบน) */
+  try { if (typeof ARLITE !== 'undefined' && ARLITE.syncRoom) ARLITE.syncRoom(); } catch (e) {}
   const data = getSaveData();
   // [รอบ41 #2] ทุกครั้งที่ล็อกอินสำเร็จ → หน้าเลือกตัวละคร (เป้) ให้เลือกจากตัวละครที่มีทั้งหมดก่อนเข้าเล่น
   //   (เดิมผู้เล่นเก่าที่เคยเลือกแล้วเด้งเข้า lobby ทันที ไม่ได้เลือกใหม่) — กดปุ่ม "เริ่มการผจญภัย!" เพื่อเข้า lobby ต่อ
@@ -28734,6 +29338,7 @@ function renderCharSelectPets() {
         requestAnimationFrame(drawPreview);
         if (!_previewCanDraw(now, _thr, canvas)) return; // [รอบ39 Perf] จำกัด ~30fps + ข้ามเมื่อแท็บสัตว์เลี้ยงถูกซ่อน
         try {
+          V8DPR.fitPart(canvas, true); /* [บล็อก J] สเปซตรรกะ 64 ตายตัว (วาดที่ 32,36 สเกล 1) */
           pctx.clearRect(0, 0, 64, 64);
           PetRenderer.draw(pctx, item.id, 32, 36, 1, _petPreviewT(item.id, now - previewStart)); // [รอบ37 #7] offset เฟสต่อชนิด — ไม่กระโดดพร้อมกัน
         } catch (err) {
@@ -28994,8 +29599,13 @@ function wireEvents() {
       }
       const ac = document.getElementById('toggle-ar'), av = document.getElementById('toggle-ar-val');
       if (ac) {
+        /* [บล็อก K] ห้องสั่งปิด = สวิตช์เครื่องหมดสิทธิ์ชั่วคราว (เข้มสุดชนะ)
+           ค่าเครื่องเดิมใน cai_ar_off ไม่ถูกแตะ — ห้องเลิกปิดเมื่อไรสวิตช์กลับมาทำงานเหมือนเดิม */
+        const acRoomOff = !!(ARLITE.roomOff && ARLITE.roomOff());
         ac.checked = ARLITE.allowed();
-        if (av) av.textContent = ARLITE.supported() ? (ac.checked ? 'อนุญาต' : 'ปิดไว้') : 'เครื่องนี้ไม่มีกล้อง';
+        ac.disabled = acRoomOff;
+        if (av) av.textContent = acRoomOff ? 'ครูปิดไว้ทั้งห้อง'
+          : (ARLITE.supported() ? (ac.checked ? 'อนุญาต' : 'ปิดไว้') : 'เครื่องนี้ไม่มีกล้อง');
         if (!ac._wired) { ac._wired = true;
           ac.addEventListener('change', () => { ARLITE.setAllowed(ac.checked); if (av) av.textContent = ac.checked ? 'อนุญาต' : 'ปิดไว้'; }); }
       }
@@ -29598,6 +30208,12 @@ function updateWrapperUnits() {
   const unit = Math.min(r.width / 100, r.height / 56.25);
   if (r.width > 0 && r.height > 0) w.style.setProperty('--vw', (unit * k) + 'px');
   if (r.height > 0) w.style.setProperty('--vh', (r.height / 100) + 'px');
+  /* [บล็อก H] ผืนแคนวาสหลักคมตามจอจริง — ตั้งขนาดบัฟเฟอร์ + ทรานส์ฟอร์มฐานใหม่
+     ทุกครั้งที่กรอบเกมเปลี่ยน (ที่ dpr=1 เป็น no-op เต็มตัว: ขนาดเท่าเดิม ทรานส์ฟอร์ม identity) */
+  try { if (r.width > 0 && typeof V8DPR !== 'undefined' && V8DPR.fitScreens) V8DPR.fitScreens(r.width); } catch (e) { }
+  /* [ข้อ 5 · บล็อก F4] กรอบภาพแผนที่กับหมุดอิงขนาดกรอบจริง — เปลี่ยนขนาดจอแล้วต้องคิดใหม่ */
+  try { if (typeof V8PIN !== 'undefined' && document.getElementById('worldmap-screen') &&
+    document.getElementById('worldmap-screen').classList.contains('active')) V8PIN.apply(); } catch (e) { }
 }
 /* ===== [V.7.75 ตามที่ครูเลือก] ปรับขนาดตัวอักษร/ปุ่มได้เอง (A- / A+) ===== */
 var UI_SCALE_STEPS = [[0.9, 'ย่อ'], [1, 'ปกติ'], [1.15, 'ใหญ่'], [1.3, 'ใหญ่สุด']];
@@ -29840,6 +30456,41 @@ window.addEventListener('pagehide', () => { if (typeof flushAnswerLogs === 'func
 #sat-survey .self-subtag{display:inline-block;margin-left:7px;font-size:11px;font-weight:600;color:#0e7490;background:#ecfeff;border:1px solid #a5f3fc;border-radius:999px;padding:1px 9px;vertical-align:middle;line-height:1.7;overflow-wrap:anywhere}
 #sat-survey .self-note{font-size:12.5px;color:#0b5566;background:#ecfeff;border:1px solid #a5f3fc;border-radius:10px;padding:9px 12px;margin:14px 0 4px;line-height:1.55}
 @media(max-width:560px){#sat-survey .sat-fields{grid-template-columns:1fr}#sat-survey .sat-scale label{min-width:52px}}
+
+/* ══ [ครู ข้อ 1 · บล็อก G4] แบบประเมินแบ่งหน้าให้พอดีจอ ══════════════════
+   เดิมทั้งฉบับกองอยู่ในกล่องเดียวที่ overflow:auto → เลื่อนลงได้อีกถึง 3,290 px
+   ตอนนี้กล่องสูงเท่าจอพอดี เนื้อหาแบ่งเป็นหน้า ๆ มีปุ่ม ‹ ย้อนกลับ / ถัดไป ›
+   ปุ่ม "ส่งแบบประเมิน" อยู่หน้าสุดท้าย · ข้อความเตือนอยู่แถบล่างที่เห็นตลอดเวลา   */
+#sat-survey.on{display:flex;align-items:center;justify-content:center;overflow:hidden;padding:max(6px,1.6vh) max(8px,1.4vw)}
+#sat-survey .sat-card{width:100%;max-height:100%;margin:0;display:flex;flex-direction:column;min-height:0}
+#sat-survey .sat-head{position:static;flex:0 0 auto}
+#sat-survey .sat-close{width:44px;height:44px}
+#sat-survey .sat-body{flex:1 1 auto;min-height:0;overflow:hidden}
+#sat-survey textarea.fi{min-height:max(44px,9vh)}
+#sat-survey .satpg-off{display:none !important}
+#sat-survey .satpg-foot{flex:0 0 auto;border-top:1px solid #e2e8f0;background:#f8fafc;padding:8px 12px}
+#sat-survey .satpg-foot .sat-err{margin:0 0 7px}
+#sat-survey .satpg-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#sat-survey .satpg-foot.satpg-1 .satpg-row{display:none}
+#sat-survey .satpg-b{flex:0 0 auto;min-width:112px;min-height:44px;font-family:inherit;font-size:14px;font-weight:800;
+  border:1.5px solid #cbd5e1;border-radius:11px;background:#fff;color:#0b5566;cursor:pointer;padding:6px 14px}
+#sat-survey .satpg-b:disabled{opacity:.42;cursor:default}
+#sat-survey .satpg-n{flex:1 1 auto;text-align:center;font-size:13.5px;font-weight:800;color:#0b5566}
+/* จอเตี้ย (มือถือแนวนอน) — ย่อเฉพาะ "หัวกล่อง/ระยะขอบ" ไม่แตะขนาดเป้ากดและตัวอักษรของข้อสอบ
+   และย้ายแถวคำตอบไปอยู่ "ข้างคำถาม" แทนที่จะอยู่ใต้คำถาม
+   จอแนวนอนกว้าง 844 px แต่สูงแค่ 390 px — ใช้ความกว้างที่มีเหลือเฟือแลกความสูงกลับมา
+   ผลคือ 1 หน้าใส่ได้ 3 ข้อแทน 2 ข้อ จำนวนหน้าที่เด็กต้องกดจึงลดลงมาก */
+@media(max-height:560px){
+  #sat-survey .sat-head{padding:7px 12px}
+  #sat-survey .sat-head h2{font-size:15px}
+  #sat-survey .sat-body{padding:10px 14px 12px}
+  #sat-survey .sat-intro{font-size:12.5px;padding:8px 11px;margin-bottom:9px}
+  #sat-survey .satpg-foot{padding:6px 10px}
+  #sat-survey .sat-dim{margin:9px 0 4px;padding:7px 12px}
+  #sat-survey .sat-item{display:flex;align-items:center;gap:12px;padding:7px 3px}
+  #sat-survey .sat-item .sat-q{flex:1 1 40%;min-width:0;margin-bottom:0}
+  #sat-survey .sat-item .sat-scale{flex:1 1 60%;min-width:0;flex-wrap:nowrap}
+}
 </style>
 <div id="sat-survey"><div class="sat-card"><div class="sat-head"><h2 id="sat-title">แบบประเมินความพึงพอใจต่อเกมผจญภัยกาญจนบุรี</h2><button class="sat-close" onclick="closeSatisfactionSurvey()" title="ปิด">✕</button></div><div class="sat-body" id="sat-body"></div></div></div>
 
@@ -29872,6 +30523,44 @@ window.addEventListener('pagehide', () => { if (typeof flushAnswerLogs === 'func
 #clsj .jself{border-top:1px dashed #cbd5e1;margin-top:14px;padding-top:12px}
 #clsj .jself input{font-family:inherit;font-size:14.5px;padding:9px 11px;border:1.5px solid #cbd5e1;border-radius:9px;margin:3px 4px 3px 0}
 @media(max-width:520px){#clsj .jlist{grid-template-columns:1fr}}
+
+/* ══ [ครู ข้อ 1+2 · บล็อก I] หน้าเข้าร่วมห้องเรียนพอดีจอ — จุดบอดสุดท้ายของบล็อก G ══
+   วัดจริงก่อนแก้ (ห้อง 38 คน): .jlist เลื่อนภายใน 956–1,130 px · modal ทั้งบานเลื่อน
+   76–250 px · ชื่อคนท้าย ๆ ใต้ขอบจอถึง 1,093 px · มือถือแม้ห้อง 8 คน ปุ่ม ▶ เข้าเล่น
+   ก็อยู่ใต้จอ 97 px — แก้ท่าเดียวกับ G4: การ์ดสูงไม่เกินจอ + เนื้อหาแบ่งหน้าเอง (I2) */
+#clsj.on{display:flex;align-items:center;justify-content:center;overflow:hidden;padding:max(8px,1.8vh) max(10px,1.6vw)}
+#clsj .jcard{margin:0;display:flex;flex-direction:column;min-height:0;max-height:100%}
+/* หน้ารายชื่อใช้การ์ดกว้างขึ้น (จอเกมเป็นแนวนอนเสมอ — ใช้ความกว้างแลกความสูงแบบ G1c)
+   และสูงเต็มจอเสมอ — ไม่งั้นการ์ดหดตามเนื้อหา ช่องรายชื่อ (flex) เหลือที่แค่ 2 แถว
+   ทุกจอ (วัดแล้ว: ได้ 145px เท่ากันหมด = 4 ชื่อ/หน้า → ห้อง 38 คนต้องกด 10 หน้า)
+   หน้าอื่น (ใส่โค้ด/ตั้งชื่อ) คงหน้าตาเดิม 560px สูงตามเนื้อหา ทุกประการ */
+#clsj .jcard.jc-ros{width:min(780px,100%);max-width:780px;height:100%}
+#clsj .jhead{flex:0 0 auto}
+#clsj .jx{width:44px;height:44px}
+#clsj .jbody{flex:1 1 auto;min-height:0;overflow:hidden}
+#clsj .jros{height:100%;display:grid;grid-template-columns:minmax(0,1fr) 232px;gap:12px}
+#clsj .jros-l{min-height:0;display:flex;flex-direction:column}
+#clsj .jros-r{min-height:0;display:flex;flex-direction:column;gap:9px}
+#clsj .jros-r .jbtn,#clsj .jros-r .jhint,#clsj .jros-r .jgroup-hint{margin-top:0}
+#clsj .jros .jroom{margin-bottom:9px}
+/* เลิก max-height:46vh + overflow-y:auto ของเดิม — ความสูงมาจากที่ว่างจริง (flex)
+   จำนวนชื่อต่อหน้าคุมด้วย JS (I2) จึงไม่มีเนื้อหาถูกตัดจริง แม้ประกาศ hidden กันขอบเศษ */
+#clsj .jlist{flex:1 1 auto;min-height:0;max-height:none;overflow:hidden;align-content:start;grid-template-columns:repeat(auto-fill,minmax(212px,1fr))}
+#clsj .jstu{min-height:44px}
+#clsj .jpgbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
+#clsj .jpgb{min-width:104px;min-height:44px;font-family:inherit;font-size:13.5px;font-weight:800;border:1.5px solid #cbd5e1;border-radius:11px;background:#fff;color:#1e3a8a;cursor:pointer;padding:6px 12px}
+#clsj .jpgb:disabled{opacity:.42;cursor:default}
+#clsj .jpgn{flex:1 1 auto;text-align:center;font-size:12.5px;font-weight:800;color:#1e3a8a}
+/* จอเตี้ย (มือถือแนวนอน) — ย่อเฉพาะหัวกล่อง/ระยะขอบแบบเดียวกับ G4 ไม่แตะเป้ากด/ตัวอักษร */
+@media(max-height:560px){
+  #clsj .jhead{padding:6px 12px}
+  #clsj .jhead h2{font-size:15px}
+  #clsj .jbody{padding:9px 12px 10px}
+  #clsj .jroom{padding:5px 10px;font-size:12.5px}
+  #clsj .jros .jroom{margin-bottom:7px}
+  #clsj .jgroup-hint{font-size:12px;padding:5px 9px}
+  #clsj .jself{margin-top:8px;padding-top:7px}
+}
 </style>
 <!-- [ตรวจมือถือ V.7.64] มือถือจอแนวตั้ง: เกม 16:9 เหลือแถบเตี้ย ~220px — ชวนหมุนจอ (ปิดได้ ไม่บังคับ · โผล่เฉพาะจอแคบ <820px แนวตั้ง) -->
 <div id="rotate-hint-overlay" style="display:none;position:fixed;inset:0;z-index:3500;background:rgba(8,14,22,.94);color:#fff;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px;gap:13px">
@@ -29957,6 +30646,164 @@ var SAT_DIMS=[
     'เกมช่วยให้นักเรียนนำความรู้เดิมมาใช้แก้ไขภารกิจหรือสถานการณ์ใหม่',
     'เกมทำให้นักเรียนสนุก มีความกระตือรือร้น และต้องการเรียนรู้เพิ่มเติม']}
 ];
+/* ══ [ครู ข้อ 1 · บล็อก G4] SATPAGE — ตัวแบ่งหน้าแบบประเมินให้พอดีจอ ══════
+   ทำไมต้องแบ่งหน้า ไม่ใช่ปล่อยให้เลื่อน:
+     ครูสั่งว่าทุกหน้าต้องไม่มีแถบเลื่อน และห้ามใช้ overflow:hidden กลบ
+     แบบประเมินเป็นเครื่องมือวิจัย ตัดข้อทิ้งไม่ได้ · ย่อตัวอักษรก็ไม่ได้ (เกณฑ์ ≥12 px)
+     การแบ่งหน้าจึงเป็นทางเดียวที่ "พอดีจริง" โดยไม่เสียข้อมูลและไม่เสียเป้ากด
+   หลักการทำงาน:
+     1. วัดที่ว่างจริงของกล่องเนื้อหา (คิดจากจอจริง ไม่ใช่ค่าคงที่)
+     2. ชิ้นไหนสูงเกินหนึ่งหน้าและมีลูกหลายชิ้น → คลี่ลูกออกมาเป็นชิ้นย่อย
+        (เช่นบล็อกคำถามปลายเปิดของแบบประเมินตนเอง)
+     3. ไล่ใส่ทีละชิ้นจนเต็มหน้า แล้วขึ้นหน้าใหม่
+     4. ซ่อนหน้าที่ไม่ได้ดูอยู่ด้วยคลาส .satpg-off — **ยังอยู่ใน DOM ครบทุกข้อ**
+        คำตอบจึงไม่หาย และฟังก์ชันส่งคำตอบเดิมไม่ต้องแก้แม้แต่บรรทัดเดียว
+     5. กดส่งแล้วยังตอบไม่ครบ → พาไปหน้าที่มีข้อที่ยังไม่ได้ตอบให้อัตโนมัติ         */
+var SATPAGE = {
+  _obs: null, _pg: 0, _pages: [], _items: [],
+  init: function () {
+    var self = this;
+    var body = document.getElementById('sat-body'), host = document.getElementById('sat-survey');
+    if (!body || !host || this._obs) return;
+    this._obs = new MutationObserver(function () { self._pg = 0; self.run(); });
+    this._obs.observe(body, { childList: true });
+    var t = 0;
+    window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(function () { self.run(); }, 200); });
+    /* ปุ่มส่งถูกกด แล้วขึ้นเตือนว่ายังตอบไม่ครบ → พาไปหน้าที่ยังขาด */
+    host.addEventListener('click', function (e) {
+      var b = e.target && e.target.closest ? e.target.closest('.sat-submit') : null;
+      if (b) setTimeout(function () { self.gotoMissing(); }, 90);
+    }, true);
+  },
+  run: function () {
+    var host = document.getElementById('sat-survey'), body = document.getElementById('sat-body');
+    if (!host || !body || !host.classList.contains('on')) return;
+    if (this._obs) this._obs.disconnect();               /* กันวนไม่จบ: เราจะแก้ DOM เอง */
+    try { this._layout(host, body); } catch (e) {}
+    if (this._obs) { this._obs.takeRecords(); this._obs.observe(body, { childList: true }); }
+  },
+  _kids: function (body, err) {
+    var out = [];
+    for (var i = 0; i < body.children.length; i++) { var n = body.children[i]; if (n !== err) out.push(n); }
+    return out;
+  },
+  /* ความสูงที่ชิ้นนั้น "กินจริง" รวมระยะห่างระหว่างชิ้น — ใช้ผลต่าง offsetTop จึงรวม margin ให้เอง */
+  _ext: function (list) {
+    var e = [];
+    for (var i = 0; i < list.length; i++) {
+      e.push(i + 1 < list.length ? (list[i + 1].offsetTop - list[i].offsetTop)
+        : (list[i].offsetHeight + 4));
+    }
+    return e;
+  },
+  _layout: function (host, body) {
+    var card = host.querySelector('.sat-card'); if (!card) return;
+    /* รื้อแถบล่างเก่า แต่ต้อง "ย้ายกล่องเตือนกลับเข้าตัวแบบประเมินก่อน"
+       ถ้าปล่อยให้ถูกรื้อไปด้วย getElementById('sat-err') จะเป็น null แล้วปุ่มส่งพัง */
+    var oldF = document.getElementById('satpg-foot');
+    if (oldF) {
+      var keep = oldF.querySelectorAll('.sat-err');
+      for (var k = 0; k < keep.length; k++) body.appendChild(keep[k]);
+      oldF.remove();
+    }
+    /* เรนเดอร์ใหม่อาจสร้างกล่องเตือนอันใหม่ → เหลือไว้อันแรก (อันใหม่) ที่เหลือทิ้ง */
+    var errs = body.querySelectorAll('.sat-err');
+    for (var q = 1; q < errs.length; q++) errs[q].remove();
+    var err = errs[0] || null;
+
+    var items = this._kids(body, err);
+    for (var i0 = 0; i0 < items.length; i0++) items[i0].classList.remove('satpg-off');
+    if (!items.length) return;
+
+    /* แถบล่าง (ตัวเลขหน้า + ปุ่มเปลี่ยนหน้า + ที่วางข้อความเตือน) — สร้างก่อนวัด
+       เพราะมันกินความสูงของกล่องไปด้วย ต้องหักออกจากที่ว่างให้ถูก */
+    var foot = document.createElement('div');
+    foot.id = 'satpg-foot'; foot.className = 'satpg-foot';
+    foot.innerHTML = '<div class="satpg-row">' +
+      '<button type="button" class="satpg-b" id="satpg-prev">‹ ย้อนกลับ</button>' +
+      '<span class="satpg-n" id="satpg-n"></span>' +
+      '<button type="button" class="satpg-b" id="satpg-next">ถัดไป ›</button></div>';
+    if (err) foot.insertBefore(err, foot.firstChild);
+    card.appendChild(foot);
+
+    var cs = getComputedStyle(body);
+    var avail = Math.max(120, body.clientHeight - parseFloat(cs.paddingTop || 0) - parseFloat(cs.paddingBottom || 0) - 4);
+
+    /* ชิ้นที่สูงเกินหนึ่งหน้า → คลี่ลูกออกมา แล้ววัดใหม่ (สูงสุด 2 รอบ) */
+    for (var pass = 0; pass < 2; pass++) {
+      var ext0 = this._ext(items), changed = false;
+      for (var j = 0; j < items.length; j++) {
+        var n = items[j];
+        if (ext0[j] > avail && n.children.length > 1 && !n.classList.contains('sat-item') && !n.classList.contains('sat-thanks')) {
+          while (n.firstElementChild) body.insertBefore(n.firstElementChild, n);
+          n.remove(); changed = true;
+        }
+      }
+      if (!changed) break;
+      items = this._kids(body, err);
+      for (var i1 = 0; i1 < items.length; i1++) items[i1].classList.remove('satpg-off');
+    }
+
+    /* ไล่ใส่ทีละชิ้นจนเต็มหน้า */
+    var ext = this._ext(items), pages = [], cur = [], h = 0;
+    for (var m = 0; m < items.length; m++) {
+      if (cur.length && h + ext[m] > avail) { pages.push(cur); cur = []; h = 0; }
+      cur.push(m); h += ext[m];
+    }
+    if (cur.length) pages.push(cur);
+    if (!pages.length) pages = [[]];
+
+    this._items = items; this._pages = pages;
+    if (this._pg >= pages.length) this._pg = pages.length - 1;
+    if (this._pg < 0) this._pg = 0;
+    foot.classList.toggle('satpg-1', pages.length <= 1);
+
+    var self = this;
+    var pv = foot.querySelector('#satpg-prev'), nx = foot.querySelector('#satpg-next');
+    pv.onclick = function () { if (self._pg > 0) { self._pg--; self._show(); } };
+    nx.onclick = function () { if (self._pg < self._pages.length - 1) { self._pg++; self._show(); } };
+    this._show();
+  },
+  _show: function () {
+    var pg = this._pages[this._pg] || [], on = {};
+    for (var i = 0; i < pg.length; i++) on[pg[i]] = 1;
+    for (var j = 0; j < this._items.length; j++) this._items[j].classList.toggle('satpg-off', !on[j]);
+    var n = document.getElementById('satpg-n');
+    if (n) n.textContent = 'หน้า ' + (this._pg + 1) + ' / ' + this._pages.length;
+    var pv = document.getElementById('satpg-prev'), nx = document.getElementById('satpg-next');
+    if (pv) pv.disabled = (this._pg <= 0);
+    if (nx) nx.disabled = (this._pg >= this._pages.length - 1);
+    var body = document.getElementById('sat-body'); if (body) body.scrollTop = 0;
+  },
+  _pageOf: function (el) {
+    for (var i = 0; i < this._pages.length; i++) {
+      for (var j = 0; j < this._pages[i].length; j++) {
+        var n = this._items[this._pages[i][j]];
+        if (n === el || (n.contains && n.contains(el))) return i;
+      }
+    }
+    return -1;
+  },
+  gotoMissing: function () {
+    var body = document.getElementById('sat-body'); if (!body || !this._pages.length) return;
+    var target = null;
+    /* ชื่อยังไม่ได้พิมพ์ก่อน แล้วค่อยไล่ข้อที่ยังไม่ได้เลือก */
+    var nameIn = body.querySelector('#sat-first, #self-first');
+    if (nameIn && !String(nameIn.value || '').trim()) target = nameIn;
+    if (!target) {
+      var rs = body.querySelectorAll('input[type="radio"]'), seen = {};
+      for (var i = 0; i < rs.length; i++) {
+        var nm = rs[i].name; if (seen[nm]) continue; seen[nm] = 1;
+        if (!body.querySelector('input[name="' + nm + '"]:checked')) { target = rs[i]; break; }
+      }
+    }
+    if (!target) return;
+    var p = this._pageOf(target);
+    if (p >= 0 && p !== this._pg) { this._pg = p; this._show(); }
+  }
+};
+try { SATPAGE.init(); } catch (e) {}
+
 function _satEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function openSatisfactionSurvey(){
   try{ if(typeof AUDIO!=='undefined'&&AUDIO.playSFX)AUDIO.playSFX('click'); }catch(e){}
@@ -30188,6 +31035,8 @@ function clsjErr(t){ var e=document.getElementById('clsj-err'); if(e){ e.textCon
 function clsjOpen(){
   try{ if(typeof AUDIO!=='undefined'&&AUDIO.playSFX)AUDIO.playSFX('click'); }catch(e){}
   var last=''; /* [ตามคำขอครู] ไม่ prefill โค้ดเก่า — ใช้ placeholder แทน */
+  /* [บล็อก I] หน้าใส่โค้ดกลับมาใช้การ์ดแคบ 560px เท่าหน้าตาเดิมทุกประการ */
+  var _jc=document.querySelector('#clsj .jcard'); if(_jc) _jc.classList.remove('jc-ros');
   document.getElementById('clsj-title').textContent='🏫 เข้าห้องเรียน';
   document.getElementById('clsj-body').innerHTML=
     '<div style="font-size:14px;color:#475569;margin-bottom:10px">ใส่<b>โค้ดเข้าห้อง 6 ตัว</b>ที่ครูบอก แล้วกดตรวจ</div>'+
@@ -30213,24 +31062,85 @@ function clsjLookup(){
     return clsjRpc('rpc_get_roster',{p_join_key:key}).then(function(ros){ clsjState.roster=ros||[]; clsjRoster(); });
   }).catch(function(err){ btn.disabled=false; btn.textContent='🔎 ตรวจโค้ด'; clsjErr('เชื่อมต่อไม่สำเร็จ: '+(err&&err.message||'ลองใหม่อีกครั้ง')); });
 }
+function clsjStuBtn(s,i){
+  /* [บล็อก I] ปุ่มรายชื่อ 1 คน — ป้าย 🎮 ชื่อในเกม 11px → 12px ให้ถึงเกณฑ์ตัวอักษรจอสัมผัส */
+  return '<button class="jstu" id="jstu-'+i+'" onclick="clsjToggle('+i+')"><span class="no">'+_satEsc(s.student_number||'–')+'</span><span>'+_satEsc((s.first_name||'')+' '+(s.last_name||''))+
+    (s.character_name?' <span style="font-size:12px;color:#7c3aed">🎮 '+_satEsc(s.character_name)+'</span>':'')+'</span></button>';
+}
 function clsjRoster(){
   var r=clsjState.room;
   clsjState.sel=[]; // [กลุ่ม] รายการ index ที่เลือก (สูงสุด 3 คน — เครื่องเดียวกันเล่นได้หลายคน)
+  clsjState._pg=0;  /* [บล็อก I] หน้าปัจจุบันของรายชื่อ — แบ่งหน้าแทนแถบเลื่อน (แบบสมุดนักสำรวจ G1d) */
   document.getElementById('clsj-title').textContent='🏫 '+(r.name||'ห้องเรียน');
-  var list=clsjState.roster.map(function(s,i){
-    return '<button class="jstu" id="jstu-'+i+'" onclick="clsjToggle('+i+')"><span class="no">'+_satEsc(s.student_number||'–')+'</span><span>'+_satEsc((s.first_name||'')+' '+(s.last_name||''))+
-      (s.character_name?' <span style="font-size:11px;color:#7c3aed">🎮 '+_satEsc(s.character_name)+'</span>':'')+'</span></button>';
-  }).join('');
+  /* การ์ดกว้าง+สูงเต็มจอเฉพาะตอน "มีรายชื่อ" — ห้องว่างใช้การ์ดกะทัดรัดแบบเดิม */
+  var card=document.querySelector('#clsj .jcard'); if(card) card.classList.toggle('jc-ros',clsjState.roster.length>0);
   document.getElementById('clsj-body').innerHTML=
-    '<div class="jroom">ห้อง <b>'+_satEsc(r.name||'')+'</b>'+(r.school_name?' · '+_satEsc(r.school_name):'')+' — <b>แตะชื่อของเธอ</b> แล้วกดปุ่มเข้าเล่น</div>'+
-    (clsjState.roster.length?('<div class="jlist">'+list+'</div>'):'<div class="jhint" style="font-size:14px">ยังไม่มีรายชื่อในห้องนี้ — แจ้งครูให้เพิ่มชื่อของเธอก่อนนะ</div>')+
-    '<div class="jgroup-hint">👥 ใช้คอมพิวเตอร์<b>เครื่องเดียวกันหลายคน</b>? แตะชื่อเพื่อนที่เล่นด้วยกันได้<b>สูงสุด 3 คน</b> — คะแนนจะบันทึกให้ครบทุกคน</div>'+
-    '<button class="jbtn" id="clsj-go2" onclick="clsjGo()" disabled>▶ เข้าเล่น</button>'+
-    /* [ตามคำขอครู V.7.56] ตัดช่อง "เพิ่มชื่อฉันเอง" ออก — เพิ่มชื่อได้เฉพาะครูจากหน้าห้องเรียน กันนักเรียนเพิ่มชื่อซ้ำ */
-    '<div class="jhint" style="font-size:12.5px;margin-top:10px">ไม่มีชื่อของเธอในรายชื่อ? แจ้งครูประจำวิชาให้เพิ่มชื่อให้นะ</div>'+
-    '<div class="jerr" id="clsj-err"></div>'+
-    '<button class="jbtn alt" onclick="clsjOpen()">← ใส่โค้ดใหม่</button>';
+    (clsjState.roster.length?
+      ('<div class="jros"><div class="jros-l">'+
+        '<div class="jroom">ห้อง <b>'+_satEsc(r.name||'')+'</b>'+(r.school_name?' · '+_satEsc(r.school_name):'')+' — <b>แตะชื่อของเธอ</b> แล้วกดปุ่มเข้าเล่น</div>'+
+        '<div class="jlist" id="clsj-jlist"></div>'+
+        '<div class="jpgbar" id="clsj-jpgbar"><button type="button" class="jpgb" id="clsj-jprev" onclick="clsjPage(-1)">‹ ก่อนหน้า</button><span class="jpgn" id="clsj-jpgn"></span><button type="button" class="jpgb" id="clsj-jnext" onclick="clsjPage(1)">ถัดไป ›</button></div>'+
+      '</div><div class="jros-r">'+
+        '<div class="jgroup-hint">👥 ใช้คอมพิวเตอร์<b>เครื่องเดียวกันหลายคน</b>? แตะชื่อเพื่อนที่เล่นด้วยกันได้<b>สูงสุด 3 คน</b> — คะแนนจะบันทึกให้ครบทุกคน</div>'+
+        '<button class="jbtn" id="clsj-go2" onclick="clsjGo()" disabled>▶ เข้าเล่น</button>'+
+        /* [ตามคำขอครู V.7.56] ตัดช่อง "เพิ่มชื่อฉันเอง" ออก — เพิ่มชื่อได้เฉพาะครูจากหน้าห้องเรียน กันนักเรียนเพิ่มชื่อซ้ำ */
+        '<div class="jhint" style="font-size:12.5px">ไม่มีชื่อของเธอในรายชื่อ? แจ้งครูประจำวิชาให้เพิ่มชื่อให้นะ</div>'+
+        '<div class="jerr" id="clsj-err"></div>'+
+        '<button class="jbtn alt" onclick="clsjOpen()">← ใส่โค้ดใหม่</button>'+
+      '</div></div>')
+      /* ห้องยังไม่มีรายชื่อ — โครงเดิมทุกชิ้น (เนื้อหาสั้น ไม่มีทางล้น) */
+      :('<div class="jroom">ห้อง <b>'+_satEsc(r.name||'')+'</b>'+(r.school_name?' · '+_satEsc(r.school_name):'')+' — <b>แตะชื่อของเธอ</b> แล้วกดปุ่มเข้าเล่น</div>'+
+        '<div class="jhint" style="font-size:14px">ยังไม่มีรายชื่อในห้องนี้ — แจ้งครูให้เพิ่มชื่อของเธอก่อนนะ</div>'+
+        '<div class="jgroup-hint">👥 ใช้คอมพิวเตอร์<b>เครื่องเดียวกันหลายคน</b>? แตะชื่อเพื่อนที่เล่นด้วยกันได้<b>สูงสุด 3 คน</b> — คะแนนจะบันทึกให้ครบทุกคน</div>'+
+        '<button class="jbtn" id="clsj-go2" onclick="clsjGo()" disabled>▶ เข้าเล่น</button>'+
+        '<div class="jhint" style="font-size:12.5px;margin-top:10px">ไม่มีชื่อของเธอในรายชื่อ? แจ้งครูประจำวิชาให้เพิ่มชื่อให้นะ</div>'+
+        '<div class="jerr" id="clsj-err"></div>'+
+        '<button class="jbtn alt" onclick="clsjOpen()">← ใส่โค้ดใหม่</button>'));
+  clsjFit();
 }
+function clsjFit(){
+  /* [บล็อก I] จำนวนชื่อต่อหน้า = ที่ว่างจริงของกล่อง ÷ ขนาดชิ้นจริง (ท่าเดียวกับ G1d/G2)
+     ความสูงปุ่มไม่เท่ากัน (ชื่อยาว/มีป้าย 🎮 ตัดเป็น 2 บรรทัด) จึงประมาณจากปุ่มแรกก่อน
+     แล้ววาดจริง — ชิ้นท้ายยังพ้นก้นกล่องก็ตัดออกทีละแถวจนพอดี ไม่มีการเดาค่าคงที่ */
+  var box=document.getElementById('clsj-jlist'); if(!box||!clsjState.roster.length) return;
+  box.innerHTML=clsjStuBtn(clsjState.roster[0],0);
+  var b0=box.firstElementChild, cs=getComputedStyle(box);
+  var gap=parseFloat(cs.rowGap)||8;
+  var rowH=((b0&&b0.offsetHeight)||44)+gap;
+  var cols=((cs.gridTemplateColumns||'').trim().split(/\s+/).filter(Boolean).length)||1;
+  clsjState._per=Math.max(1,Math.max(1,Math.floor((box.clientHeight+gap)/rowH))*cols);
+  clsjPage(0);
+  for(var g=0;g<8;g++){
+    var last=box.lastElementChild;
+    if(!last||last.getBoundingClientRect().bottom<=box.getBoundingClientRect().bottom+1) break;
+    if(clsjState._per<=cols) break;
+    clsjState._per-=cols; clsjPage(0);
+  }
+}
+function clsjPage(d){
+  var n=clsjState.roster.length, per=clsjState._per||8, np=Math.max(1,Math.ceil(n/per));
+  clsjState._pg=Math.min(np-1,Math.max(0,(clsjState._pg||0)+d));
+  var box=document.getElementById('clsj-jlist'); if(!box) return;
+  var s0=clsjState._pg*per, s1=Math.min(n,s0+per), html='';
+  for(var i=s0;i<s1;i++) html+=clsjStuBtn(clsjState.roster[i],i);
+  box.innerHTML=html;
+  /* ทาสถานะเลือกของหน้านี้ — การเลือกเก็บเป็น index รวมใน clsjState.sel จึงคงอยู่ข้ามหน้า */
+  (clsjState.sel||[]).forEach(function(k){ var el=document.getElementById('jstu-'+k); if(el) el.classList.add('sel'); });
+  var bar=document.getElementById('clsj-jpgbar'), num=document.getElementById('clsj-jpgn'),
+      pv=document.getElementById('clsj-jprev'), nx=document.getElementById('clsj-jnext');
+  if(bar) bar.style.display=(np>1?'':'none');
+  if(num) num.textContent='หน้า '+(clsjState._pg+1)+'/'+np+' · ทั้งห้อง '+n+' คน';
+  if(pv) pv.disabled=(clsjState._pg<=0);
+  if(nx) nx.disabled=(clsjState._pg>=np-1);
+}
+/* หมุนจอ/ย่อขยายระหว่างเปิดหน้ารายชื่อ → คำนวณจำนวนต่อหน้าใหม่จากที่ว่างจริง */
+window.addEventListener('resize',function(){
+  clearTimeout(window.__clsjFitT);
+  window.__clsjFitT=setTimeout(function(){
+    var h=document.getElementById('clsj');
+    if(h&&h.classList.contains('on')&&document.getElementById('clsj-jlist')) clsjFit();
+  },200);
+});
 function clsjToggle(i){
   var s=clsjState.roster[i]; if(!s) return;
   var sel=clsjState.sel, at=sel.indexOf(i);
@@ -33168,7 +34078,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.7-p2-2569.71',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.10-p2-2569.74',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -33739,11 +34649,13 @@ function clsOpenCredits(){
         '<div class="muted" style="font-size:11.5px;margin:9px 0 6px">หน้าแรก / ท้ายหน้าจอ</div>'+
         '<div style="background:#0b3a30;border-radius:10px;padding:9px 14px;color:#ffe9b8;font-size:12.5px;text-align:center;line-height:1.6" id="cc-prev-scr"></div>'+
       '</div>'+
+      clsArRoomsHtml()+  /* [บล็อก K] สวิตช์ปิดกล้อง AR รายห้อง — บันทึกเองทันทีที่แตะ ไม่ผูกกับปุ่ม 💾 */
       '<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">'+
         '<button class="btn-primary" style="background:#0f766e;padding:7px 18px" onclick="clsCredSave()">💾 บันทึก</button>'+
         '<span class="muted" id="cc-st" style="font-size:12px;align-self:center"></span></div></div>';
     document.body.appendChild(wrap);
     clsCredPreview();
+    clsArLoad();   /* [บล็อก K] สถานะกล้องรายห้อง — อ่านจากเซิร์ฟเวอร์จริง ไม่เดาจากเครื่องครู */
   });
 }
 /* ตัวอย่างในหน้าแก้ไข — วาดด้วยกฎเดียวกับในเกม (มีลิงก์ = ขีดเส้นใต้สีทอง) */
@@ -33798,6 +34710,74 @@ function clsCredPickFile(inp, targetId){   /* [แก้ตามครู] ร�
     img.src=fr.result;
   };
   fr.readAsDataURL(f);
+}
+/* ============================================================
+   [บล็อก K] สวิตช์ปิดกล้อง "โหมดสำรวจจริง (AR)" เป็นค่าระดับห้อง — งานค้าง C7
+   เก็บที่ตาราง classroom_settings (คีย์ ar_off · '1'=ปิดทั้งห้อง) ผ่าน 2 RPC ใหม่
+   ต้องรันไฟล์ SQL_ภาค2_สวิตช์กล้องระดับห้อง.sql ก่อน — ยังไม่รันปุ่มจะบอกตรง ๆ ไม่พังเงียบ
+   ค่านี้ "ปิดได้อย่างเดียว": เครื่องที่ครูปิดสวิตช์ในตัวเกมไว้เอง ยังปิดอยู่ตามเดิมเสมอ
+   ============================================================ */
+var _AR_SQL_HINT='ยังตั้งไม่ได้ — ฐานข้อมูลยังไม่มีฟังก์ชันนี้ ให้เปิด <b>Supabase → SQL Editor</b> แล้ววางไฟล์ <b>SQL_ภาค2_สวิตช์กล้องระดับห้อง.sql</b> ทั้งไฟล์ → กด Run (รันครั้งเดียว ใช้ได้ทุกห้อง)';
+function clsArState(jk){ return (cls._arRoom||{})[jk]; } /* '1'=ปิดทั้งห้อง · '0'=ไม่ปิด · undefined=ยังอ่านไม่สำเร็จ */
+function clsArRoomsHtml(){
+  if(!(cls.rooms&&cls.rooms.length)) return '';   /* ยังไม่มีห้อง — ไม่มีอะไรให้ตั้ง */
+  return '<div style="border:1px solid #fda4af;border-radius:12px;padding:10px 13px;margin-bottom:11px;background:#fff1f2">'+
+    '<div style="font-weight:800;font-size:13.5px">📷 โหมดสำรวจจริง (กล้อง AR) — ตั้งเป็นรายห้อง</div>'+
+    '<div class="muted" style="font-size:11.5px;margin:1px 0 8px;line-height:1.65">สำหรับโรงเรียนที่มีนโยบายห้ามใช้กล้อง: ปิดแล้วเครื่องนักเรียน<b>ทุกเครื่องในห้องนั้น</b>จะไม่เห็นปุ่มเปิดกล้องเลย และนักเรียนเปิดเองไม่ได้<br>'+
+    'ค่านี้<b>ปิดได้อย่างเดียว</b> — เครื่องที่ปิดสวิตช์กล้องไว้ในตัวเกมเองจะยังปิดอยู่ตามเดิม · มีผลเมื่อนักเรียนเข้าเกม/เข้าห้องครั้งถัดไป</div>'+
+    (cls.rooms||[]).map(function(r){
+      return '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px">'+
+        '<span style="font-size:12.5px;font-weight:700;color:#475569;min-width:132px">'+esc(r.name||'')+' <span class="cls-key" style="font-size:11px">'+esc(r.join_key||'')+'</span></span>'+
+        '<button class="btn-ghost" id="car-btn-'+esc(r.join_key)+'" style="min-height:44px;min-width:210px;padding:8px 16px;font-size:12.5px" disabled onclick="clsArToggle(\''+esc(r.join_key)+'\')">กำลังอ่านสถานะจากเซิร์ฟเวอร์...</button>'+
+        '<span class="muted" id="car-st-'+esc(r.join_key)+'" style="font-size:11.5px;flex:1;min-width:150px"></span>'+
+      '</div>';
+    }).join('')+'</div>';
+}
+function clsArPaint(jk){
+  var btn=$('car-btn-'+jk); if(!btn) return;
+  btn.disabled=false;
+  if(clsArState(jk)==='1'){ btn.textContent='📷🚫 ปิดกล้องทั้งห้องอยู่ — แตะเพื่อเลิกปิด'; btn.style.background='#fee2e2'; btn.style.borderColor='#f87171'; btn.style.color='#b91c1c'; }
+  else { btn.textContent='📷 กล้องใช้ได้ตามสวิตช์เครื่อง — แตะเพื่อปิดทั้งห้อง'; btn.style.background='#f0fdf4'; btn.style.borderColor='#86efac'; btn.style.color='#166534'; }
+}
+function clsArLoad(){
+  if(!(cls.rooms&&cls.rooms.length)) return;
+  cls._arRoom=cls._arRoom||{};
+  (cls.rooms||[]).forEach(function(r){
+    var jk=r.join_key; if(!jk) return;
+    sbFetch('/rest/v1/rpc/rpc_get_room_settings',{method:'POST',body:JSON.stringify({p_join_key:jk})})
+    .then(function(rows){
+      var off=false;
+      (Array.isArray(rows)?rows:[]).forEach(function(x){ if(x&&x.skey==='ar_off') off=String(x.sval)==='1'; });
+      cls._arRoom[jk]=off?'1':'0';
+      clsArPaint(jk);
+    })
+    .catch(function(e){
+      var m=String(e&&e.message||'');
+      var btn=$('car-btn-'+jk), st=$('car-st-'+jk);
+      if(btn){ btn.disabled=true; btn.textContent='ยังตั้งไม่ได้'; }
+      if(st) st.innerHTML=/schema cache|Could not find the function|does not exist|PGRST202|404/i.test(m)
+        ? '<span style="color:#b91c1c">'+_AR_SQL_HINT+'</span>'
+        : '<span style="color:#b91c1c">อ่านสถานะไม่สำเร็จ: '+esc(m)+' — ปิดหน้าต่างนี้แล้วเปิดใหม่เพื่อลองอีกครั้ง</span>';
+    });
+  });
+}
+function clsArToggle(jk){
+  var next=clsArState(jk)==='1'?'0':'1';
+  var btn=$('car-btn-'+jk), st=$('car-st-'+jk);
+  if(btn) btn.disabled=true;
+  if(st) st.textContent='กำลังบันทึก...';
+  sbEnsure().then(function(){ return sbFetch('/rest/v1/rpc/rpc_set_room_setting',{method:'POST',body:JSON.stringify({p_join_key:jk,p_key:'ar_off',p_val:next})}); })
+  .then(function(){
+    cls._arRoom[jk]=next; clsArPaint(jk);
+    if(st) st.innerHTML='<span style="color:#16a34a;font-weight:700">✅ บันทึกแล้ว — มีผลเมื่อนักเรียนเข้าเกมครั้งถัดไป</span>';
+  })
+  .catch(function(e){
+    var m=String(e&&e.message||'');
+    clsArPaint(jk); /* กลับไปแสดงสถานะจริงเดิม (ค่าบนเซิร์ฟเวอร์ยังไม่เปลี่ยน) */
+    if(st) st.innerHTML=/schema cache|Could not find the function|does not exist|PGRST202|404/i.test(m)
+      ? '<span style="color:#b91c1c">'+_AR_SQL_HINT+'</span>'
+      : '<span style="color:#b91c1c">บันทึกไม่สำเร็จ: '+esc(m)+' — ลองใหม่อีกครั้ง</span>';
+  });
 }
 function clsCredSave(){
   var st=$('cc-st'); if(st) st.textContent='กำลังบันทึก...';
@@ -37925,7 +38905,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.7-p2-2569.71 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.10-p2-2569.74 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };

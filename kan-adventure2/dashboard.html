@@ -2668,7 +2668,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.7-p2-2569.71',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.10-p2-2569.74',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -3239,11 +3239,13 @@ function clsOpenCredits(){
         '<div class="muted" style="font-size:11.5px;margin:9px 0 6px">หน้าแรก / ท้ายหน้าจอ</div>'+
         '<div style="background:#0b3a30;border-radius:10px;padding:9px 14px;color:#ffe9b8;font-size:12.5px;text-align:center;line-height:1.6" id="cc-prev-scr"></div>'+
       '</div>'+
+      clsArRoomsHtml()+  /* [บล็อก K] สวิตช์ปิดกล้อง AR รายห้อง — บันทึกเองทันทีที่แตะ ไม่ผูกกับปุ่ม 💾 */
       '<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">'+
         '<button class="btn-primary" style="background:#0f766e;padding:7px 18px" onclick="clsCredSave()">💾 บันทึก</button>'+
         '<span class="muted" id="cc-st" style="font-size:12px;align-self:center"></span></div></div>';
     document.body.appendChild(wrap);
     clsCredPreview();
+    clsArLoad();   /* [บล็อก K] สถานะกล้องรายห้อง — อ่านจากเซิร์ฟเวอร์จริง ไม่เดาจากเครื่องครู */
   });
 }
 /* ตัวอย่างในหน้าแก้ไข — วาดด้วยกฎเดียวกับในเกม (มีลิงก์ = ขีดเส้นใต้สีทอง) */
@@ -3298,6 +3300,74 @@ function clsCredPickFile(inp, targetId){   /* [แก้ตามครู] ร�
     img.src=fr.result;
   };
   fr.readAsDataURL(f);
+}
+/* ============================================================
+   [บล็อก K] สวิตช์ปิดกล้อง "โหมดสำรวจจริง (AR)" เป็นค่าระดับห้อง — งานค้าง C7
+   เก็บที่ตาราง classroom_settings (คีย์ ar_off · '1'=ปิดทั้งห้อง) ผ่าน 2 RPC ใหม่
+   ต้องรันไฟล์ SQL_ภาค2_สวิตช์กล้องระดับห้อง.sql ก่อน — ยังไม่รันปุ่มจะบอกตรง ๆ ไม่พังเงียบ
+   ค่านี้ "ปิดได้อย่างเดียว": เครื่องที่ครูปิดสวิตช์ในตัวเกมไว้เอง ยังปิดอยู่ตามเดิมเสมอ
+   ============================================================ */
+var _AR_SQL_HINT='ยังตั้งไม่ได้ — ฐานข้อมูลยังไม่มีฟังก์ชันนี้ ให้เปิด <b>Supabase → SQL Editor</b> แล้ววางไฟล์ <b>SQL_ภาค2_สวิตช์กล้องระดับห้อง.sql</b> ทั้งไฟล์ → กด Run (รันครั้งเดียว ใช้ได้ทุกห้อง)';
+function clsArState(jk){ return (cls._arRoom||{})[jk]; } /* '1'=ปิดทั้งห้อง · '0'=ไม่ปิด · undefined=ยังอ่านไม่สำเร็จ */
+function clsArRoomsHtml(){
+  if(!(cls.rooms&&cls.rooms.length)) return '';   /* ยังไม่มีห้อง — ไม่มีอะไรให้ตั้ง */
+  return '<div style="border:1px solid #fda4af;border-radius:12px;padding:10px 13px;margin-bottom:11px;background:#fff1f2">'+
+    '<div style="font-weight:800;font-size:13.5px">📷 โหมดสำรวจจริง (กล้อง AR) — ตั้งเป็นรายห้อง</div>'+
+    '<div class="muted" style="font-size:11.5px;margin:1px 0 8px;line-height:1.65">สำหรับโรงเรียนที่มีนโยบายห้ามใช้กล้อง: ปิดแล้วเครื่องนักเรียน<b>ทุกเครื่องในห้องนั้น</b>จะไม่เห็นปุ่มเปิดกล้องเลย และนักเรียนเปิดเองไม่ได้<br>'+
+    'ค่านี้<b>ปิดได้อย่างเดียว</b> — เครื่องที่ปิดสวิตช์กล้องไว้ในตัวเกมเองจะยังปิดอยู่ตามเดิม · มีผลเมื่อนักเรียนเข้าเกม/เข้าห้องครั้งถัดไป</div>'+
+    (cls.rooms||[]).map(function(r){
+      return '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px">'+
+        '<span style="font-size:12.5px;font-weight:700;color:#475569;min-width:132px">'+esc(r.name||'')+' <span class="cls-key" style="font-size:11px">'+esc(r.join_key||'')+'</span></span>'+
+        '<button class="btn-ghost" id="car-btn-'+esc(r.join_key)+'" style="min-height:44px;min-width:210px;padding:8px 16px;font-size:12.5px" disabled onclick="clsArToggle(\''+esc(r.join_key)+'\')">กำลังอ่านสถานะจากเซิร์ฟเวอร์...</button>'+
+        '<span class="muted" id="car-st-'+esc(r.join_key)+'" style="font-size:11.5px;flex:1;min-width:150px"></span>'+
+      '</div>';
+    }).join('')+'</div>';
+}
+function clsArPaint(jk){
+  var btn=$('car-btn-'+jk); if(!btn) return;
+  btn.disabled=false;
+  if(clsArState(jk)==='1'){ btn.textContent='📷🚫 ปิดกล้องทั้งห้องอยู่ — แตะเพื่อเลิกปิด'; btn.style.background='#fee2e2'; btn.style.borderColor='#f87171'; btn.style.color='#b91c1c'; }
+  else { btn.textContent='📷 กล้องใช้ได้ตามสวิตช์เครื่อง — แตะเพื่อปิดทั้งห้อง'; btn.style.background='#f0fdf4'; btn.style.borderColor='#86efac'; btn.style.color='#166534'; }
+}
+function clsArLoad(){
+  if(!(cls.rooms&&cls.rooms.length)) return;
+  cls._arRoom=cls._arRoom||{};
+  (cls.rooms||[]).forEach(function(r){
+    var jk=r.join_key; if(!jk) return;
+    sbFetch('/rest/v1/rpc/rpc_get_room_settings',{method:'POST',body:JSON.stringify({p_join_key:jk})})
+    .then(function(rows){
+      var off=false;
+      (Array.isArray(rows)?rows:[]).forEach(function(x){ if(x&&x.skey==='ar_off') off=String(x.sval)==='1'; });
+      cls._arRoom[jk]=off?'1':'0';
+      clsArPaint(jk);
+    })
+    .catch(function(e){
+      var m=String(e&&e.message||'');
+      var btn=$('car-btn-'+jk), st=$('car-st-'+jk);
+      if(btn){ btn.disabled=true; btn.textContent='ยังตั้งไม่ได้'; }
+      if(st) st.innerHTML=/schema cache|Could not find the function|does not exist|PGRST202|404/i.test(m)
+        ? '<span style="color:#b91c1c">'+_AR_SQL_HINT+'</span>'
+        : '<span style="color:#b91c1c">อ่านสถานะไม่สำเร็จ: '+esc(m)+' — ปิดหน้าต่างนี้แล้วเปิดใหม่เพื่อลองอีกครั้ง</span>';
+    });
+  });
+}
+function clsArToggle(jk){
+  var next=clsArState(jk)==='1'?'0':'1';
+  var btn=$('car-btn-'+jk), st=$('car-st-'+jk);
+  if(btn) btn.disabled=true;
+  if(st) st.textContent='กำลังบันทึก...';
+  sbEnsure().then(function(){ return sbFetch('/rest/v1/rpc/rpc_set_room_setting',{method:'POST',body:JSON.stringify({p_join_key:jk,p_key:'ar_off',p_val:next})}); })
+  .then(function(){
+    cls._arRoom[jk]=next; clsArPaint(jk);
+    if(st) st.innerHTML='<span style="color:#16a34a;font-weight:700">✅ บันทึกแล้ว — มีผลเมื่อนักเรียนเข้าเกมครั้งถัดไป</span>';
+  })
+  .catch(function(e){
+    var m=String(e&&e.message||'');
+    clsArPaint(jk); /* กลับไปแสดงสถานะจริงเดิม (ค่าบนเซิร์ฟเวอร์ยังไม่เปลี่ยน) */
+    if(st) st.innerHTML=/schema cache|Could not find the function|does not exist|PGRST202|404/i.test(m)
+      ? '<span style="color:#b91c1c">'+_AR_SQL_HINT+'</span>'
+      : '<span style="color:#b91c1c">บันทึกไม่สำเร็จ: '+esc(m)+' — ลองใหม่อีกครั้ง</span>';
+  });
 }
 function clsCredSave(){
   var st=$('cc-st'); if(st) st.textContent='กำลังบันทึก...';
@@ -7425,7 +7495,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.7-p2-2569.71 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.10-p2-2569.74 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };
