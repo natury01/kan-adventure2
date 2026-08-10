@@ -2437,49 +2437,152 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
 /* ปุ่ม 🔊 อ่านให้ฟัง — บนเมาส์ยังต้องกดโดนอยู่ดี */
 #game-wrapper .vk-tts-btn { min-width: 28px; min-height: 28px; }
 
-/* ===== [แก้ตามครู] ห้องแต่งตัว — กระจกส่องตัวด้านขวา + แถวปุ่มล่าง ===== */
-#character-select-screen { position: relative; }
-.cs-mirror {
-  position: absolute; right: calc(var(--vw) * 1.6); top: calc(var(--vw) * 7.4);
-  width: calc(var(--vw) * 20); max-width: 30vw;
-  background: rgba(12, 26, 46, 0.55); border: max(1px, calc(var(--vw) * 0.12)) solid rgba(255,255,255,0.18);
-  border-radius: calc(var(--vw) * 1.1); padding: calc(var(--vw) * 0.7);
-  display: flex; flex-direction: column; align-items: center; gap: calc(var(--vw) * 0.3);
-  backdrop-filter: blur(3px); z-index: 6; pointer-events: none;
+/* ===== [ข้อ 4 · บล็อก E1] ห้องแต่งตัว — แผงสวมใส่แบบเกมทั่วไป =====
+   เดิมกระจกเป็น position:absolute ลอยมุมขวาบน แยกขาดจากแถวการ์ด
+   ตอนนี้ทั้งหน้าอยู่ในกริดเดียวกัน 2 คอลัมน์: [แผงสวมใส่] [แท็บ + การ์ด]
+   ทุกขนาดจอใช้โครงเดียวกัน ต่างกันแค่ตัวเลข จึงไม่มีจอไหน "หลุดโครง"      */
+/* ⚠️ ห้ามใส่ display ที่ selector `#character-select-screen` เปล่า ๆ —
+   `.screen { display: none }` มี specificity แค่ (0,1,0) จะแพ้ id (1,0,0) ทันที
+   ผลคือหน้านี้ไม่ยอมซ่อนตอนไม่ได้ใช้งาน แล้วดัน #worldmap-screen (position:relative)
+   ตกลงไปใต้กรอบเกม 720 px จนแผนที่หายทั้งหน้า (t_overflow จับได้ตอนพัฒนา)
+   จึงประกาศ display เฉพาะตอน .active เท่านั้น ส่วนที่เหลือใส่ที่ selector ปกติได้ */
+#character-select-screen.active { display: grid; }
+#character-select-screen {
+  position: relative;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "title title"
+    "dress tabs"
+    "dress cards"
+    "act   act";
+  justify-content: stretch; align-content: stretch;
+  justify-items: center; align-items: center;
+  gap: calc(var(--vw) * 0.45) calc(var(--vw) * 1.1);
+  padding: calc(var(--vw) * 0.8) calc(var(--vw) * 1.3);
+  box-sizing: border-box;
 }
-.cs-mirror-title { font-size: max(12px, calc(var(--vw) * 0.9)); font-weight: 800; color: #ffe6a8; }
-.cs-mirror-canvas { width: 100%; height: auto; aspect-ratio: 1 / 1;
+#character-select-screen > .char-select-title { grid-area: title; margin: 0; }
+#character-select-screen > .shop-tabs { grid-area: tabs; margin: 0; }
+#character-select-screen > .cs-tab-panel { grid-area: cards; min-width: 0; min-height: 0; padding-right: 0; }
+#character-select-screen > #cs-mirror { grid-area: dress; }
+#character-select-screen > .cs-action-row { grid-area: act; }
+
+/* แถวปุ่มล่าง — อยู่ในกริดแล้ว ไม่ต้องปักด้วย absolute อีก (เดิมลอยทับเนื้อหา) */
+#character-select-screen > .cs-action-row {
+  position: static; left: auto; right: auto; bottom: auto; transform: none;
+  display: flex; gap: calc(var(--vw) * 1); z-index: 7;
+  align-items: center; flex-wrap: wrap; justify-content: center;
+}
+.cs-action-row .btn { min-height: 44px; }
+/* ปุ่มเริ่มการผจญภัยเดิมปักกลางล่างด้วย absolute — ถ้าไม่ปลดจะทับปุ่ม "ห้องพักคอย" จนกดไม่ได้ */
+#character-select-screen #btn-char-confirm { position: static; left: auto; right: auto; margin: 0; width: auto; }
+
+/* ---- แผงสวมใส่: ตัวละครใหญ่ตรงกลาง ล้อมด้วยช่องไอเทม 3 ช่อง ---- */
+#character-select-screen > #cs-mirror {
+  /* ขนาดช่องกับขนาดรูปกลาง ผูกกันด้วยตัวแปรคู่นี้ — แก้ที่เดียวขยับพร้อมกันทั้งแผง
+     max() กับหน่วย px เสมอ กันเป้ากดต่ำกว่า 44 px บนมือถือแนวนอน (--vw = 6.9 px) */
+  --cs-slot: max(48px, calc(var(--vw) * 6.4));
+  --cs-fig: max(124px, calc(var(--vw) * 20));
+  position: static; right: auto; top: auto; transform: none;
+  width: auto; max-width: none; margin: 0; pointer-events: auto; z-index: 6;
+  display: flex; flex-direction: column; align-items: center;
+  gap: calc(var(--vw) * 0.3);
+  padding: calc(var(--vw) * 0.6) calc(var(--vw) * 0.8);
+  background: rgba(12, 26, 46, 0.55);
+  border: max(1px, calc(var(--vw) * 0.12)) solid rgba(255,255,255,0.18);
+  border-radius: calc(var(--vw) * 1.1);
+  backdrop-filter: blur(3px);
+}
+#character-select-screen .cs-mirror-title { display: block;
+  font-size: max(12px, calc(var(--vw) * 0.95)); font-weight: 800; color: #ffe6a8; }
+#character-select-screen .cs-mirror-name { font-size: max(12px, calc(var(--vw) * 1));
+  font-weight: 800; color: #fff; text-align: center;
+  max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cs-dress-body {
+  display: grid;
+  grid-template-columns: var(--cs-slot) var(--cs-fig) var(--cs-slot);
+  grid-template-rows: auto auto;
+  gap: calc(var(--vw) * 0.4);
+  align-items: center; justify-items: center;
+}
+.cs-figure { grid-column: 2; grid-row: 1 / span 2;
+  width: var(--cs-fig); height: var(--cs-fig); position: relative;
   border-radius: calc(var(--vw) * 0.8);
   background: radial-gradient(ellipse at 50% 62%, rgba(255,255,255,0.16), rgba(255,255,255,0.02)); }
-.cs-mirror-name { font-size: max(13px, calc(var(--vw) * 1)); font-weight: 800; color: #fff; text-align: center; }
-.cs-mirror-wear { font-size: max(12px, calc(var(--vw) * 0.8)); color: #cfe3ff; text-align: center; line-height: 1.45; }
-.cs-action-row { position: absolute; left: 50%; transform: translateX(-50%);
-  bottom: calc(var(--vw) * 1.4); display: flex; gap: calc(var(--vw) * 1); z-index: 7;
-  align-items: center; flex-wrap: wrap; justify-content: center; }
-.cs-action-row .btn { min-height: 44px; }
-/* ปุ่มเริ่มการผจญภัยเดิมถูกปักไว้กลางล่างด้วย position:absolute — ตอนนี้อยู่ในแถวปุ่มแล้ว
-   ถ้าไม่ปลดจะทับปุ่ม "ห้องพักคอย" จนกดไม่ได้ */
-#character-select-screen #btn-char-confirm { position: static; left: auto; right: auto; margin: 0; width: auto; }
-/* จอแคบ (แท็บเล็ตแนวตั้ง/จอเล็ก): กระจกมาอยู่แถวบนแทน ไม่เบียดตารางของ */
-@media (max-width: 820px) {
-  .cs-mirror { position: static; width: auto; max-width: none; flex-direction: row; align-items: center;
-    gap: calc(var(--vw) * 0.8); margin: calc(var(--vw) * 0.3) auto calc(var(--vw) * 0.4);
-    padding: calc(var(--vw) * 0.4) calc(var(--vw) * 0.8); }
-  .cs-mirror-canvas { width: calc(var(--vw) * 7); }
-  .cs-mirror-title { display: none; }
-  .cs-mirror-wear { text-align: left; }
-}
-/* จอเตี้ยแต่กว้าง (สมาร์ตโฟนแนวนอน): กระจกคาไว้ริมขวา กลางแนวตั้ง — พื้นที่แนวตั้งมีน้อยมาก */
-@media (max-height: 500px) and (min-width: 821px) {
-  .cs-mirror { top: 50%; bottom: auto; transform: translateY(-50%);
-    width: calc(var(--vw) * 15); padding: calc(var(--vw) * 0.35); gap: calc(var(--vw) * 0.15); }
-  .cs-mirror-title { display: none; }
-  .cs-mirror-name { font-size: max(12px, calc(var(--vw) * 0.85)); }
-  .cs-mirror-wear { font-size: max(12px, calc(var(--vw) * 0.7)); line-height: 1.3; }
-  /* กันการ์ดของไปมุดใต้กระจก */
-  #character-select-screen .cs-tab-panel { padding-right: calc(var(--vw) * 17); }
+#character-select-screen .cs-mirror-canvas { width: 100%; height: 100%;
+  aspect-ratio: auto; display: block; border-radius: inherit; background: none; }
+#cs-slot-char { grid-column: 1; grid-row: 1 / span 2; }
+#cs-slot-aura { grid-column: 3; grid-row: 1; }
+#cs-slot-pet { grid-column: 3; grid-row: 2; }
+
+/* ช่องไอเทม — จัตุรัสขนาดเท่ากันทุกช่อง (ตัวแปรตัวเดียวกัน จึงต่างกันไม่ได้เลย) */
+.cs-slot { box-sizing: border-box;
+  width: var(--cs-slot); height: var(--cs-slot);
+  min-width: var(--cs-slot); min-height: var(--cs-slot);
+  padding: 0; margin: 0; position: relative; overflow: hidden; cursor: pointer;
+  font-family: inherit; line-height: 1;
+  border-radius: calc(var(--vw) * 0.7);
+  border: max(2px, calc(var(--vw) * 0.22)) solid rgba(255,255,255,0.28);
+  background: rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.15s ease, background 0.15s ease; }
+.cs-slot:hover { border-color: #ffd54a; background: rgba(255,255,255,0.14); }
+.cs-slot.on { border-color: #ffd54a; background: rgba(255,213,74,0.12); }
+.cs-slot-canvas { width: 100%; height: 100%; display: block; }
+.cs-slot:not(.on) .cs-slot-canvas { visibility: hidden; }
+/* ช่องว่าง = ไอคอนจาง ๆ ไม่ใช่ข้อความ — ป.4 ดูรูปเข้าใจเร็วกว่าอ่าน */
+.cs-slot-ghost { position: absolute; left: 0; top: 0; right: 0; bottom: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: max(18px, calc(var(--cs-slot) * 0.46)); opacity: 0.32; pointer-events: none; }
+.cs-slot.on .cs-slot-ghost { display: none; }
+
+/* ---- การ์ดของที่มี (คอลัมน์ขวา) ----
+   บีบเล็กน้อยเพื่อให้ 2 แถว + แถบเปลี่ยนหน้า อยู่ในจอครบทุกขนาด
+   รูปคงอัตราส่วนเดิมของผืนผ้าใบ 200:270 (0.74) ไม่ยืดจนตัวละครแบน */
+#character-select-screen .char-select-grid { padding: 0; }
+#character-select-screen .char-select-portrait {
+  width: calc(var(--vw) * 6.2); height: calc(var(--vw) * 8.4); }
+#character-select-screen .shop-aura-grid { max-width: 100%; }
+/* พื้นตัวอักษร 12 px ของหน้านี้ — วัดก่อนแก้พบ 5.9–11.5 px หลายจุด (ชื่อ/ราคา/เลขหน้า)
+   ใช้ max() จึงไม่มีอะไรเล็กลง มีแต่ตัวที่ต่ำกว่าพื้นถูกยกขึ้น */
+#character-select-screen .char-select-name,
+#character-select-screen .char-select-desc,
+#character-select-screen .char-select-pet-badge { font-size: max(12px, calc(var(--vw) * 0.95)); }
+/* การ์ดออร่า/สัตว์เลี้ยงกว้างแค่ 12.5vw — พอยกตัวอักษรถึงพื้น 12 px ชื่อยาวจะขึ้นบรรทัดใหม่
+   แล้วดันการ์ดสูงจนล้นจอ จึงบังคับบรรทัดเดียวแล้วตัดท้ายด้วย … แทน */
+#character-select-screen .shop-aura-name,
+#character-select-screen .shop-aura-price {
+  max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#character-select-screen .shop-aura-name { font-size: max(12px, calc(var(--vw) * 0.95)); }
+#character-select-screen .shop-aura-price { font-size: max(12px, calc(var(--vw) * 0.85)); }
+#character-select-screen .shop-pager-label { font-size: max(12px, calc(var(--vw) * 1)); }
+/* แถบเปลี่ยนหน้า ◀ 1/2 ▶ — เดิมปักริมซ้าย/ขวาจอด้วย absolute ซึ่งตอนนี้ริมซ้ายเป็นแผงสวมใส่แล้ว
+   ย้ายลงมาเป็นแถวปกติใต้การ์ด (ไม่แตะ id เดิม ชุดทดสอบและตัวจัดการคลิกใช้ต่อได้เหมือนเดิม) */
+#character-select-screen #char-select-pager { position: static; margin: calc(var(--vw) * 0.3) 0 0; }
+#character-select-screen #char-select-page-prev,
+#character-select-screen #char-select-page-next {
+  position: static; transform: none; left: auto; right: auto; top: auto; }
+#character-select-screen #char-select-page-label {
+  position: static; transform: none; left: auto; bottom: auto; }
+
+/* ---- มือถือแนวนอน 844x390 (กรอบเกมจริง 780x390 · --vw = 6.93 px) ----
+   แนวตั้งเหลือน้อยมาก: ตัดคำบรรยายยาวกับป้ายสัตว์เลี้ยงบนการ์ดออก
+   ทั้งสองอย่างซ้ำกับแผงสวมใส่ที่โชว์อยู่ข้าง ๆ แล้ว จึงไม่ได้เสียข้อมูลอะไร */
+@media (max-height: 500px) {
+  #character-select-screen { gap: calc(var(--vw) * 0.3) calc(var(--vw) * 0.8);
+    padding: calc(var(--vw) * 0.5) calc(var(--vw) * 0.9); }
+  #character-select-screen > #cs-mirror { --cs-fig: max(112px, calc(var(--vw) * 16.5));
+    padding: calc(var(--vw) * 0.45) calc(var(--vw) * 0.6); }
+  #character-select-screen .cs-mirror-title { display: none; }
   #character-select-screen .char-select-title { font-size: max(13px, calc(var(--vw) * 1.15)); }
-  .cs-action-row { bottom: calc(var(--vw) * 0.7); gap: calc(var(--vw) * 0.7); }
+  #character-select-screen .char-select-desc,
+  #character-select-screen .char-select-pet-badge { display: none; }
+  #character-select-screen .char-select-card { padding: calc(var(--vw) * 0.5); gap: calc(var(--vw) * 0.25); }
+  /* บรรทัด "เป็นเจ้าของแล้ว/สวมใส่อยู่" ซ้ำกับตัวหนังสือบนปุ่มใต้การ์ดอยู่แล้ว — ตัดออกเอาที่ว่างคืน */
+  #character-select-screen .shop-aura-price { display: none; }
+  #character-select-screen .char-select-portrait {
+    width: calc(var(--vw) * 5.5); height: calc(var(--vw) * 7.4); }
 }
 
 /* ===== [แก้ตามครู] จอเตี้ย (สมาร์ตโฟนแนวนอน) — ทุกหน้าต้องพอดีจอ ไม่มีแถบเลื่อน ===== */
@@ -2796,6 +2899,76 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
   background:rgba(255,255,255,0.08);color:#ffe9b8;padding:6px 4px;line-height:1.25;}
 .netmode-chips button.on{background:#ffd76a;border-color:#ffd76a;color:#4a2c00;}
 .netmode-note{width:100%;margin-top:5px;font-size:max(11px,calc(var(--vw)*0.78));color:#dbeafe;line-height:1.4;opacity:0.95;}
+
+/* ============================================================
+   [ข้อ 7 · บล็อก D9] หน้าจบเกม — ใบประกาศเป็นพระเอก
+   อาการเดิมที่ครูส่งภาพมา (วัดจริงก่อนแก้):
+     คอม 1280x720  ใบประกาศกินพื้นที่ 16.9% ของจอ · แถบคะแนน 10 ปีอยู่บนสุด · ปุ่มแตก 2 บรรทัด
+     แท็บ 1024x768 ใบประกาศ 12.7% · overlay สูง 691 แต่ช่องมองสูง 576 → มีแถบเลื่อนแนวตั้งจริง
+     มือถือ 844x390 ปุ่มแตก 3 บรรทัด
+   หลักที่ใช้แก้:
+     · overlay เป็นคอลัมน์: [เวทีใบประกาศ ยืดเต็ม] + [แถวปุ่มความสูงคงที่] + overflow:hidden
+     · ใบประกาศคงสัดส่วน 1600:1130 เท่าไฟล์ PNG แล้วให้ JS (CERT.fitCards) ขยายจนสุดกล่อง
+       ขนาดตัวอักษรอิงหน่วย --cw ที่ JS ส่งมา จึงโตตามใบประกาศ ไม่ใช่โตตามจอ
+     · ทุกค่าที่เล็กได้มี max(12px, ...) กันตัวอักษรต่ำกว่าเกณฑ์บนมือถือ
+   ============================================================ */
+.cap-cert-overlay { display: flex; align-items: stretch; justify-content: center;
+  overflow: hidden; padding: calc(var(--vw)*0.7); }
+.cap-cert-overlay > .cc-wrap { flex: 1 1 auto; min-width: 0; min-height: 0;
+  display: flex; flex-direction: column; gap: calc(var(--vw)*0.45); }
+.cc-stage { flex: 1 1 auto; min-height: 0; min-width: 0; position: relative;
+  display: flex; align-items: center; justify-content: center; }
+
+/* ใบประกาศ — ขนาดจริงถูกกำหนดโดย CERT.fitCards() ทุกครั้งที่กล่องเปลี่ยนขนาด */
+.cap-cert { --cw: 8px; width: auto; max-width: none; margin: 0; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: calc(var(--cw)*0.55);
+  padding: calc(var(--cw)*3) calc(var(--cw)*4);
+  border-width: calc(var(--cw)*0.8); border-radius: calc(var(--cw)*2.2); }
+.cap-cert::before { inset: calc(var(--cw)*1.1); border-width: calc(var(--cw)*0.26);
+  border-radius: calc(var(--cw)*1.5); }
+.cap-cert .cc-head { font-size: max(12px, calc(var(--cw)*2.1)); letter-spacing: 0.14em; }
+.cap-cert .cc-title { font-size: max(14px, calc(var(--cw)*4.5)); margin: 0; line-height: 1.2; }
+.cap-cert .cc-line { font-size: max(12px, calc(var(--cw)*2.25)); line-height: 1.45; }
+.cap-cert .cc-name { font-size: max(15px, calc(var(--cw)*4.2)); margin: 0;
+  border-bottom-width: calc(var(--cw)*0.3); padding: 0 calc(var(--cw)*3) calc(var(--cw)*0.4); }
+.cap-cert .cc-badges { font-size: max(16px, calc(var(--cw)*4.2)); letter-spacing: 0.1em; margin: 0; }
+.cap-cert .cc-badgen { font-size: max(12px, calc(var(--cw)*2.2)); font-weight: 800; color: #7a5a12; }
+.cap-cert .cc-lv { font-size: max(12px, calc(var(--cw)*2.5)); font-weight: 800; color: #155a3c;
+  background: rgba(21,90,60,0.10); border-radius: 999px;
+  padding: calc(var(--cw)*0.55) calc(var(--cw)*2.2); max-width: 100%; }
+.cap-cert .cc-date { font-size: max(12px, calc(var(--cw)*2)); margin: 0; }
+
+/* แผงรายละเอียด — ซ้อนตำแหน่งเดียวกับใบประกาศ สลับกันโชว์ทีละอย่าง จอจึงไม่มีวันล้น */
+.cc-more { position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: calc(var(--vw)*0.5); overflow: hidden; }
+.cc-more .cap-future { width: min(100%, calc(var(--vw)*54)); margin: 0; }
+.cc-more .cap-future h4 { font-size: max(13px, calc(var(--vw)*1.15)); }
+.cf-row { display: flex; align-items: center; gap: calc(var(--vw)*0.6);
+  margin-top: calc(var(--vw)*0.32); font-size: max(12px, calc(var(--vw)*0.95)); }
+.cf-row > span { flex: 0 0 auto; min-width: calc(var(--vw)*12); }
+.cf-bar { flex: 1 1 auto; display: block; height: calc(var(--vw)*0.55); min-height: 6px;
+  border-radius: 999px; background: rgba(255,255,255,0.15); overflow: hidden; }
+.cf-bar > i { display: block; height: 100%; border-radius: 999px; }
+.cf-storm { margin-top: calc(var(--vw)*0.45); font-size: max(12px, calc(var(--vw)*0.9)); }
+.cc-lvgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(var(--vw)*0.35);
+  width: min(100%, calc(var(--vw)*54)); }
+.cc-lvcell { background: rgba(10,24,32,0.94); border: 1px solid rgba(140,220,255,0.35);
+  border-radius: calc(var(--vw)*0.6); padding: calc(var(--vw)*0.3) calc(var(--vw)*0.2);
+  color: #dff3ff; text-align: center; line-height: 1.25; }
+.cc-lvcell b { display: block; font-size: max(12px, calc(var(--vw)*0.86)); }
+.cc-lvcell span { display: block; font-size: max(12px, calc(var(--vw)*0.86)); color: #9fe3b4; font-weight: 800; }
+
+/* แถวปุ่ม — ทุกปุ่มแถวเดียว กว้างเท่ากันทุกจอ (flex:1 1 0 + min-width:0) */
+.cert-actions { flex: 0 0 auto; display: flex; align-items: stretch; justify-content: center;
+  gap: calc(var(--vw)*0.45); margin: 0; }
+.cert-actions .dt-btn { flex: 1 1 0; min-width: 0; max-width: calc(var(--vw)*18);
+  min-height: 44px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  padding-left: calc(var(--vw)*0.5); padding-right: calc(var(--vw)*0.5);
+  font-size: max(12px, calc(var(--vw)*1.02)); }
+.cert-status { flex: 0 0 auto; text-align: center; color: #ffe9a8;
+  height: max(16px, calc(var(--vw)*1.5)); overflow: hidden; white-space: nowrap;
+  font-size: max(12px, calc(var(--vw)*0.9)); line-height: 1.25; }
 </style>
 </head>
 <body>
@@ -3206,12 +3379,29 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
         <div class="cs-tab-panel" data-cs-panel="pets">
           <div id="char-select-pet-grid" class="shop-aura-grid"></div>
         </div>
-        <!-- [แก้ตามครู] กระจกส่องตัว — เห็นผลของการสวมใส่ทันทีที่กด ไม่ต้องออกไปดูที่หน้าอื่น -->
+        <!-- [ข้อ 4 · บล็อก E2] แผงสวมใส่ — ตัวละครใหญ่ตรงกลาง ล้อมด้วยช่องไอเทม 3 ช่อง
+             ช่องว่างเป็นกรอบเปล่า + ไอคอนจาง (ไม่มีข้อความ "ยังไม่ได้ใส่" อีกแล้ว)
+             กดช่องไหน = สลับไปแท็บของหมวดนั้นทันที (ดูบล็อก E5) -->
         <div id="cs-mirror" class="cs-mirror">
           <div class="cs-mirror-title">🪞 กระจกส่องตัว</div>
-          <canvas id="cs-mirror-canvas" class="cs-mirror-canvas" width="360" height="360"></canvas>
+          <div class="cs-dress-body">
+            <button type="button" id="cs-slot-char" class="cs-slot" data-cs-slot="characters" title="ช่องตัวละคร" aria-label="ช่องตัวละคร">
+              <canvas id="cs-slot-char-canvas" class="cs-slot-canvas" width="132" height="132"></canvas>
+              <span class="cs-slot-ghost" aria-hidden="true">🧑</span>
+            </button>
+            <div class="cs-figure">
+              <canvas id="cs-mirror-canvas" class="cs-mirror-canvas" width="360" height="360"></canvas>
+            </div>
+            <button type="button" id="cs-slot-aura" class="cs-slot" data-cs-slot="auras" title="ช่องออร่า" aria-label="ช่องออร่า">
+              <canvas id="cs-slot-aura-canvas" class="cs-slot-canvas" width="132" height="132"></canvas>
+              <span class="cs-slot-ghost" aria-hidden="true">✨</span>
+            </button>
+            <button type="button" id="cs-slot-pet" class="cs-slot" data-cs-slot="pets" title="ช่องสัตว์เลี้ยง" aria-label="ช่องสัตว์เลี้ยง">
+              <canvas id="cs-slot-pet-canvas" class="cs-slot-canvas" width="132" height="132"></canvas>
+              <span class="cs-slot-ghost" aria-hidden="true">🐾</span>
+            </button>
+          </div>
           <div id="cs-mirror-name" class="cs-mirror-name">—</div>
-          <div id="cs-mirror-wear" class="cs-mirror-wear"></div>
         </div>
         <div class="cs-action-row">
           <button id="btn-char-lobby" class="btn btn-secondary">🏕️ ห้องพักคอย</button>
@@ -3913,7 +4103,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
    ด่านที่ผ่านในภาคหนึ่งจะไปโผล่ว่า 'ผ่านแล้ว' ในอีกภาค (ตราหลุด/ประตูเปิดเอง/คะแนนเพี้ยน) */
 const GAME_PART = 2;
 const PART1_URL = 'https://www.gameplearn.com/kan-adventure';
-const GAME_VERSION = 'V.8.5-p2-2569.69'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
+const GAME_VERSION = 'V.8.7-p2-2569.71'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
     ฝั่งเกม (1) ลบปุ่มวิ่ง ◀▶ + ป้ายสอนปัดของ V.7 ที่ชี้ผิดด่าน (2) แว่นขยายด่านนิเวศแตะครั้งเดียวติด
     (3) ซ่อนหมวดไอเทมที่ยังต่อเข้าด่านเรือธงไม่ได้ (ของที่ซื้อแล้วยังอยู่ในเซฟครบ)
     (4) หรี่เพลงอัตโนมัติระหว่างอ่านออกเสียงแล้วคืนเมื่ออ่านจบ (5) หน้าเข้าระบบแยกช่องโค้ดห้องออกจากชื่อในเกมชัดเจน + เตือนเมื่อพิมพ์สลับ
@@ -5624,6 +5814,9 @@ function renderLearning(selectKey) {
 
 // [ใหม่ #6] เปิดด่านจากแผนที่โลกพร้อมฉาก Intro — ทุกปุ่มด่านเรียกฟังก์ชันนี้แทนโค้ดซ้ำเดิม
 function _launchStage(key, stage) {
+  /* [ข้อ 6] เริ่มด่านใหม่ = สุ่มลำดับตัวเลือกใหม่ทั้งชุด
+     (ระหว่างเล่นห้ามสลับซ้ำ — V8SHUF จำลำดับไว้ต่อคีย์อยู่แล้ว) */
+  try { V8SHUF.reset(); } catch (e) {}
   _bumpStageAttempt(key); // [รอบ 49 Capstone] นับครั้งที่เริ่มเล่นต่อด่าน (metadata วิจัย — จุดเข้าเล่นทุกทางผ่านฟังก์ชันนี้)
   showScreen('worldmap-screen'); // canvas วาดทับเต็มจอระหว่างเล่น ไม่ต้องสลับ screen อีกใบ
   document.getElementById('worldmap-screen').classList.remove('active');
@@ -10564,8 +10757,8 @@ const StageDetective = {
       '<span class="ev-source official">🏛️ สุสานทหารสัมพันธมิตรดอนรัก</span>' +
       '<h3>ก่อนเข้าไปสำรวจ เราควรทำตัวอย่างไร?</h3>' +
       '<div class="ev-text">ที่นี่เป็นสถานที่ฝังร่างของทหารเกือบ 7,000 คน ครอบครัวของพวกเขายังเดินทางมาเยี่ยมทุกปี</div>' +
-      '<div id="dt-etiq-list">' + this.ETIQUETTE.map((o, i) =>
-        '<button class="dt-choice" data-i="' + i + '">' + o.t + '</button>').join('') + '</div>' +
+      '<div id="dt-etiq-list">' + V8SHUF.order('dt_etiq', this.ETIQUETTE.length).map((i) =>
+        '<button class="dt-choice" data-i="' + i + '">' + this.ETIQUETTE[i].t + '</button>').join('') + '</div>' +
       '<div id="dt-etiq-fb" style="margin-top:calc(var(--vw)*0.6);font-size:calc(var(--vw)*0.95);font-weight:700;display:none"></div>' +
       '<div class="dt-btn-row"><button id="dt-etiq-go" class="dt-btn" style="display:none">เข้าสำรวจอย่างเคารพ 🕊️</button></div>' +
       '</div></div>';
@@ -10669,7 +10862,7 @@ const StageDetective = {
         '<button class="dt-tag-choice trust' + (verdict === 'trust' ? ' on' : '') + '" data-v="trust">✅ เชื่อได้</button>' +
         '<button class="dt-tag-choice suspect' + (verdict === 'suspect' ? ' on' : '') + '" data-v="suspect">🤔 ยังสงสัย</button></div>' +
         '<div style="margin-top:calc(var(--vw)*0.5);font-weight:700;font-size:calc(var(--vw)*0.9)">เพราะอะไร? (เลือก 1 เหตุผล)</div>' +
-        '<div>' + self.REASONS.map(r => '<button class="dt-reason-chip' + (reason === r.id ? ' on' : '') + '" data-r="' + r.id + '">' + r.label + '</button>').join('') + '</div>' +
+        '<div>' + V8SHUF.pick('dt_reasons', self.REASONS).map(r => '<button class="dt-reason-chip' + (reason === r.id ? ' on' : '') + '" data-r="' + r.id + '">' + r.label + '</button>').join('') + '</div>' +
         '<div class="dt-btn-row"><button class="dt-btn" id="dt-tag-submit"' + ((verdict && reason) ? '' : ' disabled') + '>ปักลงกระดาน 📌</button></div>' +
         '<div id="dt-tag-fb" style="margin-top:calc(var(--vw)*0.4);font-weight:700;font-size:calc(var(--vw)*0.92)"></div></div>';
       zone.querySelectorAll('.dt-tag-choice').forEach(b => b.onclick = () => { verdict = b.dataset.v; draw(); });
@@ -10867,7 +11060,7 @@ const StageDetective = {
       '<div style="font-size:calc(var(--vw)*0.95);color:#6b5b2e">เลือกประโยคที่ตรงกับ "หลักฐาน" ของเราที่สุดในแต่ละช่อง แล้วอ่านรวมกันเป็นข้อสรุปคดี</div>' +
       ['c1', 'c2', 'c3'].map(slot =>
         '<div class="dt-slot-label">' + C[slot].label + '</div>' +
-        C[slot].opts.map((o, i) => '<button class="dt-choice" data-slot="' + slot + '" data-i="' + i + '">' + o.t + '</button>').join('')
+        V8SHUF.order('dt_concl_' + slot, C[slot].opts.length).map((i) => '<button class="dt-choice" data-slot="' + slot + '" data-i="' + i + '">' + C[slot].opts[i].t + '</button>').join('')
       ).join('') +
       '<div class="dt-slot-label">💬 อยากบอกอะไรเพิ่มในฐานะนักสืบ? (ไม่บังคับ)</div>' +
       '<textarea class="dt-free-text" id="dt-free" maxlength="220" placeholder="เขียนความคิดของเราเอง 1-2 ประโยค เช่น สิ่งที่ประทับใจ หรือสิ่งที่อยากบอกทุกคน..."></textarea>' +
@@ -12002,9 +12195,9 @@ const StageRadio = {
     const ov = VK.overlay(
       '<h3>🧒 ภารกิจสุดท้าย: เล่าให้น้อง ป.1 ฟัง</h3>' +
       '<div style="font-size:calc(var(--vw)*0.95)">น้อง ป.1 ถามว่า "สะพานไม้นี้คืออะไรอ้ะพี่?" — เลือกคำตอบที่<b>เหมาะกับน้องที่สุด</b></div>' +
-      [['a', 'สะพานไม้เก่าแก่มาก ๆ ที่คนสมัยก่อนสร้างเลียบหน้าผา พี่จะจับมือน้องเดินช้า ๆ อย่างระวังนะ', 1],
+      V8SHUF.pick('cm_tellp1', [['a', 'สะพานไม้เก่าแก่มาก ๆ ที่คนสมัยก่อนสร้างเลียบหน้าผา พี่จะจับมือน้องเดินช้า ๆ อย่างระวังนะ', 1],
        ['b', 'สะพานโครงสร้างไม้สมัยสงครามโลกครั้งที่ 2 มีความสำคัญเชิงยุทธศาสตร์ต่อการลำเลียงเสบียง', 0.4],
-       ['c', 'ไม่รู้สิ ข้ามไปเถอะ เดี๋ยวก็ถึง', 0]]
+       ['c', 'ไม่รู้สิ ข้ามไปเถอะ เดี๋ยวก็ถึง', 0]])
         .map(o => '<button class="dt-choice" data-v="' + o[2] + '">' + o[1] + '</button>').join(''));
     ov.querySelectorAll('.dt-choice').forEach(btn => {
       btn.onclick = () => {
@@ -12123,12 +12316,12 @@ const StageCamp = {
       '<div style="background:rgba(255,253,242,0.96);border:calc(var(--vw)*0.18) solid #c9a95c;border-radius:calc(var(--vw)*1);padding:calc(var(--vw)*1);color:#33301f">' +
       '<div style="display:flex;align-items:center;gap:calc(var(--vw)*0.8);flex-wrap:wrap"><b style="font-size:calc(var(--vw)*1.1)">ของที่มีให้เลือก</b>' +
       '<span style="margin-left:auto;font-weight:800;font-size:calc(var(--vw)*1.05)">⚖️ <span id="cp-kg">0</span>/' + limit + ' กก.</span></div>' +
-      '<div id="cp-items">' + this.ITEMS.map(it =>
+      '<div id="cp-items">' + V8SHUF.pick('camp_items', this.ITEMS).map(it =>
         '<button class="cp-item' + (this.lv === 1 && it.kind === 'ess' ? ' hint-ess' : '') + '" data-id="' + it.id + '">' +
         it.icon + ' ' + it.t + ' <span class="cp-w">' + it.w + ' กก.</span></button>').join('') + '</div>' +
       (this.lv === 1 ? '<div style="font-size:calc(var(--vw)*0.82);color:#166534;font-weight:700">💡 คำใบ้ลูกเสือ: ของที่มีขอบเขียว = นักสำรวจตัวจริงไม่ลืม</div>' : '') +
       '<div style="border-top:1px dashed #d8c48a;margin-top:calc(var(--vw)*0.7);padding-top:calc(var(--vw)*0.6)"><b>แผนการพักของเรา</b><div id="cp-rest">' +
-      this.REST_PLANS.map(r => '<button class="dt-choice" style="display:inline-block;width:auto" data-r="' + r.id + '">' + r.t + '</button>').join('') + '</div></div>' +
+      V8SHUF.pick('camp_rest', this.REST_PLANS).map(r => '<button class="dt-choice" style="display:inline-block;width:auto" data-r="' + r.id + '">' + r.t + '</button>').join('') + '</div></div>' +
       '<div class="dt-btn-row"><button class="dt-btn" id="cp-go" disabled>ออกเดินทาง! ⛰️</button></div>' +
       '<div id="cp-warn" style="text-align:center;font-weight:700;color:#b45309;font-size:calc(var(--vw)*0.9)"></div>' +
       '</div></div>';
@@ -12273,8 +12466,9 @@ const StageCamp = {
         document.getElementById('cp-ok').onclick = () => { this.decisions.push(0.7); logEvidence(4, 'act', 'SM-B', 0.7, this.ctx({ tier: 2, used: 'umb' })); this._spend(-10, -6); advance('กันฝนได้ แต่มือไม่ว่างเลย — เสื้อกันฝนเบากว่าเยอะ', true); };
       } else {
         card('<b>' + ev.t + '</b><div style="margin-top:6px">ไม่มีของกันฝนในเป้... ทำไงดี?</div>' +
-          '<button class="dt-choice" data-v="0.7" data-e="-3" data-tm="-9">⛺ หลบใต้ชะง่อนผา รอฝนซา</button>' +
-          '<button class="dt-choice" data-v="0.4" data-e="-13" data-tm="-4">🏃 เดินตากฝนต่อเลย</button>');
+          V8SHUF.html('camp_rain', [
+            '<button class="dt-choice" data-v="0.7" data-e="-3" data-tm="-9">⛺ หลบใต้ชะง่อนผา รอฝนซา</button>',
+            '<button class="dt-choice" data-v="0.4" data-e="-13" data-tm="-4">🏃 เดินตากฝนต่อเลย</button>']));
         box.querySelectorAll('.dt-choice').forEach(btn => {
           btn.onclick = () => {
             const v = Number(btn.dataset.v);
@@ -12289,9 +12483,11 @@ const StageCamp = {
     }
     if (ev.friend) {
       card('<b>' + ev.t + '</b>' +
-        '<button class="dt-choice" data-k="rest">🤝 พักด้วยกันแป๊บนึง ไปพร้อมกัน</button>' +
-        (has('snack') ? '<button class="dt-choice" data-k="snack">🍪 แบ่งขนมให้เพื่อน เติมพลังคู่</button>' : '') +
-        '<button class="dt-choice" data-k="leave">💨 บอกเพื่อนตามมาทีหลัง เราไปก่อน</button>');
+        V8SHUF.html('camp_friend', [
+          '<button class="dt-choice" data-k="rest">🤝 พักด้วยกันแป๊บนึง ไปพร้อมกัน</button>',
+          (has('snack') ? '<button class="dt-choice" data-k="snack">🍪 แบ่งขนมให้เพื่อน เติมพลังคู่</button>' : ''),
+          '<button class="dt-choice" data-k="leave">💨 บอกเพื่อนตามมาทีหลัง เราไปก่อน</button>'
+        ].filter(function (h) { return h; })));
       box.querySelectorAll('.dt-choice').forEach(btn => {
         btn.onclick = () => {
           const k = btn.dataset.k;
@@ -12318,11 +12514,12 @@ const StageCamp = {
       const eLow = this.energy < 45, tLow = this.timeLeft < 26;
       const planT = { even: 'พักทุก 2 ชั้น', rush: 'รวดเดียวแล้วพักยาว', slow: 'พักทุกชั้น' }[this.restPlan];
       card('<b>' + ev.t + '</b><div style="margin-top:6px">📋 เช็คแผนกลางทาง: ตอนนี้พลัง <b>' + Math.round(this.energy) + '</b> · เวลาเหลือ <b>' + Math.round(this.timeLeft) + ' นาที</b><br>แผนพักที่วางไว้: <b>' + planT + '</b> — เอายังไงต่อดี?</div>' +
-        '<button class="dt-choice" data-k="keep">✅ แผนเดิมดีอยู่ เดินต่อตามแผน</button>' +
-        '<button class="dt-choice" data-k="more">🔋 เปลี่ยน: เพิ่มจุดพัก เก็บแรงไว้ก่อน</button>' +
-        '<button class="dt-choice" data-k="fast">⏰ เปลี่ยน: ลดการพัก เร่งให้ทันเวลา</button>' +
+        V8SHUF.html('camp_revise', [
+          '<button class="dt-choice" data-k="keep">✅ แผนเดิมดีอยู่ เดินต่อตามแผน</button>',
+          '<button class="dt-choice" data-k="more">🔋 เปลี่ยน: เพิ่มจุดพัก เก็บแรงไว้ก่อน</button>',
+          '<button class="dt-choice" data-k="fast">⏰ เปลี่ยน: ลดการพัก เร่งให้ทันเวลา</button>']) +
         '<div id="cp-revwhy" style="display:none;margin-top:6px"><b>เพราะอะไร?</b><div>' +
-        [['e', '🔋 ดูจากพลังที่เหลือ'], ['t', '⏰ ดูจากเวลาที่เหลือ'], ['ok', '👍 ทั้งพลังและเวลายังดี'], ['guess', '🎲 เดาเอา']]
+        V8SHUF.pick('camp_revwhy', [['e', '🔋 ดูจากพลังที่เหลือ'], ['t', '⏰ ดูจากเวลาที่เหลือ'], ['ok', '👍 ทั้งพลังและเวลายังดี'], ['guess', '🎲 เดาเอา']])
           .map(w => '<button class="dt-reason-chip" data-w="' + w[0] + '">' + w[1] + '</button>').join('') + '</div></div>');
       let pickK = null;
       const whyBox = () => box.querySelector('#cp-revwhy');
@@ -12354,9 +12551,11 @@ const StageCamp = {
     }
     if (ev.share) {
       card('<b>' + ev.t + '</b>' +
-        (has('water') ? '<button class="dt-choice" data-k="share">💧 แบ่งน้ำให้ครึ่งกระติก</button>' : '') +
-        '<button class="dt-choice" data-k="find">🔍 ชวนกันหาจุดเติมน้ำที่ศาลาพัก</button>' +
-        '<button class="dt-choice" data-k="no">🙅 ไม่แบ่ง น้ำเราก็เหลือน้อย</button>');
+        V8SHUF.html('camp_share', [
+          (has('water') ? '<button class="dt-choice" data-k="share">💧 แบ่งน้ำให้ครึ่งกระติก</button>' : ''),
+          '<button class="dt-choice" data-k="find">🔍 ชวนกันหาจุดเติมน้ำที่ศาลาพัก</button>',
+          '<button class="dt-choice" data-k="no">🙅 ไม่แบ่ง น้ำเราก็เหลือน้อย</button>'
+        ].filter(function (h) { return h; })));
       box.querySelectorAll('.dt-choice').forEach(btn => {
         btn.onclick = () => {
           const k = btn.dataset.k;
@@ -12374,9 +12573,10 @@ const StageCamp = {
     if (ev.final) {
       const strong = this.energy >= 25;
       card('<b>' + ev.t + '</b><div style="margin-top:6px">พลังตอนนี้ <b>' + Math.round(this.energy) + '</b> — ' + (strong ? 'ยังไหวสบาย!' : 'เหลือน้อยแล้ว...') + '</div>' +
-        '<button class="dt-choice" data-k="steady">🧗 ปีนช้า ๆ มั่นคงทีละขั้น</button>' +
-        (strong ? '<button class="dt-choice" data-k="sprint">⚡ พลังยังเหลือ ปีนรวดเดียวถึงยอด!</button>' :
-          '<button class="dt-choice" data-k="rest1">😮‍💨 นั่งพัก 1 นาที ค่อยขึ้น</button>'));
+        V8SHUF.html('camp_final', [
+          '<button class="dt-choice" data-k="steady">🧗 ปีนช้า ๆ มั่นคงทีละขั้น</button>',
+          (strong ? '<button class="dt-choice" data-k="sprint">⚡ พลังยังเหลือ ปีนรวดเดียวถึงยอด!</button>' :
+            '<button class="dt-choice" data-k="rest1">😮‍💨 นั่งพัก 1 นาที ค่อยขึ้น</button>')]));
       box.querySelectorAll('.dt-choice').forEach(btn => {
         btn.onclick = () => {
           const k = btn.dataset.k;
@@ -12390,8 +12590,8 @@ const StageCamp = {
       return;
     }
     // เหตุทั่วไป (ชั้น 1)
-    card('<b>' + ev.t + '</b>' + ev.c.map((c, i) =>
-      '<button class="dt-choice" data-i="' + i + '"' + (c.need && !has(c.need) ? ' disabled style="opacity:0.5"' : '') + '>' + c.t + '</button>').join(''));
+    card('<b>' + ev.t + '</b>' + V8SHUF.order('camp_ev' + this.tier, ev.c.length).map((i) => { const c = ev.c[i]; return (
+      '<button class="dt-choice" data-i="' + i + '"' + (c.need && !has(c.need) ? ' disabled style="opacity:0.5"' : '') + '>' + c.t + '</button>'); }).join(''));
     box.querySelectorAll('.dt-choice').forEach(btn => {
       btn.onclick = () => {
         const c = ev.c[Number(btn.dataset.i)];
@@ -12423,9 +12623,9 @@ const StageCamp = {
         '🎒 ของที่ได้ใช้จริง: <b>' + (Object.keys(this.usedItems).map(id => (this.ITEMS.find(i => i.id === id) || {}).icon || '').join(' ') || '—') + '</b>' +
         (unused.length ? '<br>😅 ของที่แบกขึ้นมาฟรี ๆ: ' + unused.map(id => this.ITEMS.find(i => i.id === id).icon + ' ' + this.ITEMS.find(i => i.id === id).t).join(', ') : '') + '</div>' +
         '<div class="dt-slot-label">มองย้อนแผนของเรา — ข้อไหนตรงใจที่สุด?</div>' +
-        [['fit', '📋 แผนที่วางไว้ช่วยได้จริง โดยเฉพาะตอนเจอเหตุไม่คาดฝัน', 1],
+        V8SHUF.pick('camp_reflect', [['fit', '📋 แผนที่วางไว้ช่วยได้จริง โดยเฉพาะตอนเจอเหตุไม่คาดฝัน', 1],
          ['adj', '🔄 แผนแรกไม่พอดี แต่เราปรับกลางทางได้ทัน', 0.9],
-         ['luck', '🍀 รอดมาได้เพราะโชคช่วยมากกว่าแผน', 0.5]]
+         ['luck', '🍀 รอดมาได้เพราะโชคช่วยมากกว่าแผน', 0.5]])
           .map(o => '<button class="dt-choice" data-v="' + o[2] + '" data-k="' + o[0] + '">' + o[1] + '</button>').join('') +
         '</div>'
     });
@@ -12814,7 +13014,7 @@ const StageRescue = {
         '<button class="dt-tag-choice trust" data-v="' + v1 + '">ไป' + T[v1].t + '</button>' +
         '<button class="dt-tag-choice trust" data-v="' + v2 + '">ไป' + T[v2].t + '</button></div>' +
         '<div style="margin-top:calc(var(--vw)*0.4)"><b>เพราะอะไร?</b><div>' +
-        REASONS.map(r => '<button class="dt-reason-chip" data-r="' + r[0] + '">' + r[1] + '</button>').join('') + '</div></div>' +
+        V8SHUF.pick('rs_reasons', REASONS).map(r => '<button class="dt-reason-chip" data-r="' + r[0] + '">' + r[1] + '</button>').join('') + '</div></div>' +
         '<div class="dt-btn-row"><button class="dt-btn" id="rs-vote-ok" disabled>ยืนยัน</button></div>');
       let pv = null, pr = null;
       const upd = () => { ov.querySelector('#rs-vote-ok').disabled = !(pv && pr); };
@@ -12859,7 +13059,7 @@ const StageRescue = {
   _supplyEvent(afterCb) {
     const ov = VK.overlay('<h3>🎒 ผู้จัดเสบียง: ที่ศูนย์พักพิง</h3>' +
       '<div style="font-size:calc(var(--vw)*0.95)">น้ำดื่มกับผ้าห่มเหลือ 2 ชุด แต่ผู้ประสบภัยมี 4 กลุ่ม — ให้ใครก่อนดี? (เลือก 2)</div>' +
-      [['baby', '👶 แม่กับเด็กเล็กตัวสั่นหนาว', 1], ['old', '👵 คุณยายไอไม่หยุด', 1], ['teen', '🧑 พี่วัยรุ่นแข็งแรงดี ขอเผื่อไว้', 0], ['self', '😋 เก็บไว้ให้ทีมเรากินเอง', 0]]
+      V8SHUF.pick('rs_supply', [['baby', '👶 แม่กับเด็กเล็กตัวสั่นหนาว', 1], ['old', '👵 คุณยายไอไม่หยุด', 1], ['teen', '🧑 พี่วัยรุ่นแข็งแรงดี ขอเผื่อไว้', 0], ['self', '😋 เก็บไว้ให้ทีมเรากินเอง', 0]])
         .map(o => '<button class="dt-choice" data-v="' + o[2] + '" data-k="' + o[0] + '">' + o[1] + '</button>').join('') +
       '<div class="dt-btn-row"><button class="dt-btn" id="rs-sup-ok" disabled>แจกเสบียง</button></div>');
     let picks = [];
@@ -13189,7 +13389,7 @@ const StageEco = {
       '<div class="dt-slot-label">📓 จดการสังเกตของเรา (เลือกแบบที่ "เห็นจริง" ที่สุด)</div>' +
       obsShuffled.map((o, i) => '<button class="dt-choice eco-obs" data-v="' + o[1] + '">' + o[0] + '</button>').join('') +
       '<div class="dt-slot-label">❓ ตั้งคำถาม 1 ข้อที่อยากรู้ต่อ</div>' +
-      '<div>' + s.qs.map((q, i) => '<button class="dt-reason-chip eco-q" data-i="' + i + '">' + q + '</button>').join('') + '</div>' +
+      '<div>' + V8SHUF.order('eco_q_' + s.id, s.qs.length).map((i) => '<button class="dt-reason-chip eco-q" data-i="' + i + '">' + s.qs[i] + '</button>').join('') + '</div>' +
       '<div class="dt-btn-row"><button class="dt-btn" id="eco-save" disabled>บันทึกลงสมุด ✍️</button></div>');
     if (s.img) {
       V8ASSETS.load(s.img).then(im => {
@@ -13303,9 +13503,9 @@ const StageEco = {
       '<span class="ev-source news">🩹 ภารกิจผู้พิทักษ์ต้นไม้</span>' +
       '<h3>เราเจอตะปูเก่ากับลวดรัดกิ่ง' + (this.found.includes('wound') ? ' (จากที่ส่องเจอเมื่อกี้)' : 'บนลำต้น') + ' — ทำอย่างไรดี?</h3>' +
       '<div class="ev-text">เปลือกไม้รอบ ๆ บวมแตก ต้นไม้กำลังพยายามรักษาแผลของตัวเอง</div>' +
-      [['report', '📣 ถ่ายรูป-จดตำแหน่ง แล้วชวนครูกับเจ้าหน้าที่มาช่วยถอนอย่างถูกวิธี พร้อมเก็บขยะรอบโคนต้น', 1],
+      V8SHUF.pick('eco_care', [['report', '📣 ถ่ายรูป-จดตำแหน่ง แล้วชวนครูกับเจ้าหน้าที่มาช่วยถอนอย่างถูกวิธี พร้อมเก็บขยะรอบโคนต้น', 1],
        ['pull', '💪 รีบดึงตะปูกับลวดออกเองแรง ๆ เดี๋ยวนี้เลย', 0.5],
-       ['skip', '🚶 ไม่ใช่เรื่องของเรา เดินผ่านไปเถอะ', 0.1]]
+       ['skip', '🚶 ไม่ใช่เรื่องของเรา เดินผ่านไปเถอะ', 0.1]])
         .map(o => '<button class="dt-choice" data-v="' + o[2] + '" data-k="' + o[0] + '">' + o[1] + '</button>').join(''));
     ov.querySelectorAll('.dt-choice').forEach(btn => {
       btn.onclick = () => {
@@ -17600,6 +17800,13 @@ const StageBalance2050 = {
     // 1) บันทึกลงระบบความคืบหน้าเดิม (Progress/ProfileBlob/เหรียญ/รางวัลปลดล็อก — เส้นทางเดียวกับทุกด่าน)
     saveStageProgress('balance2050', finalScore * 10, stars, timeSec, true, norm);
 
+    /* [ข้อ 8.3 · บล็อก D3] กระจกผลรวบยอดสำหรับใบประกาศ
+       อ่านตัวแปรที่บรรทัดข้างบนคำนวณเสร็จแล้วเท่านั้น — ไม่คำนวณใหม่ ไม่แตะ payload
+       ที่ส่งเข้า saveCapstoneResult แม้แต่ฟิลด์เดียว (กติกาข้อ 4 · สคีมาวิจัยห้ามแตะ)
+       ไม่ใส่ cw1-cw3 โดยตั้งใจ: ช่องนั้นคือคะแนนคำตอบเขียนที่ "ครูตรวจ" ซึ่งยังไม่เกิด
+       ณ วินาทีนี้ — ใส่คะแนน AI ลงไปแทนจะทำให้ใบประกาศคิดคนละฐานกับหน้าครู */
+    try { CERTLV.addCapstone({ PD: PD, EE: EE, ST: ST, SD: SD, CD: CD, PA: PA }); } catch (e) {}
+
     // 2) บันทึกผลสมรรถนะละเอียดลงชีต CapstoneResults (ผ่าน SyncQueue — ออฟไลน์ก็ไม่หาย ลองส่งซ้ำจนสำเร็จ)
     if (GOOGLE_SHEET_URL && data.username) {
       SyncQueue.push({
@@ -18970,7 +19177,7 @@ const StageCouncil = {
         [['yes', '✅ เห็นควรสร้าง'], ['no', '🌊 ยังไม่ควรสร้าง'], ['info', '📋 ขอเงื่อนไขดูแลชุมชนให้ชัดก่อน']]
           .map(o => '<button class="dt-tag-choice trust" data-v="' + o[0] + '" style="display:block;width:100%;margin:calc(var(--vw)*0.3) 0;text-align:left">' + o[1] + '</button>').join('') + '</div>' +
         '<div class="dt-slot-label">เพราะอะไร? (เลือก 1 เหตุผลที่ตรงใจที่สุด)</div>' +
-        '<div>' + this.REASONS.map(r => '<button class="dt-reason-chip" data-r="' + r.id + '">' + r.t + '</button>').join('') + '</div>' +
+        '<div>' + V8SHUF.pick('cn_reasons', this.REASONS).map(r => '<button class="dt-reason-chip" data-r="' + r.id + '">' + r.t + '</button>').join('') + '</div>' +
         '<div class="dt-btn-row"><button class="dt-btn" id="cn-vote-ok" disabled>หย่อนบัตรเสียง 🗳️</button></div></div>'
     });
     let pv = null, pr = null;
@@ -19033,7 +19240,7 @@ const StageCouncil = {
         opp.map(v => '<div style="background:#fffbea;border-left:calc(var(--vw)*0.3) solid #d9a736;border-radius:calc(var(--vw)*0.5);padding:calc(var(--vw)*0.6) calc(var(--vw)*0.9);margin-top:calc(var(--vw)*0.5)">' +
           '<b>' + v.face + ' ' + v.name + ':</b> "' + v.say + '"</div>').join('') +
         '<div class="dt-slot-label">เช็คหูของเรา: ' + oppName + ' ห่วงเรื่องอะไร "มากที่สุด"?</div>' +
-        '<div id="cn-check">' + this._minorityOptions(myV).map((o, i) =>
+        '<div id="cn-check">' + V8SHUF.pick('cn_minority', this._minorityOptions(myV)).map((o, i) =>
           '<button class="dt-choice" data-v="' + o[1] + '">' + o[0] + '</button>').join('') + '</div></div>'
     });
     scene.querySelectorAll('#cn-check .dt-choice').forEach(btn => {
@@ -19081,7 +19288,7 @@ const StageCouncil = {
     ];
     const ov = VK.overlay(
       '<h3>🤝 สภาให้เราออกแบบ "ข้อตกลงดูแลผู้เสียสละ" (เลือก 2 มาตรการที่ดีที่สุด)</h3>' +
-      OPTS.map(o => '<button class="dt-choice" data-k="' + o[0] + '" data-v="' + o[2] + '">' + o[1] + '</button>').join('') +
+      V8SHUF.pick('cn_care', OPTS).map(o => '<button class="dt-choice" data-k="' + o[0] + '" data-v="' + o[2] + '">' + o[1] + '</button>').join('') +
       '<div class="dt-btn-row"><button class="dt-btn" id="cn-care-ok" disabled>เสนอต่อสภา 📜</button></div>', true);
     ov.querySelectorAll('.dt-choice').forEach(b => {
       b.onclick = () => {
@@ -19106,9 +19313,11 @@ const StageCouncil = {
     const ov = VK.overlay(
       '<h3>🌉 งานอาสาเมืองสังขละ</h3>' +
       '<div class="ev-text">ชุมชนกำลังช่วยกันซ่อมสะพานมอญหลังน้ำหลาก ใคร ๆ ก็ช่วยได้ตามกำลัง — <b>ของจริง เสียของจริง</b> (เหรียญเราตอนนี้: 🪙 ' + coins + ')</div>' +
-      (canPay ? '<button class="dt-choice" data-k="donate">🪙 บริจาค 10 เหรียญของเราซื้อไม้ซ่อมสะพาน</button>' : '') +
-      '<button class="dt-choice" data-k="labor">💪 ลงแรงช่วยแบกไม้ 1 เที่ยว (เหนื่อยหน่อยแต่ฟรี)</button>' +
-      '<button class="dt-choice" data-k="skip">🙏 รอบนี้ขอผ่านก่อน</button>');
+      V8SHUF.html('cn_volunteer', [
+        (canPay ? '<button class="dt-choice" data-k="donate">🪙 บริจาค 10 เหรียญของเราซื้อไม้ซ่อมสะพาน</button>' : ''),
+        '<button class="dt-choice" data-k="labor">💪 ลงแรงช่วยแบกไม้ 1 เที่ยว (เหนื่อยหน่อยแต่ฟรี)</button>',
+        '<button class="dt-choice" data-k="skip">🙏 รอบนี้ขอผ่านก่อน</button>'
+      ].filter(function (h) { return h; })));
     ov.querySelectorAll('.dt-choice').forEach(b => {
       b.onclick = () => {
         const k = b.dataset.k;
@@ -20464,13 +20673,61 @@ function getFailEncourageMessage() {
    ============================================================ */
 // บันทึกแยกเป็นก้อนต่อผู้ใช้ 1 คนต่อ 1 ก้อน (สำคัญมากสำหรับคอมพิวเตอร์ห้องเรียนที่ใช้ร่วมกัน —
 // ไม่งั้นเด็กคนที่ 2 ที่ล็อกอินบนเครื่องเดียวกันจะไปทับ/เห็นความคืบหน้าของเด็กคนแรก)
-const SAVE_KEY_PREFIX = 'kanchanaburi_game_save_v1_';
+/* [ภาค 2 · จุดกันเซฟ 3/3 · รอบ 70] ช่องเซฟในเครื่องของภาค 2 ต้องคนละคีย์กับภาค 1
+   เหตุผล: สองภาคอยู่โดเมนเดียวกัน (gameplearn.com) — localStorage แยกตามโดเมน ไม่ได้แยกตาม path
+   ถ้าใช้คีย์เดียวกัน ด่านที่ผ่านของอีกภาคจะโผล่ว่า 'ผ่านแล้ว' แล้วเด็กจะข้ามไม่เล่น
+   → ไม่มีแถวหลักฐานสมรรถนะของด่านนั้น (ข้อมูลวิจัยมีรู ไม่ใช่แค่หน้าตาเกมเพี้ยน)
+   ⚠️ ห้ามเปลี่ยนกลับไปใช้ชื่อเดียวกับภาค 1 เด็ดขาด */
+const SAVE_KEY_PREFIX = 'kanchanaburi2_game_save_v1_';
+const SAVE_KEY_PREFIX_P1 = 'kanchanaburi_game_save_v1_';   /* ของภาค 1 — ใช้ตอนยกของเก่ามาเท่านั้น */
+/* ยกข้ามภาคได้เฉพาะรายการนี้ — กติกาเดียวกับ 'จุดกันเซฟ 2/2' ที่ใช้กับก้อนเซฟบนคลาวด์อยู่แล้ว
+   ไม่มี stages / stageAttempts / notebook / tutorialSeen โดยตั้งใจ:
+     stages·stageAttempts = ความคืบหน้าและจำนวนครั้งที่ลอง ยกข้ามภาคแล้วข้อมูลวิจัยเพี้ยน
+     notebook             = งานเขียนของเด็ก เป็นหลักฐานที่ครูตรวจ ต้องแยกภาค
+     tutorialSeen         = ภาค 2 มีวิธีเล่นของตัวเอง ข้ามคำสอนไปจะงงกว่าเดิม */
+const CROSS_PART_CARRY = ['coins', 'selectedCharacter', 'hasChosenCharacter',
+  'ownedCharacters', 'ownedPets', 'ownedAuras', 'equippedPet', 'equippedAura', 'items', 'username'];
 const LAST_USER_KEY = 'kanchanaburi_last_username'; // เก็บแค่ชื่อผู้ใช้ (ไม่เก็บ PIN) ไว้ prefill ช่องกรอกครั้งถัดไป
 function getSaveKey() {
   /* [V.7.69] โหมดสาธิตใช้ถังเซฟของตัวเอง — เล่นโชว์บนเครื่องนักเรียนได้โดยไม่แตะความคืบหน้าของเขา */
   if (typeof DEMO_MODE !== 'undefined' && DEMO_MODE) return SAVE_KEY_PREFIX + '__demo__';
   return SAVE_KEY_PREFIX + (localStorage.getItem(LAST_USER_KEY) || 'guest');
 }
+
+/* [ภาค 2 · จุดกันเซฟ 3/3 · รอบ 70] ยกของเก่ามาครั้งเดียวตอนเปลี่ยนคีย์
+   เด็กที่เคยเล่นอยู่ก่อนรุ่นนี้ เซฟของเขาอยู่ใต้คีย์ของภาค 1 — ถ้าไม่ยกมาเลยจะเหมือนของหายหมด
+   แต่ยกมาทั้งก้อนก็ไม่ได้ เพราะ 'ด่านที่ผ่าน' ในก้อนนั้นอาจเป็นของภาค 1
+   จึงยกเฉพาะ CROSS_PART_CARRY (เหรียญ · ตัวละคร · ของสะสม) ตามกติกาจุดกันเซฟ 2/2
+   ความคืบหน้าด่านของภาค 2 ที่เคยเล่นไว้ ดึงคืนได้จากคลาวด์ผ่าน P2SAVE.pull()
+   ตอนเข้าสู่ระบบ (ต้องผูกห้องเรียนแล้ว และรัน SQL_ภาค2_เพิ่มช่องเซฟ.sql แล้ว)
+   ทำงานครั้งเดียวต่อชื่อผู้ใช้ — รันซ้ำกี่รอบก็ไม่เขียนทับของใหม่ */
+(function _p2MigrateSaveOnce() {
+  try {
+    if (typeof GAME_PART === 'undefined' || GAME_PART !== 2) return;
+    var names = {};
+    var cur = null; try { cur = localStorage.getItem(LAST_USER_KEY); } catch (e) {}
+    if (cur) names[cur] = 1;
+    names['guest'] = 1;
+    /* คอมห้องเรียนใช้ร่วมกัน — กวาดทุกชื่อที่ค้างอยู่ในเครื่อง ไม่ใช่แค่คนล่าสุด */
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k && k.indexOf(SAVE_KEY_PREFIX_P1) === 0) names[k.slice(SAVE_KEY_PREFIX_P1.length)] = 1;
+    }
+    Object.keys(names).forEach(function (nm) {
+      if (nm === '__demo__') return;                       /* โหมดสาธิตมีถังของตัวเอง เริ่มใหม่ทุกครั้งอยู่แล้ว */
+      var nk = SAVE_KEY_PREFIX + nm;
+      if (localStorage.getItem(nk) != null) return;        /* ย้ายไปแล้ว หรือเล่นภาค 2 รุ่นใหม่ไปแล้ว */
+      var raw = null; try { raw = localStorage.getItem(SAVE_KEY_PREFIX_P1 + nm); } catch (e) {}
+      if (!raw) return;
+      var old = null; try { old = JSON.parse(raw); } catch (e) { return; }
+      if (!old || typeof old !== 'object') return;
+      var carry = {};
+      CROSS_PART_CARRY.forEach(function (f) { if (old[f] !== undefined) carry[f] = old[f]; });
+      carry._p2MigratedFrom = 'part1_localkey';            /* ร่องรอยว่าก้อนนี้ยกมา ไม่ใช่เล่นเอง */
+      try { localStorage.setItem(nk, JSON.stringify(carry)); } catch (e) {}
+    });
+  } catch (e) { /* ยกไม่สำเร็จก็ไม่ควรทำให้เกมเปิดไม่ขึ้น — เริ่มเซฟใหม่ยังดีกว่าเกมพัง */ }
+})();
 const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzimc0u5Nf7eaRxU1JxZfba2KyqbMem-hpr4VDaUHRsSg7Fd81KZRyT4tRnfyx3VrprOw/exec';
 
 function getSaveData() {
@@ -20516,7 +20773,7 @@ function getEquippedLoadoutOverrides() {
   // ออร่าอย่างน้อย 1 ครั้ง (รวมถึงกดสวมใส่ "ออร่าประจำตัว" ฟรีตั้งต้นกลับคืนหลังเคยเปลี่ยนไปใช้ตัวอื่นมาก่อน) — แก้โดยแปลงไอดี
   // เป็นค่า .color จริงจาก AURA_CATALOG ก่อนเสมอ (ออร่า "default" มี color:null ตั้งใจไม่ override เพื่อให้ตกไปใช้สีประจำตัวละครแทน)
   if (data.equippedAura) {
-    const aura = AURA_CATALOG.find(a => a.id === data.equippedAura);
+    const aura = AURA_CATALOG.find(a => a.id === data.equippedAura || a.color === data.equippedAura);
     if (aura && aura.color) overrides.auraColor = aura.color;
   }
   if (data.equippedPet && data.equippedPet !== 'none') {
@@ -22422,47 +22679,105 @@ async function renderLobby() {
    จึงไม่มีทางที่กระจกกับตัวจริงในเกมจะไม่ตรงกัน
    ============================================================ */
 let _csMirrorLoopId = 0;
+/* [ข้อ 4 · บล็อก E4] ลูปเดียววาดครบทั้งแผง: รูปกลาง + ช่องตัวละคร + ช่องออร่า + ช่องสัตว์เลี้ยง
+   ทุกช่องอ่านจาก getPlayerConfig()/dataset ชุดเดียวกับที่เกมใช้จริง จึงไม่มีทางแสดงไม่ตรงกัน
+   หรี่เฟรมด้วย _previewCanDraw เหมือนลูปพรีวิวอื่นในเกม (ราว 30 fps · หยุดเองเมื่อออกจากหน้า) */
 function _startCsMirrorLoop() {
   const canvas = document.getElementById('cs-mirror-canvas');
   if (!canvas) return;
   const myId = ++_csMirrorLoopId;
   const ctx = canvas.getContext('2d');
+  const cvChar = document.getElementById('cs-slot-char-canvas');
+  const cvAura = document.getElementById('cs-slot-aura-canvas');
+  const cvPet = document.getElementById('cs-slot-pet-canvas');
   const start = performance.now();
+  const _thr = { last: 0 };
   const step = (now) => {
     if (myId !== _csMirrorLoopId) return;
     const scr = document.getElementById('character-select-screen');
     if (!scr || !scr.classList.contains('active')) return;
+    requestAnimationFrame(step);
+    if (!_previewCanDraw(now, _thr, canvas)) return;
+    const t = now - start;
+    const cfg = getPlayerConfig();
     ctx.clearRect(0, 0, 360, 360);
     try {
       ctx.save();
       ctx.translate(180, 214);
-      CharacterEngine.draw(ctx, getPlayerConfig(), 0, 0, 1.62, 'idle', now - start, 1);
+      CharacterEngine.draw(ctx, cfg, 0, 0, 1.62, 'idle', t, 1);
       ctx.restore();
-    } catch (e) { ctx.restore(); return; }
-    requestAnimationFrame(step);
+    } catch (e) { try { ctx.restore(); } catch (e2) {} }
+    /* ช่องตัวละคร — ตัวเดียวกับกลางกระจก ย่อส่วนด้วยสูตรเดียวกับการ์ดในตาราง */
+    if (cvChar) {
+      const c2 = cvChar.getContext('2d'), w2 = cvChar.width, h2 = cvChar.height;
+      c2.clearRect(0, 0, w2, h2);
+      try {
+        c2.save(); c2.translate(w2 / 2, h2 * 0.593);
+        CharacterEngine.draw(c2, cfg, 0, 0, (h2 / 600) * 2.7, 'idle', t, 1);
+        c2.restore();
+      } catch (e) { try { c2.restore(); } catch (e2) {} }
+    }
+    /* ช่องออร่า — วงพลังสีจริงของออร่าที่ใส่ (ว่าง = ไม่วาด ปล่อยไอคอนจางโชว์แทน) */
+    if (cvAura) {
+      const c3 = cvAura.getContext('2d');
+      c3.clearRect(0, 0, cvAura.width, cvAura.height);
+      const spec = cvAura.dataset.aura || '';
+      if (spec) { try { _drawAuraOrb(c3, cvAura.width, cvAura.height, spec, t); } catch (e) {} }
+    }
+    /* ช่องสัตว์เลี้ยง — ตัวจริงที่ใส่ ขยายจากขนาดพรีวิวมาตรฐาน 64x64 */
+    if (cvPet) {
+      const c4 = cvPet.getContext('2d');
+      c4.clearRect(0, 0, cvPet.width, cvPet.height);
+      const pid = cvPet.dataset.pet || '';
+      if (pid) {
+        try {
+          PetRenderer.draw(c4, pid, cvPet.width / 2, cvPet.height * 0.58,
+            cvPet.width / 64, _petPreviewT(pid, t));
+        } catch (e) {}
+      }
+    }
   };
   step(performance.now());
 }
+/* [ข้อ 4 · บล็อก E3] อัปเดตสถานะช่องไอเทม — มีของ = ติดคลาส .on แล้วโชว์รูปจริง
+   ไม่มีของ = ปล่อยว่างให้เห็นกรอบ + ไอคอนจาง
+   เลิกใช้ข้อความ "ยังไม่ได้ใส่" ตามที่ครูสั่ง (เด็ก ป.4 ดูรูปรู้เรื่องกว่าอ่าน)
+   อ่านอย่างเดียว ไม่เขียนเซฟ — ตรรกะซื้อ/สวมใส่อยู่ที่ renderCharSelectAuras/Pets เหมือนเดิม */
 function _csMirrorLabels() {
   try {
     const d = getSaveData();
+    const cid = getSelectedCharacterId();
+    const cfg = CHAR_CONFIG[cid] || null;
     const nameEl = document.getElementById('cs-mirror-name');
-    const wearEl = document.getElementById('cs-mirror-wear');
-    if (nameEl) {
-      const cid = getSelectedCharacterId();
-      nameEl.textContent = (CHAR_CONFIG[cid] && (CHAR_CONFIG[cid].displayName || CHAR_CONFIG[cid].name)) || 'ตัวละครของฉัน';
-    }
-    if (wearEl) {
-      const bits = [];
-      const au = d.equippedAura || (d.equipped && d.equipped.aura) || null;
-      const pe = d.equippedPet || (d.equipped && d.equipped.pet) || null;
-      const _find = (cat, id) => { try { const h = (cat || []).filter(x => x.id === id)[0]; return h && (h.name || h.label); } catch (e) { return null; } };
-      const auName = _find(typeof AURA_CATALOG !== 'undefined' ? AURA_CATALOG : [], au) || au;
-      const peName = (pe && pe !== 'none') ? (_find(typeof PET_CATALOG !== 'undefined' ? PET_CATALOG : [], pe) || pe) : null;
-      bits.push('✨ ออร่า: ' + (auName ? auName : 'ยังไม่ได้ใส่'));
-      bits.push('🐾 สัตว์เลี้ยง: ' + (peName ? peName : 'ยังไม่ได้ใส่'));
-      wearEl.innerHTML = bits.join('<br>');
-    }
+    if (nameEl) nameEl.textContent = (cfg && (cfg.displayName || cfg.name)) || 'ตัวละครของฉัน';
+    /* ค่าที่เซฟไว้เป็น "สีของออร่า" (renderCharSelectAuras เขียน item.color)
+       แต่เซฟรุ่นเก่าบางเครื่องเก็บเป็น "ไอดี" — รับทั้งสองแบบ ไม่ต้องแก้เซฟของเด็ก */
+    let auColor = null;
+    try {
+      const rawAu = d.equippedAura || null;
+      if (rawAu) {
+        const hit = AURA_CATALOG.find(a => a.id === rawAu || a.color === rawAu);
+        auColor = (hit && hit.color) || null;
+      }
+    } catch (e) { auColor = null; }
+    const pid = (d.equippedPet && d.equippedPet !== 'none' &&
+      PET_CATALOG.some(p => p.id === d.equippedPet)) ? d.equippedPet : null;
+    const petName = pid ? ((PET_CATALOG.find(p => p.id === pid) || {}).name || '') : '';
+    const auName = auColor ? ((AURA_CATALOG.find(a => a.color === auColor) || {}).name || '') : '';
+    const _set = (id, on, tip) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.toggle('on', !!on);
+      el.title = tip;
+      el.setAttribute('aria-label', tip);
+    };
+    _set('cs-slot-char', true, 'ตัวละคร: ' + ((cfg && cfg.name) || '—'));
+    _set('cs-slot-aura', !!auColor, auColor ? ('ออร่า: ' + auName) : 'ช่องออร่า — ยังว่าง กดเพื่อเลือก');
+    _set('cs-slot-pet', !!pid, pid ? ('สัตว์เลี้ยง: ' + petName) : 'ช่องสัตว์เลี้ยง — ยังว่าง กดเพื่อเลือก');
+    const auCv = document.getElementById('cs-slot-aura-canvas');
+    if (auCv) auCv.dataset.aura = auColor || '';
+    const petCv = document.getElementById('cs-slot-pet-canvas');
+    if (petCv) petCv.dataset.pet = pid || '';
   } catch (e) {}
 }
 
@@ -23479,6 +23794,59 @@ const V8COMPASS = {
   }
 };
 
+/* ============================================================
+   [ข้อ 6] V8SHUF — ตัวช่วยกลางตัวเดียวสำหรับ "สลับลำดับที่ตาเห็น"
+
+   ห้ามสุ่มเองกระจัดกระจายตามจุดต่าง ๆ อีก ให้เรียกผ่านตัวนี้ที่เดียว เพราะ:
+     · ต้องจำลำดับไว้ต่อคีย์ ไม่งั้น re-render ทีไรตัวเลือกขยับ เด็กกดผิด
+     · ต้องอ่านลำดับกลับออกมาใส่ ctx ได้ ไม่งั้นครูตรวจย้อนหลังไม่ได้
+
+   สิ่งที่ตัวนี้ "ไม่" ทำ: ไม่แตะค่าคะแนน ไม่แตะรหัสข้อ ไม่แตะว่าข้อไหนถูก
+   ทุกจุดที่เรียกใช้ยังส่งค่าผ่าน data-v / data-k / ดัชนีเดิมของอาเรย์ต้นทางเหมือนเดิม
+   ============================================================ */
+const V8SHUF = {
+  _m: {},                                    /* คีย์ → ลำดับ index ที่สุ่มไว้แล้ว */
+
+  /* คืนลำดับ index ของคีย์นี้ — คีย์เดิม + จำนวนเท่าเดิม = ได้ลำดับเดิมเสมอจนกว่าจะ reset */
+  order(key, n) {
+    n = Number(n) || 0;
+    if (n <= 0) return [];
+    var cur = this._m[key];
+    if (cur && cur.length === n) return cur.slice();
+    var a = [], i, j, t;
+    for (i = 0; i < n; i++) a.push(i);
+    for (i = n - 1; i > 0; i--) {            /* Fisher-Yates — ทุกลำดับมีโอกาสเท่ากันจริง */
+      j = Math.floor(Math.random() * (i + 1));
+      t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    this._m[key] = a;
+    return a.slice();
+  },
+
+  /* คืน "สำเนา" ของอาเรย์ที่เรียงใหม่ — ของเดิมไม่ถูกแตะ ดัชนีเดิมยังใช้อ้างอิงได้ */
+  pick(key, arr) {
+    arr = arr || [];
+    return this.order(key, arr.length).map(function (i) { return arr[i]; });
+  },
+
+  /* สำหรับชุดปุ่มที่เขียนเป็น HTML ตายตัว — ส่งอาเรย์ของสตริงมา ได้สตริงเดียวที่สลับแล้ว */
+  html(key, parts) { return this.pick(key, parts).join(''); },
+
+  tag(key) { var a = this._m[key]; return a ? a.join(',') : ''; },
+
+  /* ลำดับทั้งหมดของรอบนี้ — logEvidence เอาไปติดไว้กับหลักฐานทุกแถว */
+  all() {
+    var o = null, k;
+    for (k in this._m) {
+      if (Object.prototype.hasOwnProperty.call(this._m, k)) { o = o || {}; o[k] = this._m[k].join(','); }
+    }
+    return o;
+  },
+
+  /* ล้างเมื่อออก/เข้าด่านใหม่ — เล่นรอบใหม่ต้องได้ลำดับใหม่ ไม่งั้นเล่นซ้ำก็จำตำแหน่งได้อยู่ดี */
+  reset(key) { if (key == null) this._m = {}; else delete this._m[key]; }
+};
+
 /* ---------- 4) บัญชีหลักฐานสมรรถนะ (Evidence Ledger) ---------- */
 /* ชนิดหลักฐาน: plan / act / revise / artifact / collab / observe / reflect (ตามแผนแม่บท V.8)
    ทุกแถวติด game_version + โหมด/บริบท — additive ล้วน ไม่แตะข้อมูลเก่า */
@@ -23491,10 +23859,22 @@ function logEvidence(stageId, evType, sub, val, ctx) {
     const _g = (typeof GCARD !== 'undefined') ? GCARD.tag() : null;
     if (_g) { ctx = Object.assign({}, ctx || {}); ctx._gc = _g; }
   } catch (e) {}
+  /* [ข้อ 6] ลำดับตัวเลือกที่เด็กเห็นจริงในรอบนี้ (คีย์ → '2,0,3,1')
+     ต้องติดไปกับหลักฐาน ไม่งั้นครูอ่านแถวย้อนหลังแล้วไม่รู้ว่า 'ข้อที่ถูก' ไปอยู่ตำแหน่งไหน
+     สิ่งที่สุ่มได้เปลี่ยนแค่บริบท ไม่เปลี่ยนสิ่งที่วัด — จึงบันทึกเป็นบริบท ไม่ใช่คะแนน */
+  try {
+    const _sh = (typeof V8SHUF !== 'undefined') ? V8SHUF.all() : null;
+    if (_sh) { ctx = Object.assign({}, ctx || {}); ctx._shuf = _sh; }
+  } catch (e) {}
   /* [ตรวจระบบ รอบ 17 · A2] ติดชื่อด่านไว้กับตัวหลักฐานตั้งแต่ตอนบันทึก
      เดิมชื่อด่านมาจาก "ด่านที่กำลัง flush" เท่านั้น ของค้างจากด่านก่อนจึงถูกสวมชื่อผิด */
   _pendingEvidence.push({ et: String(evType || 'act'), sub: String(sub || ''), val: (typeof val === 'number' ? Math.round(val * 1000) / 1000 : null),
     ctx: ctx == null ? null : ctx, t: Date.now(), _sid: String(stageId == null ? '' : stageId) });
+  /* [ข้อ 8.3 · บล็อก D2] กระจกในเครื่องสำหรับคิดระดับบนใบประกาศ
+     คิวจริง (_pendingEvidence) ถูก splice ทิ้งตอน flush และ "ไม่ส่งเลย" ในโหมด Guest
+     ใบประกาศจึงต้องมีสำเนาของตัวเอง ไม่งั้นเด็กที่เล่นแบบไม่ล็อกอินจะไม่มีระดับให้แสดง
+     เก็บแค่ et/sub/val — ไม่มี ctx ไม่มีเวลา ไม่มีอะไรที่ระบุตัวเด็กได้ */
+  try { CERTLV.addEvidence(evType, sub, (typeof val === 'number' ? Math.round(val * 1000) / 1000 : null)); } catch (e) {}
 }
 function flushEvidence(stageId) {
   if (!_pendingEvidence.length) return;
@@ -23984,6 +24364,312 @@ const VKBUDDY = {
    ไม่พึ่งไลบรารีภายนอกสักตัว → ทำงานได้แม้ออฟไลน์ ตรงกับหลักการของเกมทั้งไฟล์
    และเก็บ "ข้อมูล" ของเกียรติบัตรไว้ในเซฟ เพื่อสร้างใหม่ได้ทุกเมื่อ (ไม่ได้เก็บรูป — เปลืองที่)
    ============================================================ */
+/* ============================================================
+   [ข้อ 8.3 · บล็อก D1] เกณฑ์ระดับของใบประกาศ = เกณฑ์ก้อนเดียวกับหน้าครู
+
+   ก้อน `var CBE8 = {...}` ข้างล่างนี้ **ไม่ได้เขียนขึ้นใหม่** — สคริปต์ build
+   คัดลอกมาจากหน้าครูในไฟล์เดียวกันนี้แบบตัวต่อตัว (ดูบล็อก D1 ใน patch_part3.py)
+   เหตุผล: หน้าครูฝังอยู่ใน <script type="text/html"> ซึ่งเบราว์เซอร์ไม่รัน
+   ตัวเกมจึงเรียก CBE8.compute() ไม่ได้เลยถ้าไม่ยกมา
+
+   ⚠️ ห้ามแก้ตัวเลข/สูตรในก้อนนี้เด็ดขาด (กติกาข้อ 4) ถ้าจะแก้ต้องแก้ที่หน้าครู
+      แล้วปล่อยให้ build คัดลอกตามมาเอง มิฉะนั้นเลขบนใบประกาศกับเลขในงานวิจัยจะคนละชุด
+   ⚠️ loadSettings() ในก้อนนี้พึ่ง sbEnsure/sbFetch ซึ่งเป็นของหน้าครู — ฝั่งเกม "ห้ามเรียก"
+      ฝั่งเกมจึงใช้ค่า set เริ่มต้น (30/70 · 50/65/80 · ระดับฐาน 3) ซึ่งตรงกับเอกสารเกณฑ์
+   ============================================================ */
+var CBE8 = {
+  COMPS: [['HT','การคิดขั้นสูง','#7c3aed'],['CM','การสื่อสาร','#0369a1'],['SM','การจัดการตนเอง','#b45309'],
+          ['TW','รวมพลังทำงานเป็นทีม','#0d9488'],['CZ','การเป็นพลเมืองที่เข้มแข็ง','#be123c'],['NS','อยู่ร่วมกับธรรมชาติฯ อย่างยั่งยืน','#15803d']],
+  /* เกณฑ์กาญ 2050 (6 เกณฑ์เดิม 0-4) → สมรรถนะ (รอ v2 สามองก์ใน BUILD 3 จะครบทุกด้าน) */
+  CAP_MAP: { HT:['PD','CD'], NS:['EE','ST'], CZ:['SD','PA'] },
+  ST_INFO: {
+    CONFIRMED:{ t:'ยืนยันแล้ว', c:'#16a34a', bg:'#dcfce7', i:'✅' },
+    CONFIRMED_WITH_VARIANCE:{ t:'ยืนยัน (แหล่งประกอบต่างกันเล็กน้อย)', c:'#a16207', bg:'#fef9c3', i:'🟡' },
+    QUICK_REVIEW:{ t:'ควรตรวจสอบ — ใช้คำถามยืนยัน', c:'#c2410c', bg:'#ffedd5', i:'🟠' },
+    AWAITING_TEACHER_CONFIRMATION:{ t:'รอครูยืนยัน', c:'#1d4ed8', bg:'#dbeafe', i:'🔵' },
+    FINALIZED:{ t:'ครูยืนยันผลแล้ว', c:'#1e3a8a', bg:'#c7d2fe', i:'🔷' },
+    NO_DATA:{ t:'ยังไม่มีหลักฐาน V.8', c:'#64748b', bg:'#f1f5f9', i:'⬜' },
+    NO_SOURCES:{ t:'มีคะแนนหลักแล้ว — รอผลประเมินประกอบ', c:'#475569', bg:'#e2e8f0', i:'◻️' }
+  },
+  /* [แก้ตามครู] สรุป 7 สถานะเป็น 3 กลุ่มสำหรับ "อ่านเร็ว" — สถานะละเอียดยังอยู่ครบในช่องรายละเอียด
+     เหตุที่ไม่ใช้ 2 สี: เด็กที่ยังไม่ได้เล่นเลยจะกลายเป็นสีแดงเหมือนเด็กที่ผลขัดแย้งจริง
+     ครูจะเสียเวลาไล่ตรวจเด็กที่ "แค่ยังไม่มีข้อมูล" — จึงแยกสีเทาไว้ต่างหาก */
+  ST3_MAP: {
+    CONFIRMED:'OK', CONFIRMED_WITH_VARIANCE:'OK', FINALIZED:'OK',
+    QUICK_REVIEW:'CHECK', AWAITING_TEACHER_CONFIRMATION:'CHECK', NO_SOURCES:'CHECK',
+    NO_DATA:'NONE'
+  },
+  ST3_INFO: {
+    OK:{ t:'สอดคล้อง', c:'#15803d', bg:'#dcfce7', i:'🟢', d:'คะแนนหลักกับผลประเมินประกอบไปทางเดียวกัน — ใช้ผลนี้ได้' },
+    CHECK:{ t:'ต้องตรวจสอบ', c:'#b91c1c', bg:'#fee2e2', i:'🔴', d:'ผลยังไม่ลงรอยกัน หรือหลักฐานประกอบไม่พอ — ครูควรถามยืนยันแล้วกดยืนยันผล' },
+    NONE:{ t:'ยังไม่มีหลักฐาน', c:'#64748b', bg:'#f1f5f9', i:'⬜', d:'ยังไม่มีข้อมูลของด้านนี้ — ยังไม่ต้องตรวจ ให้เด็กเล่นก่อน' }
+  },
+  st3(status){ return this.ST3_INFO[this.ST3_MAP[status]||'NONE']; },
+  /* ครูกดยืนยันผลด้วยตัวเองแล้วหรือยัง — ติดหมุดเล็ก ๆ ที่มุมช่อง */
+  isFinal(status){ return status==='FINALIZED'; },
+  /* คลังคำถามยืนยัน 1 ข้อ/สมรรถนะ (ใช้เมื่อสถานะ QUICK_REVIEW — ครูถามนักเรียนตัวต่อตัวใน ชม.5) */
+  CONFIRM_Q: {
+    HT:'ถ้าเพื่อนแชร์ข่าวมาให้ 1 ข่าว หนูจะรู้ได้อย่างไรว่าข่าวนั้นเชื่อได้หรือไม่ ลองบอกวิธีคิดมา 2 ข้อ',
+    CM:'ลองเล่าสิ่งที่หนูได้เรียนรู้จากเกมนี้ 1 เรื่อง ให้น้อง ป.1 ฟังเข้าใจ ต้องพูดอย่างไร',
+    SM:'ก่อนเริ่มงานชิ้นใหญ่ หนูวางแผนอย่างไร และถ้าเจอปัญหากลางทางหนูทำอย่างไร เล่าจากที่ทำจริงในเกม',
+    TW:'ตอนทำงานกลุ่ม ถ้าเพื่อนในทีมทำงานช้ากว่าคนอื่น หนูจะทำอย่างไร เพราะอะไร',
+    CZ:'ถ้าเสียงส่วนใหญ่ในห้องเลือกอย่างหนึ่ง แต่หนูไม่เห็นด้วย หนูควรทำอย่างไร เพราะอะไร',
+    NS:'ลองยกตัวอย่างสิ่งที่หนูสังเกตเห็นในธรรมชาติรอบตัว 1 อย่าง แล้วตั้งคำถามจากสิ่งนั้น 1 คำถาม'
+  },
+  set: { wMinor:30, wSum:70, r1:50, r2:65, r3:80, diff:1, lvBase:3 },
+  _setLoaded:false,
+  loadSettings(){
+    var self=this;
+    if(this._setLoaded) return Promise.resolve(this.set);
+    return sbEnsure().then(function(){ return sbFetch('/rest/v1/rpc/rpc_get_settings',{method:'POST',body:'{}'}); })
+      .catch(function(){ return []; })
+      .then(function(rows){
+        var m={}; (rows||[]).forEach(function(r){ m[r.skey]=r.sval; });
+        function num(k,d){ var v=Number(m[k]); return (isNaN(v)||m[k]==null||m[k]==='')?d:v; }
+        self.set={ wMinor:num('v8_w_minor',30), wSum:num('v8_w_sum',70), r1:num('v8_r1',50), r2:num('v8_r2',65), r3:num('v8_r3',80),
+          diff:num('v8_diff',1), lvBase:num('v8_lv_base',3) };
+        self._setLoaded=true;
+        return self.set;
+      });
+  },
+  lvOf(p){ var s=this.set; if(p==null) return null; return p>=s.r3?(s.lvBase+3):p>=s.r2?(s.lvBase+2):p>=s.r1?(s.lvBase+1):s.lvBase; },
+  lvLabel(lv){ var s=this.set; if(lv==null) return '–';
+    var names=['เริ่มต้น','กำลังพัฒนา','สามารถ','เหนือความคาดหวัง'];
+    return lv+' '+ (names[lv-s.lvBase]||''); },
+
+  /* ---------- คำนวณต่อนักเรียน 1 คน ---------- */
+  compute(stu){
+    var self=this, out={};
+    this.COMPS.forEach(function(cd){
+      var c=cd[0];
+      var minor=self._minor(c, stu);
+      var summ=self._summative(c, stu);
+      var M=null, mNote='';
+      if(minor.pct!=null && summ.pct!=null){ M=minor.pct*self.set.wMinor/100 + summ.pct*self.set.wSum/100; }
+      else if(minor.pct!=null){ M=minor.pct; mNote='ยังไม่มีหลักฐานรวบยอด — สรุปจากหลักฐานระหว่างเรียนไปก่อน'; }
+      else if(summ.pct!=null){ M=summ.pct; mNote='ยังไม่มีหลักฐานระหว่างเรียนแบบ V.8 (ด่านเรือธงมาใน BUILD 2)'; }
+      var mLv=self.lvOf(M);
+      var T=self._tLevel(c, stu), P=self._pLevel(c, stu), S=self._sLevel(c, stu);
+      var fin=stu.v8c && stu.v8c[c];
+      var status, why='';
+      if(fin && fin.status==='FINALIZED'){ status='FINALIZED'; why='ครูยืนยันเมื่อ '+(fin.at?new Date(fin.at).toLocaleDateString('th-TH'):''); mLv=(fin.lv!=null?fin.lv:mLv); }
+      else if(M==null){ status='NO_DATA'; }
+      else {
+        var srcs=[['ครู',T],['เพื่อน',P],['ตนเอง',S]].filter(function(x){ return x[1]!=null; });
+        if(!srcs.length){ status='NO_SOURCES'; }
+        else {
+          var near=0, far=0, names=[];
+          /* [ตรวจระบบ รอบ 17 · B4] เดิมสองเงื่อนไขคาบเกี่ยวกัน
+             ตั้ง ±2 แล้วต่าง 2 ระดับ → ถูกนับเป็นทั้ง "ตรงกัน" และ "ต่างมาก" พร้อมกัน → ขึ้นแดงทั้งที่อยู่ในเกณฑ์
+             ตั้ง ±0 แล้วต่าง 1 ระดับ → ไม่ถูกนับฝั่งไหนเลย → ขึ้นเขียวพร้อมเหตุผลที่ขัดกับความจริง
+             เขียนเป็นคู่ตรงข้ามให้ชัด: อยู่ในเกณฑ์ = near · นอกเกณฑ์ = far */
+          srcs.forEach(function(x){ var d=Math.abs(x[1]-mLv);
+            if(d<=self.set.diff) near++; else { far++; names.push(x[0]+' (ต่าง '+d+' ระดับ)'); } });
+          var vals=srcs.map(function(x){ return x[1]; });
+          var spread=Math.max.apply(null,vals)-Math.min.apply(null,vals);
+          if(far>=2){ status='QUICK_REVIEW'; why='แหล่งประกอบ ≥2 แหล่งต่างจากคะแนนหลักตั้งแต่ 2 ระดับ: '+names.join(', '); }
+          else if(near>=2){ if(spread>=2){ status='CONFIRMED_WITH_VARIANCE'; why='แหล่งประกอบส่วนใหญ่ตรงกับคะแนนหลัก แต่แหล่งประกอบต่างกันเอง '+spread+' ระดับ'; }
+                            else { status='CONFIRMED'; why='แหล่งประกอบอย่างน้อย 2 แหล่งห่างจากคะแนนหลักไม่เกิน '+self.set.diff+' ระดับ'; } }
+          else if(far===1){ status='QUICK_REVIEW'; why='แหล่งประกอบที่มี ('+names.join(', ')+') ต่างจากคะแนนหลักมาก และยังมีแหล่งประกอบไม่ครบ'; }
+          else { status='CONFIRMED_WITH_VARIANCE'; why='แหล่งประกอบยังไม่ครบ 2 แหล่ง — ยืนยันแบบมีเงื่อนไข'; }
+        }
+      }
+      out[c]={ M:(M==null?null:Math.round(M*10)/10), lv:mLv, minor:minor, summ:summ, note:mNote,
+        T:T, P:P, S:S, status:status, why:why, fin:fin||null };
+    });
+    return out;
+  },
+  /* [ตรวจระบบ รอบ 17 · B2] สัดส่วนผสมของหลักฐานระหว่างเรียน
+     คุณภาพรวมของด่าน (ระบบให้จากพฤติกรรมการเล่น) กับ ด้านย่อย (รวมงานเขียนที่ครูตรวจ) */
+  MIX_OVERALL: 0.6,
+  MIX_SUB: 0.4,
+  _minor(c, stu){
+    var evd=(stu.evd||[]).filter(function(r){ return (r.sub||'').indexOf(c)===0 || r.sub===c; });
+    if(!evd.length) return { pct:null, parts:[], src:'รอด่านเรือธง '+c+' (BUILD 2)' };
+    /* ใช้ "ชิ้นสรุปของด่าน" (sub=รหัสสมรรถนะตรง ๆ) ถ้ามี — คือคุณภาพรวมของการเล่นครั้งที่ดีที่สุด */
+    var overall=evd.filter(function(r){ return r.sub===c && r.et==='artifact'; });
+    var parts=[], pct=null;
+    if(overall.length){
+      var best=0; overall.forEach(function(r){ var v=Number(r.val); if(!isNaN(v)&&v>best) best=v; });
+      pct=best*100;
+      parts.push({ label:'คุณภาพรวมด่านเรือธง (ครั้งที่ดีที่สุดจาก '+overall.length+' ครั้ง)', txt:Math.round(pct)+'%' });
+    }
+    var bySub={};
+    evd.forEach(function(r){ if(r.sub===c) return; if(!bySub[r.sub]) bySub[r.sub]=[]; var v=Number(r.val); if(!isNaN(v)&&r.val!=null) bySub[r.sub].push(v); });
+    var subAvgs=[]; /* [BUILD 2] ไม่มีแถวสรุป → เฉลี่ยจากทุกด้านย่อย (เดิมใช้ด้านแรกด้านเดียว) */
+    Object.keys(bySub).forEach(function(s2){
+      var a=bySub[s2]; if(!a.length) return;
+      var av=a.reduce(function(x,y){return x+y;},0)/a.length;
+      parts.push({ label:'หลักฐานด้านย่อย '+s2+' ('+a.length+' ชิ้น)', txt:Math.round(av*100)+'%' });
+      subAvgs.push(av);
+    });
+    /* [ตรวจระบบ รอบ 17 · B2] รวมสองแหล่งเข้าด้วยกัน แทนที่จะให้แถวสรุปด่านกินรวบ
+       เดิม: มีแถวสรุปด่าน = ค่าเฉลี่ยด้านย่อยถูกทิ้ง → คะแนนที่ครูตรวจไม่มีผลใด ๆ
+       ตอนนี้: คุณภาพรวมด่าน 60% + หลักฐานด้านย่อย (รวมคะแนนที่ครูตรวจ) 40% */
+    var subPct=null;
+    if(subAvgs.length){ var sS=0; subAvgs.forEach(function(x){ sS+=x; }); subPct=sS/subAvgs.length*100; }
+    if(pct!=null&&subPct!=null){
+      pct=pct*CBE8.MIX_OVERALL + subPct*CBE8.MIX_SUB;
+      parts.push({ label:'รวมสองแหล่ง (คุณภาพรวมด่าน '+Math.round(CBE8.MIX_OVERALL*100)+'% + ด้านย่อย '+Math.round(CBE8.MIX_SUB*100)+'%)',
+        txt:Math.round(pct)+'%' });
+    } else if(pct==null){ pct=subPct; }
+    return { pct:(pct==null?null:Math.round(pct*10)/10), parts:parts, n:evd.length,
+      src:'บัญชีหลักฐานพฤติกรรม (Evidence Ledger) '+evd.length+' รายการ' };
+  },
+  _summative(c, stu){
+    /* [ตรวจระบบ รอบ 17 · B3] เดิมใช้ "ครั้งล่าสุด" แต่ช่องกาญ 2050 ในตารางคะแนนใช้ "ครั้งที่ดีที่สุด"
+       เด็กที่เล่นซ้ำแล้วทำเล่น ๆ จะเห็นตัวเลขสองช่องบนหน้าเดียวกันมาจากคนละครั้ง
+       และคะแนนหลักตกทันที ซึ่งขัดกับเจตนาของเกมที่ชวนให้เล่นซ้ำเพื่อพัฒนาผล
+       ใช้ "ครั้งที่ดีที่สุด" ให้ตรงกันทั้งหน้า */
+    var caps=(stu.cap||[]).slice();
+    var _score=function(r){ var n=0, k=['PD','EE','ST','SD','CD','PA'];
+      k.forEach(function(x){ var v=Number(r[x]); if(!isNaN(v)) n+=v; }); return n; };
+    caps.sort(function(a,b){ var d=_score(b)-_score(a); return d!==0?d:((b.t||0)-(a.t||0)); });
+    var cap=caps[0];
+    if(!cap) return { pct:null, parts:[], src:'ยังไม่ได้เล่นด่านรวบยอดกาญจนบุรี 2050' };
+    if(c==='CM'){
+      var s=0,n=0; ['cw1','cw2','cw3'].forEach(function(k){ var v=Number(cap[k]); if(cap[k]!=null&&cap[k]!==''&&!isNaN(v)){ s+=v; n++; } });
+      if(n) return { pct:Math.round(s/(n*4)*1000)/10, parts:[{label:'คำตอบเขียน '+n+' ข้อ (ครูตรวจ)', txt:s+'/'+(n*4)}], src:'กาญ 2050 — คำตอบเขียน' };
+      /* [ตรวจระบบ รอบ 17 · B5] ยังไม่มีคะแนนครู แต่ AI ตรวจไว้แล้ว → ใช้ไปก่อนแบบติดป้ายว่าชั่วคราว
+         เดิมคืน null ทำให้สูตรเปลี่ยนรูปเงียบ ๆ (M กลายเป็นหลักฐานระหว่างเรียนล้วน)
+         แล้วตัวเลขกระโดดในวันที่ครูกดตรวจ ทั้งที่ตัวเด็กไม่ได้เปลี่ยนอะไรเลย */
+      var sa=0,na=0; ['ai1','ai2','ai3'].forEach(function(k){ var v=Number(cap[k]); if(cap[k]!=null&&cap[k]!==''&&!isNaN(v)){ sa+=v; na++; } });
+      if(na) return { pct:Math.round(sa/(na*4)*1000)/10, provisional:true,
+        parts:[{label:'คำตอบเขียน '+na+' ข้อ (AI ตรวจชั่วคราว — รอครูยืนยัน)', txt:sa+'/'+(na*4)}],
+        src:'กาญ 2050 — คำตอบเขียน (ยังรอครูตรวจ)' };
+      return { pct:null, parts:[], src:'รอครูตรวจคำตอบเขียน (ช่อง 💬 การสื่อสาร)' };
+    }
+    var keys=this.CAP_MAP[c];
+    if(!keys) return { pct:null, parts:[], src:'กาญ 2050 v2 (สามองก์) จะเก็บหลักฐานด้านนี้โดยตรง — BUILD 3' };
+    var s2=0,n2=0,parts=[];
+    keys.forEach(function(k){ var v=Number(cap[k]); if(cap[k]!=null&&cap[k]!==''&&!isNaN(v)){ s2+=v; n2++; parts.push({label:'เกณฑ์ '+k, txt:v+'/4'}); } });
+    if(!n2) return { pct:null, parts:[], src:'เล่นกาญ 2050 แล้ว แต่ยังไม่มีคะแนนเกณฑ์ '+keys.join('/') };
+    return { pct:Math.round(s2/(n2*4)*1000)/10, parts:parts, src:'กาญ 2050 — เกณฑ์ '+keys.join(' + ') };
+  },
+  _tLevel(c, stu){
+    var dims=stu.kru; if(!dims) return null;
+    var s=0,n=0;
+    SELF_SUB_LABEL.forEach(function(r){ if(r[2]!==c) return; var v=Number(dims[r[0]]); if(!isNaN(v)&&v>0){ s+=v; n++; } });
+    if(!n) return null;
+    return this.lvOf((s/n-1)/3*100); /* 1-4 → 0-100 */
+  },
+  _pLevel(c, stu){
+    var pr=stu.pr||[]; if(!pr.length) return null;
+    var vals=[];
+    pr.forEach(function(r){
+      if(c==='TW'){ var a=[r.p1,r.p2,r.p3].map(Number).filter(function(x){return !isNaN(x);});
+        if(a.length) vals.push(a.reduce(function(x,y){return x+y;},0)/a.length); }
+      else { var k={HT:'p4',SM:'p5',CM:'p6',CZ:'p7',NS:'p8'}[c]; var v=Number(r[k]); if(r[k]!=null&&r[k]!==''&&!isNaN(v)) vals.push(v); }
+    });
+    if(!vals.length) return null;
+    var av=vals.reduce(function(x,y){return x+y;},0)/vals.length;
+    return this.lvOf(av/4*100); /* 0-4 → 0-100 */
+  },
+  _sLevel(c, stu){
+    var sa=stu.self; if(!sa) return null;
+    var s=0,n=0;
+    if(sa.subAns){ SELF_SUB_LABEL.forEach(function(r){ if(r[2]!==c) return; var v=Number(sa.subAns[r[0]]); if(!isNaN(v)&&v>0){ s+=v; n++; } }); }
+    if(!n && sa.dims && sa.dims[c]!=null){ s=Number(sa.dims[c]); n=1; }
+    if(!n) return null;
+    return this.lvOf((s/n-1)/4*100); /* 1-5 → 0-100 */
+  }
+};
+
+/* ============================================================
+   [ข้อ 8.3 · บล็อก D1] CERTLV — ป้อนข้อมูลของเด็กคนนี้เข้า CBE8.compute()
+
+   CBE8 ฝั่งหน้าครูรับ stu = { evd, cap, pr, kru, self, v8c } ที่ประกอบมาจากฐานข้อมูล
+   ฝั่งเกมไม่มีฐานข้อมูล (และต้องทำงานตอนออฟไลน์/โหมด Guest ด้วย) จึงเก็บ "กระจก" ของ
+   สองกองที่เด็กสร้างเองไว้ในเครื่อง แล้วประกอบเป็น stu รูปเดียวกันเป๊ะ:
+     · evd = แถวหลักฐานที่ logEvidence() บันทึก (เก็บแค่ et/sub/val — ไม่มีข้อมูลส่วนตัว)
+     · cap = คะแนน 6 เกณฑ์ของด่านรวบยอด (PD/EE/ST/SD/CD/PA) ที่ _finish() คำนวณไว้แล้ว
+   pr/kru/self/v8c เป็น null เสมอ เพราะเป็นผลประเมินของครู/เพื่อน/ตนเอง ซึ่งยังไม่เกิด
+   ตอนเด็กจบเกม — CBE8 คืน null ให้เองอยู่แล้ว ไม่ต้องแตะโค้ด
+
+   เก็บใน localStorage คีย์แยก (ไม่ยัดลงก้อนเซฟ) โดยตั้งใจ 2 ข้อ:
+     1) ก้อนเซฟถูก _syncProfileBlob() ส่งขึ้นชีตทุกครั้งที่เขียน — ไม่ควรบวมขึ้นเพราะเรื่องนี้
+     2) คีย์อิง getSaveKey() จึงยังแยกภาค 1/ภาค 2 และแยกรายคนตามบล็อก A เหมือนเดิม
+
+   ⚠️ ตัวเลขบนใบประกาศ = "ผลจากการเล่นของเด็ก ณ วันจบเกม"
+      ผลสรุปที่ครูยืนยันในหน้าครูยังเป็นตัวตัดสินสุดท้ายเสมอ (สถานะ FINALIZED)
+   ============================================================ */
+const CERTLV = {
+  MAX_EVD: 600,
+  _mem: null, _memKey: '', _wt: 0,
+  key() { try { return getSaveKey() + '__certevd'; } catch (e) { return 'certevd'; } },
+  _read() {
+    /* ต้องจำด้วยว่า _mem มาจากคีย์ไหน — คอมห้องเรียนใช้ร่วมกัน เด็กคนถัดไปล็อกอิน
+       แล้ว getSaveKey() เปลี่ยนกลางคัน ถ้าไม่โหลดใหม่ หลักฐานของเด็กคนก่อนจะไหลข้ามคน */
+    const k = this.key();
+    if (this._mem && this._memKey === k) return this._mem;
+    let m = null;
+    try { m = JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { m = null; }
+    if (!m || typeof m !== 'object') m = {};
+    if (!Array.isArray(m.evd)) m.evd = [];
+    if (!Array.isArray(m.cap)) m.cap = [];
+    this._mem = m; this._memKey = k;
+    return m;
+  },
+  _write() {
+    /* หน่วงการเขียนไว้ — logEvidence ถูกเรียกรัวได้ในบางด่าน ไม่ควรเขียนดิสก์ทุกครั้ง
+       ผูกคีย์ปลายทางไว้ตั้งแต่ตอนตั้งเวลา กันกรณีคีย์เปลี่ยนระหว่างรอ */
+    clearTimeout(this._wt);
+    const k = this._memKey, m = this._mem;
+    this._wt = setTimeout(() => {
+      try { localStorage.setItem(k, JSON.stringify(m)); } catch (e) {}
+    }, 700);
+  },
+  flush() {
+    clearTimeout(this._wt);
+    const m = this._read();
+    try { localStorage.setItem(this._memKey, JSON.stringify(m)); } catch (e) {}
+  },
+  addEvidence(et, sub, val) {
+    if (typeof val !== 'number' || isNaN(val)) return;   /* แถวไม่มีค่า = ไม่เข้าสูตร CBE8 อยู่แล้ว */
+    const m = this._read();
+    m.evd.push({ et: String(et || ''), sub: String(sub || ''), val: val });
+    if (m.evd.length > this.MAX_EVD) m.evd.splice(0, m.evd.length - this.MAX_EVD);
+    this._write();
+  },
+  addCapstone(row) {
+    const m = this._read();
+    m.cap.push(Object.assign({ t: Date.now() }, row || {}));
+    if (m.cap.length > 8) m.cap.splice(0, m.cap.length - 8);
+    this.flush();          /* ผลรวบยอดเกิดครั้งเดียว — เขียนทันที ไม่รอหน่วง */
+  },
+  stu() {
+    const m = this._read();
+    return { evd: m.evd.slice(), cap: m.cap.slice(), pr: [], kru: null, self: null, v8c: null };
+  },
+  /* ผลระดับสำหรับใบประกาศ — ทุกตัวเลขมาจาก CBE8.compute() ตรง ๆ ไม่มีการคิดเกณฑ์ใหม่
+     ที่เพิ่มเข้ามามีอย่างเดียวคือ "เฉลี่ย M ของด้านที่มีหลักฐาน" เพื่อให้ได้ตัวเลขเดียว
+     พอเขียนลงกระดาษได้ — แล้วแปลงเป็นระดับด้วย CBE8.lvOf() ตัวเดิม (50/65/80) */
+  result() {
+    let comp = null;
+    try { comp = CBE8.compute(this.stu()); } catch (e) { comp = null; }
+    const per = [], Ms = [];
+    let COMPS = [];
+    try { COMPS = CBE8.COMPS || []; } catch (e) { COMPS = []; }
+    COMPS.forEach((cd) => {
+      const r = comp && comp[cd[0]];
+      const M = (r && typeof r.M === 'number') ? r.M : null;
+      per.push({ c: cd[0], name: cd[1], M: M, lv: (r && r.lv != null) ? r.lv : null });
+      if (M != null) Ms.push(M);
+    });
+    let Mavg = null, lv = null, label = '', name = '';
+    if (Ms.length) {
+      Mavg = Math.round(Ms.reduce((a, b) => a + b, 0) / Ms.length * 10) / 10;
+      try {
+        lv = CBE8.lvOf(Mavg);
+        label = CBE8.lvLabel(lv);                       /* เช่น '5 สามารถ' */
+        name = String(label).slice(String(lv).length).trim();
+      } catch (e) { lv = null; label = ''; name = ''; }
+    }
+    return { per: per, n: Ms.length, M: Mavg, lv: lv, label: label, name: name };
+  }
+};
+
+
 const CERT = {
   W: 1600, H: 1130,
 
@@ -23998,17 +24684,9 @@ const CERT = {
   get() { try { return getSaveData().guardianCert || null; } catch (e) { return null; } },
   has() { return !!this.get(); },
 
-  _wrap(c, text, x, y, maxW, lh) {
-    const words = String(text).split(' ');
-    let line = '', yy = y;
-    words.forEach((w) => {
-      const test = line ? line + ' ' + w : w;
-      if (c.measureText(test).width > maxW && line) { c.fillText(line, x, yy); yy += lh; line = w; }
-      else line = test;
-    });
-    if (line) c.fillText(line, x, yy);
-    return yy + lh;
-  },
+  /* [บล็อก D5d] เดิมมี _wrap() ตัดบรรทัดด้วย split(' ') อยู่ตรงนี้ — ถอดออกแล้ว
+     เพราะภาษาไทยไม่มีช่องว่างระหว่างคำ มันจึงไม่เคยตัดได้จริงและปล่อยให้ข้อความล้นกรอบ
+     ตัวแทนคือ line() ใน toCanvas ที่ย่อขนาดอักษรจนพอดีกรอบแทน */
 
   /* วาดเกียรติบัตรเป็นภาพจริง — ใช้ทั้งตอนบันทึกและตอนแชร์ */
   toCanvas(data) {
@@ -24042,37 +24720,58 @@ const CERT = {
     });
 
     c.textAlign = 'center'; c.textBaseline = 'alphabetic';
-    c.fillStyle = '#8a6a1e'; c.font = '600 30px ' + F;
-    c.fillText('พื้นที่นวัตกรรมการศึกษาจังหวัดกาญจนบุรี', W / 2, 148);
-    c.fillStyle = '#155a3c'; c.font = '800 66px ' + F;
-    c.fillText('🎖️ ประกาศนียบัตรผู้พิทักษ์เมืองกาญจน์', W / 2, 234);
-    c.fillStyle = '#5a5a45'; c.font = '400 34px ' + F;
-    c.fillText('ขอประกาศเกียรติคุณให้', W / 2, 306);
+    /* [ข้อ 8 · บล็อก D5] วางเนื้อความชุดเดียวกับที่แสดงบนจอ (bodyLines/badgeLine/lvLine)
+       ทุกบรรทัดผ่าน line() ซึ่ง "ย่อขนาดอักษรจนพอดีกรอบ" แทนการตัดบรรทัดที่ช่องว่าง
+       เพราะภาษาไทยไม่มีช่องว่างระหว่างคำ — _wrap เดิมจึงตัดไม่ได้และตัวหนังสือทะลุขอบกระดาษ
+       ตำแหน่ง y ทุกจุดถูกยึดเพดานไว้ ไม่ให้ไหลลงไปทับท้ายกระดาษเมื่อมีบรรทัดเพิ่ม */
+    const MAXW = W - 300;
+    const line = (txt, px, weight, color, yy) => {
+      let sz = px;
+      c.fillStyle = color;
+      c.font = weight + ' ' + sz + 'px ' + F;
+      while (sz > 14 && c.measureText(String(txt)).width > MAXW) { sz -= 2; c.font = weight + ' ' + sz + 'px ' + F; }
+      c.fillText(String(txt), W / 2, yy);
+    };
+    line('www.GamePlearn.com', 36, '700', '#8a6a1e', 140);
+    line('🎖️ ประกาศนียบัตรผู้พิทักษ์เมืองกาญจน์', 64, '800', '#155a3c', 228);
+    line('ขอมอบประกาศนียบัตรฉบับนี้ไว้เพื่อแสดงว่า', 32, '400', '#5a5a45', 292);
 
     /* ชื่อผู้รับ */
-    c.fillStyle = '#7c4a03'; c.font = '800 74px ' + F;
-    c.fillText(String(data.name || ''), W / 2, 402);
+    line(String(data.name || ''), 74, '800', '#7c4a03', 388);
     c.strokeStyle = '#c9a95c'; c.lineWidth = 4; c.setLineDash([12, 10]);
-    c.beginPath(); c.moveTo(W / 2 - 420, 430); c.lineTo(W / 2 + 420, 430); c.stroke();
+    c.beginPath(); c.moveTo(W / 2 - 420, 416); c.lineTo(W / 2 + 420, 416); c.stroke();
     c.setLineDash([]);
 
-    /* ตราผู้พิทักษ์ 6 ดวง */
-    c.font = '400 64px ' + F;
-    c.fillText(String(data.badges || ''), W / 2, 520);
+    /* ตราผู้พิทักษ์ 6 ดวง (ด่านพิเศษไม่นับ — จำนวนมาจาก V8.FLAGSHIP เท่านั้น) */
+    line(String(data.badges || ''), 60, '400', '#3a3a2a', 486);
+    line(this.badgeLine(data), 32, '700', '#7a5a12', 540);
 
     /* ข้อความรับรอง */
-    c.fillStyle = '#3a3a2a'; c.font = '400 36px ' + F;
-    let y = 596;
-    y = this._wrap(c, 'ผู้สำเร็จภารกิจพิทักษ์สมดุลกาญจนบุรี 2050 ' + '⭐'.repeat(data.stars || 0), W / 2, y, W - 320, 52);
-    y = this._wrap(c, 'ด้วยการคิด วางแผน ฟังเสียงผู้คน และปรับตัวเมื่อพายุมา', W / 2, y, W - 320, 52);
-    if (data.duo) y = this._wrap(c, '👥 สำเร็จร่วมกันแบบทีมผู้พิทักษ์คู่', W / 2, y, W - 320, 52);
-    if (data.storm) y = this._wrap(c, '⛈️ คืนพายุ: ทีมเรารับมือสำเร็จ ' + data.storm + '%' + (data.warned ? ' (ชุมชนซ้อมมาดี ได้เวลารับมือเพิ่ม)' : ''), W / 2, y, W - 320, 52);
+    let y = 606;
+    this.bodyLines(data).forEach((t) => { line(t, 34, '400', '#3a3a2a', y); y += 48; });
+    if (data.storm) {
+      line('⛈️ คืนพายุ: ทีมเรารับมือสำเร็จ ' + data.storm + '%' + (data.warned ? ' (ชุมชนซ้อมมาดี ได้เวลารับมือเพิ่ม)' : ''),
+        30, '400', '#3a3a2a', y);
+      y += 46;
+    }
+
+    /* ระดับสมรรถนะ — ตัวเลขเดียวกับที่ CBE8.compute() ให้ (บล็อก D1) */
+    const lvTxt = this.lvLine(data);
+    c.font = '800 36px ' + F;
+    const lvW = Math.min(MAXW + 40, c.measureText(lvTxt).width + 80);
+    const lvY = Math.min(y - 6, 806);
+    c.fillStyle = 'rgba(21,90,60,0.10)';
+    c.beginPath();
+    if (c.roundRect) c.roundRect((W - lvW) / 2, lvY, lvW, 62, 18); else c.rect((W - lvW) / 2, lvY, lvW, 62);
+    c.fill();
+    line(lvTxt, 36, '800', '#155a3c', lvY + 43);
+    y = lvY + 62;
 
     /* มิเตอร์เมือง 3 ตัว */
     const ix = data.ix || {};
     const items = [['💰 เศรษฐกิจ', ix.eco], ['👥 สังคมและผู้คน', ix.so], ['🌿 สิ่งแวดล้อม', ix.env]];
     const bw = 330, gap = 42, total = bw * 3 + gap * 2;
-    let bx = (W - total) / 2, by = Math.max(y + 46, 760);
+    let bx = (W - total) / 2, by = Math.min(Math.max(y + 44, 898), 922);   /* [D5] ยึดเพดานไว้ ไม่ให้ทับท้ายกระดาษ */
     c.textAlign = 'left'; c.font = '700 30px ' + F;
     items.forEach((it) => {
       const v = Math.max(0, Math.min(100, Math.round(Number(it[1]) || 0)));
@@ -24084,10 +24783,9 @@ const CERT = {
     });
 
     /* ท้ายกระดาษ */
-    c.textAlign = 'center'; c.fillStyle = '#8a7a4a'; c.font = '400 30px ' + F;
-    c.fillText(String(data.date || '') + ' · เกมผจญภัยกาญจนบุรี ภาค 2', W / 2, H - 118);
-    c.fillStyle = '#a09472'; c.font = '400 24px ' + F;
-    c.fillText('ลงชื่อ ..................................................... ครูผู้สอน', W / 2, H - 66);
+    c.textAlign = 'center';
+    line(String(data.date || '') + ' · เกมผจญภัยกาญจนบุรี ภาค 2', 30, '400', '#8a7a4a', H - 118);
+    line('ลงชื่อ ..................................................... ครูผู้สอน', 24, '400', '#a09472', H - 66);
     return cv;
   },
 
@@ -24132,30 +24830,144 @@ const CERT = {
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(go).catch(go); else go();
   },
 
+  /* ---------- [ข้อ 8 · บล็อก D4] ถ้อยคำกลางของใบประกาศ ----------
+     ทั้งการ์ดบนจอและรูป PNG อ่านจากชุดนี้ชุดเดียว — สองที่จึงไม่มีวันเขียนไม่ตรงกัน */
+
+  /* วันที่แบบไทย ตรึงโซนเวลา Asia/Bangkok เสมอ (ข้อ 8.4)
+     ห้ามพึ่งโซนเวลาของเครื่อง — แท็บเล็ตโรงเรียนหลายเครื่องตั้งโซนเวลาไว้ผิด
+     ทางแรกใช้ timeZone ของ Intl (แม่นที่สุด · ให้ปี พ.ศ. ถูกเองเพราะ th-TH ใช้ปฏิทินพุทธ)
+     ทางสำรองสำหรับเครื่องเก่าที่ไม่มีฐานข้อมูลโซนเวลา: บวก 7 ชั่วโมงแล้วอ่านด้วยเมท็อด UTC */
+  thaiDate(dt) {
+    const d = dt || new Date();
+    try {
+      const s = d.toLocaleDateString('th-TH', { timeZone: 'Asia/Bangkok', year: 'numeric', month: 'long', day: 'numeric' });
+      if (s && /2[45]\d\d/.test(s)) return s;       /* ต้องได้ปี พ.ศ. จริง ไม่ใช่ ค.ศ. */
+    } catch (e) {}
+    const t = new Date(d.getTime() + 7 * 3600 * 1000);
+    const M = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+               'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+    return t.getUTCDate() + ' ' + M[t.getUTCMonth()] + ' ' + (t.getUTCFullYear() + 543);
+  },
+
+  /* บรรทัดตรา — ด่านพิเศษไม่ถูกนับ เพราะจำนวนมาจาก V8.FLAGSHIP (6 ด่านเรือธง) เท่านั้น
+     ได้ไม่ครบก็ไม่ใช้คำว่าไม่ผ่าน — บอกตามจริงแล้วชวนกลับมาเก็บ (กติกาข้อ 8.3) */
+  badgeLine(data) {
+    const tot = Number(data.badgeTotal || 6);
+    const n = (data.badgeN == null) ? tot : Number(data.badgeN);
+    return 'ตราผู้พิทักษ์ ' + n + ' / ' + tot + ' ดวง' +
+      (n >= tot ? ' — ครบทุกดวง' : ' · อีก ' + (tot - n) + ' ดวงรออยู่ กลับมาเก็บได้เสมอ');
+  },
+
+  /* ข้อความรับรอง — ต้องสื่อว่าผ่าน "ทั้งเกม" ไม่ใช่เฉพาะด่านกาญ 2050 (ข้อ 8.2) */
+  bodyLines(data) {
+    const tot = Number(data.badgeTotal || 6);
+    const n = (data.badgeN == null) ? tot : Number(data.badgeN);
+    const st = '⭐'.repeat(Math.max(0, Math.min(3, Number(data.stars) || 0)));
+    const L = [];
+    L.push(n >= tot
+      ? 'ได้เดินทางจนจบการผจญภัยครบทั้งเกม ทั้งด่านเรือธงทั้ง ' + tot + ' ด่าน และด่านรวบยอด สมดุลกาญจนบุรี 2050 ครบทั้งสามองก์ ' + st
+      : 'ได้ผ่านด่านเรือธง ' + n + ' ใน ' + tot + ' ด่าน และด่านรวบยอด สมดุลกาญจนบุรี 2050 ครบทั้งสามองก์ ' + st);
+    L.push('ด้วยการคิด วางแผน ฟังเสียงผู้คน และปรับตัวเมื่อพายุมา');
+    if (data.duo) L.push('👥 สำเร็จร่วมกันแบบทีมผู้พิทักษ์คู่');
+    return L;
+  },
+
+  /* ระดับ — มาจาก CBE8.compute() ตรง ๆ (ดูบล็อก D1) ห้ามคิดเกณฑ์ใหม่ตรงนี้เด็ดขาด */
+  lvLine(data) {
+    if (data.lv == null) return 'ระดับสมรรถนะ · ยังเก็บหลักฐานไม่พอจะสรุประดับ (ครูจะสรุปให้อีกครั้ง)';
+    return 'ระดับสมรรถนะที่ทำได้ · ระดับ ' + data.lv + (data.lvName ? ' ' + data.lvName : '');
+  },
+
+  /* แผงรายละเอียด — แถบคะแนน 10 ปี (ผลจากการเล่นของเด็ก ห้ามลบ) + ระดับรายด้าน */
+  moreHTML(data) {
+    const ix = (data && data.ix) || {};
+    const bar = (v, icon, label) => {
+      const n = Math.max(0, Math.min(100, Math.round(Number(v) || 0)));
+      const col = n >= 60 ? '#4ade80' : n >= 40 ? '#fbbf24' : '#f87171';
+      return '<div class="cf-row"><span>' + icon + ' ' + label + ' <b>' + n + '</b></span>' +
+        '<i class="cf-bar"><i style="width:' + Math.max(4, n) + '%;background:' + col + '"></i></i></div>';
+    };
+    const per = (data && data.lvPer) || [];
+    const grid = per.length ? '<div class="cc-lvgrid">' + per.map((r) =>
+      '<div class="cc-lvcell"><b>' + VK.esc(r.name) + '</b>' +
+      '<span>' + (r.lv == null ? 'ยังไม่มีหลักฐาน' : 'ระดับ ' + r.lv) + '</span></div>').join('') + '</div>' : '';
+    return '<div class="cap-future"><h4>🔭 กาญจนบุรีในอีก 10 ปี — ผลจากการเลือกของเรา</h4>' +
+      bar(ix.eco, '💰', 'เศรษฐกิจ') + bar(ix.so, '👥', 'สังคมและผู้คน') + bar(ix.env, '🌿', 'สิ่งแวดล้อม') +
+      (data && data.storm ? '<div class="cf-storm">⛈️ คืนพายุ: ทีมเรารับมือสำเร็จ <b>' + data.storm + '%</b>' +
+        (data.warned ? ' (ชุมชนซ้อมมาดี ได้เวลารับมือเพิ่ม)' : '') + '</div>' : '') +
+      '</div>' + grid;
+  },
+
   /* การ์ดเกียรติบัตรบนจอ (ใช้ทั้งตอนจบด่านรวบยอดและตอนเปิดดูย้อนหลัง) */
   cardHTML(data) {
     return '<div class="cap-cert" id="cap-cert-card">' +
-      '<div class="cc-head">พื้นที่นวัตกรรมการศึกษาจังหวัดกาญจนบุรี</div>' +
+      '<div class="cc-head">www.GamePlearn.com</div>' +
       '<div class="cc-title">🎖️ ประกาศนียบัตรผู้พิทักษ์เมืองกาญจน์</div>' +
-      '<div class="cc-line">ขอประกาศเกียรติคุณให้</div>' +
+      '<div class="cc-line cc-intro">ขอมอบประกาศนียบัตรฉบับนี้ไว้เพื่อแสดงว่า</div>' +
       '<div class="cc-name">' + VK.esc(data.name) + '</div>' +
       '<div class="cc-badges">' + VK.esc(data.badges) + '</div>' +
-      '<div class="cc-line">ผู้สำเร็จภารกิจพิทักษ์สมดุลกาญจนบุรี 2050 ' + '⭐'.repeat(data.stars || 0) +
-      '<br>ด้วยการคิด วางแผน ฟังเสียงผู้คน และปรับตัวเมื่อพายุมา' +
-      (data.duo ? '<br>👥 สำเร็จร่วมกันแบบทีมผู้พิทักษ์คู่' : '') + '</div>' +
+      '<div class="cc-badgen">' + VK.esc(this.badgeLine(data)) + '</div>' +
+      '<div class="cc-line cc-body">' + this.bodyLines(data).map((t) => VK.esc(t)).join('<br>') + '</div>' +
+      '<div class="cc-lv">' + VK.esc(this.lvLine(data)) + '</div>' +
       '<div class="cc-date">' + VK.esc(data.date) + ' · เกมผจญภัยกาญจนบุรี ภาค 2</div></div>';
   },
-  actionsHTML() {
+  /* [ข้อ 7 · บล็อก D6] ปุ่มทั้งหมดอยู่แถวเดียวกันและกว้างเท่ากัน (flex:1 ใน CSS)
+     ปุ่มที่หน้าจอนั้น ๆ มีเพิ่ม (ภูมิใจสุด ๆ / ปิด) ส่งเข้ามาทาง extra เพื่อให้อยู่แถวเดียวกันจริง */
+  actionsHTML(extra) {
     return '<div class="cert-actions">' +
       '<button class="dt-btn" id="cert-save">💾 บันทึกเป็นรูป</button>' +
       '<button class="dt-btn" id="cert-share">📤 แชร์ให้ที่บ้านดู</button>' +
+      '<button class="dt-btn ghost" id="cert-more">📊 ดูรายละเอียด</button>' +
+      (extra || '') +
       '</div><div class="cert-status" id="cert-status"></div>';
   },
+
+  /* [ข้อ 7 · บล็อก D6] ขยายใบประกาศให้เต็มพื้นที่ที่เหลือ โดยคงสัดส่วนเท่ากับไฟล์ PNG เป๊ะ
+     คิดจากขนาดกล่อง .cc-stage ตรง ๆ ไม่ได้คิดจาก --vw จึงไม่พลาดตอน --vw ยังไม่ถูกคำนวณ
+     แล้วส่งหน่วย --cw (= 1% ของความกว้างใบประกาศ) ให้ CSS ใช้ปรับขนาดตัวอักษรตามไปด้วย */
+  CERT_AR: 1600 / 1130,
+  fitCards() {
+    document.querySelectorAll('.cap-cert-overlay .cc-stage').forEach((box) => {
+      const card = box.querySelector('.cap-cert');
+      if (!card) return;
+      const bw = box.clientWidth, bh = box.clientHeight;
+      if (bw < 8 || bh < 8) return;
+      let w = bw, h = w / this.CERT_AR;
+      if (h > bh) { h = bh; w = h * this.CERT_AR; }
+      w = Math.floor(w); h = Math.floor(h);
+      card.style.width = w + 'px';
+      card.style.height = h + 'px';
+      card.style.setProperty('--cw', (w / 100) + 'px');
+    });
+  },
+  watchFit(ov) {
+    const box = ov && ov.querySelector('.cc-stage');
+    if (!box) { this.fitCards(); return; }
+    /* ResizeObserver ดักได้ทั้งตอนหมุนจอ ตอน --vw ถูกคำนวณใหม่ และตอนแถวปุ่มสูงเปลี่ยน
+       (ห้ามใช้ getAnimations() รอ — ไฟล์นี้มีอนิเมชันวนไม่จบหลายสิบจุด) */
+    try { ov._certRO = new ResizeObserver(() => this.fitCards()); ov._certRO.observe(box); } catch (e) {}
+    this.fitCards();
+    try { requestAnimationFrame(() => this.fitCards()); } catch (e) {}
+    setTimeout(() => this.fitCards(), 320);
+  },
+
   wireActions(data) {
     const st = document.getElementById('cert-status');
     const s = document.getElementById('cert-save'), sh = document.getElementById('cert-share');
     if (s) s.onclick = () => { st.textContent = 'กำลังสร้างรูป...'; this.download(data, st); };
     if (sh) sh.onclick = () => { st.textContent = 'กำลังสร้างรูป...'; this.share(data, st); };
+    /* [ข้อ 7] สลับไปดูแถบคะแนน 10 ปี — ย้ายที่ ไม่ได้ลบ */
+    const mb = document.getElementById('cert-more'), mp = document.getElementById('cap-cert-more');
+    const cardEl = document.getElementById('cap-cert-card');
+    if (mb && !mp) mb.remove();
+    else if (mb) mb.onclick = () => {
+      const open = mp.classList.contains('hidden');
+      mp.classList.toggle('hidden', !open);
+      if (cardEl) cardEl.classList.toggle('hidden', open);
+      mb.textContent = open ? '🎖️ ดูใบประกาศ' : '📊 ดูรายละเอียด';
+      try { AUDIO.playSFX('click'); } catch (e) {}
+      this.fitCards();
+    };
     V8ASSETS.load('cert_guardian_bg');
     const c = document.getElementById('cap-cert-card');
     V8ASSETS.load('cert_guardian_bg').then((im) => {
@@ -24164,6 +24976,7 @@ const CERT = {
         c.style.backgroundSize = 'cover';
       }
     });
+    if (c && c.closest) this.watchFit(c.closest('.cap-cert-overlay'));
   },
 
   /* เปิดดูย้อนหลังจากหน้าเหรียญตรา */
@@ -24174,8 +24987,12 @@ const CERT = {
     const ov = document.createElement('div');
     ov.id = 'cert-review-ov';
     ov.className = 'cap-cert-overlay';
-    ov.innerHTML = '<div>' + this.cardHTML(data) + this.actionsHTML() +
-      '<div style="text-align:center;margin-top:calc(var(--vw)*0.6)"><button class="dt-btn" id="cert-review-close">ปิด</button></div></div>';
+    ov.innerHTML = '<div class="cc-wrap">' +
+      '<div class="cc-stage">' + this.cardHTML(data) +
+        '<div class="cc-more hidden" id="cap-cert-more">' + this.moreHTML(data) + '</div>' +
+      '</div>' +
+      this.actionsHTML('<button class="dt-btn ghost" id="cert-review-close">ปิด</button>') +
+      '</div>';
     document.getElementById('badges-screen').appendChild(ov);
     this.wireActions(data);
     document.getElementById('cert-review-close').onclick = () => ov.remove();
@@ -24571,8 +25388,8 @@ const V8GOAL = {
     const ov = VK.overlay(
       '<h3 style="text-align:center">🎯 ตั้งเป้ารอบนี้</h3>' +
       '<div style="text-align:center;font-size:calc(var(--vw)*0.9);color:#6b5b2e">เลือกเป้าหมายของตัวเอง 1 ข้อ — จบด่านแล้วเรามาดูกันว่าทำได้ไหม</div>' +
-      '<div id="vk-goal-list">' + goals.map((g, i) =>
-        '<button class="dt-choice" data-i="' + i + '">' + g.t + '</button>').join('') + '</div>');
+      '<div id="vk-goal-list">' + V8SHUF.order('goal_' + stageKey, goals.length).map((i) =>
+        '<button class="dt-choice" data-i="' + i + '">' + goals[i].t + '</button>').join('') + '</div>');
     ov.querySelectorAll('.dt-choice').forEach(btn => {
       btn.onclick = () => {
         const g = goals[Number(btn.dataset.i)];
@@ -24592,7 +25409,7 @@ const V8GOAL = {
       '<div style="text-align:center;font-size:calc(var(--vw)*1.0)">เป้าที่ตั้งไว้: <b>' + goal.t + '</b></div>' +
       '<div style="text-align:center;font-size:calc(var(--vw)*0.92);color:#6b5b2e;margin-top:calc(var(--vw)*0.5)">' +
       (achieved ? 'อะไรที่ทำให้เราทำได้?' : 'ไม่เป็นไรเลย — เพราะอะไรนะ? (รู้สาเหตุ = ก้าวแรกของการเก่งขึ้น)') + '</div>' +
-      '<div style="text-align:center">' + whys.map(w =>
+      '<div style="text-align:center">' + V8SHUF.pick('goal_why', whys).map(w =>
         '<button class="dt-reason-chip" data-w="' + w[0] + '">' + w[1] + '</button>').join('') + '</div>');
     ov.querySelectorAll('.dt-reason-chip').forEach(btn => {
       btn.onclick = () => {
@@ -25089,14 +25906,17 @@ const KAN2050V2 = {
     const host = document.getElementById('capstone-screen');
     const NEED_TH = { wall: 'น้ำเอ่อล้นตลิ่ง', pump: 'น้ำท่วมขัง', evac: 'ต้องพาคนออก', patrol: 'ต้องเฝ้าระวัง' };
     const KIT = ['wall', 'pump', 'evac'];        /* ของกัน 3 ชิ้น ต่อจุดเสี่ยง 4 จุด — ต้องเลือก */
+    /* [ข้อ 6] สลับเฉพาะลำดับที่ตาเห็น — x.id · x.need · สูตร prepHit/prepMiss/stormScore ไม่ถูกแตะ
+       ปุ่มยังผูกด้วย id เดิม (#pp-<id>) จึงไม่มีทางกดผิดจุดแม้ตำแหน่งเปลี่ยน */
+    const VIEW = V8SHUF.pick('storm_sites', SITES);
     const plan = {};
-    let leftKit = KIT.slice();
+    let leftKit = V8SHUF.pick('storm_kit', KIT);
     const ov = document.createElement('div');
     ov.className = 'cap-storm st-prep';
     ov.innerHTML = '<div class="st-head"><b>🗺️ เตรียมรับมือก่อนพายุมา</b>' +
       '<div class="st-sub">เรามีของกัน <b>3 ชิ้น</b> แต่จุดเสี่ยงมี <b>4 จุด</b> — เลือกวางให้ตรงงานที่สุด<br>' +
       'จุดที่วางถูกงานจะมีเวลารับมือมากขึ้นตอนพายุมา · จุดที่ปล่อยไว้ต้องรับมือสดหน้างาน</div></div>' +
-      '<div class="st-city">' + SITES.map((x) =>
+      '<div class="st-city">' + VIEW.map((x) =>
         '<button class="st-site st-prep-site" id="pp-' + x.id + '">' +
         '<span class="ss-icon">' + x.icon + '</span><span class="ss-name">' + x.name + '</span>' +
         '<span class="ss-risk">เสี่ยง: ' + (NEED_TH[x.need] || '') + '</span>' +
@@ -25178,7 +25998,7 @@ const KAN2050V2 = {
     ov.innerHTML = '<div class="st-rain"></div><div class="st-flash" id="st-flash"></div>' +
       '<div class="st-head"><b>⛈️ คืนพายุ — ปกป้องเมืองกาญจน์!</b><div class="st-sub">จุดไหนกะพริบแดง แตะจุดนั้น แล้วเลือกทีมที่ "ตรงงาน" ให้ทัน — ทีมมีจำกัดนะ!</div></div>' +
       '<div class="st-timer" id="st-timer">46</div>' +
-      '<div class="st-city">' + SITES.map(x =>
+      '<div class="st-city">' + V8SHUF.pick('storm_sites', SITES).map(x =>
         '<button class="st-site" id="st-site-' + x.id + '"><span class="ss-count"><i></i></span>' +
         '<span class="ss-icon">' + x.icon + '</span><span class="ss-name">' + x.name + '</span><span class="ss-status" id="st-stat-' + x.id + '"></span></button>').join('') + '</div>' +
       (warned ? '<div class="st-warnnote">📢 ชุมชนของเราซ้อมรับมือกันมาดี — รู้ตัวไว มีเวลารับมือมากขึ้น!</div>' : '') +
@@ -25313,18 +26133,19 @@ const KAN2050V2 = {
     const ix = s.ix || { eco: 60, so: 60, env: 60 };
     const d = getSaveData();
     const name = (d.profile && (d.profile.characterName || d.profile.firstName)) || d.username || getPlayerConfig().name;
-    const dateTh = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+    /* [ข้อ 8.4 · บล็อก D6] วันที่ไทยตรึงโซนเวลา ไม่อิงเครื่อง (เหตุผลเต็มอยู่ที่ CERT.thaiDate) */
+    const dateTh = CERT.thaiDate();
     const badges = getProtectorState(d);
-    const bar = (v, icon, label) => {
-      const c = v >= 60 ? '#4ade80' : v >= 40 ? '#fbbf24' : '#f87171';
-      return '<div style="margin-top:calc(var(--vw)*0.35)">' + icon + ' ' + label + ' <b>' + Math.round(v) + '</b>' +
-        '<div style="height:calc(var(--vw)*0.5);border-radius:999px;background:rgba(255,255,255,0.15);overflow:hidden;margin-top:calc(var(--vw)*0.1)">' +
-        '<div style="height:100%;width:' + Math.max(4, Math.min(100, v)) + '%;background:' + c + ';border-radius:999px"></div></div></div>';
-    };
+    /* [ข้อ 8.3 · บล็อก D6] ระดับจาก CBE8.compute() ตัวจริง — ผูกติดกับใบประกาศตั้งแต่วินาทีที่ออกใบ
+       เก็บลงเซฟด้วย เพื่อให้ "ดูย้อนหลัง" กับ "รูปที่บันทึกไว้" แสดงเลขชุดเดียวกันตลอดไป */
+    let _lvr = { lv: null, label: '', M: null, per: [], n: 0 };
+    try { _lvr = CERTLV.result(); } catch (e) {}
     /* [เฟส 2 · 2.2] เก็บ "ข้อมูล" เกียรติบัตรลงเซฟ เพื่อบันทึกเป็นรูป/แชร์/เปิดดูย้อนหลังได้ตลอด */
     const _certData = {
       name: name,
       badges: [1, 6, 3, 4, 5, 7].map(sid => badges.earned.indexOf(V8.FLAGSHIP[sid].comp) >= 0 ? V8.FLAGSHIP[sid].icon : '◌').join(' '),
+      badgeN: badges.count, badgeTotal: badges.total,
+      lv: _lvr.lv, lvName: _lvr.name || '', lvM: _lvr.M, lvN: _lvr.n, lvPer: _lvr.per,
       stars: stars, date: dateTh, duo: (KAN2050V2.mode === 'duo'),
       storm: (s.stormDone && !s.stormSkipped) ? Math.round((s.stormScore || 0) * 100) : 0, warned: !!s.stormWarned,
       ix: { eco: Math.round(ix.eco), so: Math.round(ix.so), env: Math.round(ix.env) },
@@ -25334,13 +26155,16 @@ const KAN2050V2 = {
     const ov = document.createElement('div');
     ov.id = 'cap-cert-ov';
     ov.className = 'cap-cert-overlay';
-    ov.innerHTML = '<div>' +
-      '<div class="cap-future"><h4>🔭 กาญจนบุรีในอีก 10 ปี — ผลจากการเลือกของเรา</h4>' +
-      bar(ix.eco, '💰', 'เศรษฐกิจ') + bar(ix.so, '👥', 'สังคมและผู้คน') + bar(ix.env, '🌿', 'สิ่งแวดล้อม') +
-      (s.stormDone && !s.stormSkipped ? '<div style="margin-top:calc(var(--vw)*0.45);font-size:calc(var(--vw)*0.9)">⛈️ คืนพายุ: ทีมเรารับมือสำเร็จ <b>' + Math.round((s.stormScore || 0) * 100) + '%</b>' + (s.stormWarned ? ' (ชุมชนซ้อมมาดี ได้เวลารับมือเพิ่ม)' : '') + '</div>' : '') +
+    /* [ข้อ 7 · บล็อก D6] โครงใหม่ของหน้าจบเกม:
+         .cc-stage  = พื้นที่ทั้งหมดที่เหลือ → ใบประกาศขยายเต็ม เป็นสิ่งแรกที่เห็น
+         .cc-more   = แถบคะแนน 10 ปี + ระดับรายด้าน ซ่อนไว้หลังปุ่ม "ดูรายละเอียด" (ไม่ได้ลบ)
+         .cert-actions = ปุ่มทุกปุ่มแถวเดียว ขนาดเท่ากัน รวมปุ่ม "ภูมิใจสุด ๆ" ด้วย */
+    ov.innerHTML = '<div class="cc-wrap">' +
+      '<div class="cc-stage">' + CERT.cardHTML(_certData) +
+        '<div class="cc-more hidden" id="cap-cert-more">' + CERT.moreHTML(_certData) + '</div>' +
       '</div>' +
-      CERT.cardHTML(_certData) + CERT.actionsHTML() +
-      '<div style="text-align:center;margin-top:calc(var(--vw)*0.6)"><button class="dt-btn" id="cap-cert-close">ภูมิใจสุด ๆ! 🎉</button></div></div>';
+      CERT.actionsHTML('<button class="dt-btn" id="cap-cert-close">🎉 ภูมิใจสุด ๆ!</button>') +
+      '</div>';
     host.appendChild(ov);
     CERT.wireActions(_certData);
     v8Confetti(ov, 30);
@@ -25388,13 +26212,15 @@ Object.assign(KAN2050V2, {
     const ov = document.createElement('div');
     ov.id = 'cz-voices-ov';
     ov.className = 'cap-act-overlay cz-ov';
-    const cards = this.CITIZENS.map((c, i) =>
+    /* [ข้อ 6] สลับเฉพาะลำดับการ์ด — data-i ยังเป็นดัชนีเดิมของ CITIZENS
+       ค่าคะแนน CZ-B/CZ-C และ ctx.order (เก็บเป็นชื่อคน ไม่ใช่ตำแหน่ง) เหมือนเดิมทุกตัว */
+    const cards = V8SHUF.pick('cz2050_cards', this.CITIZENS.map((c, i) => ({ c: c, i: i }))).map((z) => { const c = z.c, i = z.i; return (
       '<button class="cz-card" data-i="' + i + '">' +
         '<span class="cz-por" id="cz-por-' + i + '">' + c.ic + '</span>' +
         '<span class="cz-name">' + c.name + '</span>' +
         '<span class="cz-want">' + c.want + '</span>' +
         '<span class="cz-tag">แตะเพื่อฟัง</span>' +
-      '</button>').join('');
+      '</button>'); }).join('');
     ov.innerHTML =
       '<div class="cap-act-card cz-card-wrap">' +
         '<div class="cap-act-num">องก์ 2 · ก่อนลงมือวางแผน</div>' +
@@ -25459,7 +26285,7 @@ Object.assign(KAN2050V2, {
 
     const askReason = () => {
       detail.innerHTML = '<div class="cz-q">เรียงลำดับแบบนี้เพราะอะไร?</div><div class="cz-reasons">' +
-        self.REASONS.map(r => '<button class="dt-reason-chip" data-r="' + r.k + '">' + r.t + '</button>').join('') + '</div>';
+        V8SHUF.pick('cz2050_reasons', self.REASONS).map(r => '<button class="dt-reason-chip" data-r="' + r.k + '">' + r.t + '</button>').join('') + '</div>';
       detail.querySelectorAll('.dt-reason-chip').forEach(ch => {
         ch.onclick = () => {
           const r = self.REASONS.find(z => z.k === ch.dataset.r);
@@ -25995,7 +26821,7 @@ const StageWater = {
     ];
     const ov = VK.overlay('<h3 style="text-align:center">🧠 ทำไมขยับบานเดียว แล้วที่อื่นเปลี่ยนตาม?</h3>' +
       '<div class="vk-pick-note" style="text-align:center">เลือกคำอธิบายที่ตรงกับที่เราเห็นมากที่สุด</div>' +
-      WHY.map((w) => '<button class="dt-choice" data-k="' + w.k + '">' + w.t + '</button>').join(''));
+      V8SHUF.pick('water_why', WHY).map((w) => '<button class="dt-choice" data-k="' + w.k + '">' + w.t + '</button>').join(''));
     ov.querySelectorAll('.dt-choice').forEach((b) => {
       b.onclick = () => {
         const w = WHY.filter((x) => x.k === b.dataset.k)[0];
@@ -26306,7 +27132,7 @@ const V8SUMMARY = {
       '<div class="sum-row"><span class="sr-n">+' + dCoins + '</span> เหรียญที่หามาได้ 🪙</div>' +
       (sug ? '<div class="sum-row" style="border-left-color:#3b82f6">🧭 พรุ่งนี้ชวนไป: <b>' + V8COMPASS.stageLabel(sug.key) + '</b></div>' : '') +
       '<div style="margin-top:calc(var(--vw)*0.8);font-weight:800">วันนี้รู้สึกยังไงกับการผจญภัยของเรา?</div><div id="sum-mood">' +
-      [['fun', '😄 สนุกมาก'], ['proud', '🌟 ภูมิใจในตัวเอง'], ['retry', '💪 อยากกลับมาแก้มือ'], ['tired', '😮‍💨 เหนื่อยนิดหน่อย แต่ก็ดี']]
+      V8SHUF.pick('sum_mood', [['fun', '😄 สนุกมาก'], ['proud', '🌟 ภูมิใจในตัวเอง'], ['retry', '💪 อยากกลับมาแก้มือ'], ['tired', '😮‍💨 เหนื่อยนิดหน่อย แต่ก็ดี']])
         .map(x => '<button class="dt-reason-chip" data-m="' + x[0] + '">' + x[1] + '</button>').join('') + '</div></div>';
     host.appendChild(m);
     m.onclick = (ev) => { if (ev.target === m) m.remove(); };
@@ -27244,8 +28070,10 @@ function afterAuthSuccess() {
   // [รอบ41 #2] ทุกครั้งที่ล็อกอินสำเร็จ → หน้าเลือกตัวละคร (เป้) ให้เลือกจากตัวละครที่มีทั้งหมดก่อนเข้าเล่น
   //   (เดิมผู้เล่นเก่าที่เคยเลือกแล้วเด้งเข้า lobby ทันที ไม่ได้เลือกใหม่) — กดปุ่ม "เริ่มการผจญภัย!" เพื่อเข้า lobby ต่อ
   showScreen('character-select-screen');
-  // [รอบ 55 ตามคำขอ] ถามทุกครั้งที่เข้าสู่ระบบ (รวม Guest): เปิดระบบช่วยอ่านไหม — พร้อมอ่านคำถามออกเสียงให้เด็กที่อ่านไม่คล่องได้ยิน
-  try { askReadAloudChoice(); } catch (e) {}
+  /* [ข้อ 3 รอบ 71] เลิกถามเรื่องช่วยอ่านตรงนี้ — ย้ายไปถามที่ปุ่ม "เริ่มเกม"/"วิธีเล่น" เท่านั้น
+     เดิมบรรทัดนี้เรียกทุกครั้งที่เข้าสู่ระบบโดยไม่ดู ReadAloud.asked() กล่องจึงเด้งทับ
+     หน้าเลือกตัวละครซ้ำทุกครั้งแม้เด็กตอบไปแล้ว = ขวางปุ่ม + ผิดกติกา "ถามครั้งเดียวต่อเครื่อง"
+     ตอนนี้เด็กตอบไปตั้งแต่ก่อนเข้าสู่ระบบแล้ว (ที่หน้าแรก) จึงไม่ต้องถามซ้ำที่นี่อีก */
   // [ใหม่ #6] ป้ายต้อนรับหลังเข้าสู่ระบบ — ใช้กลไกป้ายฉลองเดิม (ลอยทับทุกหน้าจอ จางเอง)
   const el = document.getElementById('unlock-banner');
   if (el) {
@@ -27659,10 +28487,9 @@ function wireAuthEvents() {
     ReadAloud.set(true); // จะประกาศ "เปิดโหมดอ่านให้ฟังแล้ว" เอง
     const cb = document.getElementById('toggle-readaloud'); if (cb) cb.checked = true;
     const v = document.getElementById('toggle-readaloud-val'); if (v) v.textContent = 'เปิด';
-    /* [แก้ตามครู] ถ้ากล่องนี้ถูกเปิดจากการกด "เริ่มเกม" ให้เดินหน้าต่อให้เลย
-       เด็กจะรู้สึกว่ากดปุ่มเดียวจบ ไม่ต้องกลับมากดซ้ำ */
-    try { if (window._raGate) { window._raGate = false;
-      setTimeout(function(){ try { document.getElementById('btn-start').click(); } catch (e) {} }, 260); } } catch (e) {}
+    /* [ข้อ 3 รอบ 71] ตอบแล้วเดินหน้าต่อที่ "ปุ่มที่เด็กกดจริง" ผ่าน _raRelease()
+       เดิมฮาร์ดโค้ด btn-start ไว้ — พอเส้นทาง "วิธีเล่น" มาใช้ประตูเดียวกันจะพาไปผิดหน้า */
+    try { if (window._raGate) window._raRelease(); } catch (e) {}
   });
   document.getElementById('btn-readaloud-no')?.addEventListener('click', () => {
     AUDIO.playSFX('click');
@@ -27672,10 +28499,9 @@ function wireAuthEvents() {
     ReadAloud.set(false);
     const cb = document.getElementById('toggle-readaloud'); if (cb) cb.checked = false;
     const v = document.getElementById('toggle-readaloud-val'); if (v) v.textContent = 'ปิด';
-    /* [แก้ตามครู] ถ้ากล่องนี้ถูกเปิดจากการกด "เริ่มเกม" ให้เดินหน้าต่อให้เลย
-       เด็กจะรู้สึกว่ากดปุ่มเดียวจบ ไม่ต้องกลับมากดซ้ำ */
-    try { if (window._raGate) { window._raGate = false;
-      setTimeout(function(){ try { document.getElementById('btn-start').click(); } catch (e) {} }, 260); } } catch (e) {}
+    /* [ข้อ 3 รอบ 71] ตอบแล้วเดินหน้าต่อที่ "ปุ่มที่เด็กกดจริง" ผ่าน _raRelease()
+       เดิมฮาร์ดโค้ด btn-start ไว้ — พอเส้นทาง "วิธีเล่น" มาใช้ประตูเดียวกันจะพาไปผิดหน้า */
+    try { if (window._raGate) window._raRelease(); } catch (e) {}
   });
 
   // [FIX] กด Enter เพื่อ submit ฟอร์ม (ฟีเจอร์ที่ V1 เคยมีแต่หายไปตอนเขียนใหม่)
@@ -27920,18 +28746,54 @@ function renderCharSelectPets() {
 }
 
 function wireEvents() {
-  /* [แก้ตามครู] ถามเรื่องช่วยอ่าน "ตั้งแต่กดเริ่มเกม" — ต้องถามคาอยู่บนหน้าแรก
-     ไม่ใช่ปล่อยให้เด้งเข้าหน้าเข้าสู่ระบบก่อนแล้วค่อยโผล่ทับ (เด็กที่อ่านไม่คล่องจะเจอหน้าตัวหนังสือเยอะก่อน)
-     วิธี: ดักไว้ในจังหวะ capture หยุดการเดินหน้าไว้ก่อน → ตอบเสร็จค่อยกดต่อให้เอง */
-  document.getElementById('btn-start').addEventListener('click', (e) => {
-    try {
-      if (ReadAloud.asked() || window._raGate) return;      /* ตอบแล้ว หรือกำลังตอบอยู่ = ปล่อยผ่าน */
-      e.stopImmediatePropagation(); e.preventDefault();      /* ยังอยู่หน้าแรก ยังไม่ไปไหน */
-      try { AUDIO.unlock(); AUDIO.playSFX('click'); } catch (e2) {}
-      window._raGate = true;
-      askReadAloudChoice();
-    } catch (e3) { window._raGate = false; }
-  }, true);
+  /* [ข้อ 3 รอบ 71] ประตูเดียวของคำถาม "เปิดโหมดช่วยอ่านไหม"
+     กติกา: กล่องนี้ห้ามเด้งเอง — ถามเฉพาะตอนเด็กกด "เริ่มเกม" หรือ "วิธีเล่น" เท่านั้น
+     วิธี: ดักไว้ในจังหวะ capture หยุดการเดินหน้าไว้ก่อน → ตอบเสร็จค่อยกดปุ่มเดิมต่อให้เอง
+           เด็กจึงรู้สึกว่ากดปุ่มเดียวจบ และไม่ต้องเจอหน้าตัวหนังสือเยอะก่อนได้ตอบ
+     _raGate  = กำลังถามอยู่   (ชุดทดสอบเก่าตั้งเป็น false เองได้ ยังทำงานเหมือนเดิม)
+     _raBtn   = ปุ่มที่เด็กกดค้างไว้ — ตอบเสร็จกดต่อให้ที่ปุ่มนี้ ไม่ใช่ btn-start ตายตัว
+     _raPass  = ตั๋วผ่านประตูรอบเดียว กันวนซ้ำตอนกดปุ่มเดิมต่อให้
+     ยามกันค้าง (ข้อบังคับ): ถ้ากล่องเปิดไม่ขึ้น หรือถูกปิดไปโดยไม่ตอบ
+           ต้องปล่อยปุ่มให้เดินต่อทันที และ **ไม่** mark ว่าตอบแล้ว (รอบหน้าถามใหม่) */
+  window._raGate = false; window._raBtn = null; window._raPass = null; window._raWatch = 0;
+  window._raRelease = function () {
+    if (!window._raGate) return;                  /* ปล่อยไปแล้ว — กันเดินหน้าซ้ำสองรอบ */
+    window._raGate = false;
+    try { clearInterval(window._raWatch); } catch (e) {}
+    window._raWatch = 0;
+    var id = window._raBtn; window._raBtn = null;
+    if (!id) return;
+    window._raPass = id;
+    setTimeout(function () {
+      try { document.getElementById(id).click(); } catch (e) {}
+      window._raPass = null;
+    }, 260);
+  };
+  var _raGuard = function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('click', function (e) {
+      try {
+        if (window._raPass === id) { window._raPass = null; return; }  /* รอบที่กดต่อให้เอง = ผ่าน */
+        if (ReadAloud.asked() || window._raGate) return;    /* ตอบแล้ว หรือกำลังตอบอยู่ = ปล่อยผ่าน */
+        e.stopImmediatePropagation(); e.preventDefault();    /* ยังอยู่หน้าเดิม ยังไม่ไปไหน */
+        try { AUDIO.unlock(); AUDIO.playSFX('click'); } catch (e2) {}
+        window._raGate = true; window._raBtn = id;
+        askReadAloudChoice();
+        var m = document.getElementById('readaloud-ask-modal');
+        if (!m || m.classList.contains('hidden')) { window._raRelease(); return; }  /* เปิดไม่ขึ้น = ห้ามขวางทาง */
+        window._raWatch = setInterval(function () {
+          if (!window._raGate) { try { clearInterval(window._raWatch); } catch (e4) {} window._raWatch = 0; return; }
+          if (m.classList.contains('hidden')) window._raRelease();  /* ปิดโดยไม่ตอบ = ยังไม่ถือว่าตอบ แต่ต้องไม่ค้าง */
+        }, 300);
+      } catch (e3) {
+        /* พังกลางทางห้ามทำให้ปุ่มค้าง — ปล่อยให้เดินต่อเสมอ */
+        try { window._raRelease(); } catch (e5) { window._raGate = false; window._raBtn = null; }
+      }
+    }, true);
+  };
+  _raGuard('btn-start');
+  _raGuard('btn-howtoplay');
   document.getElementById('btn-start').addEventListener('click', () => {
     AUDIO.unlock();
     AUDIO.playSFX('click');
@@ -28213,8 +29075,9 @@ function wireEvents() {
   document.getElementById('btn-howtoplay').addEventListener('click', () => {
     AUDIO.unlock(); AUDIO.playSFX('click');
     HowToPlay.open('start-screen');
-    /* [แก้ตามครู] หน้าวิธีเล่นมีตัวหนังสือเยอะที่สุด — ถามเรื่องช่วยอ่านตรงนี้ด้วย ถ้ายังไม่เคยตอบ */
-    try { if (!ReadAloud.asked()) setTimeout(() => askReadAloudChoice(), 420); } catch (e) {}
+    /* [ข้อ 3 รอบ 71] การถามย้ายไปอยู่ที่ประตู capture ด้านบน (_raGuard('btn-howtoplay')) แล้ว
+       เดิมบรรทัดนี้เปิดหน้าวิธีเล่น (หน้าที่ตัวหนังสือเยอะที่สุด) ก่อนแล้วค่อยเด้งกล่องทับ
+       และถ้าเด็กปิดกล่องโดยไม่ตอบ บรรทัดนี้จะเด้งซ้ำเอง — ผิดกติกา "ห้ามเด้งเอง" */
   });
   document.getElementById('btn-htp-close').addEventListener('click', () => { AUDIO.playSFX('click'); showScreen(HowToPlay._returnTo); });
   document.getElementById('btn-htp-next').addEventListener('click', () => { AUDIO.playSFX('click'); HowToPlay.next(); });
@@ -28337,6 +29200,15 @@ function wireEvents() {
     btn.addEventListener('click', () => {
       AUDIO.playSFX('click');
       switchCharSelectTab(btn.dataset.csTab);
+    });
+  });
+  /* [ข้อ 4 · บล็อก E5] กดช่องไอเทมในแผงสวมใส่ = ลัดไปแท็บของหมวดนั้นทันที
+     (กดช่องออร่า → แท็บออร่า · กดช่องสัตว์เลี้ยง → แท็บสัตว์เลี้ยง)
+     ผูกครั้งเดียวตอนเริ่มเกม เพราะช่องทั้ง 3 เป็นโครงคงที่ใน HTML ไม่ได้สร้างใหม่ทุกรอบ */
+  document.querySelectorAll('#character-select-screen .cs-slot').forEach(slot => {
+    slot.addEventListener('click', () => {
+      try { AUDIO.playSFX('click'); } catch (e) {}
+      switchCharSelectTab(slot.dataset.csSlot);
     });
   });
   document.getElementById('char-select-page-prev').addEventListener('click', () => {
@@ -32296,7 +33168,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.5-p2-2569.69',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.7-p2-2569.71',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -37053,7 +37925,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.5-p2-2569.69 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.7-p2-2569.71 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };
