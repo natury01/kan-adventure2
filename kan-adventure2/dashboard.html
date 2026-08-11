@@ -2410,6 +2410,25 @@ function closeClassroomPage(){ var pc=$('page-cls'); if(pc)pc.classList.add('hid
 function clsStatus(html){ var el=$('cls-status'); if(el) el.innerHTML=html; }
 function clsMain(html){ var el=$('cls-main'); if(el) el.innerHTML=html; }
 function clsErrBox(t){ return '<div class="card"><div class="err" style="display:block">'+esc(t)+'</div></div>'; }
+/* ══ [บล็อก N10 · บั๊ก 6] ป้ายเตือน "ตัวเลขที่เห็นอาจไม่ครบ" บนหน้าครู ═══════════
+   ทำไมต้องมีทั้งที่ console.error ก็มีแล้ว: ครูไม่เปิด DevTools และตามกติกาห้ามโชว์ข้อความดิบ
+   ถ้าโหลดคะแนนล้มแล้วเงียบ ครูจะอ่านตารางว่า "เด็กคนนี้ยังไม่ได้ทำ" ทั้งที่ทำไปแล้ว
+   → เป็นการตัดสินนักเรียนจากข้อมูลที่ขาด ซึ่งเป็นความเสียหายที่ย้อนกลับไม่ได้
+   ใช้เฉพาะจุดที่ทำให้ตัวเลขผิดแบบเนียน ๆ (จุด 1 = โหลดคะแนนทั้งห้องล้ม · จุด 4 = คะแนนครูสังเกตหาย)
+   ป้ายเป็นการ์ดแถวเดียวเหนือเนื้อหา รูปแบบเดียวกับแบนเนอร์โหมดสาธิตที่มีอยู่แล้ว
+   จึงไม่ทับของเดิมและไม่ทำให้เกิดแถบเลื่อนใหม่ (หน้าครูเป็นหน้าเอกสารเลื่อนได้อยู่แล้ว) */
+var clsWarn={};
+function clsStatsWarn(msg){ clsWarn[String(msg)]=1; }
+function clsWarnClear(){ clsWarn={}; try{ clsRender(); }catch(e){} }
+function clsWarnBannerHTML(){
+  var ks=Object.keys(clsWarn); if(!ks.length) return '';
+  return '<div class="card" id="cls-warn-banner" style="margin-bottom:12px;background:#fff7ed;border:1px solid #fdba74;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px">'+
+    '<span style="font-size:18px">⚠️</span>'+
+    '<span style="flex:1;min-width:200px;font-size:12.5px;color:#9a3412;line-height:1.65">'+
+      ks.map(function(k){ return esc(k); }).join('<br>')+
+      '<br><span style="font-size:11.5px;color:#c2410c">ตัวเลขบางส่วนอาจต่ำกว่าความเป็นจริง — ลองรีเฟรชหน้าอีกครั้ง ถ้ายังขึ้นซ้ำให้แจ้งผู้ดูแลระบบ (รายละเอียดอยู่ใน Console)</span></span>'+
+    '<button class="btn-ghost" style="padding:4px 10px;font-size:12px" onclick="clsWarnClear()">ซ่อน</button></div>';
+}
 
 function clsInit(){
   clsStatus('<div class="card" style="padding:14px 16px"><span class="loading" style="border-color:#2563eb;border-top-color:transparent"></span> กำลังตรวจการเชื่อมต่อระบบห้องเรียน...</div>');
@@ -2668,7 +2687,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.10-p2-2569.74',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.15-p2-2569.79',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -3492,7 +3511,12 @@ function clsLoadCounts(){
     .then(function(rows){
       cls.students=rows||[];
       cls.students.forEach(function(s){ cls.counts[s.classroom_id]=(cls.counts[s.classroom_id]||0)+1; });
-    }).catch(function(){});
+    /* [บล็อก N16 · บั๊ก 6 จุดที่ 6] โหลดรายชื่อล้ม = cls.students ว่าง = ทั้งหน้าดูเหมือน "ห้องยังไม่มีนักเรียน"
+       ซึ่งครูอ่านผิดได้ง่ายมากว่าเด็กยังไม่เข้าห้อง · fallback เดิม (ปล่อยว่าง ไม่ล้มทั้งหน้า) คงไว้ */
+    }).catch(function(e){
+      try{ console.error('[หน้าครู · clsLoadCounts] โหลดรายชื่อนักเรียนไม่สำเร็จ'+
+        ' — ห้องจะขึ้นว่าไม่มีนักเรียนทั้งที่อาจมีอยู่จริง:', (e&&e.message)||e, e); }catch(e2){}
+    });
 }
 /* ---------- 3) Pilok ReferenceRoute solver (พิสูจน์ 9/9 — ตรง pilok-ref-sph-v1.0) ---------- */
 var PILOK_DIG_COST = { dirt: 2, rock: 5, tin: 1, wolfram: 1, cave: 0 };
@@ -3620,7 +3644,17 @@ var CV2 = (function(){
          มีรอบ 2-3 → ครั้งแรก 40% + รอบเก่งสุด 60% (สูตรทางการ hotsV2_scoreA) · มีแค่ครั้งแรก → ใช้ครั้งแรกเต็ม ---- */
     var aBy={}, aRounds={};
     (ev.q||[]).forEach(function(r){
-      if(String(r.sid)==='8') return;
+      /* [บล็อก O4 · บั๊กใหม่ที่เจอตอนตอบแบบสอบถาม 42] หอคอยท้าประลอง (sid='challenge')
+         ใช้คลังข้อสอบชุดเดียวกับด่านปกติ (ARENA.pool() ดึงจาก lessonContent · q.id เดิมทุกข้อ)
+         แล้ว logAnswer('challenge', q.id, ...) ก็ลงตาราง events เหมือนคำตอบในด่าน
+         เดิมขานี้กรองแค่ sid==='8' → คำตอบในหอคอยไหลเข้าคะแนน HOTS ขา A เต็ม ๆ
+         และ HOTS ขา A กลายเป็น CORE6ENG.HT ตรง ๆ
+         ขัดกับป้ายในเกมที่เขียนไว้เองว่า "(เปิดเสมอ ไม่มีผลต่อคะแนนสมรรถนะ)"
+         และขัดเจตนาออกแบบที่คอมเมนต์ไว้ว่า "sid='challenge' ไม่อยู่ในสูตรใด"
+         (เหตุผลเชิงวัดผล: หอคอยเล่นซ้ำได้ไม่จำกัด มีไอเทมชี้คำตอบ และไม่มีเลขครั้งที่เล่น
+          จึงเป็นคนละเงื่อนไขการวัดกับด่านเรือธงที่เป็นที่เก็บหลักฐานสมรรถนะจริง)
+         เหรียญ/สตรีคของหอคอยไม่ถูกแตะ — ยังเล่นได้เหมือนเดิมทุกอย่าง */
+      if(String(r.sid)==='8'||String(r.sid)==='challenge') return;
       var qid=String(r.qid||''); if(!ITEM_MAP[qid]) return;
       var an=has(r.att)?num(r.att):null;
       if(an===2||an===3){ var rd=aRounds[an]||(aRounds[an]={c:0,n:0}); rd.c+=num(r.cr); rd.n++; }
@@ -3779,6 +3813,25 @@ var QDIM_MAP={
   /* CM-A รับสาร (ข้อสถานการณ์บทสนทนา — ต้องอ่านจับใจความก่อนตัดสิน) */
   'q5_22':['CM-A'],'q6_19':['CM-A','NS-C'],'qp_12':['CM-A','NS-C']
 };
+/* ══ [บล็อก O1 · บั๊ก 4] รายชื่อด่านจริงของภาค 2 — ที่เดียวที่แก้เวลาเพิ่ม/ถอดด่าน ══
+   เดิมมีเลขฝังตาย 2 ที่ที่ไม่มีใครเตือนกัน:
+     · CORE6ENG.TOTAL_STAGES = 12  → ขึ้น "เล่นครบ 14/12 ด่าน" ได้จริง
+       และ coverage ตันที่ 100% ตั้งแต่ด่านที่ 12 (เล่น 12 กับ 14 ด่านได้ SM เท่ากัน)
+     · CLS_MAX_COLLECTED = 150     → เด็กที่เก่งจริงโชว์ 160/150 = 106.7% ได้ (ไม่มี clamp)
+   ทั้งคู่ค้างมาจากยุคที่ภาค 2 ยังมี 12 ด่าน แล้วเพิ่ม mg3/balance2050/water ทีหลังโดยลืมขยับ
+   ตอนนี้ผูกทั้งสองค่ากับรายชื่อนี้ → เพิ่มด่านใหม่แล้วตัวเลขขยับเองทั้งระบบ
+
+   ⚠️ ด่าน '2' (สุสานทหารสัมพันธมิตร) ไม่อยู่ในรายชื่อโดยตั้งใจ — ภาค 2 ผนวกเข้าด่านนักสืบแล้ว
+      ไม่มีโหนดบนแผนที่และไม่มีทางเข้า โค้ด Stage2 เหลือไว้เป็นคลังเนื้อหาเท่านั้น
+      (ต่างจากภาค 1 ที่ยังมีด่าน 2 จริง — รายชื่อสองภาคจึงไม่เหมือนกันโดยตั้งใจ)
+   ⚠️ 'water' (ปริศนาสายน้ำ) และ 'balance2050' อยู่ในรายชื่อตามมติครู 10 ส.ค. 2569
+      ทั้งคู่ส่ง kind='progress' จริง จึงต้องนับเป็นด่านของตัวหาร                     */
+var P2_SM_STAGES=['1','3','4','5','6','7','8','mg1','mg2','mg3','hellfire','pilok','balance2050','water'];
+var P2_BOSS_SID='8';
+/* เพดานคะแนนเก็บ = ผลรวม cap ต่อด่าน โดยใช้กติกาเดียวกับ clsLoadStats เป๊ะ ((k==='8')?30:10)
+   คิดจากรายชื่อทุกครั้ง — ห้ามฝังผลลัพธ์เป็นตัวเลขอีก ไม่งั้นจะค้างซ้ำรอยเดิม */
+function p2StageCap(k){ return (String(k)===P2_BOSS_SID)?30:10; }
+function p2MaxCollected(){ var s=0; P2_SM_STAGES.forEach(function(k){ s+=p2StageCap(k); }); return s; }
 var CORE6ENG = (function(){
   var NS_STAGES={'4':1,'5':1,'6':1,'mg2':1,'pilok':1};
   var CZ_STAGES={'2':1,'6':1,'7':1,'hellfire':1};
@@ -3810,7 +3863,11 @@ var CORE6ENG = (function(){
        แบบประเมินตนเองไม่เข้าสูตรใด ๆ (คำสั่งครู 4 ส.ค.: เก็บและสรุปแยกส่วนเสมอ) ===== */
     var QD=(function(){
       var first={};
-      (ev.q||[]).forEach(function(r){ var qid=String(r.qid||''); if(!QDIM_MAP[qid]) return;
+      /* [บล็อก O5 · บั๊กเดียวกับ O4 อีกทางหนึ่ง] เส้นนี้ไม่กรอง sid เลยแม้แต่ตัวเดียว
+         คำตอบในหอคอยจึงไปติดป้ายด้านย่อย CZ/NS/CM-A แล้วเข้า mkDim() ได้ทั้งชุด
+         (domainScore กรองด้วย NS_STAGES/CZ_STAGES อยู่แล้ว จึงไม่ต้องแตะ) */
+      (ev.q||[]).forEach(function(r){ if(String(r.sid||'')==='challenge') return;
+        var qid=String(r.qid||''); if(!QDIM_MAP[qid]) return;
         var cur=first[qid];
         if(!cur){ first[qid]=r; return; }
         var a=has(r.att)?num(r.att):null, b=has(cur.att)?num(cur.att):null;
@@ -3921,7 +3978,27 @@ var CORE6ENG = (function(){
         useComm?' (ครูตรวจ ช่อง 💬)':' (ใช้คะแนนการคิดชั่วคราว)',
         useComm?null:'ข้อมูลตรวจก่อนเวอร์ชันนี้');
     } else if(rvAi){
-      out.CM=cmScore([rvAi.ai1,rvAi.ai2,rvAi.ai3],' (AI ตรวจ)','คะแนนอัตนัยจาก AI บันทึกอัตโนมัติ — รอครูยืนยัน/ปรับที่ปุ่ม 📝 ตรวจสอบอัตนัย');
+      /* [บล็อก O6 · บั๊ก 5 — ยกท่าจากภาค 1 V.7.99.2] AI ให้ 0 ครบทั้ง 3 ข้อ
+         แทบทุกกรณีคือ "ไม่ได้พิมพ์คำตอบ / พิมพ์สั้นกว่า 8 ตัวอักษร"
+         (ตัวตรวจ _hsScoreOne คืน {s:0, flag:'REVIEW', why:'ไม่มีคำตอบ/สั้นเกินไป'} ตรงเงื่อนไขนี้)
+         = "ไม่มีหลักฐาน" ไม่ใช่ "สื่อสารได้ระดับเริ่มต้น" — ตามกติกาถาวรว่าคะแนนที่ไม่มีหลักฐานห้ามเดาให้
+         เดิมเด็กที่ไม่พิมพ์อะไรเลยได้ CM 0% ระดับ 3 แสดงเป็นผลประเมินจริงบนหน้าครู
+         ตอนนี้ไม่ตัดสินระดับ แต่บอกครูตรง ๆ ให้ไปดูคำตอบจริงที่ปุ่ม 📝 ตรวจสอบอัตนัย
+         ⚠️ แยกสองกรณีให้ออก: ถ้า "ครูตรวจเอง" แล้วให้ 0 (สาขา rv ข้างบน) ถือเป็นการตัดสินของครู
+            ยังคิดเป็นคะแนนตามเดิมทุกบรรทัด — บล็อกนี้แตะเฉพาะสาขา AI เท่านั้น
+         หมายเหตุที่ต้องพูดตรง ๆ: ตัวตรวจมี flag 'REVIEW' ที่แม่นกว่าการเดาจากผลรวม
+            และ flag นั้นถูกบันทึกลง events.raw.aiFlag จริง (หน้า 📝 ตรวจสอบอัตนัยอ่านอยู่)
+            แต่ SEL_O ของ clsLoadStats ไม่ได้ดึงคอลัมน์นั้นมา CORE6ENG จึงมองไม่เห็น
+            และ REVIEW ยังติดกับ "คำตอบจริงแต่อ่อน" ด้วย (คำสำคัญน้อย/คล้ายลอกโจทย์)
+            จึงไม่ใช่สัญญาณ "ไม่มีคำตอบ" ที่คมกว่า — ใช้ aiSum<=0 ตามภาค 1 และเขียนคำว่า "มัก" ไว้ */
+      var aiSum=num(rvAi.ai1)+num(rvAi.ai2)+num(rvAi.ai3);
+      if(aiSum<=0){
+        out.CM={ st:'partial', pct:null, n:0, need:1, dims:cmDims(null),
+          note:'AI ตรวจแล้วได้ 0 ทั้ง 3 ข้อ — มักแปลว่านักเรียนยังไม่ได้พิมพ์คำตอบ',
+          src:'ยังไม่มีคำตอบเขียนที่ประเมินได้ (AI ให้ 0 ทั้ง 3 ข้อ) — เปิดดูคำตอบจริงที่ปุ่ม 📝 ตรวจสอบอัตนัย แล้วให้คะแนนเองได้ ระบบจะไม่เดาระดับให้' };
+      } else {
+        out.CM=cmScore([rvAi.ai1,rvAi.ai2,rvAi.ai3],' (AI ตรวจ)','คะแนนอัตนัยจาก AI บันทึกอัตโนมัติ — รอครูยืนยัน/ปรับที่ปุ่ม 📝 ตรวจสอบอัตนัย');
+      }
     } else if(kruCM!=null){
       out.CM={ st:'score', pct:Math.round(kruCM/4*1000)/10, level:lvOf(kruCM/4*100), n:1,
         parts:[{ label:'ครูประเมินจากการสังเกต (เฉลี่ยด้านสื่อสาร)', pct:Math.round(kruCM/4*1000)/10, txt:(Math.round(kruCM*100)/100)+'/4' }],
@@ -3930,8 +4007,13 @@ var CORE6ENG = (function(){
       out.CM={ st:((ev.c||[]).length?'pending':'partial'), pct:null, n:0, need:1, dims:cmDims(null),
         src:'คำตอบเขียน 3 ข้อในด่านกาญ 2050 — '+((ev.c||[]).length?'รอผลตรวจ (AI จะบันทึกให้ทันทีในรุ่นนี้ · ครูดูที่ปุ่ม 📝 ตรวจสอบอัตนัย)':'ยังไม่ได้ทำด่านกาญ 2050') };
     }
-    var TOTAL_STAGES=12;
-    var doneKeys={}; (ev.p||[]).forEach(function(r){ if(num(r.sc)>0) doneKeys[String(r.sid||'')]=1; });
+    /* [บล็อก O2 · บั๊ก 4 · มติครู] ตัวหารมาจากรายชื่อด่านจริง ไม่ใช่เลขฝังตาย
+       และนับเฉพาะด่านที่อยู่ในรายชื่อ — ของเดิมนับ "ทุก stage_id ที่คะแนน >0" โดยไม่มี whitelist
+       แถวรหัสแปลกปลอม (ด่านที่ถูกถอดออกไปแล้ว · ข้อมูลเก่าจากรุ่นก่อน · รหัสพิมพ์ผิด)
+       จึงดันตัวเศษให้เกินตัวหารได้ — ตอนนี้เกินไม่ได้อีกแล้วทั้งสองทาง */
+    var TOTAL_STAGES=P2_SM_STAGES.length;
+    var doneKeys={}; (ev.p||[]).forEach(function(r){ var sid0=String(r.sid||'');
+      if(num(r.sc)>0&&P2_SM_STAGES.indexOf(sid0)>=0) doneKeys[sid0]=1; });
     var nDone=Object.keys(doneKeys).length;
     var coverage=Math.min(1,nDone/TOTAL_STAGES);
     var impN=0, impSum=0, byStage={};
@@ -4561,7 +4643,15 @@ function clsLoadStats(){
         sbFetchAll('/rest/v1/events?kind=eq.question&select='+SEL_Q+'&student_id=in.('+ch.join(',')+')'),
         sbFetchAll('/rest/v1/events?kind=in.(progress,boss,capstone,pilok,peer)&select='+SEL_O+'&student_id=in.('+ch.join(',')+')'),
         /* [V.7.80] ครูประเมินสมรรถนะจากการสังเกต (surveys.kind=kru_assess) — โหลดไม่ได้ = ข้าม ไม่ให้ทั้งหน้าล้ม */
-        sbFetchAll('/rest/v1/surveys?kind=eq.kru_assess&select=student_id,payload,created_at&student_id=in.('+ch.join(',')+')').catch(function(){ return []; })
+        /* [บล็อก N14 · บั๊ก 6 จุดที่ 4] อันตรายที่สุดในเจ็ดจุด: คืน [] แล้วเดินต่อเหมือนไม่มีอะไรเกิดขึ้น
+           แต่ TW/SM/CM ใช้คะแนนครูสังเกตเป็นตัวตั้งตามโมเดล → หายไปเฉย ๆ = คะแนน "ต่ำกว่าจริง"
+           ซึ่งอ่านไม่ออกจากหน้าจอเลย (ไม่ใช่ช่องว่าง แต่เป็นตัวเลขที่ผิด)
+           คง fallback เดิม (return []) ไว้ เพราะทั้งหน้าต้องไม่ล้มเพราะโหลดส่วนเสริมไม่ได้ */
+        sbFetchAll('/rest/v1/surveys?kind=eq.kru_assess&select=student_id,payload,created_at&student_id=in.('+ch.join(',')+')').catch(function(e){
+          try{ console.error('[หน้าครู · kru_assess] โหลดคะแนนที่ครูประเมินจากการสังเกตไม่สำเร็จ'+
+            ' — TW/SM/CM ของนักเรียนชุดนี้จะคิดโดยไม่มีคะแนนครู (ต่ำกว่าความเป็นจริง):', (e&&e.message)||e, e); }catch(e2){}
+          try{ clsStatsWarn('โหลดคะแนนที่ครูประเมินจากการสังเกตไม่สำเร็จ — ด้านทำงานเป็นทีม/จัดการตนเอง/สื่อสาร อาจต่ำกว่าความเป็นจริง'); }catch(e2){}
+          return []; })
       ]);
     }).then(function(rr){
       (rr[0]||[]).forEach(function(e){
@@ -4611,7 +4701,10 @@ function clsLoadStats(){
     lch.forEach(function(ch2){
       lp=lp.then(function(){ return sbFetch('/rest/v1/competency_results?select=student_id,a,b,c,d,total,level,ctc,stm,crt,prb,data_status&run_id=eq.LEGACY-SHEETS&student_id=in.('+ch2.join(',')+')'); })
         .then(function(rows2){ (rows2||[]).forEach(function(r2){ S(r2.student_id).legacy=r2; }); })
-        .catch(function(){});
+        /* [บล็อก N15 · บั๊ก 6 จุดที่ 5] ผลสรุปเก่าที่ย้ายมาจากชีต (LEGACY-SHEETS) โหลดไม่ได้ = ช่อง
+           "เทียบข้อมูลเดิม" หายเงียบ · fallback เดิม (ข้ามไป) คงไว้ เพราะเป็นข้อมูลประกอบไม่ใช่ตัวหลัก */
+        .catch(function(e){ try{ console.error('[หน้าครู · LEGACY-SHEETS] โหลดผลสรุปเดิมที่ย้ายมาจากชีตไม่สำเร็จ'+
+          ' — คอลัมน์เทียบข้อมูลเดิมจะว่าง:', (e&&e.message)||e, e); }catch(e2){} });
     });
     return lp;
   });
@@ -4625,8 +4718,13 @@ function clsLoadStats(){
       /* [ตรวจระบบ รอบ 17 · A6] ดูคำอธิบายที่ตัวรวมอีกตัว — เลขครั้งเริ่มที่ 3 ได้ */
       if(!pick.length) pick=bl.slice().sort(function(a,b){ return (a.t||0)-(b.t||0); }).slice(0,2);
       pick.forEach(function(r){ if(r.sc>s.boss) s.boss=r.sc; });
-      try{ s.v2=CV2.compute(s.ev); }catch(e){ s.v2=null; }
-      try{ s.c6=CORE6ENG.compute(s.ev,s.v2,s); }catch(e){ s.c6=null; }
+      /* [บล็อก N12/N13 · บั๊ก 6 จุดที่ 2-3] เดิมเงียบสนิท — เด็กคนที่เครื่องคิดคะแนนพังจะขึ้น "–"
+         ปนอยู่กับเด็กที่ยังไม่ได้เล่นจริง ๆ แยกไม่ออกเลยว่าอันไหนคือ "ไม่มีข้อมูล" อันไหนคือ "คิดไม่ได้"
+         คง fallback เดิม (null) ไว้ทุกจุด เพื่อไม่ให้ทั้งตารางล้มเพราะเด็กคนเดียว */
+      try{ s.v2=CV2.compute(s.ev); }catch(e){ s.v2=null;
+        try{ console.error('[หน้าครู · CV2.compute] คิดคะแนน HOTS ของนักเรียน '+k+' ไม่สำเร็จ — ช่องนี้จะว่าง:', (e&&e.message)||e, e); }catch(e2){} }
+      try{ s.c6=CORE6ENG.compute(s.ev,s.v2,s); }catch(e){ s.c6=null;
+        try{ console.error('[หน้าครู · CORE6ENG.compute] คิดสมรรถนะ 6 ด้านของนักเรียน '+k+' ไม่สำเร็จ — ช่องนี้จะว่าง:', (e&&e.message)||e, e); }catch(e2){} }
       /* [V.7.80] มีคำตอบเขียนแล้วแต่ครูยังไม่กดยืนยัน (AI บันทึกชั่วคราวอยู่) → ใช้ทำตัวเลขบนปุ่ม 📝 ตรวจสอบอัตนัย */
       s.capPend=((s.ev.c||[]).length>0)&&!(s.ev.c||[]).some(function(r){ return r.trv!=null&&r.trv!==''; });
       delete s.ev; /* คิดเสร็จแล้ว ไม่เก็บข้อมูลดิบไว้กินหน่วยความจำ */ }
@@ -4641,7 +4739,15 @@ function clsLoadStats(){
       grp.forEach(function(st3){ if(!stats[st3.id]||!(stats[st3.id].plays>0)){ stats[st3.id]=Object.assign({},src,{shared:true}); } });
     });
     cls.stats=stats; cls.statsReady=true; clsRender();
-  }).catch(function(e){ cls.statsReady=true; clsRender(); });
+  }).catch(function(e){
+    /* [บล็อก N11 · บั๊ก 6 จุดที่ 1 — จุดหลักตามรายงาน] เดิมกลืน error ทั้งก้อนแล้ววาดหน้าต่อ
+       ผลคือทั้งห้องขึ้น "–" เหมือนเด็กไม่เคยเล่น โดยไม่มีอะไรบอกว่าโหลดล้ม
+       fallback เดิม (statsReady=true + clsRender) คงไว้ครบ — แค่ไม่เงียบอีกต่อไป */
+    try{ console.error('[หน้าครู · clsLoadStats] โหลด/คำนวณคะแนนทั้งห้องไม่สำเร็จ'+
+      ' — ตารางจะแสดงเป็นค่าว่างทั้งที่ข้อมูลอาจมีอยู่จริง:', (e&&e.message)||e, e); }catch(e2){}
+    try{ clsStatsWarn('โหลดคะแนนของนักเรียนไม่สำเร็จ — ตารางคะแนนที่เห็นตอนนี้ยังไม่ใช่ข้อมูลจริงทั้งหมด'); }catch(e2){}
+    cls.statsReady=true; clsRender();
+  });
 }
 function clsStatOf(stu){
   var s=(cls.stats&&cls.stats[stu.id])||null;
@@ -5784,9 +5890,12 @@ function clsRowSel(id, on){
 }
 var CLS_LV_CLR={6:'#7c3aed',5:'#16a34a',4:'#d97706',3:'#64748b'};
 /* [ตามคำขอครู V.7.68 ข้อ 6] คะแนนเต็มของ "เก็บ" และ "สอบ"
-   เก็บ = ผลรวมคะแนนดีที่สุดของทุกด่านสะสม (12 ด่าน/ภารกิจ × 10) = 120 + ด่านบอส 30 = 150
-   สอบ = ด่านบอส (ปีศาจข้อสอบ) เต็ม 30 */
-var CLS_MAX_COLLECTED=150, CLS_MAX_BOSS=30;
+   เก็บ = ผลรวมคะแนนดีที่สุดของทุกด่านสะสม · สอบ = ด่านบอส (ปีศาจข้อสอบ) เต็ม 30
+   [บล็อก O3 · บั๊ก 4] เดิมเขียนไว้ว่า "(12 ด่าน × 10) = 120 + บอส 30 = 150"
+   แต่ด่านที่ไม่ใช่บอสมี 13 ด่าน → เพดานจริง 13×10 + 30 = 160
+   ผลของเลขที่ค้าง: เด็กที่เล่นครบทุกด่านโชว์ 160/150 = 106.7% ได้ (clsAchLevel ไม่มี clamp)
+   ตอนนี้คิดจาก P2_SM_STAGES ด้วยกติกา cap เดียวกับ clsLoadStats — ไม่ฝังเลขตายอีก */
+var CLS_MAX_COLLECTED=p2MaxCollected(), CLS_MAX_BOSS=30;
 function clsScoresHtml(r){
   var studs=(cls.students||[]).filter(function(s){return s.classroom_id===r.id;})
     .sort(function(a,b){ return (Number(a.student_number)||999)-(Number(b.student_number)||999); });
@@ -5985,6 +6094,7 @@ function clsRender(){
       '<span class="muted" style="font-size:12px;flex:1">ห้องเรียนของครู: '+cls.rooms.length+' ห้อง</span>'+
     '</div>');
   var h='';
+  try{ h+=clsWarnBannerHTML(); }catch(e){}   /* [บล็อก N10 · บั๊ก 6] โหลดคะแนนไม่ครบ = ต้องเห็นบนจอ ไม่ใช่รู้แค่ใน console */
   try{ h+=DEMO.bannerHTML(); }catch(e){}   /* [แก้ตามครู ข้อ 6] เตือนตลอดเวลาว่ากำลังดูข้อมูลจำลอง */
   // [ตามคำขอ] แนะนำผูก Google เมื่อยังไม่ผูก — ข้อมูลจะได้อยู่ถาวรและเปิดได้ทุกเครื่อง
   if(!(cls.teacher&&cls.teacher.is_anonymous===false)){
@@ -7199,7 +7309,10 @@ var CBE8 = {
          เดิมคืน null ทำให้สูตรเปลี่ยนรูปเงียบ ๆ (M กลายเป็นหลักฐานระหว่างเรียนล้วน)
          แล้วตัวเลขกระโดดในวันที่ครูกดตรวจ ทั้งที่ตัวเด็กไม่ได้เปลี่ยนอะไรเลย */
       var sa=0,na=0; ['ai1','ai2','ai3'].forEach(function(k){ var v=Number(cap[k]); if(cap[k]!=null&&cap[k]!==''&&!isNaN(v)){ sa+=v; na++; } });
-      if(na) return { pct:Math.round(sa/(na*4)*1000)/10, provisional:true,
+      /* [บล็อก O13 · บั๊ก 5 ชนิดเดียวกัน] AI ให้ 0 ครบทุกข้อ = "ยังไม่ได้พิมพ์คำตอบ" ไม่ใช่ "ได้ 0 คะแนน"
+         ตกไปใช้บรรทัดล่าง (รอครูตรวจ) แทนการประกาศคะแนน 0 เป็นผลชั่วคราว
+         คะแนนที่ครูตรวจเอง (cw1-3 ข้างบน) ไม่ถูกแตะ — ครูให้ 0 ยังเป็น 0 ตามเดิม */
+      if(na&&sa>0) return { pct:Math.round(sa/(na*4)*1000)/10, provisional:true,
         parts:[{label:'คำตอบเขียน '+na+' ข้อ (AI ตรวจชั่วคราว — รอครูยืนยัน)', txt:sa+'/'+(na*4)}],
         src:'กาญ 2050 — คำตอบเขียน (ยังรอครูตรวจ)' };
       return { pct:null, parts:[], src:'รอครูตรวจคำตอบเขียน (ช่อง 💬 การสื่อสาร)' };
@@ -7479,6 +7592,140 @@ var DASH4 = {
   }
 };
 
+/* ══ [บล็อก V · พรอมต์ 45] ท่อส่งใบรายงานผลเข้า Dashboard กลาง (rpc_submit_report) ══
+   เกมเป็นเจ้าของการคิดคะแนน — ตรงนี้คือ "รายงานผลที่คิดเสร็จแล้ว" ไม่มีการคิดใหม่แม้แต่ช่องเดียว
+   ใช้ CBE8 เท่านั้น · run_id 'live' เท่านั้น · ส่งพลาด = เงียบ ไม่ขัดจังหวะครู (รอบหน้าส่งใหม่เอง) */
+var GP2_HUB = {
+  VER: 'V.8.15-p2-2569.79',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
+  CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
+  KEY: 'gp2_hub_sent_v1',               /* ลายเซ็นผลที่ส่งสำเร็จแล้ว รายนักเรียน (กันยิงถี่) */
+  LVNAME: ['เริ่มต้น', 'กำลังพัฒนา', 'สามารถ', 'เหนือความคาดหวัง'],
+  NO_SUMM: { SM: 1, TW: 1 },            /* สองด้านนี้ไม่มีขารวบยอดในรุ่นนี้ (CAP_MAP ไม่มีคีย์) — ฐาน minor 100% */
+  _busy: false, _wait: 0, _queued: null, _saidWhy: 0,
+
+  _memo() { try { return JSON.parse(localStorage.getItem(this.KEY) || '{}') || {}; } catch (e) { return {}; } },
+  _saveMemo(m) { try { localStorage.setItem(this.KEY, JSON.stringify(m)); } catch (e) {} },
+  _hash(s) { var h = 5381, i; for (i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return 'h' + (h >>> 0).toString(36) + '_' + s.length; },
+  _lvWord(lv) { return this.LVNAME[lv - CBE8.set.lvBase] || null; },
+
+  /* ── ใบที่ 1 ผลสัมฤทธิ์ — เลขชุดเดียวกับหน้าจอครู (s มาจาก clsLoadStats · กรองภาคแล้ว) ── */
+  _achOf(s) {
+    if (!s || !s.pb || !Object.keys(s.pb).length) return null;   /* ยังไม่เคยเล่นภาค 2 = ไม่มีใบผลสัมฤทธิ์ (ห้ามส่งค่าที่ไม่ได้วัด) */
+    var units = {};
+    for (var k in s.pb) units[k] = s.pb[k];                      /* รายด่าน คีย์ = P2_SM_STAGES */
+    if (s.bossN > 0) units['_boss'] = s.boss;                    /* คะแนนสอบบอส — ข้อมูลประกอบ (_) ส่งเฉพาะเมื่อสอบจริง */
+    if (s.cap > 0) units['_cap24'] = s.cap;                      /* กาญ 2050 ดิบ /24 — 0 อาจแปลว่ายังไม่เล่น จึงไม่ส่ง 0 */
+    var played = P2_SM_STAGES.filter(function (k2) { return k2 in s.pb; });
+    var a = clsAchLevel(s.collected, CLS_MAX_COLLECTED);
+    return {
+      score: s.collected,
+      max_score: CLS_MAX_COLLECTED,                              /* = p2MaxCollected() = 160 (ครูสั่ง 160 ทั้งสองภาค) */
+      grade_label: a ? (a.lv ? 'ระดับ ' + a.lv + ' ' + (CORE6_LVNAME[a.lv] || '') : 'ยังไม่ถึงเกณฑ์') : null,
+      progress_percent: Math.round(played.length / P2_SM_STAGES.length * 1000) / 10,
+      unit_scores: units,
+      criteria_note: 'ภาค 2 · คะแนนเก็บ = ผลรวมคะแนนดีที่สุดต่อด่าน 14 ด่าน (ด่านละ 0-10 · ด่าน 8 บอส 0-30) '
+        + '· คะแนนสอบบอส (_boss) เป็นข้อมูลประกอบ ไม่บวกซ้ำ · ระดับ 80/70/60/50'
+    };
+  },
+
+  /* ── ใบที่ 2 สมรรถนะ 6 ด้าน จาก CBE8 ที่วัดจริงเท่านั้น — ด้านไม่มีหลักฐาน = ไม่มีแถว ── */
+  _compsOf(comp) {
+    var self = this, S = CBE8.set;
+    /* บันทึกเกณฑ์จริง ณ เวลาที่คิด (ครูปรับเกณฑ์ได้ — ห้ามใส่ค่า default · พรอมต์ 45 ข้อ 8) */
+    var noteBase = 'CBE8 ' + this.VER + ' · minor' + S.wMinor + '/sum' + S.wSum
+      + ' · ช่วง ' + S.r1 + '/' + S.r2 + '/' + S.r3 + ' · ฐานระดับ ' + S.lvBase
+      + ' · ผสมย่อย ' + Math.round(CBE8.MIX_OVERALL * 100) + '/' + Math.round(CBE8.MIX_SUB * 100);
+    var rows = [];
+    CBE8.COMPS.forEach(function (cd) {
+      var c = cd[0], r = comp && comp[c];
+      if (!r || (r.M == null && r.lv == null)) return;           /* ไม่มีหลักฐาน = ไม่ส่งแถว */
+      rows.push({
+        code: c,                                                 /* HT/NS ส่งตรง ๆ — gp_comp_code ฝั่งฐานแปลง HOT/SN ให้ (พรอมต์ 45 ข้อ 2) */
+        score: r.M,
+        level: r.lv,
+        level_label: r.lv != null ? self._lvWord(r.lv) : null,   /* "คำ" นำเสมอ ตามมาตรฐานเว็บกลาง */
+        evidence: self.NO_SUMM[c] ? 'observed' : 'scored',       /* ห้ามมี self_report จากเกมนี้เด็ดขาด */
+        criteria_note: self.NO_SUMM[c]
+          ? noteBase + ' · ฐาน minor 100% (ยังไม่มีหลักฐานรวบยอด) — คนละฐานกับด้านอื่น'
+          : noteBase,
+        sub_scores: {                                            /* คีย์ _ = ข้อมูลประกอบ เว็บกลางไม่ตีเป็นคะแนน */
+          _basis: self.NO_SUMM[c] ? 'minor100_no_summative' : 'minor30+summ70',
+          _status: r.status || null,
+          _cmp_T: r.T != null ? r.T : null,
+          _cmp_P: r.P != null ? r.P : null,
+          _cmp_S: r.S != null ? r.S : null,                      /* ผลเทียบตนเอง = ข้อมูลประกอบเท่านั้น ไม่ใช่แถวคะแนน */
+          _finalized: r.status === 'FINALIZED',
+          _provisional: !!(r.summ && r.summ.provisional)         /* ธงจริงของ CM อยู่ใน summ (ตรวจที่ _summative แล้ว) */
+        }
+      });
+    });
+    return rows;
+  },
+
+  _payloadOf(sid, s, comp) {
+    var ach = this._achOf(s), comps = this._compsOf(comp);
+    if (!ach && !comps.length) return null;                      /* ไม่มีสักใบที่วัดจริง = ไม่ส่ง */
+    return { p_game_code: this.CODE, p_game_version: this.VER, p_student: sid,
+      p_run_id: 'live', p_achievement: ach, p_competencies: comps };
+  },
+
+  /* ส่ง 1 คน — คืน promise ที่ไม่มีวัน reject (พลาด = 'fail' เงียบ ๆ ไม่เก็บลายเซ็น → รอบหน้าส่งใหม่) */
+  sendOne(sid, s, comp) {
+    var self = this;
+    var pay = this._payloadOf(sid, s, comp);
+    if (!pay) return Promise.resolve('skip');
+    var sig = this._hash(JSON.stringify(pay));                   /* ยังไม่ใส่ computed_at = ลายเซ็นนิ่งเทียบข้ามรอบได้ */
+    if (this._memo()[sid] === sig) return Promise.resolve('same');
+    var whenISO = new Date().toISOString();                      /* เวลาที่ "เกมคิดผลชุดนี้" — ฐานเก็บเป็น computed_at */
+    if (pay.p_achievement) pay.p_achievement.computed_at = whenISO;
+    pay.p_competencies.forEach(function (r) { r.computed_at = whenISO; });
+    return sbEnsure()
+      .then(function () { return sbFetch('/rest/v1/rpc/rpc_submit_report', { method: 'POST', body: JSON.stringify(pay) }); })
+      .then(function () { var m = self._memo(); m[sid] = sig; self._saveMemo(m); return 'sent'; })
+      .catch(function (e) {
+        try {
+          if (!self._saidWhy && /PGRST|function|not found|schema/i.test(String(e && e.message || ''))) {
+            self._saidWhy = 1;
+            console.error('[บล็อก V] ส่งใบรายงานผลเข้า Dashboard กลางไม่ได้ — ฐานยังไม่มี rpc_submit_report (ต้องรัน 43_REPORT_CARDS.sql ฝั่งเว็บกลางก่อน) · หน้าครูทำงานต่อปกติ');
+          }
+        } catch (e2) {}
+        return 'fail';
+      });
+  },
+
+  /* จุดเรียกจากท้าย clsV8Render — ส่งเฉพาะตอนที่ "เลขบนจอ = เลขที่ส่ง" */
+  schedule(studs, by) {
+    var self = this;
+    try {
+      if (window.DEMO && DEMO.on) return;                        /* โหมดตัวอย่างห้ามเขียนฐาน — เงียบ ไม่เด้ง toast */
+      if (typeof CLSPART !== 'undefined' && CLSPART.get() !== 'p2') return;   /* กันพลาด (แท็บนี้บังคับ p2 อยู่แล้ว) */
+      if (!/-p2-/.test(this.VER)) return;                        /* ห้ามส่งรุ่นไร้ป้ายภาคเด็ดขาด */
+      if (this._busy) { this._queued = [studs, by]; return; }    /* ระหว่างส่งมีวาดใหม่ (ครูกดยืนยัน) → ต่อคิวรอบเดียว */
+      this._busy = true;
+      var run = function () {
+        /* ใบที่ 1 ใช้สถิติจาก clsLoadStats — ยังโหลดไม่เสร็จก็รอสั้น ๆ (สูงสุด ~18 วิ) แล้วส่งเท่าที่มีจริง */
+        if (!cls.statsReady && (self._wait = self._wait + 1) < 12) { setTimeout(run, 1500); return; }
+        self._wait = 0;
+        var chain = Promise.resolve();
+        (studs || []).forEach(function (st) {
+          chain = chain.then(function () {
+            var comp = null;
+            try { comp = CBE8.compute(by[st.id] || { evd: [], cap: [], pr: [] }); } catch (e) { comp = null; }
+            return self.sendOne(st.id, (cls.stats || {})[st.id] || null, comp);
+          }).then(function (r) {
+            if (r === 'sent') return new Promise(function (ok) { setTimeout(ok, 120); });   /* เว้นจังหวะเฉพาะตอนยิงจริง */
+          });
+        });
+        chain.then(function () {
+          self._busy = false;
+          var q = self._queued; self._queued = null;
+          if (q) self.schedule(q[0], q[1]);
+        });
+      };
+      run();
+    } catch (e) { this._busy = false; }
+  }
+};
 var _cv8Cache=null;
 function clsV8Render(studs, by){
   _cv8Cache={ studs:studs, by:by };
@@ -7495,7 +7742,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.10-p2-2569.74 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.15-p2-2569.79 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };
@@ -7519,7 +7766,14 @@ function clsV8Render(studs, by){
     '</tr></thead><tbody>'+rows+'</tbody></table></div>'+
     '<div class="muted" style="font-size:11.5px;margin-top:8px;line-height:1.7">แตะช่องคะแนนเพื่อดูที่มาของหลักฐาน · ระดับ T/P/S · เหตุผลของสถานะ และคำถามยืนยันสำหรับด้านที่ต้องตรวจสอบ<br>'+
     'ข้อสอบปรนัย/แบบทดสอบหลังเรียน = หลักฐานสนับสนุนและผลสัมฤทธิ์ (ดูที่ตารางคะแนนเดิม) — ไม่รวมในคะแนนหลัก V.8</div>';
-  try { DASH4.fill(studs, by); } catch (e) {}   /* [เฟส 4 · 4.3] */
+  /* [บล็อก N17 · บั๊ก 6 จุดที่ 7] แผงพัฒนาการหายทั้งแผงแบบเงียบ ๆ — ครูนึกว่ายังไม่มีข้อมูลพัฒนาการ
+     fallback เดิม (ข้ามไป ไม่ให้ตารางหลักล้มตาม) คงไว้ */
+  try { DASH4.fill(studs, by); } catch (e) {   /* [เฟส 4 · 4.3] */
+    try { console.error('[หน้าครู · DASH4.fill] เติมแผงพัฒนาการไม่สำเร็จ — แผงนี้จะว่างทั้งที่ตารางหลักปกติ:', (e && e.message) || e, e); } catch (e2) {}
+  }
+  /* [บล็อก V · พรอมต์ 45] เลข CBE8 ชุดที่เพิ่งวาดบนจอครู = ชุดเดียวกับที่ส่งเข้า Dashboard กลาง
+     (เกณฑ์ตรวจรับข้อ 2) · ส่งเฉพาะคนที่ค่าเปลี่ยนจากที่ส่งสำเร็จครั้งก่อน · พลาด = เงียบ */
+  try { GP2_HUB.schedule(studs, by); } catch (e) { }
 }
 function clsV8Detail(si, c){
   var det=$('cv8-det-'+si), td=$('cv8-det-td-'+si);

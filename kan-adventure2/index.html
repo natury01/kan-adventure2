@@ -42,6 +42,7 @@ html, body {
   transform: translate(-50%, -50%);
   width: 100vw; height: 56.25vw;        /* 16:9 */
   max-height: 100vh; max-width: 177.78vh; /* 16:9 คำนวณกลับจากความสูง */
+  /* [บล็อก Q3] ดูค่า dvh ด้านล่างไฟล์ — บนคอมได้ค่าเท่ากันเป๊ะ */
   background: #000;
   overflow: hidden;
   box-shadow: 0 0 60px rgba(0,0,0,0.6);
@@ -585,8 +586,10 @@ body.lowfx .cap-twist-banner { animation: none; }
 /* MODULE 5: เหรียญตรา/รางวัลตามสมรรถนะ */
 /* [ปรับตามคำขอ 15 ก.ค.] หน้านี้เดิมพื้นหลังโล่งๆ สีเข้มเรียบ (ไม่มี #badges-screen{background} ของตัวเอง) — ตอนนี้มีภาพพื้นหลังจริงแล้ว (.badges-bg-photo)
    จึงต้องเพิ่มความทึบพื้นกล่อง+การ์ดแต่ละใบ เพื่อให้ตัวหนังสือยังอ่านง่ายไม่ว่าภาพส่วนนั้นจะสว่าง/มืดแค่ไหน */
-.badges-box { width: calc(var(--vw) * 40); background: rgba(8,16,12,0.6); }
-.badges-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(var(--vw) * 0.6); overflow: visible; padding: calc(var(--vw) * 0.3); max-width: calc(var(--vw) * 38); } /* [รอบใหม่] เหรียญตรา 9 ใบ = ตาราง 3×3 พอดีจอในหน้าเดียว ไม่มีแถบเลื่อน ไม่ต้องแบ่งหน้า */
+.badges-box { width: calc(var(--vw) * 48); background: rgba(8,16,12,0.6); }   /* [บล็อก T2] กว้างขึ้นรับ 4 คอลัมน์ */
+/* [บล็อก T2] เหรียญ 13 ใบ = 4 คอลัมน์ (4+4+4+1) — คง "หน้าเดียว ไม่มีแถบเลื่อน" ไว้เหมือนเดิม
+   ช่องไฟ/ระยะขอบหดลงเล็กน้อยให้ 4 แถวพอดีความสูงจอมือถือแนวนอน */
+.badges-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: calc(var(--vw) * 0.45); overflow: visible; padding: calc(var(--vw) * 0.25); max-width: calc(var(--vw) * 46); }
 .badge-card { display: flex; flex-direction: column; align-items: center; gap: calc(var(--vw) * 0.4); padding: calc(var(--vw) * 1) calc(var(--vw) * 0.6);
   border-radius: calc(var(--vw) * 0.9); background: rgba(10,20,16,0.4); border: calc(var(--vw) * 0.12) solid rgba(255,255,255,0.15);
   text-align: center; }
@@ -682,11 +685,15 @@ body.lowfx .cap-twist-banner { animation: none; }
 
 /* ปุ่มเปิด/ปิดเสียง — ตำแหน่งถาวรมุมบนขวา อยู่นอก .screen จึงแสดงทับทุกหน้าจอ/ทุกด่านเสมอ */
 /* [รอบ 53 ตามคำขอ] ปุ่ม 🔊 ถูกถอดออก — ปุ่มตั้งค่า ⚙️ เลื่อนมาแทนตำแหน่งมุมขวาสุด */
-.btn-settings-global { position: absolute; top: calc(var(--vw) * 2); right: calc(var(--vw) * 2); z-index: 50; pointer-events: auto; }
+/* [บล็อก Q2] ปุ่มมุมจอต้องพ้นรอยบาก — บนคอม --sat/--sar = 0 ค่าที่ได้เท่าเดิมทุกพิกเซล */
+.btn-settings-global { position: absolute; top: max(calc(var(--vw) * 2), calc(var(--sat, 0px) + var(--vw) * 0.6));
+  right: max(calc(var(--vw) * 2), calc(var(--sar, 0px) + var(--vw) * 0.6)); z-index: 50; pointer-events: auto; }
 /* [V.7.76] ปุ่มเต็มจอ วางถัดจากปุ่มตั้งค่าไปทางซ้าย (ระยะเท่าความกว้างปุ่มไอคอน + ช่องไฟ) */
 /* ระยะห่างต้องคิดจาก "ความกว้างจริงของปุ่มไอคอน" ซึ่งมีค่าขั้นต่ำเป็นพิกเซลบนจอเล็ก ไม่งั้นปุ่มจะทับกัน */
-.btn-fullscreen-global { position: absolute; top: calc(var(--vw) * 2);
-  right: calc(var(--vw) * 2.8 + clamp(30px, calc(var(--vw) * 3.2), 44px)); z-index: 50; pointer-events: auto; }
+.btn-fullscreen-global { position: absolute; top: max(calc(var(--vw) * 2), calc(var(--sat, 0px) + var(--vw) * 0.6));
+  right: max(calc(var(--vw) * 2.8 + clamp(30px, calc(var(--vw) * 3.2), 44px)),
+             calc(var(--sar, 0px) + var(--vw) * 1.4 + clamp(30px, calc(var(--vw) * 3.2), 44px)));
+  z-index: 50; pointer-events: auto; }
 
 /* MODULE 8: ตั้งค่าเสียงละเอียด */
 .audio-settings-box { width: calc(var(--vw) * 30); max-height: calc(var(--vh) * 92); overflow-y: auto; } /* [V.7.75] กันกล่องสูงเกินจอเมื่อมีแถวตั้งค่าเพิ่ม */
@@ -717,7 +724,8 @@ body.lowfx .cap-twist-banner { animation: none; }
 .volume-val { flex: 0 0 calc(var(--vw) * 3); font-size: calc(var(--vw) * 0.9); color: #ffd54a; text-align: right; font-weight: 700; }
 
 /* ปุ่มออกจากด่าน + หน้าต่างยืนยัน */
-.btn-exit-global { position: absolute; top: calc(var(--vw) * 2); left: calc(var(--vw) * 2); z-index: 50; pointer-events: auto; background: rgba(228,84,74,0.55); }
+.btn-exit-global { position: absolute; top: max(calc(var(--vw) * 2), calc(var(--sat, 0px) + var(--vw) * 0.6));
+  left: max(calc(var(--vw) * 2), calc(var(--sal, 0px) + var(--vw) * 0.6)); z-index: 50; pointer-events: auto; background: rgba(228,84,74,0.55); }
 .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(10,8,10,0.6); display: flex; align-items: center; justify-content: center; z-index: 70; pointer-events: auto; }
 .modal-box { background: linear-gradient(180deg,#2a5a4a,#10241c); border-radius: calc(var(--vw) * 1.2); padding: calc(var(--vw) * 2.4) calc(var(--vw) * 3);
@@ -2449,16 +2457,18 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
 #character-select-screen.active { display: grid; }
 #character-select-screen {
   position: relative;
-  grid-template-columns: auto minmax(0, 1fr);
+  /* [บล็อก S2] คอลัมน์กว้างเท่าเนื้อหา + จัดทั้งคู่กลางจอ — การ์ดเกาะข้างกระจกเป็นก้อนเดียว
+     (เดิมคอลัมน์ขวาเป็น 1fr แล้วการ์ดถูกจับกึ่งกลางของที่ว่างกว้าง ๆ → ช่องโบ๋กลางจอ) */
+  grid-template-columns: auto minmax(0, max-content);
   grid-template-rows: auto auto minmax(0, 1fr) auto;
   grid-template-areas:
     "title title"
     "dress tabs"
     "dress cards"
     "act   act";
-  justify-content: stretch; align-content: stretch;
+  justify-content: center; align-content: stretch;
   justify-items: center; align-items: center;
-  gap: calc(var(--vw) * 0.45) calc(var(--vw) * 1.1);
+  gap: calc(var(--vw) * 0.45) calc(var(--vw) * 2.4);
   padding: calc(var(--vw) * 0.8) calc(var(--vw) * 1.3);
   box-sizing: border-box;
 }
@@ -3155,6 +3165,33 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
 .mobile-fit #game-wrapper .audio-settings-box .volume-row label,
 .mobile-fit #game-wrapper .audio-settings-box .volume-val {
   font-size: max(12px, calc(var(--vw) * 0.95)) !important; line-height: 1.25; }
+
+/* ══ [บล็อก L-C · มติครูภาค 1 V.7.99.1 ข้อ 2] แยกสีความคืบหน้าบนแผนที่ ══
+   ด่านที่ผ่านตอน "เล่นด้วยกันกับเพื่อน" แต่ยังไม่เคยผ่านด้วยตัวเอง = ป้ายฟ้า + 👥
+   (ผ่านเองแล้ว = เขียวเหมือนเดิม) — เด็กเห็นว่าด่านไหนควรกลับมาลองเอง
+   แตะเฉพาะสี/ข้อความของป้าย ไม่แตะตำแหน่งหมุดเลย — V8PIN (บล็อก F) วางตำแหน่งจาก id เดิมทุกอย่าง */
+.stage-node.stage-team .stage-node-passed { background: #2b7fd4; }
+.stage-node.stage-team .stage-node-label { background: rgba(219,238,255,0.9); color: #12395e; }
+/* บนแผนที่ภาพวาด ป้ายชื่อพื้นเข้ม (กฎ #worldmap-screen.active ของ F6) — ใช้ฟ้าเข้มโทนเดียวกัน */
+#worldmap-screen.active .stage-node.stage-team .stage-node-label {
+  background: rgba(16,44,78,0.9); border-color: rgba(120,190,255,0.6); color: #dff0ff;
+}
+/* คำอธิบายสีใต้แผนที่ — ลอยเหนือแถบตราผู้พิทักษ์ · ของประดับล้วน (pointer-events:none)
+   ตัวอักษร ≥12px ตามเกณฑ์จอสัมผัส · โผล่เฉพาะเมื่อมีด่าน "ทำด้วยกัน" จริง (ดู L-C5) */
+#wm-team-legend {
+  position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(var(--vw) * 4.0); z-index: 6;
+  background: rgba(16,26,20,0.82); color: #eafff4; font-size: max(12px, calc(var(--vw) * 0.85)); font-weight: 700;
+  line-height: 1.35; text-align: center; max-width: 94%;
+  padding: calc(var(--vw) * 0.3) calc(var(--vw) * 1.0); border-radius: calc(var(--vw) * 1);
+  border: 1px solid rgba(255,235,170,0.35); pointer-events: none;
+}
+
+/* [บล็อก R] แถบแท็บหน้าเข้าเล่นบนจอสัมผัส — เป้ากด ≥44px (คอมคงเดิม 26px ซึ่งเกินเกณฑ์คอมอยู่แล้ว)
+   [แก้ตามชุดทดสอบ 11 ส.ค.] แท็บเพิ่งถูกเปิดกลับมา เลยเพิ่งถูกวัดครั้งแรก: ตัวอักษรโดนกฎย่อรวม
+   ของ .mobile-fit เหลือ 7.2px (มือถือ) / 10.6px (แท็บเล็ต) < เกณฑ์ 12 — เขียนทับด้วย
+   ตัวเลือกแบบเดียวกับเฟส G1f (.mobile-fit #game-wrapper + !important) เฉพาะจอสัมผัส คอมไม่ขยับ */
+.mobile-fit .auth-tab { min-height: 44px; }
+.mobile-fit #game-wrapper .auth-tab { font-size: 12.5px !important; line-height: 1.25 !important; }
 </style>
 </head>
 <body>
@@ -3279,12 +3316,13 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
         <div class="auth-box">
           <div class="auth-title">เข้าสู่การผจญภัย</div>
           <!-- [เฟส 2.1] เมนู 3 แท็บสไตล์เดียวกัน: เข้าห้องเรียน / เข้าสู่ระบบ / สมัครสมาชิก -->
-          <div class="auth-tabs" style="display:none"><!-- [V.7.66] เหลือทางเข้าเดียว (ห้องเรียน) จึงไม่ต้องมีแถบแท็บ -->
+          <!-- [บล็อก R1 · คำสั่งครู 11 ส.ค. 2569 ข้อ 2] เมนู "เข้าสู่ระบบ" + "สมัครสมาชิก" กลับมาแล้ว
+               (ของเดิมถูกซ่อนไว้ตั้งแต่ V.7.66 — โค้ดอยู่ครบตามที่คอมเมนต์เดิมสัญญาไว้จริง)
+               สมัครแบบใหม่ = บัญชี "ผู้เล่นทั่วไป" บนแพลตฟอร์มจริง ไม่ใช่ชีต Google แบบเก่า -->
+          <div class="auth-tabs">
             <button id="auth-tab-classroom" class="auth-tab active" data-tab="classroom">🏫 เข้าห้องเรียน</button>
-            <!-- [ตามคำขอครู V.7.66 ข้อ 13] ซ่อนเมนู "เข้าสู่ระบบ" (บัญชี+PIN แบบเดิม) — นักเรียนเข้าทางห้องเรียนอย่างเดียว
-                 โค้ดยังอยู่ครบ ถ้าครูอยากเปิดคืนเมื่อไรแค่เอา display:none ออก -->
-            <button id="auth-tab-login" class="auth-tab" data-tab="login" style="display:none">เข้าสู่ระบบ</button>
-            <button id="auth-tab-register" class="auth-tab" data-tab="register" style="display:none">สมัครสมาชิกใหม่</button><!-- [เฟส 3e] ปิดสมัครแบบเก่า — เข้าเล่นผ่านแท็บห้องเรียน -->
+            <button id="auth-tab-login" class="auth-tab" data-tab="login">เข้าสู่ระบบ</button>
+            <button id="auth-tab-register" class="auth-tab" data-tab="register">สมัครสมาชิกใหม่</button>
           </div>
 
           <!-- แท็บเข้าห้องเรียนด้วยโค้ดจากครู — ไม่ต้องสมัคร ระบบผูกบัญชีให้อัตโนมัติ -->
@@ -3309,8 +3347,10 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
           <div id="auth-form-login" class="auth-form hidden">
             <label class="form-label">ชื่อผู้ใช้</label>
             <input id="login-username" class="form-input" type="text" placeholder="เช่น somchai01" autocomplete="off">
-            <label class="form-label">PIN (ตัวเลข 4-6 หลัก)</label>
-            <input id="login-pin" class="form-input" type="password" inputmode="numeric" maxlength="6" placeholder="••••">
+            <!-- [บล็อก R2] ช่องเดียวรับสองแบบ: รหัสผ่านบัญชีใหม่ (8-12) และ PIN บัญชีเดิม (4-6)
+                 maxlength เดิม 6 ทำให้พิมพ์รหัสผ่านใหม่ไม่ได้เลย — ขยายเป็น 12 -->
+            <label class="form-label">รหัสผ่าน (บัญชีเดิมใช้ PIN ตัวเลขได้เหมือนเดิม)</label>
+            <input id="login-pin" class="form-input" type="password" maxlength="12" placeholder="••••••••">
             <!-- [รอบ 56 ตามคำขอ] ระบบกลุ่มย้ายไปหน้า "สมัครสมาชิกใหม่" — หน้าเข้าสู่ระบบกลับมาเรียบง่ายเหมือนเดิม -->
             <div id="login-error" class="form-error hidden"></div>
             <button id="btn-login-submit" class="btn btn-primary auth-submit">เข้าสู่ระบบ</button>
@@ -3318,100 +3358,32 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
 
           <!-- [ปรับปรุงตามคำขอ] ฟอร์มสมัครจัดใหม่ให้พอดีหน้าเดียว: จับคู่ช่องเป็นแถวคู่ ไม่มีแถบเลื่อนขึ้นลง/ซ้ายขวา -->
           <div id="auth-form-register" class="auth-form hidden">
+            <!-- [บล็อก R3 · คำสั่งครูข้อ 5] แถวแรก: Username ซ้าย · รหัสผ่านขวา (ไม่มีช่องยืนยันรหัส) -->
             <div class="form-row">
               <div class="form-col">
-                <label class="form-label">ชื่อผู้ใช้ (อังกฤษ/ตัวเลข 4-8 ตัว ไม่ซ้ำใคร)</label>
-                <input id="reg-username" class="form-input" type="text" placeholder="เช่น somchai01" autocomplete="off" maxlength="8">
+                <label class="form-label">ชื่อผู้ใช้ (อังกฤษ/ตัวเลข 6-12 ตัว)</label>
+                <input id="reg-username" class="form-input" type="text" placeholder="เช่น somchai01" autocomplete="off" maxlength="12">
               </div>
               <div class="form-col">
-                <label class="form-label">ตั้ง PIN (ตัวเลข 4-6 หลัก) จำให้ดีนะ</label>
-                <input id="reg-pin" class="form-input" type="password" inputmode="numeric" maxlength="6" placeholder="••••">
+                <label class="form-label">รหัสผ่าน (อังกฤษ+ตัวเลข 8-12 ตัว)</label>
+                <input id="reg-pin" class="form-input" type="password" maxlength="12" placeholder="เช่น kan2569ab" autocomplete="new-password">
               </div>
             </div>
             <div id="reg-username-status" class="form-hint"></div>
-            <label class="form-label">ชื่อนักสำรวจ (ตั้งชื่อเล่นในเกม — ไม่ซ้ำใคร)</label>
-            <input id="reg-charname" class="form-input" type="text" placeholder="เช่น กัปตันกาญจน์">
-            <div id="reg-charname-status" class="form-hint"></div><!-- [ข้อ 3] แสดงสถานะตรวจชื่อนักสำรวจซ้ำ -->
-            <!-- [รอบ 63 ตามคำขอ] เพิ่มช่อง "โรงเรียน" — บันทึกลงชีต Users คอลัมน์ School (ต่อท้ายอัตโนมัติ ไม่กระทบข้อมูลเดิม) -->
-            <label class="form-label">โรงเรียน</label>
-            <input id="reg-school" class="form-input" type="text" placeholder="ชื่อโรงเรียนของนักเรียน">
-            <!-- [รอบ 65 ตามคำขอ] ย้ายปุ่มเลือกจำนวนคนมาไว้ใต้ "โรงเรียน" · คนที่ 1 = เจ้าของบัญชีนี้
-                 คนที่ 2-3 มีช่อง ห้อง/เลขที่ เหมือนคนที่ 1 (บันทึกคอลัมน์ใหม่ Member2/3 Class/Number — ไม่กระทบข้อมูลเดิม) -->
-            <label class="form-label">👥 เครื่องนี้เล่นกี่คน? (คนที่ 1 คือเจ้าของบัญชีนี้)</label>
-            <div class="group-size-row" id="reg-group-size-row">
-              <button type="button" class="group-size-btn active" data-gsize="1">👤 1 คน</button>
-              <button type="button" class="group-size-btn" data-gsize="2">👥 2 คน</button>
-              <button type="button" class="group-size-btn" data-gsize="3">👥👤 3 คน</button>
-            </div>
-            <div class="member-block member-1">
-              <div class="member-head">👤 คนที่ 1 · เจ้าของบัญชีนี้</div>
-              <div class="form-row">
-                <div class="form-col">
-                  <label class="form-label">ชื่อจริง</label>
-                  <input id="reg-firstname" class="form-input" type="text">
-                </div>
-                <div class="form-col">
-                  <label class="form-label">นามสกุล</label>
-                  <input id="reg-lastname" class="form-input" type="text">
-                </div>
+            <!-- [บล็อก R3 · คำสั่งครูข้อ 5] แถวสอง: ชื่อในเกม + อายุ (รวมแถวเดียว — แนวตั้งบนมือถือมีจำกัด)
+                 ช่องโรงเรียนแบบพิมพ์เองถูกถอด: สมาชิกใหม่สังกัด "ผู้เล่นทั่วไป" ตายตัวตามคำสั่งครูข้อ 4 -->
+            <div class="form-row">
+              <div class="form-col" style="flex:2.2">
+                <label class="form-label">ชื่อในเกม (4-20 ตัวอักษร)</label>
+                <input id="reg-charname" class="form-input" type="text" placeholder="เช่น กัปตันกาญจน์" maxlength="20">
               </div>
-              <div class="form-row">
-                <div class="form-col">
-                  <label class="form-label">ห้อง</label>
-                  <input id="reg-class" class="form-input" type="text" placeholder="เช่น ป.4/1">
-                </div>
-                <div class="form-col">
-                  <label class="form-label">เลขที่</label>
-                  <input id="reg-studentnum" class="form-input" type="text" inputmode="numeric">
-                </div>
+              <div class="form-col" style="flex:1">
+                <label class="form-label">อายุ (ปี)</label>
+                <input id="reg-age" class="form-input" type="text" inputmode="numeric" maxlength="2" placeholder="10" autocomplete="off">
               </div>
             </div>
-            <div id="reg-g2-row" class="member-block member-2 hidden">
-              <div class="member-head">👥 คนที่ 2</div>
-              <div class="form-row">
-                <div class="form-col">
-                  <label class="form-label">ชื่อจริง</label>
-                  <input id="reg-g2-first" class="form-input" type="text" autocomplete="off">
-                </div>
-                <div class="form-col">
-                  <label class="form-label">นามสกุล</label>
-                  <input id="reg-g2-last" class="form-input" type="text" autocomplete="off">
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-col">
-                  <label class="form-label">ห้อง</label>
-                  <input id="reg-g2-class" class="form-input" type="text" placeholder="เช่น ป.4/1" autocomplete="off">
-                </div>
-                <div class="form-col">
-                  <label class="form-label">เลขที่</label>
-                  <input id="reg-g2-number" class="form-input" type="text" inputmode="numeric" autocomplete="off">
-                </div>
-              </div>
-            </div>
-            <div id="reg-g3-row" class="member-block member-3 hidden">
-              <div class="member-head">👥 คนที่ 3</div>
-              <div class="form-row">
-                <div class="form-col">
-                  <label class="form-label">ชื่อจริง</label>
-                  <input id="reg-g3-first" class="form-input" type="text" autocomplete="off">
-                </div>
-                <div class="form-col">
-                  <label class="form-label">นามสกุล</label>
-                  <input id="reg-g3-last" class="form-input" type="text" autocomplete="off">
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-col">
-                  <label class="form-label">ห้อง</label>
-                  <input id="reg-g3-class" class="form-input" type="text" placeholder="เช่น ป.4/1" autocomplete="off">
-                </div>
-                <div class="form-col">
-                  <label class="form-label">เลขที่</label>
-                  <input id="reg-g3-number" class="form-input" type="text" inputmode="numeric" autocomplete="off">
-                </div>
-              </div>
-            </div>
+            <div id="reg-charname-status" class="form-hint"></div>
+            <div class="form-hint">สมัครแล้วจะสังกัด "ผู้เล่นทั่วไป" อัตโนมัติ — ครั้งหน้าเข้าเล่นที่แท็บ "เข้าสู่ระบบ" ได้เลย</div>
             <div id="register-error" class="form-error hidden"></div>
             <button id="btn-register-submit" class="btn btn-primary auth-submit">สมัครสมาชิก</button>
           </div>
@@ -3686,10 +3658,10 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
              (เดิมทับแถบตราผู้พิทักษ์ · ทับหมุดด่าน 2050 · ทับหมุดด่านบอส)
              ป้ายพวกนี้กว้าง 12% ของจอบนคอมแต่ 21.5% บนมือถือ (ตัวอักษรมีพื้นขั้นต่ำ 12 px)
              ตำแหน่งจึงต้องเผื่อกรณีมือถือเป็นหลัก -->
-        <div class="wm-zone-chip" style="left:58%; top:42.5%">🏘️ โซนเมืองมรดกริมแคว</div>
-        <div class="wm-zone-chip z2" style="left:11%; top:56%">🌊 โซนสายน้ำตะวันตก</div>
-        <div class="wm-zone-chip z3" style="left:30%; top:9%">⛰️ โซนขุนเขาชายแดน</div>
-        <div class="wm-zone-chip zf" style="left:61%; top:1%">🌏 ประตูกาญจน์ 2050</div>
+        <div class="wm-zone-chip" style="left:68%; top:93%">🏘️ โซนเมืองมรดกริมแคว</div>
+        <div class="wm-zone-chip z2" style="left:10%; top:78%">🌊 โซนสายน้ำตะวันตก</div>
+        <div class="wm-zone-chip z3" style="left:40%; top:32%">⛰️ โซนขุนเขาชายแดน</div>
+        <div class="wm-zone-chip zf" style="left:78%; top:1%">🌏 ประตูกาญจน์ 2050</div>
         <!-- จัดกลุ่มปุ่มมุมบนซ้าย/ขวาเป็น "ด็อก" เดียวกันแบบ flex-column แทนการวาง corner-tl/tr แยกทีละปุ่มพร้อม top เป็นตัวเลขเอง (เดิมเสี่ยงเรียงชนกันเวลาปรับ/เพิ่มปุ่มทีหลัง) -->
         <div class="worldmap-dock worldmap-dock-tl">
           <button id="btn-worldmap-home" class="btn btn-icon" title="หน้าแรก">🏠</button>
@@ -4304,7 +4276,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
    ด่านที่ผ่านในภาคหนึ่งจะไปโผล่ว่า 'ผ่านแล้ว' ในอีกภาค (ตราหลุด/ประตูเปิดเอง/คะแนนเพี้ยน) */
 const GAME_PART = 2;
 const PART1_URL = 'https://www.gameplearn.com/kan-adventure';
-const GAME_VERSION = 'V.8.10-p2-2569.74'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
+const GAME_VERSION = 'V.8.15-p2-2569.79'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
     ฝั่งเกม (1) ลบปุ่มวิ่ง ◀▶ + ป้ายสอนปัดของ V.7 ที่ชี้ผิดด่าน (2) แว่นขยายด่านนิเวศแตะครั้งเดียวติด
     (3) ซ่อนหมวดไอเทมที่ยังต่อเข้าด่านเรือธงไม่ได้ (ของที่ซื้อแล้วยังอยู่ในเซฟครบ)
     (4) หรี่เพลงอัตโนมัติระหว่างอ่านออกเสียงแล้วคืนเมื่ออ่านจบ (5) หน้าเข้าระบบแยกช่องโค้ดห้องออกจากชื่อในเกมชัดเจน + เตือนเมื่อพิมพ์สลับ
@@ -4963,11 +4935,27 @@ document.addEventListener('visibilitychange', () => {
 
 // [ตรวจมือถือ V.7.64] มือถือถือแนวตั้ง → ชวนหมุนจอ (เกม 16:9 บนจอตั้งเหลือแถบเตี้ยมาก) — ปิดแล้วจำทั้งเซสชัน
 (function () {
+  /* [บล็อก Q4] ครูเลือก "ทาง ก — บังคับแนวนอนบนมือถือ"
+     เหตุผลเชิงวิจัย: แนวตั้งใช้พื้นที่จอได้ 25-42% ตัวหนังสือเล็กลงครึ่งหนึ่ง เด็กกดพลาดบ่อยกว่า
+     ข้อมูลที่ได้จากเด็กที่เล่นแนวตั้งจึงเทียบกับเด็กที่เล่นแนวนอนไม่ได้ — กระทบผลวิจัยโดยตรง
+     มือถือ (ด้านสั้น ≤ 500 px) = ปิดแผ่นนี้ไม่ได้ · แท็บเล็ต = ปิดได้ เพราะแนวตั้งยังพอเล่นไหว
+     ทุกเงื่อนไขมี "จอสัมผัส" คุมอยู่ — คอมไม่มีทางเห็นแผ่นนี้ */
+  function _isPhoneSize() { return Math.min(window.innerWidth || 0, window.innerHeight || 0) <= 500; }
   function chk() {
     var el = document.getElementById('rotate-hint-overlay'); if (!el) return;
-    var off = false; try { off = sessionStorage.getItem('rotateHintOff') === '1'; } catch (e) {}
+    var touch = (navigator.maxTouchPoints || 0) > 0 || ('ontouchstart' in window);
     var portrait = window.innerHeight > window.innerWidth;
-    el.style.display = (portrait && window.innerWidth < 820 && !off) ? 'flex' : 'none';
+    var phone = _isPhoneSize();
+    var off = false;
+    /* บนมือถือ ไม่สนใจว่าเคยกดปิดไปหรือยัง — ต้องหมุนเท่านั้นถึงจะเล่นได้ */
+    if (!phone) { try { off = sessionStorage.getItem('rotateHintOff') === '1'; } catch (e) {} }
+    var show = touch && portrait && !off;
+    el.style.display = show ? 'flex' : 'none';
+    /* ปุ่ม "เล่นต่อแนวตั้งไปก่อน" โผล่เฉพาะแท็บเล็ต */
+    var skip = document.getElementById('rotate-hint-skip');
+    if (skip) skip.style.display = phone ? 'none' : '';
+    var why = document.getElementById('rotate-hint-why');
+    if (why) why.style.display = phone ? '' : 'none';
   }
   window.addEventListener('resize', chk);
   window.addEventListener('orientationchange', chk);
@@ -9097,6 +9085,20 @@ const CHAR_CONFIG = {
     weaponType: 'bow', // [รอบ37 #2] นายพรานถือธนูล่าเวท (เดิม binoculars)
     headwear: 'bandana'
   },
+  /* [บล็อก P4] ตัวประกอบในฉากด่านปริศนาสายน้ำ — ไม่ขาย ไม่ให้เลือกเป็นตัวละครผู้เล่น
+     ใช้ headwear 'sun-hat' (งอบ) และไม่ถืออาวุธ ให้อ่านออกทันทีว่าเป็นชาวนา */
+  piChaoNa: {
+    id: 'piChaoNa', name: 'พี่ชาวนา', gender: 'male',
+    body: { w: 1.04, h: 0.99 },
+    skinTone: '#b07a4a',
+    hairColorLight: '#3a2a1a', hairColorDark: '#1e1409',
+    hairStyle: 'short',
+    eyeColor: '#3a2a18',
+    outfitPrimary: '#6e8a4a', outfitSecondary: '#4a6030',
+    accentColor: '#e8c86a',
+    weaponType: 'none',
+    headwear: 'sun-hat'
+  },
   nongMonNoi: {
     id: 'nongMonNoi', name: 'น้องมอญน้อย', gender: 'female',
     body: { w: 0.95, h: 0.97 },
@@ -10620,7 +10622,36 @@ const BADGE_DEFS = [
   { id: 'medal_challenger', icon: '🏅', name: 'ยอดนักฝึกปรือ', desc: 'กลับไปคว้าชัยใน “รอบชิงเหรียญ” (เล่นซ้ำ) ครบทุกด่านทักษะและมินิเกม',
     check: (d) => RESEARCH_REPLAY_STAGES.every(k => _badgeDone(d, k) && _badgeAtt(d, k) >= 2) },
   { id: 'kanchana_legend', icon: '🏆', name: 'ตำนานแห่งกาญจนบุรี', desc: 'เก็บครบทั้ง 8 เหรียญ พิชิตการผจญภัยกาญจนบุรีอย่างสมบูรณ์',
-    check: (d) => BADGE_DEFS.slice(0, 8).every(b => { try { return b.check(d); } catch (e) { return false; } }) }
+    check: (d) => BADGE_DEFS.slice(0, 8).every(b => { try { return b.check(d); } catch (e) { return false; } }) },
+
+  /* ══ [บล็อก T · คำสั่งครู 11 ส.ค. ข้อ 7] เหรียญใหม่ 4 เหรียญ ตามเกณฑ์ตัวอย่างของครูเป๊ะ ๆ ══
+     ทุกเหรียญ "อ่าน" เซฟอย่างเดียว ไม่เขียนอะไร ไม่แตะการวัดสมรรถนะ
+     ต่อท้ายรายการเสมอ — เหรียญตำนาน (slice 0-8) จึงไม่ถูกกระทบ */
+  { id: 'guardian_six', icon: '🛡️', name: 'ผู้พิทักษ์เต็มยศ', desc: 'ผ่านด่านหลักครบ 6 ด่าน ได้ตราผู้พิทักษ์ครบทุกดวง',
+    check: (d) => { try { return getProtectorState(d).count >= (V8.REQUIRED_BADGES || 6); } catch (e) { return false; } } },
+  { id: 'triple_star_six', icon: '🌟', name: 'ดาวสามพราวฟ้า', desc: 'เก็บ 3 ดาวครบทุกด่านหลักทั้ง 6 ด่าน',
+    /* คีย์ด่านหลักอ่านจาก V8.FLAGSHIP ตัวจริง — เพิ่ม/ย้ายด่านหลักเมื่อไรเหรียญตามให้เอง
+       การแปลงคีย์เลขทำแบบเดียวกับ getProtectorState (เซฟเก็บ 1 เป็น number แต่ 'mg1' เป็น string) */
+    check: (d) => { try {
+      return Object.keys(V8.FLAGSHIP).every((sid) => {
+        const key = (String(sid) === String(Number(sid))) ? Number(sid) : sid;
+        const en = d.stages && d.stages[key];
+        return !!(en && en.completed && Number(en.stars) >= 3);
+      });
+    } catch (e) { return false; } } },
+  { id: 'all_paths', icon: '🗺️', name: 'ผู้พิชิตทุกเส้นทาง', desc: 'ผ่านครบทั้ง 14 ด่าน รวมมินิเกมและด่านพิเศษทุกด่าน',
+    /* รายชื่อชุดเดียวกับ P2_SM_STAGES ของหน้าครู (14 ด่านที่ส่งความคืบหน้า) */
+    check: (d) => { try {
+      return [1, 3, 4, 5, 6, 7, 8, 'mg1', 'mg2', 'mg3', 'hellfire', 'pilok', 'water', 'balance2050']
+        .every((k) => _badgeDone(d, k));
+    } catch (e) { return false; } } },
+  { id: 'balance_perfect', icon: '🌏', name: 'สุดยอดผู้พิทักษ์สมดุล', desc: 'พิชิตกาญจนบุรี 2050 ด้วยคะแนนเต็มร้อย',
+    /* "เต็ม" = normScore 10 (สเกลวิจัย 0-10 = 100% ของด่าน) — นิยามเดียวที่ไม่ขึ้นกับ
+       ว่ารอบนั้นมีข้อเขียน AI หรือไม่ (คะแนนดิบเต็ม 240 หรือ 360 ก็ได้ 10 เท่ากัน) */
+    check: (d) => { try {
+      const en = d.stages && d.stages['balance2050'];
+      return !!(en && en.completed && Number(en.normScore) >= 10 - 1e-9);
+    } catch (e) { return false; } } }
 ];
 
 function getEarnedBadges(data) {
@@ -10924,16 +10955,53 @@ const StageDetective = {
       '<button id="dt-bridge-next" class="dt-btn" style="position:absolute;bottom:calc(var(--vw)*1.4);right:calc(var(--vw)*2);display:none">เดินทางไปสุสานดอนรัก ➜</button>');
     this._wireHotspots('dt-bridge-next', ['E1', 'E2', 'E3'], () => this._gotoCemetery());
   },
+  /* ⟦P⟧ */
+  /* ══ [บล็อก P1] อวตารเด็กเดินสืบเอง (ทางเลือก ข) ══
+     หลักเดียวกับด่านวิทยุ (rdActor) และด่านสภา (cnActor): ตัวละครไม่ได้มายืนประดับ
+     แต่ "เดินตามรอยการสืบของเด็ก" — เด็กเห็นตัวเองกำลังลงพื้นที่ ไม่ใช่แค่จิ้มปุ่มบนภาพ
+     ข้อบังคับที่ยึด: ไม่รอ (ไม่ await) · ไม่แตะการวัด · สุสานเดินช้าและไม่มีท่าดีใจ */
+  _dtActor: null,
+  _dtMount() {
+    try {
+      /* ทุกครั้งที่เปลี่ยนฉาก _shell() ล้าง innerHTML ทิ้ง แคนวาสเดิมจึงหายไปแล้ว */
+      try { if (typeof VKACTOR !== 'undefined') VKACTOR.unmountAll(); } catch (e) {}
+      this._dtActor = null;
+      if (typeof VKACTOR === 'undefined') return;
+      const host = document.getElementById('dt-scene');
+      if (!host) return;
+      const a = VKACTOR.mount(host, { x: 10, y: 88, scale: 0.58, pose: 'idle' });
+      if (!a) return;
+      this._dtActor = a;
+      VKACTOR.placeFeet(a, 10, 88);
+      /* วัดซ้ำอีกเฟรม — ตอน mount เวทีอาจยังไม่มีขนาดจริง (ภาพพื้นหลังยังโหลดไม่เสร็จ) */
+      requestAnimationFrame(() => { try { VKACTOR.placeFeet(a, 10, 88); } catch (e) {} });
+    } catch (e) { console.error('[P1] ตั้งอวตารในด่านนักสืบไม่สำเร็จ', e); }
+  },
+  _dtWalkTo(el) {
+    try {
+      const a = this._dtActor;
+      if (!a || !el || typeof VKACTOR === 'undefined') return;
+      /* อ่านพิกัดจาก DOM จริงของจุดหลักฐาน ไม่ได้เดาเลขซ้ำอีกที่หนึ่ง */
+      const x = parseFloat(el.style.left), y = parseFloat(el.style.top);
+      if (!isFinite(x) || !isFinite(y)) return;
+      const quiet = this.step === 'cemetery';   /* สุสาน = สถานที่จริงของคนจริง เดินช้า สงบ */
+      VKACTOR.moveTo(a, x, VKACTOR.feetTop(a, y + 6), 'walk', quiet ? 1150 : 620)
+        .then(() => { try { VKACTOR.setPose(a, 'crouch', quiet ? 1700 : 900); } catch (e) {} });
+    } catch (e) { console.error('[P1] อวตารเดินไปจุดหลักฐานไม่สำเร็จ', e); }
+  },
+  /* ⟦/P⟧ */
   _hotspotHTML(spots) {
     return spots.map(s => '<button class="dt-hotspot' + (this.collected[s.ev] ? ' got' : '') + '" id="dt-hs-' + s.ev + '" style="left:' + s.x + '%;top:' + s.y + '%">' +
       s.icon + '<span class="hs-label">' + s.label + '</span></button>').join('');
   },
   _wireHotspots(nextBtnId, evIds, onNext) {
+    this._dtMount();                     /* [บล็อก P1] ฉากที่มีจุดหลักฐาน = ฉากที่อวตารลงพื้นที่ */
     evIds.forEach(id => {
       const el = document.getElementById('dt-hs-' + id);
       if (!el) return;
       el.onclick = () => {
         if (this.collected[id]) return;
+        this._dtWalkTo(el);              /* [บล็อก P1] เดินไปจุดนั้น — ไม่รอ การ์ดหลักฐานเปิดทันที */
         this._openEvidence(this.EVIDENCE.find(e => e.id === id), { collect: true, after: () => {
           el.classList.add('got');
           const allGot = evIds.every(k => this.collected[k]);
@@ -11332,6 +11400,10 @@ const StageDetective = {
     const showEnd = () => {
       DIALOGUE.hide();
       try { VKBUDDY.unmount(); } catch (e) {}
+      /* [บล็อก P1] ด่านนี้ไม่ได้ผ่าน VK.close() จึงต้องเก็บแคนวาสตัวละครเอง
+         (ในโหมด lowfx ไม่มี rAF มาเก็บให้ ถ้าไม่เก็บจะค้างใน VKACTOR._list) */
+      try { VKACTOR.unmountAll(); } catch (e) {}
+      this._dtActor = null;
       const root = document.getElementById('detective-root');
       root.classList.remove('active');
       root.innerHTML = '';
@@ -11365,6 +11437,8 @@ const StageDetective = {
   _quitToMap() {
     this._runId = (this._runId || 0) + 1;
     try { VKBUDDY.unmount(); } catch (e) {}
+    try { VKACTOR.unmountAll(); } catch (e) {}   /* [บล็อก P1] ออกกลางคันก็ต้องเก็บให้เกลี้ยง */
+    this._dtActor = null;
     const root = document.getElementById('detective-root');
     root.classList.remove('active');
     root.innerHTML = '';
@@ -21881,6 +21955,12 @@ const SyncQueue = {
 };
 
 // normScore = คะแนนสเกลวิจัย (0-10 ด่านทั่วไป / 0-30 บอส) — ทุกด่านส่งมาด้วยเสมอ (เซฟเก่าที่ไม่มีใช้ตัวประมาณด้านบน)
+/* [บล็อก L-C] เครื่องนี้กำลังเล่นเป็นกลุ่ม (2-3 คน/เครื่อง) หรือไม่ — ใช้ติดธงด่านว่า
+   "ทำเอง" (solo) หรือ "ทำด้วยกัน" (team) · ท่าเดียวกับ isGroupPlaySession ของภาค 1 เป๊ะ */
+function isGroupPlaySession() {
+  try { const b = JSON.parse(localStorage.getItem('cls_current') || 'null');
+        return !!(b && b.member_ids && b.member_ids.length > 1); } catch (e) { return false; }
+}
 function saveStageProgress(stageId, score, stars, timeSpentSec, completed, normScore) {
   const _v8PrevProt = getProtectorState(getSaveData()).earned.slice(); /* [V.8] ตราที่มีก่อนบันทึก — ไว้เช็คว่าได้ตราใหม่ไหม */
   const data = getSaveData();
@@ -21921,10 +22001,16 @@ function saveStageProgress(stageId, score, stars, timeSpentSec, completed, normS
   const bestStars = Math.max((prevEntry && prevEntry.stars) || 0, stars || 0);
   const newNorm = typeof normScore === 'number' ? normScore : getStageNormScore({ score }, stageId);
   const bestNorm = Math.max((prevEntry && typeof prevEntry.normScore === 'number') ? prevEntry.normScore : 0, newNorm);
+  /* [บล็อก L-C · มติครูภาค 1 V.7.99.1 ข้อ 2] จำไว้ว่าด่านนี้ผ่านตอน "เล่นคนเดียว" หรือ
+     "เล่นด้วยกันกับเพื่อน" — ใช้แยกสีบนแผนที่ให้เห็นว่าด่านไหนตัวเองยังไม่เคยทำเอง
+     (เคยผ่านแบบใดแล้วธงนั้นไม่ถูกลบทิ้ง · เซฟเก่าไม่มีธง = false เฉย ๆ ไม่พัง) */
+  const _grp = isGroupPlaySession();
   data.stages[stageId] = {
     score: bestScore, stars: bestStars, lastScore: score, lastStars: stars,
     normScore: bestNorm, lastNormScore: newNorm, // สเกลวิจัย 0-10 (บอส 0-30)
     timeSpentSec, completed: completed || (prevEntry && prevEntry.completed) || false,
+    solo: (completed && !_grp) || !!(prevEntry && prevEntry.solo),
+    team: (completed && _grp) || !!(prevEntry && prevEntry.team),
     timestamp: Date.now(), _everCleared: completed || (prevEntry && prevEntry._everCleared) || false
   };
   // [ใหม่] รางวัลปลดล็อคจากการผ่านด่าน (ตัวละคร/สัตว์เลี้ยง/ออร่า ตาม STAGE_UNLOCKS) — มอบทันทีที่ด่านกลายเป็น "ผ่านแล้ว"
@@ -22020,7 +22106,10 @@ var PEER_Q2=[
 ];
 var PEER_ALL=PEER_Q.concat(PEER_Q2);
 var PEER_FACE=[['😞','แทบไม่เคย'],['😐','นาน ๆ ครั้ง'],['🙂','บางครั้ง'],['😃','บ่อย ๆ'],['🤩','ทุกครั้ง']];
-var _peerState={ me:null, roster:[], sel:{}, targets:[], idx:0, scores:{} };
+/* [บล็อก O7 · บั๊ก 2] done = "คนบนเครื่องนี้ที่ประเมินเสร็จแล้ว" (คีย์เป็นรหัสนักเรียน)
+   ท่าเดียวกับ _selfState.done ของบล็อก N เป๊ะ เพื่อให้สองหน้าประเมินทำงานเหมือนกัน
+   เก็บในหน่วยความจำอย่างเดียว ไม่แตะ localStorage (ไม่ให้ค้างข้ามวันในเครื่องห้องเรียน) */
+var _peerState={ me:null, roster:[], sel:{}, targets:[], idx:0, scores:{}, done:{} };
 
 function peerMembers(){
   var b=(typeof SBTee!=='undefined'&&SBTee.bind)?SBTee.bind():null;
@@ -22040,14 +22129,27 @@ function peerFetchRoster(){
   return SBTee._rpc('rpc_list_roommates',{ p_join_key:b.join_key, p_student:b.student_id, p_pin:b.jpin||'' })
     .then(function(t){
       var rows=[]; try{ rows=JSON.parse(t||'[]')||[]; }catch(e){ rows=[]; }
-      return rows.map(function(r){ return { id:String(r.id), name:String(r.player_name||('เพื่อนเลขที่ '+(r.student_number||'?'))), no:String(r.student_number||'') }; });
+      /* [บล็อก O7 · บั๊ก 2 ข้อ 1] เดิมอ่านแค่ player_name + student_number แล้วทิ้ง real_name
+         ที่เซิร์ฟเวอร์รุ่น v7991 (rpc_list_roommates รุ่น 2) ส่งมาให้แล้ว
+         ผลคือรายชื่อเป็น "ชื่อในเกม" ซึ่งสมาชิกกลุ่มเดียวกันตั้งซ้ำกันทั้งกลุ่ม
+         เด็ก ป.4 แยกไม่ออก ต้องเดาจากเลขที่อย่างเดียว → เลือกผิดคนได้ง่ายมาก
+         ตอนนี้เก็บ real_name ไว้ด้วยเมื่อมี · ไม่มี (ครูยังไม่ได้รัน SQL v7991) ก็ถอยไปแบบเดิม
+         ไม่มีการเปลี่ยนพารามิเตอร์ที่ส่งไป RPC แม้แต่ตัวเดียว — อ่านฟิลด์ที่ส่งกลับมาเพิ่มเท่านั้น */
+      return rows.map(function(r){ return { id:String(r.id),
+        name:String(r.player_name||('เพื่อนเลขที่ '+(r.student_number||'?'))),
+        real:String(r.real_name||'').trim(),
+        no:String(r.student_number||'') }; });
     })
     .catch(function(){ return null; });
 }
 function openPeerReview(){
   var b=(typeof SBTee!=='undefined'&&SBTee.bind)?SBTee.bind():null;
   if(!b||!b.student_id){ if(typeof showShopToast==='function') showShopToast('ต้องเข้าห้องเรียนด้วยโค้ดครูก่อน จึงจะประเมินเพื่อนได้นะ'); return; }
-  _peerState={ me:null, roster:[], sel:{}, targets:[], idx:0, scores:{} };
+  /* [บล็อก O8 · บั๊ก 2 ข้อ 2] เดิมล้าง _peerState ทั้งก้อนทุกครั้งที่เปิดหน้า
+     ถ้าคนที่ 1 ทำเสร็จแล้วปิดหน้าไป พอเปิดใหม่จะไม่มีใครรู้ว่าใครทำไปแล้ว
+     → เก็บ done ข้ามการเปิด/ปิดไว้ (คำตอบ/ตัวเลือกยังล้างใหม่ทุกครั้งเหมือนเดิม) */
+  var _keepDone=(_peerState&&_peerState.done)||{};
+  _peerState={ me:null, roster:[], sel:{}, targets:[], idx:0, scores:{}, done:_keepDone };
   var host=document.getElementById('sat-survey'); if(!host) return;
   host.classList.add('on');
   var t=document.getElementById('sat-title'); if(t) t.textContent='ประเมินเพื่อนร่วมห้อง';
@@ -22066,15 +22168,29 @@ function openPeerReview(){
 function peerClose(){ var h=document.getElementById('sat-survey'); if(h) h.classList.remove('on'); }
 function peerRenderWho(mem){
   var b=document.getElementById('sat-body'); if(!b) return;
-  b.innerHTML='<div class="sat-intro">เครื่องนี้เล่นเป็นกลุ่ม — ก่อนอื่น เธอคือใคร?</div>'+
-    '<div style="display:flex;flex-direction:column;gap:9px;margin-top:10px">'+
-      mem.map(function(m,i){ return '<button class="sat-submit" style="margin:0" onclick="peerPickMe('+i+')">'+escapeHtml(m.name)+'</button>'; }).join('')+
-    '</div>'+
-    '<button class="sat-submit" style="background:#94a3b8;max-width:220px;margin:16px auto 0" onclick="peerClose()">ยังไม่ทำตอนนี้</button>';
+  /* [บล็อก O9 · บั๊ก 2 ข้อ 2] หน้าเดิมบอกแค่ "เธอคือใคร?" — คนที่ 2-3 บนเครื่องเดียวกัน
+     ไม่มีทางรู้เลยว่าตัวเองต้องทำด้วย และไม่มีทางรู้ว่าใครทำไปแล้ว
+     เพิ่มตัวนับ "เหลืออีกกี่คน" + ติ๊ก ✅ คนที่ทำแล้ว (ท่าเดียวกับ satWhoRender ของบล็อก N)
+     ปุ่มทุกอันเป็นลูกตรง ๆ ของ #sat-body เพื่อให้ SATPAGE แบ่งหน้าได้เองบนจอเตี้ย
+     ⛔ ข้อความ "เธอคือใคร" ต้องอยู่ และจำนวนปุ่มต้องเท่าเดิม (สมาชิก + ปุ่มปิด 1) */
+  var left=mem.filter(function(m){ return !_peerState.done[String(m.id)]; }).length;
+  b.innerHTML='<div class="sat-intro">เครื่องนี้เล่นเป็นกลุ่ม '+mem.length+' คน — ก่อนอื่น เธอคือใคร?<br>'+
+      '<b>ทุกคนต้องประเมินเพื่อนของตัวเอง</b> (เหลืออีก '+left+' คน)</div>'+
+    mem.map(function(m,i){ var fin=!!_peerState.done[String(m.id)];
+      return '<button type="button" class="sat-submit" id="peerwho-'+i+'" style="margin:0 0 9px'+(fin?';background:#94a3b8':'')+'" onclick="peerPickMe('+i+')">'+
+        (fin?'✅ ':'🙋 ')+escapeHtml(peerMemLabel(m))+(fin?' (ทำแล้ว · กดเพื่อทำอีกครั้ง)':'')+'</button>'; }).join('')+
+    '<button type="button" class="sat-submit" style="background:#94a3b8;max-width:220px;margin:16px auto 0" onclick="peerClose()">ยังไม่ทำตอนนี้</button>';
 }
 function peerPickMe(i){
   var mem=peerMembers(); if(!mem) return;
-  _peerState.me=mem[i]; peerRenderPick();
+  _peerState.me=mem[i];
+  /* [บล็อก O10 · บั๊ก 2 ข้อ 3 ตามที่ครูชี้] เพื่อนที่นั่งคู่กันคือคนที่เห็นพฤติกรรมกันมากที่สุด
+     แต่เดิมกลับเป็นคนเดียวที่ไม่มีใครประเมินให้ (ต้องไปหาชื่อในรายชื่อทั้งห้องเอง)
+     → ติ๊กคู่ของตัวเองไว้ล่วงหน้าเสมอ เอาออกเองได้ถ้าไม่ต้องการ
+     ล้างตัวเลือก/คำตอบของคนก่อนหน้าด้วย — สลับคนแล้วของคนเก่าห้ามไหลไปปนคนใหม่ */
+  _peerState.sel={}; _peerState.scores={}; _peerState.targets=[]; _peerState.idx=0;
+  mem.forEach(function(m){ if(String(m.id)!==String(_peerState.me.id)) _peerState.sel[String(m.id)]=true; });
+  peerRenderPick();
 }
 /* เลือกเพื่อนที่จะประเมิน — เลือกทีละหลายคน หรือทั้งห้องได้ในคลิกเดียว */
 function peerRenderPick(){
@@ -22100,12 +22216,40 @@ function peerRenderPick(){
     '<button class="sat-submit" id="peer-start" style="margin-top:12px'+(nSel?'':';opacity:.55')+'" onclick="peerStart()">▶️ เริ่มประเมิน ('+nSel+' คน · คนละ 8 ข้อ)</button>'+
     '<button class="sat-submit" style="background:#94a3b8;max-width:220px;margin:10px auto 0" onclick="peerClose()">ยังไม่ทำตอนนี้</button>';
 }
+/* [บล็อก O11 · บั๊ก 2 ข้อ 1] "คนบนเครื่องเดียวกัน" มีแต่ชื่อในเกมจาก member_names
+   ซึ่งกลุ่มเดียวกันตั้งซ้ำกันทั้งกลุ่ม → หน้า "เธอคือใคร" และหน้าส่งเครื่องต่อ
+   จะเขียนชื่อเดียวกันซ้ำ ๆ จนแยกไม่ออกว่าใครเป็นใคร
+   เอาชื่อจริง/เลขที่จากรายชื่อห้อง (roster) มาเติมให้ โดยจับคู่ด้วยรหัสนักเรียน
+   ไม่มีชื่อจริง (ครูยังไม่ได้รัน SQL v7991) → ถอยไปใช้ชื่อในเกมแบบเดิม */
+function peerRosterOf(id){
+  var r=_peerState.roster||[];
+  for(var i=0;i<r.length;i++){ if(String(r[i].id)===String(id)) return r[i]; }
+  return null;
+}
+function peerMemLabel(m){
+  var r=peerRosterOf(m.id)||{};
+  var nm=(r.real||'').trim()||m.name;
+  return (r.no?('เลขที่ '+r.no+' · '):'')+nm;
+}
+/* ป้ายชื่อในรายชื่อทั้งห้อง: เลขที่ + ชื่อจริง (ไม่ซ้ำ) + ชื่อในเกม (ซ้ำกันได้ทั้งกลุ่ม) */
+function peerLabelHTML(m){
+  var head=(m.no?('เลขที่ '+m.no+' · '):'')+(m.real||m.name);
+  var tail=(m.real&&m.name&&m.real!==m.name)?(' 🎮 '+m.name):'';
+  return escapeHtml(head)+(tail?'<span style="font-size:12px;color:#7c3aed;font-weight:700">'+escapeHtml(tail)+'</span>':'');
+}
+/* คนที่นั่งเครื่องเดียวกับ "คนที่กำลังทำ" — ใช้แปะป้ายเตือนว่าอย่าลืมประเมินให้ */
+function peerIsMate(id){
+  var me=_peerState.me||{}, mem=peerMembers()||[];
+  for(var i=0;i<mem.length;i++){ if(String(mem[i].id)===String(id)&&String(mem[i].id)!==String(me.id)) return true; }
+  return false;
+}
 function peerStuBtn(m){
   /* [บล็อก I] ปุ่มรายชื่อ 1 คน — min-height:44px ให้ถึงเกณฑ์เป้ากดจอสัมผัสเสมอ */
-  var on=!!_peerState.sel[m.id];
+  var on=!!_peerState.sel[m.id], mate=peerIsMate(m.id);
   return '<button type="button" id="peerstu-'+m.id+'" onclick="peerSelOne(\''+m.id+'\')" style="display:flex;align-items:center;gap:8px;min-height:44px;padding:8px 11px;border-radius:12px;cursor:pointer;font-family:inherit;text-align:left;'+
-    'border:2px solid '+(on?'#0e7490':'#cbd5e1')+';background:'+(on?'#cffafe':'#fff')+'">'+
-    '<span class="pstu-ic" style="font-size:19px">'+(on?'✅':'⬜')+'</span><span style="font-weight:700;font-size:14.5px;color:#0f172a">'+(m.no?('เลขที่ '+escapeHtml(m.no)+' · '):'')+escapeHtml(m.name)+'</span></button>';
+    'border:2px solid '+(on?'#0e7490':'#cbd5e1')+';background:'+(on?(mate?'#e0f2fe':'#cffafe'):'#fff')+'">'+
+    '<span class="pstu-ic" style="font-size:19px">'+(on?'✅':'⬜')+'</span><span style="font-weight:700;font-size:14.5px;color:#0f172a">'+peerLabelHTML(m)+
+    (mate?'<span style="display:block;font-size:12px;color:#0369a1;font-weight:700">👥 เพื่อนที่นั่งด้วยกัน — ประเมินให้ด้วยนะ</span>':'')+'</span></button>';
 }
 function peerSelPaint(id){
   var on=!!_peerState.sel[id], b=document.getElementById('peerstu-'+id);
@@ -22137,7 +22281,9 @@ function peerRenderTarget(){
   if(!cur){ peerSubmit(); return; }
   var sc=_peerState.scores[cur.id]||{};
   b.innerHTML='<div class="sat-intro">กำลังประเมินคนที่ '+(_peerState.idx+1)+' จาก '+tg.length+' · ครบทั้ง 6 สมรรถนะ (8 ข้อ)</div>'+
-    '<div class="sat-dim">🤝 '+escapeHtml(cur.name)+' เป็นเพื่อนแบบไหน?</div>'+
+    /* [บล็อก O11] หัวหน้าให้คะแนนต้องบอกให้ชัดว่ากำลังประเมิน "ใคร" ด้วยชื่อจริง
+       ไม่ใช่ชื่อในเกมที่ซ้ำกันทั้งกลุ่ม (เดิมเด็กให้คะแนนผิดคนโดยไม่รู้ตัวได้) */
+    '<div class="sat-dim">🤝 '+escapeHtml((cur.no?('เลขที่ '+cur.no+' · '):'')+(cur.real||cur.name))+' เป็นเพื่อนแบบไหน?</div>'+
     PEER_ALL.map(function(q,qi){
       return '<div class="sat-item"><div class="sat-q"><b>'+(qi+1)+'. '+escapeHtml(q.t)+'</b><br><span style="font-size:13px;color:#64748b">'+escapeHtml(q.sub)+'</span></div>'+
         '<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">'+
@@ -22187,10 +22333,34 @@ function peerSubmit(){
     PEER_ALL.forEach(function(q){ body[q.k]=sc[q.k]; });
     sheetPost(body);
   });
-  var b=document.getElementById('sat-body');
-  if(b) b.innerHTML='<div class="sat-thanks"><div class="big">🤝</div><h3>ขอบคุณนะ!</h3>'+
-    '<p>ส่งผลประเมินเพื่อนแล้ว '+n+' คน ครบทั้ง 6 สมรรถนะ — ครูจะเห็นในหน้าเทียบผลการประเมิน</p>'+
-    '<button class="sat-submit" style="max-width:220px;margin:14px auto 0" onclick="peerClose()">เสร็จสิ้น</button></div>';
+  /* [บล็อก O12 · บั๊ก 2 ข้อ 2] ทุกบรรทัดข้างบนนี้ (การประกอบ body + sheetPost)
+     ไม่ถูกแตะแม้แต่ไบต์เดียว — payload ของ rpc_submit_peer ต้องเหมือนเดิมเป๊ะ
+     ที่เพิ่มคือ "หลังส่งเสร็จ" เท่านั้น: จดว่าคนนี้ทำแล้ว แล้วชวนส่งเครื่องให้คนถัดไป
+     เดิมจบที่หน้าขอบคุณทันที คนที่ 2-3 บนเครื่องต้องเดาเองว่าให้เปิดหน้านี้ใหม่
+     ท่าเดียวกับที่บล็อก N ทำกับแบบประเมินตนเอง/ความพึงพอใจ (satHandoffHTML) เป๊ะ
+     ⚠️ ปิด .sat-thanks ก่อนกล่อง "ถึงตาของ..." เสมอ — SATPAGE คลี่ .sat-thanks ไม่ได้
+        ถ้ายัดรวมก้อนเดียวจะล้นจอเตี้ย (จอมือถือแนวนอนสูง 390 px) */
+  if(me.id) _peerState.done[String(me.id)]=true;
+  var b=document.getElementById('sat-body'); if(!b) return;
+  var mem=peerMembers()||[];
+  var next=mem.filter(function(m){ return !_peerState.done[String(m.id)]; });
+  var head='<div class="sat-thanks"><div class="big">🤝</div><h3>ขอบคุณนะ'+(me.name?(' '+escapeHtml(peerMemLabel(me))):'')+'!</h3>'+
+    '<p>ส่งผลประเมินเพื่อนแล้ว '+n+' คน ครบทั้ง 6 สมรรถนะ — ครูจะเห็นในหน้าเทียบผลการประเมิน</p></div>';
+  b.innerHTML=head+(next.length
+    ? ('<div style="background:#e0f2fe;border:2px solid #38bdf8;border-radius:12px;padding:11px 13px;margin:10px 0 0">'+
+       '<div style="font-weight:800;color:#0369a1;font-size:15px">📲 ถึงตาของ '+
+         escapeHtml(next.map(function(m){ return peerMemLabel(m); }).join(' และ '))+' แล้ว</div>'+
+       '<div style="font-size:13px;color:#075985;margin-top:4px">ส่งเครื่องให้เพื่อน แล้วกดปุ่มด้านล่างเพื่อประเมินต่อ</div></div>'+
+       '<button type="button" class="sat-submit" id="peer-next-member" onclick="peerNextMember()">👉 ให้เพื่อนประเมินต่อ</button>'+
+       '<button type="button" class="sat-submit" style="background:#94a3b8" onclick="peerClose()">ทำทีหลัง</button>')
+    : ((mem.length>1?'<p style="color:#0d9488;font-weight:700;text-align:center;margin:10px 0 0" id="peer-alldone">✅ ทุกคนบนเครื่องนี้ประเมินครบแล้ว</p>':'')+
+       '<button type="button" class="sat-submit" style="max-width:220px;margin:14px auto 0" onclick="peerClose()">เสร็จสิ้น</button>'));
+}
+/* กลับไปหน้า "เธอคือใคร" ให้สมาชิกคนถัดไปบนเครื่องเดียวกันประเมินต่อ */
+function peerNextMember(){
+  var mem=peerMembers(); if(!mem){ peerClose(); return; }
+  _peerState.me=null; _peerState.sel={}; _peerState.scores={}; _peerState.targets=[]; _peerState.idx=0;
+  peerRenderWho(mem);
 }
 
 /* ============================================================================
@@ -22246,9 +22416,21 @@ const SBTee = {
     const a = body.action;
     if (a === 'saveSatisfaction' || a === 'saveSelfAssessment') {
       /* [เฟส 4 · 4.5] เมืองของฉันใช้ช่องทาง survey เดิม เปลี่ยนแค่ป้าย kind — ไม่ต้องเพิ่ม SQL แม้แต่บรรทัดเดียว */
-      return this._rpc('rpc_submit_survey', { p_join_key: b.join_key, p_student: b.student_id, p_pin: b.jpin || '', p_game_code: SB_GAME_CODE,
+      /* [บล็อก N9 · บั๊ก 3] เครื่องเดียวเล่นหลายคน — ผูกผลกับ "คนที่ทำจริง" ไม่ใช่เจ้าของเครื่องเสมอไป
+         ท่าเดียวกับภาค 1 [V.7.99.1 ข้อ 5] เป๊ะ: อ่าน _forStudent ก่อน ไม่มีค่อยถอยไปใช้ seat เดิม */
+      const _sid = String(body._forStudent || b.student_id);
+      const _notSeat = (_sid !== String(b.student_id || ''));
+      return this._rpc('rpc_submit_survey', { p_join_key: b.join_key, p_student: _sid, p_pin: b.jpin || '', p_game_code: SB_GAME_CODE,
         p_kind: body._cityMode ? 'my_city' : (a === 'saveSatisfaction' ? 'satisfaction' : 'self_assessment'), p_payload: body, p_dims: null,
-        p_overall: (body.overallAvg != null && body.overallAvg !== '' ? Number(body.overallAvg) : null), p_interpretation: body.interpretation || null });
+        p_overall: (body.overallAvg != null && body.overallAvg !== '' ? Number(body.overallAvg) : null), p_interpretation: body.interpretation || null })
+        .catch(e => {
+          /* ⚠️ ห้องที่บังคับ PIN รายคน: _student_ok ฝั่งเซิร์ฟเวอร์อาจไม่รับรหัสของสมาชิกคนที่ 2
+             ด้วย PIN ของเครื่อง (อาการเดียวกับบั๊ก peer V.7.71)
+             **ห้ามถอยไปส่งเป็นชื่อคนแรกเด็ดขาด** — นั่นคือการสร้าง "ข้อมูลผิดคน" ซึ่งแย่กว่าไม่มีข้อมูล
+             ที่ทำได้คือ: โยน error ต่อให้คิว SBTee เก็บไว้ลองใหม่เอง + ทิ้งร่องรอย + ขึ้นป้ายบนจอ */
+          if (_notSeat) { try { satRejectNote(_sid, body.selfByName || body.satByName || '', (e && e.message) || ''); } catch (e2) {} }
+          throw e;
+        });
     }
     /* [V.7.70 ข้อ 8] เพื่อนประเมินเพื่อน — เขียนลง event ของ "คนที่ถูกประเมิน" คนเดียวเท่านั้น
        (ต่างจาก action อื่นที่กระจายให้ทุกคนในกลุ่ม เพราะคะแนนนี้เป็นของรายบุคคล) */
@@ -22401,6 +22583,55 @@ function sbBindLegacy(row, username, pin) {
     school: row.school_name || '', class: row.classroom_name || '', studentNumber: row.student_number || ''
   });
   if (row.save_blob) Auth._restoreFromBlob(row.save_blob);
+}
+
+/* ══ [บล็อก R5] บัญชี "ผู้เล่นทั่วไป" — RPC ใหม่ 3 ตัว + ตัวผูกบัญชี ══
+   ใช้ SQL_ภาค2_สมัครสมาชิกผู้เล่นทั่วไป.sql (เพิ่มอย่างเดียว) · โครง error เดียวกับ sbLegacyLogin */
+function _sbOpenErr(e) {
+  const m = String(e && e.message || '');
+  console.error('[R] open-account RPC:', m);
+  if (/USERNAME_TAKEN/.test(m)) return { __taken: true };
+  if (/BAD_INPUT/.test(m)) return { __badinput: true };
+  if (/OPEN_ROOM_SETUP/.test(m)) return { __roomsetup: true };
+  if (/PGRST|function|not found|schema/i.test(m)) return { __nofunc: true };
+  if (/HTTP 0|Failed to fetch|NetworkError|abort/i.test(m)) return { __offline: true };
+  return null;
+}
+function sbOpenRegister(p) {
+  return SBTee._rpc('rpc_open_register', { p_username: p.username, p_password: p.password, p_charname: p.charname, p_age: p.age })
+    .then(t => { let rows = []; try { rows = JSON.parse(t || '[]'); } catch (e) {} return (rows && rows.length) ? rows[0] : null; })
+    .catch(e => _sbOpenErr(e));
+}
+function sbOpenLogin(username, password) {
+  return SBTee._rpc('rpc_open_login', { p_username: username, p_password: password })
+    .then(t => { let rows = []; try { rows = JSON.parse(t || '[]'); } catch (e) {} return (rows && rows.length) ? rows[0] : null; })
+    .catch(e => _sbOpenErr(e));
+}
+function sbOpenCheck(username) {
+  return SBTee._rpc('rpc_open_check', { p_username: username })
+    .then(t => { try { return { exists: JSON.parse(t) === true }; } catch (e) { return { exists: null }; } })
+    .catch(() => ({ exists: null }));
+}
+/* ผูกบัญชีเปิดเข้าเครื่อง — โครงเดียวกับ sbBindLegacy แต่เป็นผู้เล่นเดี่ยวเสมอ
+   และ jpin มาจากเซิร์ฟเวอร์ (PIN รายคนที่ระบบสุ่มให้ตอนสมัคร) ไม่ใช่สิ่งที่ผู้เล่นพิมพ์
+   — jpin ตัวนี้คือกุญแจที่ทำให้ P2SAVE (rpc_get_save2/rpc_set_save2) ผ่าน _student_ok ได้ */
+function sbBindOpen(row, username) {
+  try {
+    localStorage.setItem('cls_current', JSON.stringify({
+      username: username, student_id: row.student_id,
+      member_ids: [row.student_id],
+      member_names: [row.character_name || row.first_name || username],
+      group_size: 1,
+      join_key: row.join_key, jpin: row.jpin || '',
+      classroom: row.classroom_name || 'ผู้เล่นทั่วไป', school: row.school_name || 'ผู้เล่นทั่วไป'
+    }));
+  } catch (e) { console.error('[R] ผูกบัญชีผู้เล่นทั่วไปไม่สำเร็จ', e); }
+  Auth._bindSession(username, {
+    username: username, characterName: row.character_name || '',
+    firstName: row.first_name || '', lastName: row.last_name || '',
+    school: row.school_name || 'ผู้เล่นทั่วไป', class: row.classroom_name || 'ผู้เล่นทั่วไป',
+    studentNumber: row.student_number || ''
+  });
 }
 
 // จำแนกสาเหตุที่เชื่อมต่อ Google Sheet ไม่สำเร็จ ให้ข้อความที่ช่วยแก้ปัญหาได้จริง (ไม่ใช่แค่ "เชื่อมต่อไม่ได้" เฉยๆ)
@@ -22587,7 +22818,8 @@ const Auth = {
        เดิมไม่ล้าง cls_current (ซึ่งมีรหัสนักเรียนและ PIN ห้องอยู่)
        ผลคือเด็กคนถัดไปที่มาเล่นต่อ ถูกอัปโหลดเซฟขึ้นเป็นของนักเรียนคนก่อน */
     try { localStorage.removeItem('cls_current'); } catch (e) {}
-    try { clearTimeout(P2SAVE._t); } catch (e) {}
+    try { clearTimeout(P2SAVE._t); clearTimeout(P2SAVE._pt);
+      P2SAVE._okKey = ''; P2SAVE._pushWait = false; } catch (e) {} /* [บล็อก L-A] ออกจากระบบ = ยามเริ่มนับใหม่ (บัญชีถัดไปต้อง pull ก่อนเสมอ) */
     // ไม่ลบ LAST_USER_KEY ตรงนี้ทันที เพื่อให้หน้า login ยัง prefill ชื่อผู้ใช้ล่าสุดได้สะดวก
     showScreen('login-screen');
   },
@@ -22621,6 +22853,8 @@ let _blobSyncTimer = null;
    ============================================================================ */
 const P2SAVE = {
   _t: null, _busy: false, _ready: null,
+  /* [บล็อก L-A] ยามกันทับถอยหลัง: push ได้เฉพาะบัญชีที่ pull สำเร็จแล้วในเซสชันนี้ */
+  _pt: null, _okKey: '', _pushWait: false,
   bind() { try { return JSON.parse(localStorage.getItem('cls_current') || 'null'); } catch (e) { return null; } },
   _params(extra) {
     const b = this.bind();
@@ -22645,7 +22879,32 @@ const P2SAVE = {
         equippedPet: d.equippedPet, equippedAura: d.equippedAura, items: d.items, tutorialSeen: d.tutorialSeen
       } });
       if (!p) return;                                            /* ยังไม่ผูกห้อง (Guest) — เก็บในเครื่องพอ */
-      SBTee._rpc('rpc_set_save2', p).catch(() => {
+      /* [บล็อก L-A · จุดเร่งด่วนของบั๊ก 1] ห้ามส่งขึ้นคลาวด์จนกว่า pull ของบัญชีนี้จะสำเร็จ
+         อย่างน้อย 1 ครั้งในเซสชัน — ปิดทาง "pull พลาดครั้งเดียว → เครื่องถือเซฟว่าง →
+         push ส่ง blob จน ๆ ทั้งก้อนทับ save_blob2 จริง = 141 แต้มหายถาวร" (กรณี A ในรายงาน) */
+      if (this._okKey !== (p.p_join_key + '|' + p.p_student)) {
+        this._pushWait = true;
+        this.pull();                                             /* ลองดึงทันที — ล้มก็มี retry 20 วิของตัวเอง แล้วค่อยปล่อยเซฟที่ค้างตามไป */
+        return;
+      }
+      /* [บล็อก L-D · มติครูภาค 1 V.7.99.1 ข้อ 2] เล่นเป็นกลุ่ม → เขียนให้สมาชิกทุกคนผ่าน
+         rpc_set_save2_group: เจ้าภาพเขียนได้เสมอ · สมาชิกอื่นเขียนให้เฉพาะเมื่อ "ไม่ถอยหลัง"
+         (จำนวนด่าน completed → ผลรวม normScore — เกณฑ์คู่เดียวกับ clsjProgOf ต้องแก้พร้อมกัน)
+         ตัวกันถอยหลังจริงอยู่ฝั่ง SQL — ต่อให้เครื่องไหนยิงมั่ว ข้อมูลเพื่อนก็ไม่ถูกทับให้ต่ำลง */
+      const bnd = this.bind() || {};
+      const others = (bnd.member_ids || []).map(String).filter(x => x && x !== String(bnd.student_id || ''));
+      const legacy = () => SBTee._rpc('rpc_set_save2', p);       /* payload เดิมทั้งก้อน ห้ามเปลี่ยน */
+      const send = others.length
+        ? SBTee._rpc('rpc_set_save2_group', { p_join_key: p.p_join_key, p_student: p.p_student,
+            p_pin: p.p_pin, p_members: others, p_blob: p.p_blob })
+            .catch(e => {
+              const m = String((e && e.message) || '');
+              /* ยังไม่รัน SQL ใหม่ → ถอยไปเขียนเฉพาะเจ้าภาพ (ท่าเดียวกับ rpc_submit_peer→legacy) */
+              if (/PGRST|does not exist|not found|404|schema cache/i.test(m)) return legacy();
+              throw e;
+            })
+        : legacy();
+      send.catch(() => {
         setTimeout(() => this.push(), 20000);                    /* ส่งไม่ผ่าน (เน็ตสะดุด) ลองใหม่ — เซฟเป็นภาพรวมทั้งก้อน ส่งซ้ำปลอดภัยเสมอ */
       });
     }, 3000);
@@ -22655,9 +22914,26 @@ const P2SAVE = {
     const p = this._params();
     if (!p || this._busy) return Promise.resolve(false);
     this._busy = true;
+    const k = p.p_join_key + '|' + p.p_student;   /* [บล็อก L-A] บัญชีที่กำลังดึงอยู่รอบนี้ */
+    clearTimeout(this._pt);
     return SBTee._rpc('rpc_get_save2', p)
-      .then(t => { let v = null; try { v = JSON.parse(t); } catch (e) {} return this.apply(v); })
-      .catch(() => false)
+      .then(t => {
+        /* [บล็อก L-A] เซิร์ฟเวอร์ตอบแล้ว = pull "สำเร็จ" — รวมกรณีตอบ null (บัญชีใหม่ไม่มีเซฟ)
+           นั่นคือคำยืนยันจากคลาวด์ว่าไม่มีของให้ดึง ไม่ใช่ล้ม → เปิดทางให้ push ของบัญชีนี้ได้ */
+        this._okKey = k;
+        let v = null; try { v = JSON.parse(t); } catch (e) {}
+        const r = this.apply(v);
+        if (this._pushWait) { this._pushWait = false; this.push(); }  /* มีเซฟค้างส่งจากตอนถูกยามกัน */
+        return r;
+      })
+      .catch(() => {
+        /* [บล็อก L-A] เดิมล้มเงียบไม่ลองใหม่เลย (ไม่สมมาตรกับ push ที่ retry 20 วิ) = ช่องโหว่หลัก
+           ของบั๊ก 1 — เครื่องที่ pull พลาดจะเริ่มจากว่างแล้ว push ทับของจริง → retry จนสำเร็จ
+           (รวมกรณียังไม่รัน SQL — ยิงซ้ำทุก 20 วิเท่า push เดิม ไม่หนักเซิร์ฟเวอร์ขึ้น) */
+        clearTimeout(this._pt);
+        this._pt = setTimeout(() => this.pull(), 20000);
+        return false;
+      })
       .then(r => { this._busy = false; return r; });
   },
   /* ---------- ผสานแบบ "เอาค่าที่ดีที่สุด" (เครื่องนี้เล่นไปแล้วจะไม่ถูกลบทิ้ง) ---------- */
@@ -22686,6 +22962,8 @@ const P2SAVE = {
         l.stars = Math.max(l.stars || 0, r.stars || 0);
         if (typeof r.normScore === 'number') l.normScore = Math.max(l.normScore || 0, r.normScore);
         l.completed = l.completed || !!r.completed;
+        l.solo = l.solo || !!r.solo;   /* [บล็อก L-C] ธง "ทำเอง/ทำด้วยกัน" ผสานแบบไม่หาย */
+        l.team = l.team || !!r.team;
         l._everCleared = l._everCleared || !!r._everCleared;
       });
     }
@@ -22990,15 +23268,23 @@ function _startCsMirrorLoop() {
       CharacterEngine.draw(ctx, cfg, 0, 0, 1.62, 'idle', t, 1);
       ctx.restore();
     } catch (e) { try { ctx.restore(); } catch (e2) {} }
-    /* ช่องตัวละคร — ตัวเดียวกับกลางกระจก ย่อส่วนด้วยสูตรเดียวกับการ์ดในตาราง */
+    /* [บล็อก S1] ช่องตัวละคร = ป้ายบอกว่าสวมร่างไหน — ภาพนิ่ง ไม่ใช่ตัวละครตัวที่สอง
+       (เดิมวาดตัวเดียวกับกลางกระจกด้วยเวลาเดียวกันทุกเฟรม → ขยับคู่กันสองตัว)
+       วาดซ้ำเฉพาะตอนร่าง/ออร่า/สัตว์เลี้ยง/ขนาดแคนวาสเปลี่ยนเท่านั้น */
     if (cvChar) {
-      const c2 = cvChar.getContext('2d'), w2 = cvChar.width, h2 = cvChar.height;
-      c2.clearRect(0, 0, w2, h2);
-      try {
-        c2.save(); c2.translate(w2 / 2, h2 * 0.593);
-        CharacterEngine.draw(c2, cfg, 0, 0, (h2 / 600) * 2.7, 'idle', t, 1);
-        c2.restore();
-      } catch (e) { try { c2.restore(); } catch (e2) {} }
+      const w2 = cvChar.width, h2 = cvChar.height;
+      const sig = [w2, h2, cfg.id || '', cfg.petId || '',
+        JSON.stringify(cfg.aura || cfg.auraColor || null), JSON.stringify(cfg.carry || null)].join('|');
+      if (cvChar._csStillSig !== sig) {
+        cvChar._csStillSig = sig;
+        const c2 = cvChar.getContext('2d');
+        c2.clearRect(0, 0, w2, h2);
+        try {
+          c2.save(); c2.translate(w2 / 2, h2 * 0.593);
+          CharacterEngine.draw(c2, cfg, 0, 0, (h2 / 600) * 2.7, 'idle', 600, 1);
+          c2.restore();
+        } catch (e) { try { c2.restore(); } catch (e2) {} }
+      }
     }
     /* ช่องออร่า — วงพลังสีจริงของออร่าที่ใส่ (ว่าง = ไม่วาด ปล่อยไอคอนจางโชว์แทน) */
     if (cvAura) {
@@ -24213,20 +24499,33 @@ function flushEvidence(stageId) {
    เป็นกระจุกบนทางขึ้นเขา ห่างกันแค่ 2.5–4% วางหมุดแล้วซ้อนกันแน่นอน
    ภาพแผนที่รอบหน้าให้ใช้ตารางใน KAN2_PROMPT_WORLDMAP.md ซึ่งเว้นที่รอบหมุดไว้ให้แล้ว */
 const V8MAP_NODES = {
-  1: [61.9, 81.5], mg1: [75.7, 58.0], 6: [67.1, 66.3],
-  3: [30.9, 70.9], hellfire: [44.7, 84.1], 4: [40.2, 58.9], mg2: [51.6, 85.8],
-  5: [22.8, 31.2], pilok: [16.7, 28.3], 7: [58.9, 31.6], mg3: [52.9, 36.8],
-  balance2050: [74.0, 21.5], 8: [84.3, 53.4], learn: [16.0, 86.0],
-  water: [43.9, 45.5]   /* [เฟส 4 · 4.4] ด่านพิเศษปริศนาสายน้ำ — แผ่นฐานกลางแผนที่ */
+  /* [บล็อก M2 · แผนที่รอบ 2] พิกัด = กึ่งกลางแผ่นฐานจริงในภาพ (วัดด้วย _newmap.py คลาด ≤0.1%)
+     ทุกด่านอยู่ตรงสถานที่จริงของมัน — รอบนี้ครบทั้ง 15 ด่านรวมโคนต้นจามจุรี */
+  1: [68.0, 88.1],            /* เชิงสะพานเหล็กข้ามแม่น้ำแคว */
+  3: [45.8, 75.2],            /* ปลายสะพานรถไฟไม้เลียบผา (ถ้ำกระแซ) หน้าถ้ำพระ */
+  4: [56.5, 53.1],            /* เชิงน้ำตกเอราวัณหลายชั้น ฝั่งแควใหญ่ */
+  5: [30.2, 35.3],            /* ใต้สันเขื่อนวชิราลงกรณ · บ่อน้ำพุร้อนหินดาดมีไอ อยู่ข้าง ๆ */
+  6: [36.6, 87.5],            /* >>> โคนต้นจามจุรียักษ์ — หัวใจของรอบนี้ (คำสั่งครูข้อ 2) <<< */
+  7: [24.0, 19.4],            /* ปลายสะพานมอญ + ยอดเจดีย์กลางน้ำ (สังขละบุรี) */
+  8: [77.8, 41.8],            /* สนามหญ้าหน้าเรือนใหญ่สีครีม — ปีศาจข้อสอบ */
+  mg1: [73.3, 75.9],          /* ลานหน้าสถานีรถไฟ — รอบนี้ได้ตำแหน่งเข้าธีมที่รอบก่อนต้องทิ้ง */
+  mg2: [61.6, 16.2],          /* บนสันเขื่อนศรีนครินทร์ — จัดการน้ำในเขื่อน */
+  mg3: [42.9, 16.8],          /* ที่ราบหญ้าโล่งระหว่างสองอ่างเก็บน้ำ */
+  hellfire: [35.6, 56.4],     /* ปากช่องหินขาดที่ทางรถไฟลอด (ช่องเขาขาด) */
+  pilok: [16.5, 64.8],        /* หมู่บ้านไม้บนไหล่เขาฝั่งตะวันตก (ปิล๊อก-อีต่อง) */
+  water: [55.4, 69.4],        /* สันดอนทรายกลางโค้งน้ำ — ด่านพิเศษปริศนาสายน้ำ */
+  learn: [83.7, 57.5],        /* หน้าโรงเรียนไม้ชักธงชาติ — ห้องเรียนรู้ได้บ้านจริงแล้ว */
+  balance2050: [78.6, 17.1]   /* ริมอ่างเก็บน้ำเงียบ ๆ มุมบนขวา — ประตูมิติกาญ 2050 */
 };
 
 /* [ข้อ 5 · บล็อก F3] ตัววางหมุด + ตัวกันป้ายทับ
    หน้าที่เดียว: แปลง "% ของภาพ" → "% ของกรอบจอ" ให้ตรงกับภาพที่เห็นจริง แล้วจัดป้ายไม่ให้ชนกัน
    ไม่ยุ่งกับ data/ลำดับด่าน/การปลดล็อกเลยแม้แต่บรรทัดเดียว */
 const V8PIN = {
-  AR: 1536 / 1024,   /* สัดส่วนไฟล์ map_world.webp — ถ้าเปลี่ยนภาพต้องแก้ตัวนี้ด้วย */
-  PAN: 0.72,         /* จุดยึดแนวตั้งตอนครอบตัด (0=ชิดบน 1=ชิดล่าง)
-                        0.72 = ดันภาพขึ้นเล็กน้อย ให้แผ่นฐานแถวล่างสุดพ้นแถบตราผู้พิทักษ์ */
+  AR: 1920 / 1080,   /* [บล็อก M] ภาพใหม่เป็น 16:9 เท่ากรอบเกมพอดี — ไม่มีการครอบตัดอีกแล้ว
+                        ถ้าเปลี่ยนภาพอีกต้องแก้ตัวนี้ให้ตรงไฟล์จริงเสมอ */
+  PAN: 0.5,          /* ไม่มีผลแล้วเมื่อภาพเป็น 16:9 (ไม่มีส่วนเกินให้ยึด)
+                        คงตัวแปรไว้เผื่อวันหนึ่งกลับไปใช้ภาพสัดส่วนอื่น */
   _pass: 0,
   /* สี่เหลี่ยมของภาพจริงในกรอบจอ (หน่วย px เทียบมุมซ้ายบนของ #worldmap-screen) */
   frame() {
@@ -24297,7 +24596,7 @@ const V8PIN = {
     /* กล่อง UI ที่ห้ามให้หมุด/ป้ายไปอยู่ใต้ */
     const block = [];
     ['.worldmap-dock-tl', '.worldmap-dock-tr', '#worldmap-status-bar', '.worldmap-title',
-      '#wm-protector-bar', '.screen-credit-line', '#btn-open-satisfaction', '#btn-open-selfassess',
+      '#wm-protector-bar', '#wm-team-legend', '.screen-credit-line', '#btn-open-satisfaction', '#btn-open-selfassess',
       '#btn-worldmap-peer', '#wm-compass-btn', '.wm-zone-chip'].forEach((s) => {
         scr.querySelectorAll(s).forEach((e) => {
           if (e.classList.contains('hidden')) return;
@@ -24713,6 +25012,8 @@ const VKACTOR = {
       cv: cv, ctx: cv.getContext('2d'), raf: 0, born: performance.now(),
       pose: o.pose || 'idle', facing: o.facing == null ? 1 : o.facing,
       scale: o.scale == null ? 1 : o.scale,
+      /* [บล็อก P0] cfg = ร่างที่จะวาด · ไม่ส่งมา = อวตารของเด็กเอง (พฤติกรรมเดิมทุกประการ) */
+      cfg: o.cfg || null,
       carry: o.carry || null, until: 0, _tw: null
     };
     this._list.push(a);
@@ -24766,6 +25067,45 @@ const VKACTOR = {
     });
   },
 
+  /* [บล็อก P0] แปลง "จุดที่อยากให้ปลายเท้าแตะ" (% ของเวที) เป็นค่า top ที่ต้องตั้ง
+     คืนค่า yPct เดิมถ้าวัดไม่ได้ (เวทียังไม่มีขนาด) — ไม่โยน error ไม่ทำให้ด่านพัง */
+  feetTop(a, yPct) {
+    try {
+      const host = a && a.cv && a.cv.parentNode; if (!host) return yPct;
+      const hr = host.getBoundingClientRect(), cr = a.cv.getBoundingClientRect();
+      if (!(hr.height > 0 && cr.height > 0)) return yPct;
+      return yPct + (cr.height * (120 / 420)) / hr.height * 100;
+    } catch (e) { return yPct; }
+  },
+  /* วางตัวละครให้ปลายเท้าแตะจุด (xPct, yPct) พอดี */
+  placeFeet(a, xPct, yPct) {
+    if (!a || !a.cv) return;
+    if (xPct != null) a.cv.style.left = xPct + '%';
+    a.cv.style.top = this.feetTop(a, yPct) + '%';
+  },
+  /* [บล็อก P0] กล่อง "ภาพตัวละครจริง" ซึ่งเล็กกว่ากรอบแคนวาสมาก
+     ตัวเลข 153 (สูง) และ 240 (กว้าง) หน่วยต่อ scale 1 วัดจากพิกเซลจริงด้วย _probe_actorbox.mjs
+     ไม่ใช่ค่าที่คาดเดา — ใครแก้ตัวละครแล้วสัดส่วนเปลี่ยน ให้รัน probe ใหม่แล้วอัปเดตสองตัวนี้
+     มีไว้เพื่อตอบคำถามเดียว: "ตัวละครบังของเล่นหรือเปล่า" ถ้าใช้กรอบแคนวาสจะได้คำตอบผิดเสมอ */
+  BODY_H: 153, BODY_W: 240,
+  drawnRect(a) {
+    if (!a || !a.cv) return null;
+    const r = a.cv.getBoundingClientRect(), s = a.scale || 1;
+    const feetY = r.top + r.height * (300 / 420);
+    const h = r.height * (this.BODY_H * s / 420), w = r.width * (this.BODY_W * s / 300);
+    const cx = r.left + r.width / 2;
+    return { left: cx - w / 2, right: cx + w / 2, top: feetY - h, bottom: feetY, width: w, height: h };
+  },
+  /* ความสูงของภาพตัวละคร คิดเป็น % ของเวทีที่มันยืนอยู่ (ใช้เว้นที่ให้พอดี) */
+  bodyPct(a) {
+    try {
+      const host = a && a.cv && a.cv.parentNode; if (!host) return 0;
+      const hr = host.getBoundingClientRect(), d = this.drawnRect(a);
+      if (!d || !(hr.height > 0)) return 0;
+      return d.height / hr.height * 100;
+    } catch (e) { return 0; }
+  },
+
   unmount(a) {
     if (!a) return;
     cancelAnimationFrame(a.raf); a.raf = 0;
@@ -24799,7 +25139,8 @@ const VKACTOR = {
     const k = V8DPR.fit(a.cv, 300, 420);
     c.setTransform(k, 0, 0, k, 0, 0);
     c.clearRect(0, 0, 300, 420);
-    let cfg; try { cfg = getPlayerConfig(); } catch (e) { return; }
+    /* [บล็อก P0] ร่างที่สั่งมาก่อน แล้วค่อยตกมาที่อวตารของเด็ก — ด่านเดิมไม่ส่ง cfg จึงไม่เปลี่ยนอะไรเลย */
+    let cfg; try { cfg = a.cfg || getPlayerConfig(); } catch (e) { return; }
     if (!cfg) return;
     if (a.carry) { cfg = Object.assign({}, cfg); cfg.carry = a.carry; }
     c.save();
@@ -25092,7 +25433,10 @@ var CBE8 = {
          เดิมคืน null ทำให้สูตรเปลี่ยนรูปเงียบ ๆ (M กลายเป็นหลักฐานระหว่างเรียนล้วน)
          แล้วตัวเลขกระโดดในวันที่ครูกดตรวจ ทั้งที่ตัวเด็กไม่ได้เปลี่ยนอะไรเลย */
       var sa=0,na=0; ['ai1','ai2','ai3'].forEach(function(k){ var v=Number(cap[k]); if(cap[k]!=null&&cap[k]!==''&&!isNaN(v)){ sa+=v; na++; } });
-      if(na) return { pct:Math.round(sa/(na*4)*1000)/10, provisional:true,
+      /* [บล็อก O13 · บั๊ก 5 ชนิดเดียวกัน] AI ให้ 0 ครบทุกข้อ = "ยังไม่ได้พิมพ์คำตอบ" ไม่ใช่ "ได้ 0 คะแนน"
+         ตกไปใช้บรรทัดล่าง (รอครูตรวจ) แทนการประกาศคะแนน 0 เป็นผลชั่วคราว
+         คะแนนที่ครูตรวจเอง (cw1-3 ข้างบน) ไม่ถูกแตะ — ครูให้ 0 ยังเป็น 0 ตามเดิม */
+      if(na&&sa>0) return { pct:Math.round(sa/(na*4)*1000)/10, provisional:true,
         parts:[{label:'คำตอบเขียน '+na+' ข้อ (AI ตรวจชั่วคราว — รอครูยืนยัน)', txt:sa+'/'+(na*4)}],
         src:'กาญ 2050 — คำตอบเขียน (ยังรอครูตรวจ)' };
       return { pct:null, parts:[], src:'รอครูตรวจคำตอบเขียน (ช่อง 💬 การสื่อสาร)' };
@@ -25862,7 +26206,7 @@ const LIVEROOM = {
   tick() {
     const b = SBTee.bind();
     const t0 = performance.now();
-    SBTee._rpc('rpc_leaderboard', { p_join_key: b.join_key })
+    SBTee._rpc('rpc_leaderboard2', { p_join_key: b.join_key })   /* [บล็อก U] ห้องเรียนสดก็ต้องเป็นคะแนนภาค 2 */
       .then((t) => {
         let rows = []; try { rows = JSON.parse(t || '[]'); } catch (e) {}
         this.ok++; this.fails = 0;
@@ -27112,11 +27456,50 @@ const ChallengeArena = {
       v8LaunchBoss();
     };
   },
+  /* ⟦P⟧ */
+  /* ══ [บล็อก P3] ทหารรักษาด่าน ผู้เฝ้าหอคอย (ทางเลือก ข) ══
+     ทำไมด่านนี้ปลอดภัยที่สุดสำหรับใส่ตัวละคร: sid='challenge' ไม่เข้าสูตรคะแนนสมรรถนะใด ๆ
+     (ประกาศไว้ในโค้ดเดิม และบล็อก O ก็เพิ่งกรอง sid นี้ออกจากเครื่องคิดคะแนนหน้าครูไปแล้ว)
+     บุคลิก: ขรึม นิ่ง เป็นผู้เฝ้าคลังความรู้ของกาญจนบุรี
+       · สตรีคแตะ 3 / 5 / 7 → ชูท่ายอมรับฝีมือครั้งเดียวต่อหมุด (ไม่ใช่ทุกข้อ จะได้ไม่รก)
+       · ตอบผิด → **ไม่มีปฏิกิริยาใด ๆ โดยตั้งใจ** ผู้คุมสนามต้องไม่ซ้ำเติมเด็ก */
+  _arGuard: null,
+  _arSaluted: null,
+  _arMount() {
+    try {
+      this._arGuard = null; this._arSaluted = {};
+      if (typeof VKACTOR === 'undefined' || typeof CHAR_CONFIG === 'undefined') return;
+      const host = document.getElementById('vk-scene');
+      const cfg = CHAR_CONFIG.thahanRaksaDan;
+      if (!host || !cfg) return;
+      /* ยืนในแถบว่างขอบขวา หันหน้าเข้าหาเด็ก
+         .ar-wrap เว้นขอบข้างละ 8% ของเวที → เหลือแถบ 92-100% ให้ยืน
+         ภาพตัวละครที่ scale 0.6 กว้าง 6.2% ของเวที → วางกึ่งกลางที่ 95.8% พอดีไม่ล้ำการ์ด ไม่ตกขอบ */
+      const a = VKACTOR.mount(host, { x: 95.8, y: 92, scale: 0.6, pose: 'idle', facing: -1, cfg: cfg });
+      if (!a) return;
+      this._arGuard = a;
+      VKACTOR.placeFeet(a, 95.8, 92);
+      requestAnimationFrame(() => { try { VKACTOR.placeFeet(a, 95.8, 92); } catch (e) {} });
+    } catch (e) { console.error('[P3] ตั้งทหารเฝ้าหอคอยไม่สำเร็จ', e); }
+  },
+  _arSalute() {
+    try {
+      const a = this._arGuard; if (!a || !this._arSaluted) return;
+      const s = this.streak;
+      if (s !== 3 && s !== 5 && s !== 7) return;
+      if (this._arSaluted[s]) return;
+      this._arSaluted[s] = true;
+      VKACTOR.setPose(a, 'victory', 1400);
+    } catch (e) { console.error('[P3] ทหารเฝ้าหอคอยแสดงท่าไม่สำเร็จ', e); }
+  },
+  /* ⟦/P⟧ */
   start() {
     const pool = this.pool().slice();
     for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
     this.qs = pool.slice(0, this.N);
     this.idx = 0; this.coins = 0; this.streak = 0; this.best = 0; this.correct = 0;
+    /* [บล็อก P3] กด "เล่นอีกครั้ง" จะเรียก start() ซ้ำโดยไม่ผ่าน VK.close() — เก็บทหารคนเก่าก่อน */
+    try { if (typeof VKACTOR !== 'undefined') VKACTOR.unmountAll(); } catch (e) {}
     VK.open();
     /* เปิดจากแผนที่โดยตรง (ไม่ผ่าน _launchStage) — แผนที่ยัง active (z-index 40) จึงต้องยกเวทีขึ้นเหนือชั่วคราว */
     document.getElementById('v8stage-root').style.zIndex = '60';
@@ -27132,6 +27515,7 @@ const ChallengeArena = {
         '<div class="ar-card" id="ar-card"></div>' +
         '<div style="text-align:center;margin-top:calc(var(--vw)*0.6)"><button class="dt-btn ghost" id="ar-quit">จบการประลอง</button></div></div>'
     });
+    this._arMount();                       /* [บล็อก P3] ทหารเฝ้าหอคอยยืนประจำที่ */
     document.getElementById('ar-quit').onclick = () => this.finish();
     /* เริ่มรอบใหม่ = ล้างสถานะตัวช่วยค้างจากรอบก่อนเสมอ (กันโล่/เหรียญคูณข้ามรอบ) */
     ItemSystem.shieldActive = false; ItemSystem.doubleCoinPending = false;
@@ -27181,6 +27565,7 @@ const ChallengeArena = {
       this.correct++;
       this.streak++;
       this.best = Math.max(this.best, this.streak);
+      this._arSalute();                    /* [บล็อก P3] ชูท่ายอมรับฝีมือเฉพาะหมุดสตรีค 3/5/7 */
       /* ใช้ตัวช่วยชี้คำตอบ = ได้เหรียญครึ่งเดียว (โปร่งใส ไม่ใช่ลงโทษ — บอกไว้ในป้ายไอเทมแล้ว) */
       const gain = Math.max(1, Math.round((5 + (this.streak >= 3 ? 3 : 0)) * (R.credit >= 1 ? 1 : 0.5)));
       this.coins += gain;
@@ -27312,6 +27697,10 @@ const StageWater = {
     const R = this.ROUNDS[this.round];
     this.g = { g1: 0, g2: 0, g3: 0 };   /* เริ่มที่ปิดทุกบาน — เด็กเปิดเองทีละบานจะได้เห็นผลของแต่ละบานชัด */
     this.tries = 0;
+    /* [บล็อก P2] VK.shell ล้าง innerHTML ของราก — เก็บแคนวาสตัวละครรอบก่อนให้เรียบร้อยก่อนเสมอ
+       (โหมด lowfx ไม่มี rAF คอยเก็บให้ รายการจะค้างใน VKACTOR._list ถ้าไม่เก็บเอง) */
+    try { if (typeof VKACTOR !== 'undefined') VKACTOR.unmountAll(); } catch (e) {}
+    this._wtCast = null;
     const scene = VK.shell({
       title: '💧 ปริศนาสายน้ำ — ' + R.name,
       steps: this.ROUNDS.map((x, i) => (i + 1) + ' ' + x.name), cur: this.round,
@@ -27327,6 +27716,7 @@ const StageWater = {
     });
     document.getElementById('wt-quit').onclick = () => this._quitToMap();
     document.getElementById('wt-check').onclick = () => this._check();
+    this._wtMount();                       /* [บล็อก P2] ผู้รับน้ำ 3 คนยืนใต้การ์ดปลายทาง */
     this._draw();
   },
 
@@ -27349,6 +27739,77 @@ const StageWater = {
     if (R.feedback && spill > 0) vil2 = Math.round((vil + spill * 0.5) * 10) / 10;
     return { vil: vil2, farm: farm, forest: forest, spill: spill, unused: Math.round((left * (1 - w[this.g.g3])) * 10) / 10 };
   },
+  /* ⟦P⟧ */
+  /* ══ [บล็อก P2] ผู้รับน้ำ 3 คนใต้การ์ดปลายทาง (ทางเลือก ข) ══
+     เปลี่ยนตัวเลข "2.5 ส่วน" ให้เป็นสีหน้าคน — น้ำที่เด็กปล่อยไปกระทบใครบ้าง
+       หมู่บ้าน = น้องมอญน้อย · นาข้าว = พี่ชาวนา (ร่างใหม่ P4) · ป่าต้นน้ำ = พรานป่าอนุรักษ์
+     ท่า: พอดี = victory · ยังไม่พอ = sad · มากเกินไป = hurt (เซ ไม่ใช่เจ็บ)
+     ⚠️ 3 แคนวาสพร้อมกันคือจุดที่หนักเครื่องที่สุดในเกม (ที่อื่นไม่เคยเกิน 2)
+        เครื่องช้าโหมด lowfx ได้ภาพนิ่งอัตโนมัติจาก VKACTOR อยู่แล้ว
+        และถ้าจอเตี้ยจนใต้การ์ดไม่เหลือที่ยืน เรา "ไม่วาดเลย" ดีกว่าวาดทับการ์ด */
+  _wtCast: null,
+  _WT_WHO: { vil: 'nongMonNoi', farm: 'piChaoNa', forest: 'pranPaAnurak' },
+  _wtMount() {
+    try {
+      this._wtCast = null;
+      if (typeof VKACTOR === 'undefined' || typeof CHAR_CONFIG === 'undefined') return;
+      const host = document.getElementById('vk-scene');
+      if (!host) return;
+      const cast = {};
+      Object.keys(this._WT_WHO).forEach((k) => {
+        const cfg = CHAR_CONFIG[this._WT_WHO[k]];
+        if (!cfg) return;
+        /* scale 0.45 — เอกสารข้อเสนอเขียนไว้ ~0.35 แต่พอเห็นภาพจริงบนคอมแล้วเล็กจนอ่านสีหน้าไม่ออก
+           0.45 ยังยืนใต้กล่องปริศนาได้สบายทั้ง 3 ขนาดจอ (t_actor ตรวจแล้ว) */
+        const a = VKACTOR.mount(host, { x: 50, y: 92, scale: 0.45, pose: 'idle', cfg: cfg });
+        if (a) cast[k] = a;
+      });
+      this._wtCast = cast;
+      this._wtPlace();
+      requestAnimationFrame(() => { try { this._wtPlace(); } catch (e) {} });
+    } catch (e) { console.error('[P2] ตั้งผู้รับน้ำ 3 คนไม่สำเร็จ', e); }
+  },
+  /* วางแต่ละคนใต้การ์ดของตัวเอง โดยวัดจาก DOM จริง ไม่ใช่พิกัดที่เดาไว้ล่วงหน้า
+     (การ์ดเป็น flex ยืดหดตามจอ — พิกัดตายตัวจะเพี้ยนทันทีที่เปลี่ยนขนาดจอ)
+
+     แนวตั้งยึด "ใต้กล่องปริศนาทั้งกล่อง" (.wt-wrap) ไม่ใช่ใต้การ์ด
+       เพราะใต้การ์ดยังมีข้อความสรุปน้ำล้นกับแถวปุ่มอยู่ ถ้ายืนใต้การ์ดจะไปทับข้อความพอดี
+     แนวนอนยึด "กึ่งกลางการ์ดของตัวเอง" — ความเชื่อมโยง "คนนี้คือปลายทางนี้" อยู่ที่แกนนอน */
+  _wtPlace() {
+    try {
+      const cast = this._wtCast; if (!cast) return;
+      const host = document.getElementById('vk-scene'); if (!host) return;
+      const hr = host.getBoundingClientRect();
+      if (!(hr.width > 0 && hr.height > 0)) return;
+      const wrap = document.querySelector('#vk-scene .wt-wrap');
+      const cards = document.querySelectorAll('#wt-dests .wt-dest');
+      const baseY = wrap ? ((wrap.getBoundingClientRect().bottom - hr.top) / hr.height * 100) : 60;
+      Object.keys(this.DEST).forEach((k, i) => {     /* การ์ดถูก render ตามลำดับคีย์ของ DEST */
+        const a = cast[k], el = cards[i];
+        if (!a || !a.cv || !el) return;
+        const need = VKACTOR.bodyPct(a);
+        /* ยืนต่ำสุดที่ 86% ของเวที ไม่ใช่ชิดใต้กล่องปริศนา
+           เหตุผลจากภาพจริง: กล่องข้อความ VK.toast โผล่กลางจอ "ตอนกดปล่อยน้ำพอดี"
+           ซึ่งเป็นจังหวะเดียวกับที่ตัวละครแสดงสีหน้า — ถ้ายืนสูงกว่านี้จะถูกกล่องบังทั้ง 2 คน */
+        const feetY = Math.min(94, Math.max(baseY + need + 2, 86));
+        /* ไม่เหลือที่ยืน = ไม่วาดเลย ดีกว่าวาดทับของเล่น */
+        if (feetY - need < baseY || need <= 0) { a.cv.style.display = 'none'; return; }
+        a.cv.style.display = '';
+        const r = el.getBoundingClientRect();
+        VKACTOR.placeFeet(a, ((r.left + r.width / 2) - hr.left) / hr.width * 100, feetY);
+      });
+    } catch (e) { console.error('[P2] วางผู้รับน้ำใต้การ์ดไม่สำเร็จ', e); }
+  },
+  _wtReact(f) {
+    try {
+      const cast = this._wtCast; if (!cast) return;
+      const POSE = { ok: 'victory', dry: 'sad', wet: 'hurt' };
+      Object.keys(cast).forEach((k) => {
+        try { VKACTOR.setPose(cast[k], POSE[this._state(k, f[k])[0]] || 'idle', 2200); } catch (e) {}
+      });
+    } catch (e) { console.error('[P2] ผู้รับน้ำแสดงสีหน้าไม่สำเร็จ', e); }
+  },
+  /* ⟦/P⟧ */
   _state(k, v) {
     const R = this.ROUNDS[this.round], n = R.need[k];
     if (v < n[0]) return ['dry', '🥀 ยังไม่พอ'];
@@ -27384,10 +27845,12 @@ const StageWater = {
     if (f.unused > 0) msg += '💧 ยังมีน้ำเหลือค้างในคลอง ' + f.unused + ' ส่วน (ยังไม่ได้ใช้)';
     if (this.tries >= this.hintAfter() && this.lv !== 3) msg += (msg ? '<br>' : '') + '💡 คำใบ้: ลองปรับ<b>ประตูที่ 1</b>ก่อน เพราะมันแบ่งน้ำก้อนแรก — ที่เหลือค่อยไหลต่อไปบานอื่น';
     note.innerHTML = msg;
+    this._wtPlace();   /* [บล็อก P2] การ์ดถูกวาดใหม่ทุกครั้งที่ขยับบาน — ตำแหน่งคนต้องตามไปด้วย */
   },
   _check() {
     const f = this.flow(), R = this.ROUNDS[this.round];
     this.tries++;
+    this._wtReact(f);   /* [บล็อก P2] ปล่อยน้ำแล้วเห็นสีหน้าคนที่รับน้ำทันที ทั้งตอนพลาดและตอนสำเร็จ */
     const ok = ['vil', 'farm', 'forest'].every((k) => this._state(k, f[k])[0] === 'ok');
     if (!ok) {
       try { AUDIO.playSFX('close'); } catch (e) {}
@@ -27850,6 +28313,14 @@ function refreshWorldMap() {
     const entry = data.stages[key];
     const completed = !!(entry && entry.completed);
     el.classList.toggle('stage-complete', completed);
+    /* [บล็อก L-C · มติครูภาค 1 V.7.99.1 ข้อ 2] ผ่านแบบ "ทำด้วยกัน" แต่ยังไม่เคยทำเอง
+       → ป้ายฟ้า + 👥 (ชวนให้กลับมาลองเอง) · เซฟเก่าไม่มีธง = ไม่รู้ = ไม่แสดงป้าย ไม่ใช่ error */
+    const _teamOnly = !!(entry && entry.completed && entry.team && !entry.solo);
+    el.classList.toggle('stage-team', _teamOnly);
+    const _pass = el.querySelector('.stage-node-passed');
+    if (_pass) _pass.textContent = _teamOnly ? 'ทำด้วยกัน' : 'ผ่าน';
+    const _lb = el.querySelector('.stage-node-label');
+    if (_lb) { const _t = (_lb.textContent || '').replace(/ 👥$/, ''); _lb.textContent = _teamOnly ? _t + ' 👥' : _t; }
     // จำนวนดาว 1-3 ดวง มาจาก stars ที่คำนวณไว้แล้วตอนจบด่าน (ดูเกณฑ์ในแต่ละ _endStage ของแต่ละด่าน — สัมพันธ์กับความแม่นยำ/จำนวนข้อที่ตอบถูก)
     const starsEl = el.querySelector('.stage-node-stars');
     if (starsEl) {
@@ -27857,6 +28328,17 @@ function refreshWorldMap() {
       starsEl.textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
     }
   });
+  /* [บล็อก L-C] คำอธิบายสี — ขึ้นเฉพาะเมื่อมีด่านแบบ "ทำด้วยกัน" จริง ไม่รกจอตอนเล่นเดี่ยว
+     (ของประดับ pointer-events:none · อักษร ≥12px — ดู CSS #wm-team-legend ใน L-C1) */
+  (function () {
+    const scr = document.getElementById('worldmap-screen'); if (!scr) return;
+    const anyTeam = Object.keys(data.stages || {}).some(k => { const e = data.stages[k];
+      return e && e.completed && e.team && !e.solo; });
+    let lg = document.getElementById('wm-team-legend');
+    if (!anyTeam) { if (lg) lg.remove(); return; }
+    if (!lg) { lg = document.createElement('div'); lg.id = 'wm-team-legend'; scr.appendChild(lg); }
+    lg.textContent = '🟢 ผ่าน = เธอทำเอง · 🔵 ทำด้วยกัน 👥 = ยังไม่เคยทำเอง ลองกลับมาเล่นเองดูนะ';
+  })();
   drawWorldmapIsoLayer(); // [ISO] วาดหลังอัปเดตสถานะล็อก/ผ่านด่านครบแล้ว (สีแท่นสะท้อนสถานะจริง)
   V8Map.refresh(); // [V.8] ภาพวาดแผนที่ · ตำแหน่งจุดด่าน 3 โซน · แถบตรา 6 ดวง · ป้ายประตู · เข็มทิศ
   /* [บล็อก J] หมุดคมตามจอ — fit หลัง V8Map.refresh ตอนป้ายถูกย้ายเข้า .wm-nodelab แล้วเท่านั้น
@@ -27968,11 +28450,7 @@ function resetLoginScreen() {
   document.getElementById('reg-username').value = '';
   document.getElementById('reg-pin').value = '';
   document.getElementById('reg-charname').value = '';
-  document.getElementById('reg-school').value = '';
-  document.getElementById('reg-firstname').value = '';
-  document.getElementById('reg-lastname').value = '';
-  document.getElementById('reg-class').value = '';
-  document.getElementById('reg-studentnum').value = '';
+  document.getElementById('reg-age').value = '';   /* [บล็อก R10] ช่องชุดเดิม (โรงเรียน/ชื่อจริง/กลุ่ม) ถูกถอดตามสเปกครูแล้ว */
   document.getElementById('reg-username-status').textContent = '';
   document.getElementById('reg-username-status').className = 'form-hint';
   const lastU = Auth.lastUsername;
@@ -28132,10 +28610,17 @@ function getLeaderboardCached(maxAgeMs) {
   };
   const _sbReq = (_bnd && _bnd.join_key)
     ? ((_lbScope === 'room' || _lbScope === 'week')   /* [เฟส 3 · 3.6] มุมมองสัปดาห์ใช้ข้อมูลรายห้องชุดเดิม ไม่ยิงคำขอเพิ่ม */
-        ? SBTee._rpc('rpc_leaderboard', { p_join_key: _bnd.join_key })
-        : SBTee._rpc('rpc_leaderboard_scope', { p_join_key: _bnd.join_key, p_scope: _lbScope })
-            .catch(() => SBTee._rpc('rpc_leaderboard', { p_join_key: _bnd.join_key })) /* SQL แพตช์ยังไม่รัน → ถอยเป็นรายห้อง */
+        /* [บล็อก U · ครูข้อ 8] กระดานภาค 2 ของตัวเอง — ห้ามถอยไป rpc_leaderboard ของภาค 1
+           เด็ดขาด (จะกลายเป็นโชว์คะแนนภาค 1 ซึ่งคือบั๊กเดิมที่ครูสั่งแก้) */
+        ? SBTee._rpc('rpc_leaderboard2', { p_join_key: _bnd.join_key })
+        : SBTee._rpc('rpc_leaderboard2_scope', { p_join_key: _bnd.join_key, p_scope: _lbScope })
+            .catch(() => SBTee._rpc('rpc_leaderboard2', { p_join_key: _bnd.join_key })) /* scope ยังไม่มา → ถอยเป็นรายห้องภาค 2 */
       ).then(t => { let rows = []; try { rows = JSON.parse(t || '[]'); } catch (e) {} return _mapLbRows(rows); })
+        .catch(e => {
+          if (/PGRST|function|not found|schema/i.test(String(e && e.message || '')))
+            console.error('[U] กระดานภาค 2 ยังไม่พร้อม — ครูยังไม่ได้รัน SQL_ภาค2_กระดานอันดับภาค2.sql (กระดานจะว่างไว้ ไม่โชว์เลขภาค 1 ผิด ๆ)');
+          throw e;
+        })
     : Promise.reject(new Error('ยังไม่ได้ผูกห้องเรียน'));
   _lbInflight = _sbReq
     .catch(() => { window._lbNeedJoin = !(_bnd && _bnd.join_key); return []; }) /* [เฟส 3e] ไม่มี Sheets ให้ถอยแล้ว — กระดานเป็นรายห้องจาก Supabase เท่านั้น */
@@ -28176,6 +28661,10 @@ function _lbBadgesFromSave(src) {
     const stages = {}, attempts = {};
     (o.done || []).forEach(k => { stages[k] = { completed: true }; });
     (o.rep || []).forEach(k => { attempts[k] = 2; });
+    /* [บล็อก U3] ข้อมูลเสริมจากกระดานภาค 2 — เหรียญชุดใหม่ (บล็อก T) ของเพื่อนร่วมห้องจะได้ขึ้นด้วย
+       เซิร์ฟเวอร์รุ่นเก่าไม่ส่งสองคีย์นี้มา = ข้ามเฉย ๆ เข้ากันได้ทั้งสองทาง */
+    (o.d3 || []).forEach(k => { if (stages[k]) stages[k].stars = 3; else stages[k] = { completed: true, stars: 3 }; });
+    if (o.pf) stages['balance2050'] = Object.assign(stages['balance2050'] || { completed: true }, { completed: true, normScore: 10 });
     return getEarnedBadges({ stages: stages, stageAttempts: attempts }).map(b => b.id).join(',');
   } catch (e) { return ''; }
 }
@@ -28697,6 +29186,15 @@ const USERNAME_FORMAT_RE = /^[A-Za-z0-9]{4,8}$/;
 const USERNAME_FORMAT_MSG = 'ชื่อผู้ใช้ต้องเป็นตัวอักษรภาษาอังกฤษ (a-z) หรือตัวเลข (0-9) เท่านั้น ยาว 4-8 ตัว ห้ามมีช่องว่างหรือสัญลักษณ์พิเศษนะ';
 // PIN: ตัวเลขล้วน 4-6 หลัก (เดิม label บอก "4 หลัก" + maxlength เปิดถึง 6 แต่ regex บังคับ 4 หลักตายตัว — นักเรียนพิมพ์ 5-6 หลักตามที่พิมพ์ได้จริงแล้วถูกปฏิเสธ)
 const PIN_FORMAT_RE = /^\d{4,6}$/;
+/* [บล็อก R4] กติกาบัญชี "ผู้เล่นทั่วไป" ตามคำสั่งครู 11 ส.ค. 2569 ข้อ 3
+   username 6-12 · รหัสผ่านอังกฤษ+ตัวเลข 8-12 (ต้องมีทั้งสองแบบ) · ชื่อในเกม 4-20 · อายุ 4-99 */
+const OPEN_USER_RE = /^[A-Za-z0-9]{6,12}$/;
+const OPEN_USER_MSG = 'ชื่อผู้ใช้ต้องเป็นอังกฤษ (a-z) หรือตัวเลข ยาว 6-12 ตัว ห้ามเว้นวรรคหรือสัญลักษณ์นะ';
+const OPEN_PASS_RE = /^[A-Za-z0-9]{8,12}$/;
+const OPEN_PASS_MSG = 'รหัสผ่านต้องยาว 8-12 ตัว มีทั้งตัวอักษรอังกฤษและตัวเลขปนกัน (ห้ามเว้นวรรค/สัญลักษณ์)';
+function openPassOk(p) { return OPEN_PASS_RE.test(p) && /[A-Za-z]/.test(p) && /[0-9]/.test(p); }
+const OPEN_NAME_MIN = 4, OPEN_NAME_MAX = 20;
+const OPEN_NAME_MSG = 'ชื่อในเกมต้องยาว 4-20 ตัวอักษรนะ';
 const PIN_FORMAT_MSG = 'PIN ต้องเป็นตัวเลข 0-9 เท่านั้น ยาว 4-6 หลักนะ (ห้ามมีตัวอักษรหรือสัญลักษณ์)';
 
 /* [ตามคำขอครู V.7.68 ข้อ 2] "จะเข้าทดสอบเกมในฐานะ admin อย่างไร เมื่อเอาระบบ login ออก"
@@ -28871,13 +29369,13 @@ function wireAuthEvents() {
     const u = document.getElementById('reg-username').value.trim();
     const statusEl = document.getElementById('reg-username-status');
     if (!u) { statusEl.textContent = ''; statusEl.className = 'form-hint'; return; }
-    if (!USERNAME_FORMAT_RE.test(u)) {
-      statusEl.textContent = USERNAME_FORMAT_MSG;
+    if (!OPEN_USER_RE.test(u)) {   /* [บล็อก R9] กติกาใหม่ 6-12 ตัว */
+      statusEl.textContent = OPEN_USER_MSG;
       statusEl.className = 'form-hint bad';
       return;
     }
     statusEl.textContent = 'กำลังตรวจสอบ...'; statusEl.className = 'form-hint';
-    const res = await Auth.checkUsername(u);
+    const res = await sbOpenCheck(u);   /* [บล็อก R9] ตรวจกับฐานบัญชีผู้เล่นทั่วไปจริง ไม่ใช่ชีตเก่า */
     if (res.exists === true) { statusEl.textContent = 'ชื่อนี้มีคนใช้แล้ว ลองชื่ออื่นนะ'; statusEl.className = 'form-hint bad'; }
     else if (res.exists === false) { statusEl.textContent = 'ใช้ชื่อนี้ได้ ✓'; statusEl.className = 'form-hint ok'; }
     else { statusEl.textContent = ''; statusEl.className = 'form-hint'; }
@@ -28903,40 +29401,59 @@ function wireAuthEvents() {
     const errEl = document.getElementById('login-error');
     errEl.classList.add('hidden');
     if (!username || !pin) {
-      errEl.textContent = 'กรอกชื่อผู้ใช้และ PIN ให้ครบก่อนนะ';
+      errEl.textContent = 'กรอกชื่อผู้ใช้และรหัสผ่านให้ครบก่อนนะ';
       errEl.classList.remove('hidden');
       return;
     }
-    if (!PIN_FORMAT_RE.test(pin)) { // [ปรับตามคำขอ] เดิมบังคับตายตัว 4 หลัก ทั้งที่ maxlength เปิดถึง 6 — ตอนนี้รับ 4-6 หลักตรงตามช่องกรอกจริง
-      errEl.textContent = PIN_FORMAT_MSG;
+    /* [บล็อก R6] ช่องเดียวรับสองแบบ — รหัสผ่านบัญชีใหม่ (อังกฤษ+ตัวเลข 8-12)
+       หรือ PIN บัญชีเดิม (ตัวเลข 4-6) · เข้าเงื่อนไขอย่างน้อยหนึ่งแบบถึงจะยิงเซิร์ฟเวอร์ */
+    if (!openPassOk(pin) && !PIN_FORMAT_RE.test(pin)) {
+      errEl.textContent = 'รหัสผ่านไม่ตรงรูปแบบ — บัญชีใหม่ใช้ 8-12 ตัว (อังกฤษ+ตัวเลข) · บัญชีเดิมใช้ PIN ตัวเลข 4-6 หลัก';
       errEl.classList.remove('hidden');
       return;
     }
     // [รอบ 56 ตามคำขอ] ระบบกลุ่มย้ายไปกำหนดตอน "สมัครสมาชิก" — ล็อกอินไม่ถามซ้ำ (ข้อมูลกลุ่มกู้จากโปรไฟล์ที่ซิงก์ไว้อัตโนมัติ)
     setAuthButtonsBusy(true);
-    // [เฟส 3c] ลอง Supabase ก่อน — บัญชีเดิมที่ย้ายข้อมูลมาแล้ว login ได้ทันที (เร็วกว่า Sheets มาก) พร้อมกู้เซฟ+ผูกห้องเรียนอัตโนมัติ
+    // [บล็อก R6] บัญชี "ผู้เล่นทั่วไป" (ระบบใหม่ตามคำสั่งครู) ลองก่อน → บัญชีเดิม (PIN) เป็นทางถอย
+    let openRow = null;
     try {
-      const sbRow = await sbLegacyLogin(username, pin);
-      window.__sbLastLoginRow = sbRow;
-      if (sbRow && sbRow.student_id) {
-        sbBindLegacy(sbRow, username, pin);
+      openRow = await sbOpenLogin(username, pin);
+      if (openRow && openRow.student_id) {
+        sbBindOpen(openRow, username);
         setAuthButtonsBusy(false);
         AUDIO.playSFX('victory');
         afterAuthSuccess();
         return;
       }
-    } catch (e) { console.warn('[SB] legacy login:', e && e.message); }
-    /* [เฟส 3e/3f] ไม่มี fallback Sheets แล้ว — วินิจฉัยสาเหตุให้ชัดเจนแทน */
+    } catch (e) { console.error('[R] open login:', e && e.message); }
+    if (PIN_FORMAT_RE.test(pin)) {   /* บัญชีเดิมมีแต่ PIN ตัวเลข — รหัสรูปแบบอื่นไม่ต้องยิงให้เสียเวลา */
+      try {
+        const sbRow = await sbLegacyLogin(username, pin);
+        window.__sbLastLoginRow = sbRow;
+        if (sbRow && sbRow.student_id) {
+          sbBindLegacy(sbRow, username, pin);
+          setAuthButtonsBusy(false);
+          AUDIO.playSFX('victory');
+          afterAuthSuccess();
+          return;
+        }
+      } catch (e) { console.warn('[SB] legacy login:', e && e.message); }
+    }
+    /* วินิจฉัยสาเหตุให้ชัด — เด็กอ่านแล้วรู้ว่าต้องทำอะไรต่อ */
     let msg = 'เข้าสู่ระบบไม่สำเร็จ ลองใหม่อีกครั้ง';
     try {
-      const last = window.__sbLastLoginRow;
-      if (last && last.__nofunc) msg = 'ระบบใหม่ยังตั้งค่าไม่เสร็จ — แจ้งครูให้รันไฟล์ SQL แพตช์ล่าสุด (supabase_patch_all) ใน Supabase ก่อน';
-      else if (last && last.__offline) msg = 'เชื่อมต่ออินเทอร์เน็ตไม่ได้ — ตรวจสัญญาณแล้วลองใหม่';
+      if (openRow && openRow.__nofunc) msg = 'ระบบสมาชิกยังตั้งค่าไม่เสร็จ — แจ้งครูให้รัน SQL_ภาค2_สมัครสมาชิกผู้เล่นทั่วไป ใน Supabase ก่อน';
+      else if (openRow && openRow.__offline) msg = 'เชื่อมต่ออินเทอร์เน็ตไม่ได้ — ตรวจสัญญาณแล้วลองใหม่';
       else {
-        const found = await sbLegacyCheck(username);
-        if (found === true) msg = 'พบบัญชี "' + username + '" แต่ PIN ไม่ถูกต้อง — ลองพิมพ์ใหม่ หรือถามครู (ครูดู/แก้ PIN ได้ที่หน้า 🏫 รายชื่อนักเรียน)';
-        else if (found === false) msg = 'ไม่พบบัญชี "' + username + '" ในระบบใหม่ — ถ้าเป็นบัญชีเก่า ครูต้องรันย้ายข้อมูล (migrateToSupabase) ก่อน · หรือเข้าเล่นผ่านแท็บ "เข้าห้องเรียน" ได้เลย';
-        else msg = 'ไม่พบชื่อผู้ใช้/PIN นี้ หรือเชื่อมต่อไม่ได้ — ลองใหม่ หรือเข้าเล่นผ่านแท็บ "เข้าห้องเรียน"';
+        const chk = await sbOpenCheck(username);
+        if (chk && chk.exists === true) msg = 'พบบัญชี "' + username + '" แต่รหัสผ่านไม่ถูกต้อง — ลองพิมพ์ใหม่อีกครั้งนะ';
+        else {
+          let legacyFound = null;
+          if (PIN_FORMAT_RE.test(pin)) { try { legacyFound = await sbLegacyCheck(username); } catch (e3) {} }
+          if (legacyFound === true) msg = 'พบบัญชี (แบบเดิม) "' + username + '" แต่ PIN ไม่ถูกต้อง — ลองพิมพ์ใหม่ หรือถามครู (ครูดู/แก้ PIN ได้ที่หน้า 🏫 รายชื่อนักเรียน)';
+          else if (chk && chk.exists === false) msg = 'ไม่พบบัญชี "' + username + '" — แตะแท็บ "สมัครสมาชิกใหม่" เพื่อสมัครก่อน หรือเข้าเล่นผ่านแท็บ "เข้าห้องเรียน"';
+          else msg = 'ไม่พบชื่อผู้ใช้/รหัสผ่านนี้ หรือเชื่อมต่อไม่ได้ — ลองใหม่ หรือเข้าเล่นผ่านแท็บ "เข้าห้องเรียน"';
+        }
       }
     } catch (e2) {}
     setAuthButtonsBusy(false);
@@ -28946,101 +29463,39 @@ function wireAuthEvents() {
 
   document.getElementById('btn-register-submit').addEventListener('click', async () => {
     AUDIO.playSFX('click');
+    /* [บล็อก R7 · คำสั่งครู 11 ส.ค. 2569 ข้อ 3-4] สมัครสมาชิก "ผู้เล่นทั่วไป"
+       เดิมสมัครลงชีต Google (Apps Script) — ตอนนี้สมัครเป็นนักเรียนจริงบนแพลตฟอร์ม:
+       โรงเรียน "ผู้เล่นทั่วไป" (ซ่อนจากหน้าค้นหา · admin จัดการฝ่ายเดียว)
+       การตรวจชื่อซ้ำขั้นสุดท้ายอยู่ที่เซิร์ฟเวอร์ (unique index) — ตรงนี้กรองรูปแบบก่อนยิงเท่านั้น */
     const username = document.getElementById('reg-username').value.trim();
-    const pin = document.getElementById('reg-pin').value.trim();
+    const password = document.getElementById('reg-pin').value.trim();
     const charname = document.getElementById('reg-charname').value.trim();
-    const school = document.getElementById('reg-school').value.trim();
-    const firstname = document.getElementById('reg-firstname').value.trim();
-    const lastname = document.getElementById('reg-lastname').value.trim();
-    const klass = document.getElementById('reg-class').value.trim();
-    const studentnum = document.getElementById('reg-studentnum').value.trim();
+    const ageStr = (document.getElementById('reg-age').value || '').trim();
     const errEl = document.getElementById('register-error');
+    const bad = (m) => { errEl.textContent = m; errEl.classList.remove('hidden'); };
     errEl.classList.add('hidden');
-    if (!username || !pin || !firstname || !lastname) {
-      errEl.textContent = 'กรอกอย่างน้อย ชื่อผู้ใช้ / PIN / ชื่อจริง / นามสกุล ให้ครบก่อนนะ';
-      errEl.classList.remove('hidden');
-      return;
-    }
-    if (!USERNAME_FORMAT_RE.test(username)) { // [ใหม่ตามคำขอ] เดิมเช็คแค่ห้ามช่องว่าง ไม่จำกัดอักขระ/ความยาวเลย
-      errEl.textContent = USERNAME_FORMAT_MSG;
-      errEl.classList.remove('hidden');
-      return;
-    }
-    if (!PIN_FORMAT_RE.test(pin)) { // [ปรับตามคำขอ] เดิมบังคับตายตัว 4 หลัก ทั้งที่ maxlength เปิดถึง 6 — ตอนนี้รับ 4-6 หลักตรงตามช่องกรอกจริง
-      errEl.textContent = PIN_FORMAT_MSG;
-      errEl.classList.remove('hidden');
-      return;
-    }
-    if (username.toLowerCase() === 'guest') { // [FIX] กันชนถังเซฟของโหมด Guest
-      errEl.textContent = 'ชื่อผู้ใช้นี้สงวนไว้สำหรับระบบ ลองชื่ออื่นนะ';
-      errEl.classList.remove('hidden');
-      return;
-    }
-    // [รอบ 56 ตามคำขอ] เล่นเป็นกลุ่ม 2-3 คน: คนที่ 1 = เจ้าของบัญชี (ช่องชื่อจริง/นามสกุลด้านบน บันทึกลงฐานข้อมูลเดิมตามปกติ)
-    // ถ้าติ๊ก 2/3 คน ต้องกรอกชื่อจริง+นามสกุลของสมาชิกเพิ่ม "ครบทุกช่อง" ก่อนสมัคร
-    const gsize = (typeof window._getRegGroupSize === 'function') ? window._getRegGroupSize() : 1;
-    const gmembers = [];
-    for (let k = 2; k <= gsize; k++) {
-      const gf = (document.getElementById('reg-g' + k + '-first').value || '').trim();
-      const gl = (document.getElementById('reg-g' + k + '-last').value || '').trim();
-      if (!gf || !gl) {
-        errEl.textContent = 'กรอกชื่อจริงและนามสกุลของคนที่ ' + k + ' ให้ครบก่อนนะ (เล่น ' + gsize + ' คน ต้องมีชื่อครบทุกคน)';
-        errEl.classList.remove('hidden');
-        return;
-      }
-      // [รอบ 65] ห้อง/เลขที่ ของคนที่ 2-3 (ไม่บังคับ เหมือนคนที่ 1)
-      const gc = (document.getElementById('reg-g' + k + '-class').value || '').trim();
-      const gn = (document.getElementById('reg-g' + k + '-number').value || '').trim();
-      gmembers.push({ first: gf, last: gl, class: gc, number: gn });
-    }
-    // [ข้อ 3] กันชื่อซ้ำก่อนส่งสมัครจริง — เช็คทั้ง "ชื่อผู้ใช้ (username)" และ "ชื่อนักสำรวจ (characterName)" อีกครั้ง ไม่พึ่งแค่ตอน blur
+    if (!username || !password || !charname || !ageStr) return bad('กรอกให้ครบทุกช่องก่อนนะ: ชื่อผู้ใช้ · รหัสผ่าน · ชื่อในเกม · อายุ');
+    if (!OPEN_USER_RE.test(username)) return bad(OPEN_USER_MSG);
+    if (username.toLowerCase() === 'guest') return bad('ชื่อผู้ใช้นี้สงวนไว้สำหรับระบบ ลองชื่ออื่นนะ');   /* กันชนถังเซฟโหมด Guest — กติกาเดิม */
+    if (!openPassOk(password)) return bad(OPEN_PASS_MSG);
+    if (charname.length < OPEN_NAME_MIN || charname.length > OPEN_NAME_MAX) return bad(OPEN_NAME_MSG);
+    const age = parseInt(ageStr, 10);
+    if (!/^\d{1,2}$/.test(ageStr) || !(age >= 4 && age <= 99)) return bad('อายุใส่เป็นตัวเลข 4-99 ปีนะ');
     setAuthButtonsBusy(true);
-    const uCheck = await Auth.checkUsername(username);
-    if (uCheck && uCheck.exists === true) { // exists:null (ออฟไลน์) จะไม่บล็อก — ไปเจอ error ตอน server ปฏิเสธแทน (พฤติกรรมเดิม)
-      setAuthButtonsBusy(false);
-      errEl.textContent = 'ชื่อผู้ใช้นี้มีคนใช้แล้ว ลองชื่ออื่นนะ';
-      errEl.classList.remove('hidden');
-      document.getElementById('reg-username').focus();
-      return;
-    }
-    if (charname && await isCharacterNameTaken(charname, username)) {
-      setAuthButtonsBusy(false);
-      errEl.textContent = 'ชื่อนักสำรวจ “' + charname + '” มีคนใช้แล้ว ลองตั้งชื่ออื่น หรือเติมเลข/สัญลักษณ์ให้ต่างออกไปนะ';
-      errEl.classList.remove('hidden');
-      const _cs = document.getElementById('reg-charname-status'); if (_cs) { _cs.textContent = 'ชื่อนี้มีคนใช้แล้ว ลองชื่ออื่นนะ'; _cs.className = 'form-hint bad'; }
-      document.getElementById('reg-charname').focus();
-      return;
-    }
-    const res = await Auth.register({
-      username, pin,
-      characterName: charname || firstname,
-      firstName: firstname, lastName: lastname,
-      school: school, // [รอบ 63] โรงเรียน → ชีต Users คอลัมน์ School
-      class: klass, studentNumber: studentnum,
-      // [รอบ 57 ตามคำขอ] ชื่อ-นามสกุลคนที่ 2-3 บันทึกลงชีต Users ด้วย (คอลัมน์ใหม่ต่อท้าย — ต้อง Apps Script v2.16)
-      groupSize: gsize,
-      member2FirstName: gmembers[0] ? gmembers[0].first : '', member2LastName: gmembers[0] ? gmembers[0].last : '',
-      member3FirstName: gmembers[1] ? gmembers[1].first : '', member3LastName: gmembers[1] ? gmembers[1].last : '',
-      // [รอบ 65] ห้อง/เลขที่ ของคนที่ 2-3 → คอลัมน์ใหม่ Member2/3 Class/Number
-      member2Class: gmembers[0] ? gmembers[0].class : '', member2Number: gmembers[0] ? gmembers[0].number : '',
-      member3Class: gmembers[1] ? gmembers[1].class : '', member3Number: gmembers[1] ? gmembers[1].number : ''
-    });
+    const row = await sbOpenRegister({ username: username, password: password, charname: charname, age: age });
     setAuthButtonsBusy(false);
-    if (res && res.success) {
-      // [รอบ 56] เก็บสมาชิกกลุ่มลงโปรไฟล์ (ซิงก์ขึ้นชีตผ่าน ProfileBlob เดิม — ล็อกอินเครื่องไหนก็ตามกลุ่มไปด้วย ไม่แตะคอลัมน์ฐานข้อมูลเดิม)
-      try {
-        const d = getSaveData();
-        if (!d.profile) d.profile = {};
-        d.profile.groupExtra = gsize >= 2 ? { size: gsize, members: gmembers } : null;
-        writeSaveData(d);
-        localStorage.setItem('caiGroupInfo_v1', JSON.stringify({ size: gsize, names: gmembers.map(m => m.first + ' ' + m.last) }));
-      } catch (e) {}
+    if (row && row.student_id) {
       AUDIO.playSFX('victory');
+      sbBindOpen(row, username);
       afterAuthSuccess();
-    } else {
-      errEl.textContent = (res && res.error) || 'สมัครสมาชิกไม่สำเร็จ ลองใหม่อีกครั้ง';
-      errEl.classList.remove('hidden');
+      return;
     }
+    if (row && row.__taken) { bad('ชื่อผู้ใช้นี้มีคนใช้แล้ว ลองชื่ออื่นนะ'); document.getElementById('reg-username').focus(); return; }
+    if (row && row.__nofunc) return bad('ระบบสมาชิกยังตั้งค่าไม่เสร็จ — แจ้งครูให้รัน SQL_ภาค2_สมัครสมาชิกผู้เล่นทั่วไป ใน Supabase ก่อน');
+    if (row && row.__offline) return bad('เชื่อมต่ออินเทอร์เน็ตไม่ได้ — ตรวจสัญญาณแล้วลองใหม่');
+    if (row && row.__roomsetup) return bad('ระบบยังสร้างห้อง "ผู้เล่นทั่วไป" ไม่สำเร็จ — แจ้งผู้ดูแลระบบ (รายละเอียดอยู่ท้ายไฟล์ SQL)');
+    if (row && row.__badinput) return bad('ข้อมูลบางช่องไม่ตรงกติกา — ตรวจชื่อผู้ใช้ / รหัสผ่าน / ชื่อในเกม / อายุ อีกครั้งนะ');
+    bad('สมัครสมาชิกไม่สำเร็จ ลองใหม่อีกครั้ง');
   });
 
   document.getElementById('btn-auth-guest').addEventListener('click', () => {
@@ -29049,23 +29504,8 @@ function wireAuthEvents() {
     afterAuthSuccess();
   });
 
-  // [รอบ 56 ตามคำขอ] เล่นเป็นกลุ่ม (หน้าสมัครสมาชิก): ติ๊กได้แค่ 2/3 คน — แตะซ้ำปุ่มเดิม = ยกเลิก (กลับเป็นเล่นคนเดียว)
-  {
-    const _sizeBtns = [...document.querySelectorAll('#reg-group-size-row .group-size-btn')];
-    const _applyRegGroupSize = (n) => {
-      _sizeBtns.forEach(b => b.classList.toggle('active', Number(b.dataset.gsize) === n));
-      document.getElementById('reg-g2-row').classList.toggle('hidden', n < 2);
-      document.getElementById('reg-g3-row').classList.toggle('hidden', n < 3);
-    };
-    _sizeBtns.forEach(b => b.addEventListener('click', () => {
-      AUDIO.playSFX('click');
-      const cur = window._getRegGroupSize();
-      const n = Number(b.dataset.gsize);
-      _applyRegGroupSize(cur === n ? 1 : n); // แตะซ้ำ = ยกเลิกติ๊ก
-    }));
-    window._getRegGroupSize = () => { const a = _sizeBtns.find(b => b.classList.contains('active')); return a ? Number(a.dataset.gsize) : 1; };
-    _applyRegGroupSize(1); // [รอบ 65] เริ่มต้นเลือก "1 คน" ให้ชัด (กันสับสน) + ซ่อนช่องคนที่ 2-3
-  }
+  /* [บล็อก R11] ชุดปุ่ม "เล่นกี่คน" ของระบบสมัครแบบชีตเดิมถูกถอดพร้อมฟอร์ม —
+     การเล่นกลุ่มของแพลตฟอร์มจริงอยู่ที่แท็บ "เข้าห้องเรียน" ซึ่งไม่ถูกแตะ */
 
   // [รอบ 55 ตามคำขอ] กล่องถาม "เปิดระบบช่วยอ่านไหม" หลังเข้าสู่ระบบทุกครั้ง — อ่านคำถามออกเสียงด้วยเสมอ (ให้เด็กที่อ่านไม่ได้ตัดสินใจเองได้)
   window.askReadAloudChoice = function () {
@@ -29114,7 +29554,7 @@ function wireAuthEvents() {
       if (e.key === 'Enter') { e.preventDefault(); document.getElementById('btn-login-submit').click(); }
     });
   });
-  ['reg-username', 'reg-pin', 'reg-charname', 'reg-firstname', 'reg-lastname', 'reg-class', 'reg-studentnum'].forEach(id => {
+  ['reg-username', 'reg-pin', 'reg-charname', 'reg-age'].forEach(id => {   /* [บล็อก R12] ช่องชุดใหม่ */
     document.getElementById(id).addEventListener('keydown', (e) => {
       if (e.key === 'Enter') { e.preventDefault(); document.getElementById('btn-register-submit').click(); }
     });
@@ -29621,6 +30061,9 @@ function wireEvents() {
       }
     } catch (e) {}
   });
+  /* [บล็อก Q5] แผ่นแนะนำเต็มจอ — หน่วง 1.2 วิให้หน้าเริ่มขึ้นครบก่อน
+     และให้แผ่นชวนหมุนจอ (z-index 3500) อยู่เหนือกว่าเสมอ ถ้าเครื่องถือแนวตั้งอยู่ */
+  setTimeout(function () { try { showFsGuide(); } catch (e) {} }, 1200);
   (function () { var fb = document.getElementById('btn-fullscreen'); if (fb) fb.addEventListener('click', function () { try { if (typeof AUDIO !== 'undefined' && AUDIO.playSFX) AUDIO.playSFX('click'); } catch (e) { } toggleFullscreen(); }); })(); /* [V.7.76] ปุ่มอยู่ข้างปุ่มตั้งค่า */
   refreshDisplayModeUI(); /* [V.7.76] ตั้งสถานะปุ่มเต็มจอตั้งแต่เปิดเกม */
   document.getElementById('btn-audio-settings-close').addEventListener('click', () => {
@@ -30192,6 +30635,24 @@ const SwipeControl = {
 };
 
 // [FIX M26] อัปเดตหน่วย UI ให้อิงขนาดกรอบเกมจริง (หลัง letterbox/pillarbox) — จอ 4:3/จอกว้าง UI ไม่บวม/ไม่โดนตัดอีก
+/* [บล็อก Q2] อ่านค่า env(safe-area-inset-*) ออกมาเป็นตัวเลข
+   JS อ่าน env() ตรง ๆ ไม่ได้ ต้องให้ CSS คำนวณลง padding ของกล่องล่องหนแล้วอ่านกลับ
+   กล่องนี้สร้างครั้งเดียว ไม่มีขนาด ไม่กินการแตะ ไม่ถูกโปรแกรมอ่านหน้าจออ่าน */
+var _safeProbe = null;
+function _safeInsets() {
+  if (!_safeProbe) {
+    _safeProbe = document.createElement('div');
+    _safeProbe.setAttribute('aria-hidden', 'true');
+    _safeProbe.style.cssText = 'position:fixed;left:0;top:0;width:0;height:0;pointer-events:none;visibility:hidden;' +
+      'padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);' +
+      'padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)';
+    document.documentElement.appendChild(_safeProbe);
+  }
+  var c = getComputedStyle(_safeProbe);
+  return { l: parseFloat(c.paddingLeft) || 0, r: parseFloat(c.paddingRight) || 0,
+    t: parseFloat(c.paddingTop) || 0, b: parseFloat(c.paddingBottom) || 0 };
+}
+
 function updateWrapperUnits() {
   const w = document.getElementById('game-wrapper');
   if (!w) return;
@@ -30208,6 +30669,15 @@ function updateWrapperUnits() {
   const unit = Math.min(r.width / 100, r.height / 56.25);
   if (r.width > 0 && r.height > 0) w.style.setProperty('--vw', (unit * k) + 'px');
   if (r.height > 0) w.style.setProperty('--vh', (r.height / 100) + 'px');
+  /* [บล็อก Q2] ส่วนของรอยบาก/แถบโฮม ที่ล้ำเข้ามาในเวทีเกมจริง (หน่วย px)
+     บนคอม env() = 0 ทุกด้าน ค่าที่ได้จึงเป็น 0 ทั้งหมด — ไม่มีอะไรขยับสักพิกเซล */
+  try {
+    const s = _safeInsets();
+    w.style.setProperty('--sal', Math.max(0, s.l - r.left) + 'px');
+    w.style.setProperty('--sar', Math.max(0, (s.r - (window.innerWidth - r.right))) + 'px');
+    w.style.setProperty('--sat', Math.max(0, s.t - r.top) + 'px');
+    w.style.setProperty('--sab', Math.max(0, (s.b - (window.innerHeight - r.bottom))) + 'px');
+  } catch (e) { console.error('[Q2] คำนวณระยะรอยบากไม่สำเร็จ', e); }
   /* [บล็อก H] ผืนแคนวาสหลักคมตามจอจริง — ตั้งขนาดบัฟเฟอร์ + ทรานส์ฟอร์มฐานใหม่
      ทุกครั้งที่กรอบเกมเปลี่ยน (ที่ dpr=1 เป็น no-op เต็มตัว: ขนาดเท่าเดิม ทรานส์ฟอร์ม identity) */
   try { if (r.width > 0 && typeof V8DPR !== 'undefined' && V8DPR.fitScreens) V8DPR.fitScreens(r.width); } catch (e) { }
@@ -30246,9 +30716,18 @@ function isMobileFit() {
     if (f === '1') return true;
     if (f === '0') return false;
   } catch (e) { }
-  var touch = (navigator.maxTouchPoints || 0) > 0 || (window.matchMedia && matchMedia('(pointer: coarse)').matches);
-  var shortSide = Math.min(window.innerWidth || 0, window.innerHeight || 0);
-  return !!touch && shortSide > 0 && shortSide <= 820;
+  /* [บล็อก Q1] ครูเลือก "จอสัมผัสล้วน ไม่ดูขนาด" — เลิกใช้เส้นแบ่ง 820 px
+     เหตุผลที่ต้องเลิก: iPad Pro 11" ด้านสั้น 834 เกินไป 14 px แล้วได้กติกาคอมทั้งเครื่อง
+     ปุ่มเหลือ 38.2 px ตัวอักษร 10.7 px ซึ่งเด็ก ป.4 กดพลาดแน่นอน
+     เกณฑ์ใหม่ = ต้องเป็นจอสัมผัส **และ** ไม่มีอุปกรณ์ชี้ที่แม่นยำ (ไม่มีเมาส์)
+       pointer: coarse = อุปกรณ์ชี้หลักหยาบ (นิ้ว)
+       hover: none     = ชี้ค้างไม่ได้ (ไม่มีเมาส์)
+     สองข้อนี้ต้องจริงพร้อมกัน — โน้ตบุ๊ก/จอทัชสกรีนที่ต่อเมาส์ได้ hover:hover จึงตกเกณฑ์
+     และได้กติกาคอมเหมือนเดิมทุกประการ (นี่คือหลักประกัน "ไม่กระทบคอม" ของข้อนี้) */
+  var touch = (navigator.maxTouchPoints || 0) > 0 || ('ontouchstart' in window);
+  if (!touch) return false;                    /* ไม่มีจอสัมผัสเลย = คอมแน่นอน จบตรงนี้ */
+  if (!window.matchMedia) return true;         /* เบราว์เซอร์เก่ามากจนไม่มี matchMedia: มีจอสัมผัส = ถือว่าใช่ */
+  return matchMedia('(pointer: coarse)').matches && matchMedia('(hover: none)').matches;
 }
 function applyDeviceClass() {
   try { document.documentElement.classList.toggle('mobile-fit', isMobileFit()); } catch (e) { }
@@ -30258,7 +30737,109 @@ window.addEventListener('resize', applyDeviceClass);
 window.addEventListener('orientationchange', applyDeviceClass);
 /* ===== [V.7.75] โหมดเต็มจอ / เพิ่มไปยังหน้าจอโฮม ===== */
 function _fsEl() { return document.fullscreenElement || document.webkitFullscreenElement || null; }
+/* ══════════════════════════════════════════════════════════════════════
+   [บล็อก Q5] แผ่นแนะนำ "ทำให้เต็มจอ" ครั้งแรกที่เปิดเกมบนจอสัมผัส
+   (ครูเลือกจังหวะนี้เอง — งานข้อ 3: "สามารถเปิดเต็มหน้าจอได้ มีคำแนะนำก่อนใช้งาน")
+
+   ของเดิมมีคำแนะนำเฉพาะ iOS (แถบเล็ก ๆ ใต้หน้าเริ่ม) ส่วน Android/Chrome
+   ได้ปุ่ม ⛶ เปล่า ๆ ไม่มีใครบอกว่ามันคืออะไร — คอมเมนต์ในโค้ดเดิมเขียนไว้เองว่า
+   "เครื่องอื่นมีปุ่ม ⛶ อยู่แล้ว ไม่ต้องมีคำแนะนำมากินพื้นที่" ซึ่งสวนกับสิ่งที่ครูขอ
+
+   กติกา
+     · โผล่เฉพาะจอสัมผัส (คอมไม่เห็นเลย — หลักประกันข้อ ง ของบล็อกนี้)
+     · ครั้งเดียวต่อเครื่อง (จำใน localStorage) · กดข้ามได้ ไม่ขวางการเล่น
+     · ปุ่มในแผ่นเป็น "การกดของผู้ใช้" จริง จึงสั่งเต็มจอได้ทันทีตรงนั้นเลย
+       (เบราว์เซอร์ยอมให้สั่งเต็มจอได้เฉพาะตอนมีการกดของผู้ใช้เท่านั้น)
+     · เครื่องที่สั่งเต็มจอไม่ได้ (iPhone/iPad Safari) เปลี่ยนเป็นวิธี "เพิ่มไปยังหน้าจอโฮม"
+
+     ⚠️ บทเรียนระหว่างทำ (บันทึกไว้เตือน): ตอนแรกผมทำเป็นแผ่นคลุมเต็มจอ
+     แล้วชุดทดสอบ t_ra ฟ้องทันทีว่าข้อ "หน้าแรกกดปุ่มได้ทันที (ไม่มีอะไรคลุมจอ)" ไม่ผ่าน
+     — ซึ่งเป็นกติกาที่ตั้งไว้ตั้งแต่งานข้อ 3 ของครูรอบก่อน
+     จึงเปลี่ยนเป็น **แถบล่างจอที่ไม่ขวางการกด**: กล่องนอกเป็น pointer-events:none
+     มีเฉพาะการ์ดที่รับการแตะ · เด็กกดปุ่มเริ่มเกมได้ทันทีโดยไม่ต้องปิดแผ่นนี้ก่อน
+     และแตะที่อื่นบนจอก็นับเป็นการปิดแผ่น (ไม่ต้องเล็งปุ่ม ✕ เล็ก ๆ)
+   ══════════════════════════════════════════════════════════════════════ */
+function _fsGuideNeeded() {
+  try { if (localStorage.getItem('cai_fs_guide_seen') === '1') return false; } catch (e) {}
+  var touch = (navigator.maxTouchPoints || 0) > 0 || ('ontouchstart' in window);
+  if (!touch) return false;                       /* คอมไม่เห็นเด็ดขาด */
+  try { if (_isStandalone && _isStandalone()) return false; } catch (e) {}   /* เปิดจากไอคอนโฮมอยู่แล้ว = เต็มจอแล้ว */
+  try { if (_fsEl && _fsEl()) return false; } catch (e) {}                   /* เต็มจออยู่แล้ว */
+  return true;
+}
+function _fsGuideClose(remember) {
+  if (remember) { try { localStorage.setItem('cai_fs_guide_seen', '1'); } catch (e) {} }
+  var m = document.getElementById('fs-guide-modal'); if (m) m.classList.add('hidden');
+}
+function _fsGuideGo() {
+  try { toggleFullscreen(); } catch (e) { console.error('[Q5] สั่งเต็มจอไม่สำเร็จ', e); }
+  _fsGuideClose(true);
+}
+function showFsGuide() {
+  try {
+    if (!_fsGuideNeeded()) return;
+    var m = document.getElementById('fs-guide-modal'); if (!m) return;
+    var canFs = false; try { canFs = _fsSupported(); } catch (e) {}
+    var ios = false; try { ios = _isIOS(); } catch (e) {}
+    var howto = document.getElementById('fs-guide-howto');
+    var go = document.getElementById('fs-guide-go');
+    if (howto) {
+      howto.innerHTML = canFs
+        ? 'แตะปุ่มขวามือนี้ · คราวหลังกดเอง-ปิดเองได้ที่ปุ่ม <b>⛶</b> มุมขวาบนของเกม'
+        : (ios
+          ? 'บน iPhone/iPad: แตะปุ่มแชร์ <b>⬆️</b> ของ Safari → <b>“เพิ่มไปยังหน้าจอโฮม”</b> แล้วเปิดจากไอคอนนั้น'
+          : 'เครื่องนี้สั่งเต็มจอจากในเกมไม่ได้ — ใช้เมนูของเบราว์เซอร์แล้วเลือกโหมดเต็มจอแทน');
+    }
+    if (go) go.style.display = canFs ? '' : 'none';
+    m.classList.remove('hidden');
+    /* แตะที่อื่นบนจอ = ปิดแผ่นนี้ (เด็กไม่ต้องเล็งปุ่มเล็ก ๆ) — ฟังครั้งเดียวแล้วถอดทิ้ง */
+    var away = function (ev) {
+      var card = document.getElementById('fs-guide-card');
+      if (card && card.contains(ev.target)) return;
+      document.removeEventListener('pointerdown', away, true);
+      _fsGuideClose(true);
+    };
+    setTimeout(function () { document.addEventListener('pointerdown', away, true); }, 250);
+    /* หลบให้ของสำคัญเสมอ — ถ้ามีกล่องคำถามเปิดอยู่ หรือออกจากหน้าแรกไปแล้ว ให้ซ่อนทันที
+       (กติกาเดิมของเกม: หน้าแรกต้องกดปุ่มได้ทันที ห้ามมีอะไรมาคลุม) */
+    if (window._fsGuideWatch) clearInterval(window._fsGuideWatch);
+    window._fsGuideWatch = setInterval(function () {
+      var box = document.getElementById('fs-guide-modal');
+      if (!box || box.classList.contains('hidden')) { clearInterval(window._fsGuideWatch); window._fsGuideWatch = 0; return; }
+      var onStart = (document.querySelector('.screen.active') || {}).id === 'start-screen';
+      /* ต้องเช็ค "มองเห็นจริง" ไม่ใช่แค่ไม่มีคลาส hidden —
+         ในไฟล์มี .modal-overlay หลายตัวที่ถูกซ่อนด้วยวิธีอื่น ถ้าเช็คแค่คลาสจะได้ผลบวกลวง
+         (เจอจริงระหว่างทดสอบ: แผ่นแนะนำถูกซ่อนทิ้งทันทีที่โผล่) */
+      var seen = function (el) {
+        if (!el) return false;
+        var r = el.getBoundingClientRect();
+        return r.width > 1 && r.height > 1 && getComputedStyle(el).display !== 'none';
+      };
+      var modalUp = [].slice.call(document.querySelectorAll(
+        '#readaloud-ask-modal:not(.hidden), .modal-overlay:not(.hidden), #rotate-hint-overlay')).some(seen);
+      if (!onStart || modalUp) { document.removeEventListener('pointerdown', away, true); _fsGuideClose(true); }
+    }, 320);
+  } catch (e) { console.error('[Q5] เปิดแผ่นแนะนำเต็มจอไม่สำเร็จ', e); }
+}
+
 function _fsSupported() { var e = document.documentElement; return !!(e.requestFullscreen || e.webkitRequestFullscreen); }
+/* [บล็อก Q7] จอสัมผัสไม่มี tooltip — ปุ่มที่มีแต่ title= จึงไม่มีชื่อให้ใครอ่านเลย
+   ยก title ไปเป็น aria-label ให้ทุกปุ่มที่ยังไม่มี (ทำครั้งเดียวตอนบูต + ทุกครั้งที่ DOM เปลี่ยน)
+   ไม่แตะ CSS ไม่แตะขนาด ไม่แตะตำแหน่ง — คอมก็ได้ประโยชน์ด้วย ไม่เสียอะไร */
+function _labelIconButtons(root) {
+  try {
+    (root || document).querySelectorAll('button[title], [role="button"][title], a[title]').forEach(function (e) {
+      if (!e.getAttribute('aria-label')) e.setAttribute('aria-label', e.getAttribute('title'));
+    });
+  } catch (e) { console.error('[Q7] ใส่ชื่อปุ่มไอคอนไม่สำเร็จ', e); }
+}
+_labelIconButtons();
+try {
+  new MutationObserver(function (ms) {
+    ms.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType === 1) _labelIconButtons(n); }); });
+  }).observe(document.body, { childList: true, subtree: true });
+} catch (e) { console.error('[Q7] เฝ้าดู DOM เพื่อใส่ชื่อปุ่มไม่สำเร็จ', e); }
+
 function _isIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
 function _isStandalone() {
   try { return !!window.navigator.standalone || (window.matchMedia && (matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches)); } catch (e) { return false; }
@@ -30561,13 +31142,68 @@ window.addEventListener('pagehide', () => { if (typeof flushAnswerLogs === 'func
   #clsj .jgroup-hint{font-size:12px;padding:5px 9px}
   #clsj .jself{margin-top:8px;padding-top:7px}
 }
+/* [บล็อก L-B] หน้าเลือกเจ้าภาพ "รอบนี้เล่นด่านของใคร" — โทนเดียวกับหน้ารายชื่อ (I1) */
+#clsj .jhost-rows{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:7px;width:min(740px,96%);margin:8px auto 0}
+#clsj .jhostu{display:flex;align-items:center;gap:9px;min-height:44px;padding:8px 12px;border-radius:12px;cursor:pointer;font-family:inherit;text-align:left;background:#fff;border:2px solid #cbd5e1}
+#clsj .jhostu.sel{border-color:#0e7490;background:#cffafe}
+#clsj .jhost-nav{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+#clsj .jhost-nav .jbtn{width:auto;min-width:150px;min-height:44px;margin-top:0}
+@media(max-height:560px){
+  #clsj .jhost-rows{gap:5px;margin-top:6px}
+  #clsj .jhostu{padding:6px 10px}
+  #clsj .jhost-nav{margin-top:7px}
+  #clsj .jhost-nav .jbtn{padding:10px 13px}
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   [บล็อก Q3] ความสูงจอบนมือถือ — 100vh ไม่ใช่ความสูงที่เห็นจริง
+   บนเบราว์เซอร์มือถือที่แถบที่อยู่ยุบได้ 100vh คือความสูง "ตอนแถบยุบแล้ว"
+   ตอนแถบยังกางอยู่ เวทีจึงสูงเกินพื้นที่ที่มองเห็น 60-90 px → ก้นจอโดนตัด
+   100dvh คือความสูงที่มองเห็นจริง ณ ขณะนั้น
+   บนคอม dvh = vh เสมอ (ไม่มีแถบที่ยุบได้) → ค่าที่ได้เท่าเดิมทุกพิกเซล
+   ห่อด้วย @supports ให้เบราว์เซอร์เก่าที่ไม่รู้จัก dvh ตกกลับไปใช้ของเดิม
+   ══════════════════════════════════════════════════════════════════════ */
+@supports (height: 100dvh) {
+  #game-wrapper { max-height: 100dvh; max-width: 177.78dvh; }
+  .mobile-fit #game-wrapper { width: min(100vw, 200dvh); height: min(100dvh, 56.25vw); max-height: 100dvh; }
+}
+
+/* [บล็อก Q6] ลิงก์ไปภาค 1 เป็นเป้ากดจริง ต้องได้ 44 px บนจอสัมผัส
+   เขียนใต้ .mobile-fit เท่านั้น — คอมไม่มีคลาสนี้จึงไม่ขยับ */
+.mobile-fit #p2-link-part1 { display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; padding: calc(var(--vw) * 0.4) calc(var(--vw) * 1); }
+
+/* [บล็อก Q8] iOS: กดค้างบนไอเทมที่ต้องลาก จะเรียกเมนู "บันทึกภาพ" หรือแว่นขยายเลือกข้อความ
+   ขึ้นมาขวางการลากกลางคัน · touch-action:none กันสองอย่างนี้ไม่ได้ ต้องสั่งแยก
+   ไม่มีผลกับการคลิกเมาส์บนคอมเลย */
+#ui-layer .s6-hug-token, #ui-layer .mg3-token, .eco-scene, .cap-node, .rs-tile {
+  -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
 </style>
 <!-- [ตรวจมือถือ V.7.64] มือถือจอแนวตั้ง: เกม 16:9 เหลือแถบเตี้ย ~220px — ชวนหมุนจอ (ปิดได้ ไม่บังคับ · โผล่เฉพาะจอแคบ <820px แนวตั้ง) -->
 <div id="rotate-hint-overlay" style="display:none;position:fixed;inset:0;z-index:3500;background:rgba(8,14,22,.94);color:#fff;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:26px;gap:13px">
   <div style="font-size:60px;line-height:1.15"><span style="display:inline-block;transform:rotate(-90deg)">📱</span><span style="display:inline-block;margin-left:14px">🔄</span></div>
   <div style="font-size:21px;font-weight:800">หมุนเครื่องเป็นแนวนอนนะ</div>
   <div style="font-size:14.5px;opacity:.88;max-width:300px;line-height:1.5">เกมออกแบบมาสำหรับจอแนวนอน — เต็มจอ ตัวหนังสือใหญ่ ปุ่มกดง่ายกว่ามาก</div>
-  <button onclick="_rotateHintDismiss()" style="font-family:inherit;margin-top:8px;padding:13px 24px;border-radius:999px;border:2px solid rgba(255,255,255,.45);background:rgba(255,255,255,.1);color:#fff;font-size:14px;font-weight:700;cursor:pointer">เล่นต่อแนวตั้งไปก่อน</button>
+  <button id="rotate-hint-skip" onclick="_rotateHintDismiss()" style="font-family:inherit;margin-top:8px;padding:13px 24px;border-radius:999px;border:2px solid rgba(255,255,255,.45);background:rgba(255,255,255,.1);color:#fff;font-size:14px;font-weight:700;cursor:pointer">เล่นต่อแนวตั้งไปก่อน</button>
+  <!-- [บล็อก Q4] บนมือถือไม่มีปุ่มข้าม — บอกเหตุผลแทน จะได้ไม่รู้สึกว่าเกมค้าง -->
+  <div id="rotate-hint-why" style="display:none;font-size:13px;opacity:.72;max-width:300px;line-height:1.5;margin-top:4px">แนวตั้งบนมือถือเหลือพื้นที่เล่นแค่ราวหนึ่งในสี่ของจอ ตัวหนังสือจะเล็กจนอ่านลำบาก<br>หมุนเครื่องแล้วเกมจะไปต่อเองทันที</div>
+</div>
+<!-- [บล็อก Q5] คำแนะนำเต็มจอ — โผล่ครั้งแรกที่เปิดเกมบนจอสัมผัสเท่านั้น
+     เป็น "แถบล่างจอ" ไม่ใช่แผ่นคลุม: กล่องนอก pointer-events:none จึงไม่ขวางการกดปุ่มใด ๆ -->
+<div id="fs-guide-modal" class="hidden" style="position:fixed;left:0;right:0;bottom:0;z-index:3400;pointer-events:none;display:flex;justify-content:center;padding:0 10px 10px">
+  <!-- แถบเตี้ยแนวนอน สูงราว 84 px — วัดจากหน้าจริงแล้วว่าไม่บังปุ่ม "เริ่มเกม"/"วิธีเล่น"
+       (บนมือถือ 844×390 ปุ่มสองตัวนั้นอยู่ที่ y 225-269 · แถบนี้เริ่มที่ y ~290)
+       สิ่งที่ถูกบังชั่วคราวคือลิงก์ไปภาค 1 กับเลขรุ่น ซึ่งไม่ใช่ปุ่มที่ต้องกดตอนเริ่มเล่น -->
+  <div id="fs-guide-card" style="pointer-events:none;max-width:min(620px,97vw);background:rgba(10,18,28,.96);border:2px solid rgba(120,220,215,.38);border-radius:14px;color:#fff;padding:9px 12px;box-shadow:0 6px 26px rgba(0,0,0,.55);display:flex;align-items:center;gap:10px;text-align:left">
+    <div style="flex:1;min-width:0">
+      <div style="font-size:13.5px;font-weight:800;line-height:1.35">⛶ เล่นให้เต็มจอ — ตัวหนังสือใหญ่ขึ้น ปุ่มกดง่ายขึ้น</div>
+      <div id="fs-guide-howto" style="font-size:12px;opacity:.9;line-height:1.45;margin-top:3px"></div>
+    </div>
+    <div style="display:flex;gap:7px;flex:none">
+      <button id="fs-guide-go" onclick="_fsGuideGo()" style="pointer-events:auto;font-family:inherit;min-height:44px;padding:8px 15px;border-radius:999px;border:0;background:#2fa5a0;color:#fff;font-size:13.5px;font-weight:800;cursor:pointer;white-space:nowrap">เต็มจอเลย</button>
+      <button onclick="_fsGuideClose(true)" aria-label="ปิดคำแนะนำเต็มจอ" title="ปิดคำแนะนำ" style="pointer-events:auto;font-family:inherit;min-width:44px;min-height:44px;border-radius:999px;border:2px solid rgba(255,255,255,.4);background:rgba(255,255,255,.08);color:#fff;font-size:15px;font-weight:700;cursor:pointer">✕</button>
+    </div>
+  </div>
 </div>
 <div id="clsj"><div class="jcard"><div class="jhead"><h2 id="clsj-title">🏫 เข้าห้องเรียน</h2><button class="jx" onclick="clsjClose()">✕</button></div><div class="jbody" id="clsj-body"></div></div></div>
 
@@ -30577,10 +31213,15 @@ window.addEventListener('pagehide', () => { if (typeof flushAnswerLogs === 'func
    ดึงจากข้อมูลตอนเข้าห้องเรียน (cls_current — บันทึกไว้ครบตอนเลือกชื่อตัวเอง) เป็นหลัก
    ถ้าไม่มีค่อยถอยไปใช้ profile ในเซฟเกม · ถ้ายังไม่มีอีก (เล่นแบบ Guest) จึงค่อยให้กรอกเอง
    ผลพลอยได้: ชื่อไม่สะกดผิด · จับคู่กับข้อมูลการเล่นได้ตรงคน · เด็กเริ่มทำแบบประเมินได้เร็วขึ้นมาก */
-function _satIdentity(){
+function _satIdentity(who){
   var b=null; try{ b=(typeof SBTee!=='undefined'&&SBTee.bind)?SBTee.bind():null; }catch(e){}
   var prof=(typeof getSaveData==='function'&&getSaveData().profile)||{};
-  var nm=String((b&&b.member_names&&b.member_names[0])||'').trim();
+  /* [บล็อก N1 · บั๊ก 3] ถ้าระบุ "คนที่กำลังทำ" มา ให้ใช้ชื่อของคนนั้น ไม่ใช่สมาชิกคนแรกของเครื่องเสมอไป
+     และต้องล้าง firstName/lastName/studentNumber ที่ค้างอยู่ในเซฟของเครื่องด้วย
+     เพราะสามช่องนั้นเป็นของ "เจ้าของเครื่อง" — ถ้าไม่ล้าง ชื่อบนการ์ดจะเด้งกลับเป็นคนแรกทันที
+     ทั้งที่คนที่ 2 เป็นคนทำ (ท่าเดียวกับภาค 1 [V.7.99.1 ข้อ 5] เป๊ะ) */
+  var nm=String((who&&who.name)||(b&&b.member_names&&b.member_names[0])||'').trim();
+  if(who){ prof=Object.assign({},prof,{ firstName:'', lastName:'', studentNumber:'' }); }
   var sp=nm?nm.split(/\s+/):[];
   var id={
     username : (b&&b.username)||prof.username||'',
@@ -30591,6 +31232,10 @@ function _satIdentity(){
     studentNumber: prof.studentNumber||'',
     charName : (b&&b.char_name)||prof.characterName||'',
     members  : (b&&b.member_names&&b.member_names.length>1)?b.member_names:null,
+    /* [บล็อก N1] รายชื่อ "เพื่อนร่วมเครื่องคนอื่น" — ตัดคนที่กำลังทำออก ไม่ใช่ตัดคนแรกเสมอ */
+    mates    : (function(){ var mn=(b&&b.member_names)||null; if(!mn||mn.length<2) return null;
+                 var skip=who?Number(who.i):0;
+                 return mn.filter(function(x,i){ return i!==skip; }); })(),
     fromSystem: !!(b&&b.student_id)
   };
   return id;
@@ -30615,7 +31260,9 @@ function _satIdentityCard(id, pfx){
         '<b style="font-size:15px;color:#0b5566">'+_satEsc(((id.firstName||'')+' '+(id.lastName||'')).trim()||id.username||'นักสำรวจ')+'</b>'+
         (id.charName?' <span style="font-size:12px;color:#7c3aed">🎮 '+_satEsc(id.charName)+'</span>':'')+
         (line.length?'<div style="font-size:12.5px;color:#0e7490">'+line.join(' · ')+'</div>':'')+
-        (id.members?'<div style="font-size:11.5px;color:#64748b">👥 เล่นด้วยกันกับ '+_satEsc(id.members.slice(1).join(', '))+'</div>':'')+
+        /* [บล็อก N2 · บั๊ก 3] เดิม slice(1) = ตัดสมาชิกคนแรกทิ้งเสมอ พอคนที่ 2 เป็นคนทำ
+           การ์ดจะเขียนว่า "เล่นด้วยกันกับ (ตัวเอง)" — ตอนนี้ตัด "คนที่กำลังทำ" ออกแทน */
+        ((id.mates&&id.mates.length)?'<div style="font-size:11.5px;color:#64748b">👥 เล่นด้วยกันกับ '+_satEsc(id.mates.join(', '))+'</div>':'')+
       '</div>'+
       '<span style="font-size:11px;color:#0e7490;background:#fff;border-radius:999px;padding:2px 9px;white-space:nowrap">ระบบกรอกให้แล้ว</span>'+
     '</div>'+
@@ -30805,9 +31452,137 @@ var SATPAGE = {
 try { SATPAGE.init(); } catch (e) {}
 
 function _satEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+/* ══ [บล็อก N3 · บั๊ก 3] เครื่องเดียวเล่นเป็นกลุ่ม — ต้องประเมินได้ "ทุกคน" ══════
+   ใช้ร่วมกันทั้งแบบประเมินตนเอง (kind='self') และแบบความพึงพอใจ (kind='sat')
+   เพราะทั้งสองหน้าใช้การ์ดตัวตนก้อนเดียวกัน บั๊กจึงเป็นตัวเดียวกันเป๊ะ
+
+   ⚠️ ข้อจำกัดที่รู้ล่วงหน้า — ยังทดสอบกับห้องจริงไม่ได้ (เขียนเตือนไว้ตามคำสั่ง):
+     ห้องที่บังคับ PIN รายคน ฝั่งเซิร์ฟเวอร์ (_student_ok ใน rpc_submit_survey)
+     อาจไม่ยอมรับ p_student ของสมาชิกคนที่ 2 ด้วย PIN ของเครื่อง
+     — อาการเดียวกับบั๊กประวัติศาสตร์ V.7.71 ของการประเมินเพื่อน
+     ถ้าเกิดขึ้นจริง **ห้ามถอยไปส่งเป็นชื่อคนแรกเด็ดขาด** นั่นคือการสร้างข้อมูลผิดคน
+     ระบบจะ: คงไว้ในคิว SBTee (ลองส่งใหม่เองทุก 30 วิ) + console.error + ป้ายเตือนบนจอ
+     ทางแก้ถาวรอยู่ฝั่ง SQL — ต้องมี rpc ที่ตรวจสิทธิ์ "เครื่อง/เจ้าภาพ" แล้วอนุญาตเขียน
+     แทนสมาชิกกลุ่มได้ (โครงเดียวกับ rpc_submit_peer ที่ใช้แก้ V.7.71) · รอบนี้แตะ SQL ไม่ได้  */
+var _selfState={ kind:null, who:null, done:{}, draft:{}, reject:{}, screen:'' };
+function satDeviceMembers(){
+  var b=null; try{ b=(typeof SBTee!=='undefined'&&SBTee.bind)?SBTee.bind():null; }catch(e){}
+  if(!b||!b.member_ids||b.member_ids.length<2) return null;   /* เครื่องคนเดียว = ไม่มีขั้นถาม */
+  var names=b.member_names||[];
+  return b.member_ids.map(function(id,i){
+    return { id:String(id), name:String(names[i]||('เพื่อนคนที่ '+(i+1))), i:i }; });
+}
+function _satKey(kind,id){ return String(kind)+'|'+String(id); }
+
+/* เก็บ/คืน "คำตอบที่กรอกค้าง" แยกรายคน — สลับคนหรือปิดหน้าไปแล้วกลับมาต้องได้ของเดิมคืนครบ
+   เก็บในหน่วยความจำเท่านั้น ไม่แตะ localStorage (ไม่อยากให้คำตอบของเด็กค้างในเครื่องข้ามวัน)
+   แยกรายคนด้วย เพื่อไม่ให้คำตอบของคนก่อนหน้าไหลไปปนกับคนถัดไป */
+function satSaveDraft(){
+  var w=_selfState.who, k=_selfState.kind; if(!w||!k) return;
+  var body=document.getElementById('sat-body'); if(!body) return;
+  if(!body.querySelector('input[type="radio"]')) return;   /* ไม่ใช่หน้าฟอร์ม — ไม่มีอะไรให้เก็บ */
+  var d={ r:{}, t:{} };
+  var rs=body.querySelectorAll('input[type="radio"]:checked');
+  for(var i=0;i<rs.length;i++) d.r[rs[i].name]=rs[i].value;
+  var ts=body.querySelectorAll('textarea, input[type="text"]');
+  for(var j=0;j<ts.length;j++){ if(ts[j].id) d.t[ts[j].id]=ts[j].value; }
+  _selfState.draft[_satKey(k,w.id)]=d;
+}
+function satRestoreDraft(){
+  var w=_selfState.who, k=_selfState.kind; if(!w||!k) return;
+  var d=_selfState.draft[_satKey(k,w.id)]; if(!d) return;
+  var body=document.getElementById('sat-body'); if(!body) return;
+  Object.keys(d.t||{}).forEach(function(id){ var el=document.getElementById(id); if(el) el.value=d.t[id]; });
+  Object.keys(d.r||{}).forEach(function(nm){
+    var el=body.querySelector('input[name="'+nm+'"][value="'+d.r[nm]+'"]'); if(!el) return;
+    el.checked=true;
+    var lab=el.closest?el.closest('label'):null; if(lab) lab.classList.add('sel');
+  });
+}
+
+/* ป้ายเตือนบนจอเมื่อเซิร์ฟเวอร์ไม่รับรหัสของคนที่ทำจริง — ต้องเห็นได้ ไม่ใช่ล้มเงียบ
+   ย้ำอีกครั้ง: ไม่มีทางไหนถอยไปส่งเป็นชื่อคนแรก ข้อมูลค้างในคิวและถูกลองส่งใหม่เอง */
+function satRejectHTML(){
+  var ks=Object.keys(_selfState.reject||{}); if(!ks.length) return '';
+  var names=ks.map(function(k){ return _selfState.reject[k].name||'เพื่อน'; });
+  return '<div id="sat-reject-box" style="background:#fff7ed;border:2px solid #fb923c;border-radius:12px;padding:10px 13px;margin:0 0 10px">'+
+    '<div style="font-size:13.5px;font-weight:800;color:#c2410c">⚠️ ผลของ '+_satEsc(names.join(', '))+' ยังส่งขึ้นระบบไม่สำเร็จ</div>'+
+    '<div style="font-size:12.5px;color:#9a3412;margin-top:3px;line-height:1.5">เก็บไว้ในเครื่องแล้ว ระบบจะลองส่งใหม่ให้เองเมื่อเชื่อมต่อได้ — <b>ไม่ได้ส่งเป็นชื่อคนอื่นแทน</b> บอกคุณครูด้วยนะ</div></div>';
+}
+function satRejectNote(sid,name,msg){
+  _selfState.reject[String(sid)]={ name:String(name||''), msg:String(msg||'') };
+  try{ console.error('[บล็อก N · บั๊ก 3] เซิร์ฟเวอร์ไม่รับผลของสมาชิกที่ไม่ใช่เจ้าของเครื่อง'+
+    ' — เก็บไว้ในคิวลองส่งใหม่ ไม่ส่งเป็นชื่อคนแรก · p_student='+String(sid)+' · '+String(msg||'')); }catch(e){}
+  /* แปะป้ายเฉพาะตอนอยู่หน้า "เลือกคน"/"ขอบคุณ" — ถ้าคนถัดไปกำลังกรอกฟอร์มอยู่ ห้ามแตะ DOM
+     เพราะ MutationObserver ของ SATPAGE จะจับได้แล้วดีดกลับหน้า 1 กลางคัน */
+  try{
+    var host=document.getElementById('sat-survey');
+    if(host&&host.classList.contains('on')&&(_selfState.screen==='who'||_selfState.screen==='thanks')){
+      var body=document.getElementById('sat-body'), old=document.getElementById('sat-reject-box');
+      if(old&&old.parentNode) old.parentNode.removeChild(old);
+      if(body){ var d=document.createElement('div'); d.innerHTML=satRejectHTML();
+        if(d.firstChild) body.insertBefore(d.firstChild, body.firstChild); }
+    }
+  }catch(e){}
+}
+
+/* ขั้นถาม "ตอนนี้ใครกำลังทำอยู่" — ทุกชิ้นเป็นลูกตรง ๆ ของ #sat-body
+   เพื่อให้ SATPAGE (บล็อก G4) แบ่งหน้าได้เอง กลุ่มใหญ่/จอเตี้ยก็ไม่เกิดแถบเลื่อน */
+function satWhoRender(kind){
+  var mem=satDeviceMembers(); if(!mem) return;
+  var body=document.getElementById('sat-body'); if(!body) return;
+  var left=mem.filter(function(m){ return !_selfState.done[_satKey(kind,m.id)]; }).length;
+  var what=(kind==='sat')?'แบบประเมินความพึงพอใจ':'แบบประเมินตนเอง';
+  _selfState.screen='who';
+  body.innerHTML=
+    satRejectHTML()+
+    '<p class="sat-intro">เครื่องนี้เล่นเป็นกลุ่ม '+mem.length+' คน — <b>ทุกคนต้องทำ'+what+'ของตัวเอง</b><br>'+
+      'ตอนนี้ใครกำลังทำอยู่? (เหลืออีก '+left+' คน)</p>'+
+    mem.map(function(m,i){ var fin=!!_selfState.done[_satKey(kind,m.id)];
+      return '<button type="button" class="sat-submit" id="satwho-'+i+'" data-satwho="'+_satEsc(m.id)+'"'+
+        ' style="margin:0 0 9px'+(fin?';background:#94a3b8':'')+'" onclick="satPickWho(\''+kind+'\','+i+')">'+
+        (fin?'✅ ':'🙋 ')+_satEsc(m.name)+(fin?' (ทำแล้ว · กดเพื่อทำอีกครั้ง)':'')+'</button>'; }).join('')+
+    '<button type="button" class="sat-submit" id="satwho-later" style="background:#94a3b8;margin:0" onclick="closeSatisfactionSurvey()">ยังไม่ทำตอนนี้</button>';
+  document.getElementById('sat-survey').classList.add('on');
+  document.getElementById('sat-survey').scrollTop=0;
+}
+function satPickWho(kind,i){
+  var mem=satDeviceMembers(); if(!mem||!mem[i]) return;
+  _selfState.kind=kind; _selfState.who=mem[i];
+  if(kind==='sat') _openSatForm(); else _openSelfForm();
+}
+function satNextMember(kind){
+  var mem=satDeviceMembers(); if(!mem){ closeSatisfactionSurvey(); return; }
+  _selfState.who=null; satWhoRender(kind);
+}
+/* หน้าจอ "ส่งเครื่องให้เพื่อน" — ใช้ร่วมกันทั้งสองแบบประเมิน
+   ทุกชิ้นเป็นลูกตรง ๆ ของ #sat-body เช่นกัน (SATPAGE คลี่ .sat-thanks ไม่ได้ ถ้ายัดรวมก้อนเดียวจะล้นจอเตี้ย) */
+function satHandoffHTML(kind, headHtml){
+  var mem=satDeviceMembers();
+  var next=mem?mem.filter(function(m){ return !_selfState.done[_satKey(kind,m.id)]; }):[];
+  return satRejectHTML()+headHtml+'</div>'+
+    (next.length
+      ? ('<div style="background:#fff7ed;border:2px solid #fb923c;border-radius:12px;padding:11px 13px;margin:10px 0 0">'+
+         '<div style="font-weight:800;color:#c2410c;font-size:15px">📲 ถึงตาของ '+
+           _satEsc(next.map(function(m){ return m.name; }).join(' และ '))+' แล้ว</div>'+
+         '<div style="font-size:13px;color:#9a3412;margin-top:4px">ส่งเครื่องให้เพื่อน แล้วกดปุ่มด้านล่างเพื่อทำต่อ</div></div>'+
+         '<button type="button" class="sat-submit" id="sat-next-member" onclick="satNextMember(\''+kind+'\')">👉 ให้เพื่อนทำต่อ</button>'+
+         '<button type="button" class="sat-submit" id="sat-later" style="background:#94a3b8" onclick="closeSatisfactionSurvey()">ทำทีหลัง</button>')
+      : ('<p style="color:#0d9488;font-weight:700;text-align:center;margin:10px 0 0" id="sat-allbdone">✅ ทุกคนบนเครื่องนี้ประเมินครบแล้ว</p>'+
+         '<button type="button" class="sat-submit" onclick="closeSatisfactionSurvey()">เสร็จสิ้น</button>'));
+}
 function openSatisfactionSurvey(){
   try{ if(typeof AUDIO!=='undefined'&&AUDIO.playSFX)AUDIO.playSFX('click'); }catch(e){}
   var _t=document.getElementById('sat-title'); if(_t)_t.textContent='แบบประเมินความพึงพอใจต่อเกมผจญภัยกาญจนบุรี';
+  /* [บล็อก N4 · บั๊ก 3] เครื่องกลุ่ม → ถามก่อนว่าใครกำลังทำ
+     เครื่องคนเดียว → ไม่มีขั้นถามเพิ่ม เดินตรงเข้าฟอร์มเหมือนเดิมทุกอย่าง */
+  if(_selfState.kind!=='sat') _selfState.who=null;   /* เพิ่งสลับมาจากอีกแบบประเมิน → ถามใหม่ */
+  _selfState.kind='sat';
+  var _mem=satDeviceMembers();
+  if(_mem&&!_selfState.who){ satWhoRender('sat'); return; }
+  _openSatForm();
+}
+function _openSatForm(){
   var prof=(typeof getSaveData==='function'&&getSaveData().profile)||{};
   var legend=SAT_SCALE.map(function(s){return '<span>'+(SAT_FACE[s[0]]||'')+' '+s[1]+'</span>';}).join('');
   var qn=0, dimsHtml=SAT_DIMS.map(function(d){
@@ -30817,9 +31592,12 @@ function openSatisfactionSurvey(){
     }).join('');
     return '<div class="sat-dim">'+_satEsc(d.t)+'</div>'+rows;
   }).join('');
+  var _who=_selfState.who;
   var html=
+    (_who?('<div style="text-align:center;font-size:14px;color:#0b5566;font-weight:800;margin:0 0 6px" id="sat-wholine">🙋 กำลังทำโดย: '+_satEsc(_who.name)+'</div>'):'')+
+    satRejectHTML()+
     '<p class="sat-intro">ให้นักเรียนอ่านข้อความแต่ละข้อ แล้วเลือกช่องที่ตรงกับความคิดเห็นของนักเรียนมากที่สุด (คำตอบของนักเรียนช่วยพัฒนาเกมให้ดียิ่งขึ้น)</p>'+
-    _satIdentityCard(_satIdentity(),'sat')+
+    _satIdentityCard(_satIdentity(_who),'sat')+
     '<div class="sat-legend">'+legend+'</div>'+
     '<div style="font-weight:800;color:#0b5566;margin:6px 0 2px">ตอนที่ 1 รายการประเมินความพึงพอใจ (15 ข้อ)</div>'+
     dimsHtml+
@@ -30831,12 +31609,21 @@ function openSatisfactionSurvey(){
   document.getElementById('sat-body').innerHTML=html;
   document.getElementById('sat-survey').classList.add('on');
   document.getElementById('sat-survey').scrollTop=0;
+  /* [บล็อก N4c] คืนคำตอบที่คนนี้กรอกค้างไว้ (ถ้ามี) — สลับคนไปมาแล้วคำตอบต้องไม่หาย */
+  _selfState.screen='form'; try{ satRestoreDraft(); }catch(e){}
 }
 function _satPick(idx,val){
   for(var i=0;i<SAT_SCALE.length;i++){ var el=document.getElementById('satlab-'+idx+'-'+SAT_SCALE[i][0]); if(el)el.classList.remove('sel'); }
   var sel=document.getElementById('satlab-'+idx+'-'+val); if(sel){ sel.classList.add('sel'); var inp=sel.querySelector('input'); if(inp)inp.checked=true; }
 }
-function closeSatisfactionSurvey(){ document.getElementById('sat-survey').classList.remove('on'); }
+function closeSatisfactionSurvey(){
+  /* [บล็อก N5 · บั๊ก 3] เก็บคำตอบที่กรอกค้างของคนที่กำลังทำไว้ก่อน แล้วรีเซ็ต "ใครกำลังทำ"
+     เปิดใหม่ครั้งหน้าจึงถามใหม่เสมอ — เครื่องเดียวเล่นหลายคน ห้ามเดาว่ายังเป็นคนเดิม
+     (คำตอบไม่หาย: เลือกชื่อเดิมอีกครั้งแล้วได้ของเดิมคืนครบ ดู satRestoreDraft) */
+  try{ satSaveDraft(); }catch(e){}
+  document.getElementById('sat-survey').classList.remove('on');
+  try{ _selfState.who=null; _selfState.screen=''; }catch(e){}
+}
 function submitSatisfaction(){
   var err=document.getElementById('sat-err'); err.classList.remove('on');
   var first=(document.getElementById('sat-first').value||'').trim();
@@ -30853,10 +31640,20 @@ function submitSatisfaction(){
     openEnded1:(document.getElementById('sat-open1').value||'').trim(), openEnded2:(document.getElementById('sat-open2').value||'').trim(),
     gameVersion:(typeof GAME_VERSION!=='undefined'?GAME_VERSION:''), sessionId:(typeof SESSION_ID!=='undefined'?SESSION_ID:'')
   }, ratings);
+  /* [บล็อก N6 · บั๊ก 3] ผูกผลกับ "คนที่กำลังทำ" จริง ๆ — SBTee._send จะใช้ค่านี้เป็น p_student */
+  if(_selfState.who&&_selfState.who.id){ payload._forStudent=String(_selfState.who.id); payload.satByName=_selfState.who.name||''; }
   var btn=document.getElementById('sat-submit'); btn.disabled=true; btn.textContent='กำลังส่ง...';
   function done(offline){
     var avg=0; for(var i=1;i<=15;i++)avg+=ratings['q'+i]; avg=(avg/15).toFixed(2);
-    document.getElementById('sat-body').innerHTML='<div class="sat-thanks"><div class="big">🎉</div><h3>ขอบคุณที่ประเมินนะ!</h3><p>ค่าเฉลี่ยความพึงพอใจของนักเรียน = <b>'+avg+'</b> / 5.00</p>'+(offline?'<p style="color:#b45309">เน็ตขัดข้อง — ระบบบันทึกไว้แล้ว จะส่งให้อัตโนมัติเมื่อเชื่อมต่อได้</p>':'<p>บันทึกเรียบร้อยแล้ว</p>')+'<button class="sat-submit" style="max-width:220px;margin:14px auto 0" onclick="closeSatisfactionSurvey()">กลับหน้าเข้าสู่ระบบ</button></div>';
+    /* [บล็อก N6b · บั๊ก 3] เครื่องกลุ่ม → ติ๊กว่าคนนี้ทำแล้ว ล้างคำตอบค้าง แล้วชวนส่งเครื่องต่อ
+       เครื่องคนเดียว (_mem เป็น null) → HTML เหมือนเดิมทุกตัวอักษร */
+    var _w=_selfState.who, _mem=satDeviceMembers();
+    if(_w&&_w.id){ _selfState.done[_satKey('sat',_w.id)]=true; delete _selfState.draft[_satKey('sat',_w.id)]; }
+    _selfState.screen='thanks';
+    var _head='<div class="sat-thanks"'+(_mem?' style="padding:14px 16px"':'')+'><div class="big">🎉</div><h3>ขอบคุณที่ประเมินนะ'+((_w&&_w.name)?(' '+_satEsc(_w.name)):'')+'!</h3><p>ค่าเฉลี่ยความพึงพอใจของนักเรียน = <b>'+avg+'</b> / 5.00</p>'+(offline?'<p style="color:#b45309">เน็ตขัดข้อง — ระบบบันทึกไว้แล้ว จะส่งให้อัตโนมัติเมื่อเชื่อมต่อได้</p>':'<p>บันทึกเรียบร้อยแล้ว</p>');
+    document.getElementById('sat-body').innerHTML = _mem
+      ? satHandoffHTML('sat', _head)
+      : (_head+'<button class="sat-submit" style="max-width:220px;margin:14px auto 0" onclick="closeSatisfactionSurvey()">กลับหน้าเข้าสู่ระบบ</button></div>');
     try{ if(typeof AUDIO!=='undefined'&&AUDIO.playSFX)AUDIO.playSFX('correct'); }catch(e){}
   }
   if(typeof GOOGLE_SHEET_URL==='undefined'||!GOOGLE_SHEET_URL){
@@ -30934,6 +31731,14 @@ function selfTotalItems(){ var n=0; SELF_DIMS.forEach(function(d){ n+=d.items.le
 function openSelfAssessment(){
   try{ if(typeof AUDIO!=='undefined'&&AUDIO.playSFX)AUDIO.playSFX('click'); }catch(e){}
   var _t=document.getElementById('sat-title'); if(_t)_t.textContent='แบบประเมินตนเองสมรรถนะหลัก 6 ด้าน';
+  /* [บล็อก N7 · บั๊ก 3] เครื่องกลุ่ม → ถามก่อนว่าใครกำลังทำ · เครื่องคนเดียว → เหมือนเดิมทุกอย่าง */
+  if(_selfState.kind!=='self') _selfState.who=null;
+  _selfState.kind='self';
+  var _mem=satDeviceMembers();
+  if(_mem&&!_selfState.who){ satWhoRender('self'); return; }
+  _openSelfForm();
+}
+function _openSelfForm(){
   var prof=(typeof getSaveData==='function'&&getSaveData().profile)||{};
   var legend=SELF_SCALE.map(function(s){return '<span>'+(s[2]||'')+' '+s[1]+'</span>';}).join('');
   var qn=0, dimsHtml=SELF_DIMS.map(function(d){
@@ -30945,9 +31750,12 @@ function openSelfAssessment(){
     return '<div class="sat-dim">'+_satEsc(d.t)+' <span style="font-weight:500;font-size:12.5px;opacity:.9">('+_satEsc(d.sub)+')</span></div>'+rows;
   }).join('');
   function dimChoice(name){ return '<div class="self-choice">'+SELF_DIM_NAMES.map(function(nm,i){ return '<label id="'+name+'lab-'+(i+1)+'" onclick="_selfPickDim(\''+name+'\','+(i+1)+')"><input type="radio" name="'+name+'" value="'+(i+1)+'">'+_satEsc(nm)+'</label>'; }).join('')+'</div>'; }
+  var _who=_selfState.who;
   var html=
+    (_who?('<div style="text-align:center;font-size:14px;color:#0b5566;font-weight:800;margin:0 0 6px" id="self-wholine">🙋 กำลังทำโดย: '+_satEsc(_who.name)+'</div>'):'')+
+    satRejectHTML()+
     '<p class="sat-intro">ให้นักเรียนอ่านข้อความแต่ละข้อ แล้วเลือกช่องที่ตรงกับสิ่งที่นักเรียน<b>ทำได้จริง</b>มากที่สุด ตอบตามความจริง ไม่มีคำตอบถูกหรือผิด</p>'+
-    _satIdentityCard(_satIdentity(),'self')+
+    _satIdentityCard(_satIdentity(_who),'self')+
     '<div class="sat-legend">'+legend+'</div>'+
     dimsHtml+
     '<div style="font-weight:800;color:#0b5566;margin:18px 0 2px">คำถามสั้นท้ายแบบประเมิน</div>'+
@@ -30962,6 +31770,8 @@ function openSelfAssessment(){
   document.getElementById('sat-survey').classList.add('on');
   document.getElementById('sat-survey').scrollTop=0;
   try{ document.querySelector('.sat-card').scrollTop=0; }catch(e){}
+  /* [บล็อก N7c] คืนคำตอบที่คนนี้กรอกค้างไว้ (ถ้ามี) */
+  _selfState.screen='form'; try{ satRestoreDraft(); }catch(e){}
 }
 function _selfPick(idx,val){
   for(var i=0;i<SELF_SCALE.length;i++){ var el=document.getElementById('selflab-'+idx+'-'+SELF_SCALE[i][0]); if(el)el.classList.remove('sel'); }
@@ -30993,6 +31803,8 @@ function submitSelfAssessment(){
   };
   /* [แก้ V.7.72] เดิมวนตายตัว 10 ข้อ/ด้าน — พอลดเหลือด้านละ 3 ข้อ คีย์ c4..c10 เลยเป็น undefined
      ตอนนี้วนตามจำนวนข้อจริงของแต่ละด้าน ปรับจำนวนข้อทีหลังก็ไม่พังอีก */
+  /* [บล็อก N8 · บั๊ก 3] ผูกผลกับ "คนที่กำลังทำ" จริง ๆ — SBTee._send จะใช้ค่านี้เป็น p_student */
+  if(_selfState.who&&_selfState.who.id){ payload._forStudent=String(_selfState.who.id); payload.selfByName=_selfState.who.name||''; }
   var qn=0; for(var di=0;di<SELF_DIMS.length;di++){ var d=SELF_DIMS[di]; for(var j=1;j<=d.items.length;j++){ qn++; payload[d.key+j]=ans['a'+qn]; } }
   /* [V.7.74] แนบคำตอบรายด้านย่อยไปด้วย (รหัส → คะแนน) หน้าสรุปผลจึงแยกดูรายด้านย่อยได้
      โดยไม่ต้องรู้ว่าเวอร์ชันนั้นเรียงข้อไว้อย่างไร — เพิ่ม/ลดข้อทีหลังก็ยังอ่านย้อนหลังได้ */
@@ -31003,7 +31815,14 @@ function submitSelfAssessment(){
   var btn=document.getElementById('self-submit'); btn.disabled=true; btn.textContent='กำลังส่ง...';
   function done(offline){
     var tot=0; for(var i=1;i<=NQ;i++)tot+=ans['a'+i]; var ov=(tot/NQ).toFixed(2);
-    document.getElementById('sat-body').innerHTML='<div class="sat-thanks"><div class="big">🌟</div><h3>ขอบคุณที่ประเมินตนเองนะ!</h3><p>คะแนนรวม = <b>'+tot+'</b> / '+(NQ*5)+' · ค่าเฉลี่ย <b>'+ov+'</b> / 5.00</p>'+(offline?'<p style="color:#b45309">เน็ตขัดข้อง — ระบบบันทึกไว้แล้ว จะส่งให้อัตโนมัติเมื่อเชื่อมต่อได้</p>':'<p>บันทึกเรียบร้อยแล้ว</p>')+'<button class="sat-submit" style="max-width:220px;margin:14px auto 0" onclick="closeSatisfactionSurvey()">เสร็จสิ้น</button></div>';
+    /* [บล็อก N8b · บั๊ก 3] เครื่องกลุ่ม → วนให้เพื่อนคนถัดไป · เครื่องคนเดียว → HTML เดิมทุกตัวอักษร */
+    var _w=_selfState.who, _mem=satDeviceMembers();
+    if(_w&&_w.id){ _selfState.done[_satKey('self',_w.id)]=true; delete _selfState.draft[_satKey('self',_w.id)]; }
+    _selfState.screen='thanks';
+    var _head='<div class="sat-thanks"'+(_mem?' style="padding:14px 16px"':'')+'><div class="big">🌟</div><h3>ขอบคุณที่ประเมินตนเองนะ'+((_w&&_w.name)?(' '+_satEsc(_w.name)):'')+'!</h3><p>คะแนนรวม = <b>'+tot+'</b> / '+(NQ*5)+' · ค่าเฉลี่ย <b>'+ov+'</b> / 5.00</p>'+(offline?'<p style="color:#b45309">เน็ตขัดข้อง — ระบบบันทึกไว้แล้ว จะส่งให้อัตโนมัติเมื่อเชื่อมต่อได้</p>':'<p>บันทึกเรียบร้อยแล้ว</p>');
+    document.getElementById('sat-body').innerHTML = _mem
+      ? satHandoffHTML('self', _head)
+      : (_head+'<button class="sat-submit" style="max-width:220px;margin:14px auto 0" onclick="closeSatisfactionSurvey()">เสร็จสิ้น</button></div>');
     try{ if(typeof AUDIO!=='undefined'&&AUDIO.playSFX)AUDIO.playSFX('correct'); }catch(e){}
   }
   if(typeof GOOGLE_SHEET_URL==='undefined'||!GOOGLE_SHEET_URL){
@@ -31161,7 +31980,7 @@ function clsjGo(){
   var exNames=[];
   members.forEach(function(m){ var n=(m.character_name||'').trim(); if(n&&exNames.indexOf(n)<0) exNames.push(n); });
   if(exNames.length>1){ clsjNamePick(members,jpin,exNames); return; }
-  if(exNames.length===1){ clsjBindGroup(members,jpin,exNames[0]); return; }
+  if(exNames.length===1){ clsjHostStep(members,jpin,exNames[0]); return; } /* [บล็อก L-B] ผ่านขั้นเลือกเจ้าภาพก่อนเสมอ */
   clsjNameStep(members,jpin);
 }
 /* [แก้ตามครู V.7.64] สมาชิกกลุ่มมีชื่อในเกมอยู่แล้วมากกว่า 1 ชื่อ → เลือกใช้ชื่อไหนจากที่มีอยู่ (หรือตั้งใหม่ก็ได้) */
@@ -31177,7 +31996,7 @@ function clsjNamePick(members,jpin,names){
 function clsjNamePickGo(i){
   var p2=clsjState._pend, names=clsjState._pickNames||[];
   if(!p2||!names[i]) return;
-  clsjBindGroup(p2.members,p2.jpin,names[i]);
+  clsjHostStep(p2.members,p2.jpin,names[i]); /* [บล็อก L-B] ผ่านขั้นเลือกเจ้าภาพก่อนเสมอ */
 }
 /* [ตามคำขอครู] ขั้นตั้ง "ชื่อที่แสดงในเกม" หลังเลือกชื่อ — ฐานข้อมูลเดิมมีอยู่แล้ว เติมให้อัตโนมัติ แก้ได้ */
 function clsjNameStep(members,jpin){
@@ -31248,16 +32067,129 @@ function clsjNameGo(){
     try{ (document.getElementById('clsj-gname')||{}).focus(); }catch(e2){}
     return;
   }
-  clsjBindGroup(p2.members,p2.jpin,nm);
+  clsjHostStep(p2.members,p2.jpin,nm); /* [บล็อก L-B] ผ่านขั้นเลือกเจ้าภาพก่อนเสมอ */
 }
 function clsjUser(sid){ return 'c'+String(sid).replace(/-/g,'').slice(0,7); }
 function clsjPinOf(sid){ var h=String(sid).replace(/-/g,''),n=0; for(var i=0;i<h.length;i++){ n=(n*33+h.charCodeAt(i))>>>0; } return String(1000+(n%9000)); }
 /* [V.7.56] clsjSelfAdd ถูกถอดออกตามคำขอครู — นักเรียนเพิ่มชื่อเองไม่ได้แล้ว (เพิ่มได้เฉพาะครู กันชื่อซ้ำ) */
-/* ผูกบัญชีแบบกลุ่ม (1-3 คน) — คนแรกที่เลือก = เจ้าของบัญชีเกม (ชื่อบัญชีคงที่จากรหัสนักเรียน) */
-function clsjBindGroup(members,jpin,gname){
+/* ============================================================================
+   [บล็อก L-B · มติครูภาค 1 V.7.99.1 ข้อ 2] เลือก "เจ้าภาพของรอบนี้"
+   ปัญหาเดิม: ระบบยึด "คนแรกที่ถูกแตะชื่อ" เป็นเจ้าของบัญชีรอบนั้นเสมอ (seat=members[0])
+              เด็กที่เล่นถึงด่านท้าย พอจับกลุ่มกับคนเพิ่งเริ่มแล้วเพื่อนถูกแตะชื่อก่อน
+              จึงถูกลากกลับไปเล่นด่านต้นของเพื่อน — ตรงกับอาการห้องเรียนจริงในรายงาน
+   แนวทางที่ครูเลือก (มติเดียวกับภาค 1): ค่าเริ่มต้น = "คนที่ไปได้น้อยที่สุด"
+              (เพื่อนที่ไปได้ไกลกว่านั่งช่วยสอน = เพื่อนสอนเพื่อน) แล้วให้กลุ่มกดยืนยัน/สลับได้
+              เซฟของทุกคนยังอยู่ครบ ไม่มีใครเสียความคืบหน้า
+   ============================================================================ */
+/* กลุ่มที่เลือกคราวนี้ = กลุ่มเดิมที่เคยผูกไว้บนเครื่องนี้หรือไม่ (ไม่สนลำดับการแตะชื่อ) — ท่าเดียวกับภาค 1 */
+function clsjSameGroupAsLast(members){
+  try{
+    var b=JSON.parse(localStorage.getItem('cls_current')||'null');
+    if(!b||!b.member_ids||!b.member_ids.length) return false;
+    var a1=members.map(function(m){ return String(m.student_id); }).sort().join(',');
+    var a2=b.member_ids.map(String).sort().join(',');
+    return a1===a2;
+  }catch(e){ return false; }
+}
+/* วัด "ไปได้แค่ไหน" จาก save_blob2 — เกณฑ์ของภาค 2 (ภาค 1 ใช้คอลัมน์ collected ซึ่งภาค 2 ไม่เขียน):
+     c = จำนวนด่านที่ completed (หลัก)   n = ผลรวม normScore (ตัวแตกเสมอ)
+   เหตุผล: จำนวนด่านที่ผ่านตรงกับอาการจริงของบั๊ก ("ถูกลากกลับไปเล่นด่านต้น") และอ่านตรง ๆ
+   จาก blob ได้ทั้งฝั่งเกมและฝั่ง SQL · normScore รวมไว้แตกเสมอกรณีจำนวนด่านเท่ากัน
+   ⚠ เกณฑ์คู่นี้ต้องตรงกับตัวกันถอยหลังใน SQL rpc_set_save2_group เสมอ — แก้ที่หนึ่งต้องแก้อีกที่
+   คืนค่า: {c,n} = อ่านได้ (บัญชีใหม่ไม่มีเซฟ = {c:0,n:0} คือข้อมูลจริง) · null = อ่านไม่สำเร็จ */
+function clsjProgOf(bl){
+  try{
+    if(typeof bl==='string'){ try{ bl=JSON.parse(bl); }catch(e){} }
+    if(!bl||typeof bl!=='object') return {c:0,n:0};
+    var st=bl.stages||{}, c=0, n=0;
+    Object.keys(st).forEach(function(k){
+      var e=st[k]||{};
+      if(e.completed) c++;
+      if(typeof e.normScore==='number') n+=e.normScore;
+    });
+    return {c:c,n:Math.round(n*10)/10};
+  }catch(e){ return null; }
+}
+function clsjHostStep(members,jpin,gname){
+  if(!members||members.length<2){ clsjBindGroup(members,jpin,gname,((members&&members[0])||{}).student_id); return; }
+  /* กลุ่มเดิมเหมือนรอบก่อนเป๊ะ → ไม่ต้องถามซ้ำ ใช้เจ้าภาพเดิมของเครื่องนี้ต่อเลย */
+  if(clsjSameGroupAsLast(members)){
+    var prev=null; try{ prev=JSON.parse(localStorage.getItem('cls_current')||'null'); }catch(e){ prev=null; }
+    var ph=prev?String(prev.host_id||prev.student_id||''):'';
+    if(ph&&members.some(function(m){ return String(m.student_id)===ph; })){
+      clsjBindGroup(members,jpin,gname,ph); return;
+    }
+  }
+  var body=document.getElementById('clsj-body');
+  clsjState._pend={members:members,jpin:jpin,gname:gname}; clsjState._hostSel=null; clsjState._hostProg=null;
+  body.innerHTML='<div style="text-align:center;padding:26px 10px"><div style="font-size:34px">⏳</div>'+
+    '<div style="font-weight:800;color:#1d4ed8;margin-top:8px;font-size:14px">กำลังดูความคืบหน้าของแต่ละคน...</div></div>';
+  var r=clsjState.room;
+  var prog={}, left=members.length, done=false;
+  var fin=function(){ if(done) return; done=true; clsjState._hostProg=prog; clsjHostRender(); };
+  setTimeout(fin,6000);            /* เน็ตช้า/SQL ยังไม่รัน — ไม่ค้างหน้าจอ (ท่าเดียวกับภาค 1) */
+  members.forEach(function(m){
+    clsjRpc('rpc_get_save2',{p_join_key:r.join_key,p_student:m.student_id,p_pin:jpin||''})
+      .then(function(bl){ prog[String(m.student_id)]=clsjProgOf(bl); })
+      .catch(function(){ prog[String(m.student_id)]=null; })
+      .then(function(){ left--; if(left<=0) fin(); });
+  });
+}
+function clsjHostRender(){
+  var p2=clsjState._pend; if(!p2) return;
+  var prog=clsjState._hostProg||{};
+  var members=p2.members, body=document.getElementById('clsj-body');
+  var anyData=members.some(function(m){ return prog[String(m.student_id)]!=null; });
+  /* จัดอันดับ "ไปได้น้อยสุดขึ้นก่อน" (จำนวนด่าน → normScore → ลำดับที่แตะชื่อ)
+     คนที่ดูข้อมูลไม่ได้ (null) ไปท้ายแถว — ไม่เดาให้คนที่มองไม่เห็นข้อมูลเป็นเจ้าภาพ
+     (ต่างจากภาค 1 ที่ถือว่า 0 ซึ่งลำเอียงไปทางคนที่อ่านไม่ผ่าน) · อ่านไม่ได้ทั้งกลุ่ม = คงลำดับแตะชื่อ */
+  var rank=members.map(function(m,i){
+    var g=prog[String(m.student_id)];
+    return { m:m, i:i, c:(g?g.c:null), n:(g?g.n:null) };
+  });
+  if(anyData){ rank.sort(function(a,b){
+    if(a.c==null&&b.c==null) return a.i-b.i;
+    if(a.c==null) return 1;
+    if(b.c==null) return -1;
+    return (a.c-b.c)||(a.n-b.n)||(a.i-b.i); }); }
+  var ids=members.map(function(m){ return String(m.student_id); });
+  var host=(clsjState._hostSel&&ids.indexOf(String(clsjState._hostSel))>=0)
+    ? String(clsjState._hostSel) : String(rank[0].m.student_id);
+  clsjState._hostSel=host;
+  var nameOf=function(m){ return ((m.first_name||'')+' '+(m.last_name||'')).trim()||m.character_name||'เพื่อน'; };
+  /* แถวสมาชิกเป็นกริดยืดหยุ่น (คลาส jhost-* — CSS ใน L-B6): จอเกมเป็นแนวนอนเสมอ
+     ใช้ความกว้างแลกความสูงแบบ G1c ให้กลุ่มเต็ม 3 คนพอดีจอมือถือแนวนอน 390px */
+  var rows='<div class="jhost-rows">'+rank.map(function(x){
+    var m=x.m, on=(String(m.student_id)===host);
+    var sub=(x.c==null)?'ยังดูความคืบหน้าไม่ได้'
+      :(x.c===0?'ยังไม่มีด่านที่ผ่าน — เริ่มต้นพอดีเลย':('ผ่านแล้ว '+x.c+' ด่าน'+(x.n?' · คะแนนสะสม '+x.n:'')));
+    return '<button type="button" class="jhostu'+(on?' sel':'')+'" onclick="clsjHostPick(\''+String(m.student_id)+'\')">'+
+      '<span style="font-size:19px">'+(on?'✅':'⬜')+'</span>'+
+      '<span style="flex:1;min-width:0"><b style="font-size:14.5px;color:#0f172a">'+_satEsc((m.student_number?m.student_number+'. ':'')+nameOf(m))+'</b>'+
+      '<br><span style="font-size:12px;color:#64748b">'+_satEsc(sub)+'</span></span>'+
+      (on?'<span style="font-size:12px;font-weight:800;color:#0b5566">แนะนำ</span>':'')+'</button>';
+  }).join('')+'</div>';
+  body.innerHTML='<div class="jroom">🎯 <b>รอบนี้จะเล่นด่านของใคร?</b><br>'+
+      '<span style="font-size:12.5px;font-weight:400">ระบบเลือก<b>คนที่เล่นไปได้น้อยกว่า</b>ไว้ให้ เพื่อนที่ไปได้ไกลกว่าจะได้ช่วยสอน — <b>ความคืบหน้าของทุกคนยังอยู่ครบ ไม่มีใครเสียคะแนน</b></span></div>'+
+    rows+
+    (anyData?'':'<div class="jhint" style="font-size:12px;margin-top:6px;color:#b45309">ยังดูความคืบหน้าของแต่ละคนไม่ได้ตอนนี้ — เล่นต่อได้เลย หรือแจ้งครูให้รันคำสั่งฐานข้อมูลช่องเซฟภาค 2</div>')+
+    '<div class="jhost-nav">'+
+      '<button class="jbtn" onclick="clsjHostGo()">▶ เริ่มเล่น</button>'+
+      '<button class="jbtn alt" onclick="clsjRoster()">← กลับรายชื่อ</button>'+
+    '</div>';
+}
+function clsjHostPick(id){ clsjState._hostSel=String(id); clsjHostRender(); }
+function clsjHostGo(){
+  var p2=clsjState._pend; if(!p2) return;
+  clsjBindGroup(p2.members,p2.jpin,p2.gname,clsjState._hostSel);
+}
+/* ผูกบัญชีแบบกลุ่ม (1-3 คน) — [บล็อก L-B] เจ้าของบัญชีรอบนี้ = "เจ้าภาพ" ที่กลุ่มเลือก
+   (ไม่ใช่ "คนแรกที่ถูกแตะชื่อ" อีกต่อไป — เซฟที่ดึงมาเล่นและที่บันทึกกลับยึดคนนี้เป็นหลัก) */
+function clsjBindGroup(members,jpin,gname,hostId){
   var body=document.getElementById('clsj-body');
   body.innerHTML='<div style="text-align:center;padding:30px 10px"><div style="font-size:40px">⏳</div><div style="font-weight:800;color:#1d4ed8;margin-top:8px">กำลังพาเข้าห้องเรียน... รอสักครู่นะ</div></div>';
-  var r=clsjState.room, seat=members[0];
+  var r=clsjState.room;
+  var seat=(hostId?members.filter(function(m){ return String(m.student_id)===String(hostId); })[0]:null)||members[0];
   var uname=clsjUser(seat.student_id), pin=clsjPinOf(seat.student_id);
   /* [ชื่อในเกม] ชื่อที่เลือก (หรือของเดิม) — บันทึกขึ้น Supabase ให้จำข้ามเครื่อง */
   var charName=(gname||seat.character_name||'').trim();
@@ -31267,7 +32199,7 @@ function clsjBindGroup(members,jpin,gname){
   } }); }
   function bindDone(){
     try{ localStorage.setItem('cls_current',JSON.stringify({
-      username:uname, student_id:seat.student_id,
+      username:uname, student_id:seat.student_id, host_id:seat.student_id, /* [บล็อก L-B] เจ้าภาพของรอบนี้ — กลุ่มเดิมรอบหน้าใช้คนเดิมโดยไม่ถามซ้ำ */
       member_ids:members.map(function(m){return m.student_id;}),
       member_names:members.map(function(m){return (m.first_name+' '+m.last_name).trim();}),
       group_size:members.length, char_name:charName||'',
@@ -31344,6 +32276,11 @@ function clsjOpenWithKey(k){ clsjOpen(); var ki=document.getElementById('clsj-ke
     var dl=document.getElementById('join-school-dl');
     clsjRpc('rpc_list_schools',{}).then(function(rows){
       if(!rows||!rows.length){ js.placeholder='(ยังไม่มีโรงเรียนในระบบ — ใช้ช่องใส่โค้ดแทนได้)'; return; }
+      /* [บล็อก R8 · คำสั่งครูข้อ 4] สังกัด "ผู้เล่นทั่วไป" ห้ามโผล่ในหน้าค้นหาโรงเรียน —
+         สมาชิกเข้าได้ทางแท็บ "เข้าสู่ระบบ" (username/รหัสผ่าน) เท่านั้น
+         (ห้องของสังกัดนี้มีโค้ดสุ่ม + PIN รายคน กันเข้าทางโค้ดห้องไว้อีกชั้นแล้ว) */
+      rows = rows.filter(function(s){ return String(s.name||'').trim() !== 'ผู้เล่นทั่วไป'; });
+      if(!rows.length){ js.placeholder='(ยังไม่มีโรงเรียนในระบบ — ใช้ช่องใส่โค้ดแทนได้)'; return; }
       window._clsjSchoolMap={};
       if(dl) dl.innerHTML=rows.map(function(s){ window._clsjSchoolMap[String(s.name).trim()]=s; return '<option value="'+_satEsc(s.name)+'">'+(s.rooms?s.rooms+' ห้อง':'')+'</option>'; }).join('');
       /* มีโรงเรียนเดียว → เติมชื่อให้เลย แล้วโหลดรายชื่อห้องทันที */
@@ -33820,6 +34757,25 @@ function closeClassroomPage(){ var pc=$('page-cls'); if(pc)pc.classList.add('hid
 function clsStatus(html){ var el=$('cls-status'); if(el) el.innerHTML=html; }
 function clsMain(html){ var el=$('cls-main'); if(el) el.innerHTML=html; }
 function clsErrBox(t){ return '<div class="card"><div class="err" style="display:block">'+esc(t)+'</div></div>'; }
+/* ══ [บล็อก N10 · บั๊ก 6] ป้ายเตือน "ตัวเลขที่เห็นอาจไม่ครบ" บนหน้าครู ═══════════
+   ทำไมต้องมีทั้งที่ console.error ก็มีแล้ว: ครูไม่เปิด DevTools และตามกติกาห้ามโชว์ข้อความดิบ
+   ถ้าโหลดคะแนนล้มแล้วเงียบ ครูจะอ่านตารางว่า "เด็กคนนี้ยังไม่ได้ทำ" ทั้งที่ทำไปแล้ว
+   → เป็นการตัดสินนักเรียนจากข้อมูลที่ขาด ซึ่งเป็นความเสียหายที่ย้อนกลับไม่ได้
+   ใช้เฉพาะจุดที่ทำให้ตัวเลขผิดแบบเนียน ๆ (จุด 1 = โหลดคะแนนทั้งห้องล้ม · จุด 4 = คะแนนครูสังเกตหาย)
+   ป้ายเป็นการ์ดแถวเดียวเหนือเนื้อหา รูปแบบเดียวกับแบนเนอร์โหมดสาธิตที่มีอยู่แล้ว
+   จึงไม่ทับของเดิมและไม่ทำให้เกิดแถบเลื่อนใหม่ (หน้าครูเป็นหน้าเอกสารเลื่อนได้อยู่แล้ว) */
+var clsWarn={};
+function clsStatsWarn(msg){ clsWarn[String(msg)]=1; }
+function clsWarnClear(){ clsWarn={}; try{ clsRender(); }catch(e){} }
+function clsWarnBannerHTML(){
+  var ks=Object.keys(clsWarn); if(!ks.length) return '';
+  return '<div class="card" id="cls-warn-banner" style="margin-bottom:12px;background:#fff7ed;border:1px solid #fdba74;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px">'+
+    '<span style="font-size:18px">⚠️</span>'+
+    '<span style="flex:1;min-width:200px;font-size:12.5px;color:#9a3412;line-height:1.65">'+
+      ks.map(function(k){ return esc(k); }).join('<br>')+
+      '<br><span style="font-size:11.5px;color:#c2410c">ตัวเลขบางส่วนอาจต่ำกว่าความเป็นจริง — ลองรีเฟรชหน้าอีกครั้ง ถ้ายังขึ้นซ้ำให้แจ้งผู้ดูแลระบบ (รายละเอียดอยู่ใน Console)</span></span>'+
+    '<button class="btn-ghost" style="padding:4px 10px;font-size:12px" onclick="clsWarnClear()">ซ่อน</button></div>';
+}
 
 function clsInit(){
   clsStatus('<div class="card" style="padding:14px 16px"><span class="loading" style="border-color:#2563eb;border-top-color:transparent"></span> กำลังตรวจการเชื่อมต่อระบบห้องเรียน...</div>');
@@ -34078,7 +35034,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.10-p2-2569.74',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.15-p2-2569.79',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -34902,7 +35858,12 @@ function clsLoadCounts(){
     .then(function(rows){
       cls.students=rows||[];
       cls.students.forEach(function(s){ cls.counts[s.classroom_id]=(cls.counts[s.classroom_id]||0)+1; });
-    }).catch(function(){});
+    /* [บล็อก N16 · บั๊ก 6 จุดที่ 6] โหลดรายชื่อล้ม = cls.students ว่าง = ทั้งหน้าดูเหมือน "ห้องยังไม่มีนักเรียน"
+       ซึ่งครูอ่านผิดได้ง่ายมากว่าเด็กยังไม่เข้าห้อง · fallback เดิม (ปล่อยว่าง ไม่ล้มทั้งหน้า) คงไว้ */
+    }).catch(function(e){
+      try{ console.error('[หน้าครู · clsLoadCounts] โหลดรายชื่อนักเรียนไม่สำเร็จ'+
+        ' — ห้องจะขึ้นว่าไม่มีนักเรียนทั้งที่อาจมีอยู่จริง:', (e&&e.message)||e, e); }catch(e2){}
+    });
 }
 /* ---------- 3) Pilok ReferenceRoute solver (พิสูจน์ 9/9 — ตรง pilok-ref-sph-v1.0) ---------- */
 var PILOK_DIG_COST = { dirt: 2, rock: 5, tin: 1, wolfram: 1, cave: 0 };
@@ -35030,7 +35991,17 @@ var CV2 = (function(){
          มีรอบ 2-3 → ครั้งแรก 40% + รอบเก่งสุด 60% (สูตรทางการ hotsV2_scoreA) · มีแค่ครั้งแรก → ใช้ครั้งแรกเต็ม ---- */
     var aBy={}, aRounds={};
     (ev.q||[]).forEach(function(r){
-      if(String(r.sid)==='8') return;
+      /* [บล็อก O4 · บั๊กใหม่ที่เจอตอนตอบแบบสอบถาม 42] หอคอยท้าประลอง (sid='challenge')
+         ใช้คลังข้อสอบชุดเดียวกับด่านปกติ (ARENA.pool() ดึงจาก lessonContent · q.id เดิมทุกข้อ)
+         แล้ว logAnswer('challenge', q.id, ...) ก็ลงตาราง events เหมือนคำตอบในด่าน
+         เดิมขานี้กรองแค่ sid==='8' → คำตอบในหอคอยไหลเข้าคะแนน HOTS ขา A เต็ม ๆ
+         และ HOTS ขา A กลายเป็น CORE6ENG.HT ตรง ๆ
+         ขัดกับป้ายในเกมที่เขียนไว้เองว่า "(เปิดเสมอ ไม่มีผลต่อคะแนนสมรรถนะ)"
+         และขัดเจตนาออกแบบที่คอมเมนต์ไว้ว่า "sid='challenge' ไม่อยู่ในสูตรใด"
+         (เหตุผลเชิงวัดผล: หอคอยเล่นซ้ำได้ไม่จำกัด มีไอเทมชี้คำตอบ และไม่มีเลขครั้งที่เล่น
+          จึงเป็นคนละเงื่อนไขการวัดกับด่านเรือธงที่เป็นที่เก็บหลักฐานสมรรถนะจริง)
+         เหรียญ/สตรีคของหอคอยไม่ถูกแตะ — ยังเล่นได้เหมือนเดิมทุกอย่าง */
+      if(String(r.sid)==='8'||String(r.sid)==='challenge') return;
       var qid=String(r.qid||''); if(!ITEM_MAP[qid]) return;
       var an=has(r.att)?num(r.att):null;
       if(an===2||an===3){ var rd=aRounds[an]||(aRounds[an]={c:0,n:0}); rd.c+=num(r.cr); rd.n++; }
@@ -35189,6 +36160,25 @@ var QDIM_MAP={
   /* CM-A รับสาร (ข้อสถานการณ์บทสนทนา — ต้องอ่านจับใจความก่อนตัดสิน) */
   'q5_22':['CM-A'],'q6_19':['CM-A','NS-C'],'qp_12':['CM-A','NS-C']
 };
+/* ══ [บล็อก O1 · บั๊ก 4] รายชื่อด่านจริงของภาค 2 — ที่เดียวที่แก้เวลาเพิ่ม/ถอดด่าน ══
+   เดิมมีเลขฝังตาย 2 ที่ที่ไม่มีใครเตือนกัน:
+     · CORE6ENG.TOTAL_STAGES = 12  → ขึ้น "เล่นครบ 14/12 ด่าน" ได้จริง
+       และ coverage ตันที่ 100% ตั้งแต่ด่านที่ 12 (เล่น 12 กับ 14 ด่านได้ SM เท่ากัน)
+     · CLS_MAX_COLLECTED = 150     → เด็กที่เก่งจริงโชว์ 160/150 = 106.7% ได้ (ไม่มี clamp)
+   ทั้งคู่ค้างมาจากยุคที่ภาค 2 ยังมี 12 ด่าน แล้วเพิ่ม mg3/balance2050/water ทีหลังโดยลืมขยับ
+   ตอนนี้ผูกทั้งสองค่ากับรายชื่อนี้ → เพิ่มด่านใหม่แล้วตัวเลขขยับเองทั้งระบบ
+
+   ⚠️ ด่าน '2' (สุสานทหารสัมพันธมิตร) ไม่อยู่ในรายชื่อโดยตั้งใจ — ภาค 2 ผนวกเข้าด่านนักสืบแล้ว
+      ไม่มีโหนดบนแผนที่และไม่มีทางเข้า โค้ด Stage2 เหลือไว้เป็นคลังเนื้อหาเท่านั้น
+      (ต่างจากภาค 1 ที่ยังมีด่าน 2 จริง — รายชื่อสองภาคจึงไม่เหมือนกันโดยตั้งใจ)
+   ⚠️ 'water' (ปริศนาสายน้ำ) และ 'balance2050' อยู่ในรายชื่อตามมติครู 10 ส.ค. 2569
+      ทั้งคู่ส่ง kind='progress' จริง จึงต้องนับเป็นด่านของตัวหาร                     */
+var P2_SM_STAGES=['1','3','4','5','6','7','8','mg1','mg2','mg3','hellfire','pilok','balance2050','water'];
+var P2_BOSS_SID='8';
+/* เพดานคะแนนเก็บ = ผลรวม cap ต่อด่าน โดยใช้กติกาเดียวกับ clsLoadStats เป๊ะ ((k==='8')?30:10)
+   คิดจากรายชื่อทุกครั้ง — ห้ามฝังผลลัพธ์เป็นตัวเลขอีก ไม่งั้นจะค้างซ้ำรอยเดิม */
+function p2StageCap(k){ return (String(k)===P2_BOSS_SID)?30:10; }
+function p2MaxCollected(){ var s=0; P2_SM_STAGES.forEach(function(k){ s+=p2StageCap(k); }); return s; }
 var CORE6ENG = (function(){
   var NS_STAGES={'4':1,'5':1,'6':1,'mg2':1,'pilok':1};
   var CZ_STAGES={'2':1,'6':1,'7':1,'hellfire':1};
@@ -35220,7 +36210,11 @@ var CORE6ENG = (function(){
        แบบประเมินตนเองไม่เข้าสูตรใด ๆ (คำสั่งครู 4 ส.ค.: เก็บและสรุปแยกส่วนเสมอ) ===== */
     var QD=(function(){
       var first={};
-      (ev.q||[]).forEach(function(r){ var qid=String(r.qid||''); if(!QDIM_MAP[qid]) return;
+      /* [บล็อก O5 · บั๊กเดียวกับ O4 อีกทางหนึ่ง] เส้นนี้ไม่กรอง sid เลยแม้แต่ตัวเดียว
+         คำตอบในหอคอยจึงไปติดป้ายด้านย่อย CZ/NS/CM-A แล้วเข้า mkDim() ได้ทั้งชุด
+         (domainScore กรองด้วย NS_STAGES/CZ_STAGES อยู่แล้ว จึงไม่ต้องแตะ) */
+      (ev.q||[]).forEach(function(r){ if(String(r.sid||'')==='challenge') return;
+        var qid=String(r.qid||''); if(!QDIM_MAP[qid]) return;
         var cur=first[qid];
         if(!cur){ first[qid]=r; return; }
         var a=has(r.att)?num(r.att):null, b=has(cur.att)?num(cur.att):null;
@@ -35331,7 +36325,27 @@ var CORE6ENG = (function(){
         useComm?' (ครูตรวจ ช่อง 💬)':' (ใช้คะแนนการคิดชั่วคราว)',
         useComm?null:'ข้อมูลตรวจก่อนเวอร์ชันนี้');
     } else if(rvAi){
-      out.CM=cmScore([rvAi.ai1,rvAi.ai2,rvAi.ai3],' (AI ตรวจ)','คะแนนอัตนัยจาก AI บันทึกอัตโนมัติ — รอครูยืนยัน/ปรับที่ปุ่ม 📝 ตรวจสอบอัตนัย');
+      /* [บล็อก O6 · บั๊ก 5 — ยกท่าจากภาค 1 V.7.99.2] AI ให้ 0 ครบทั้ง 3 ข้อ
+         แทบทุกกรณีคือ "ไม่ได้พิมพ์คำตอบ / พิมพ์สั้นกว่า 8 ตัวอักษร"
+         (ตัวตรวจ _hsScoreOne คืน {s:0, flag:'REVIEW', why:'ไม่มีคำตอบ/สั้นเกินไป'} ตรงเงื่อนไขนี้)
+         = "ไม่มีหลักฐาน" ไม่ใช่ "สื่อสารได้ระดับเริ่มต้น" — ตามกติกาถาวรว่าคะแนนที่ไม่มีหลักฐานห้ามเดาให้
+         เดิมเด็กที่ไม่พิมพ์อะไรเลยได้ CM 0% ระดับ 3 แสดงเป็นผลประเมินจริงบนหน้าครู
+         ตอนนี้ไม่ตัดสินระดับ แต่บอกครูตรง ๆ ให้ไปดูคำตอบจริงที่ปุ่ม 📝 ตรวจสอบอัตนัย
+         ⚠️ แยกสองกรณีให้ออก: ถ้า "ครูตรวจเอง" แล้วให้ 0 (สาขา rv ข้างบน) ถือเป็นการตัดสินของครู
+            ยังคิดเป็นคะแนนตามเดิมทุกบรรทัด — บล็อกนี้แตะเฉพาะสาขา AI เท่านั้น
+         หมายเหตุที่ต้องพูดตรง ๆ: ตัวตรวจมี flag 'REVIEW' ที่แม่นกว่าการเดาจากผลรวม
+            และ flag นั้นถูกบันทึกลง events.raw.aiFlag จริง (หน้า 📝 ตรวจสอบอัตนัยอ่านอยู่)
+            แต่ SEL_O ของ clsLoadStats ไม่ได้ดึงคอลัมน์นั้นมา CORE6ENG จึงมองไม่เห็น
+            และ REVIEW ยังติดกับ "คำตอบจริงแต่อ่อน" ด้วย (คำสำคัญน้อย/คล้ายลอกโจทย์)
+            จึงไม่ใช่สัญญาณ "ไม่มีคำตอบ" ที่คมกว่า — ใช้ aiSum<=0 ตามภาค 1 และเขียนคำว่า "มัก" ไว้ */
+      var aiSum=num(rvAi.ai1)+num(rvAi.ai2)+num(rvAi.ai3);
+      if(aiSum<=0){
+        out.CM={ st:'partial', pct:null, n:0, need:1, dims:cmDims(null),
+          note:'AI ตรวจแล้วได้ 0 ทั้ง 3 ข้อ — มักแปลว่านักเรียนยังไม่ได้พิมพ์คำตอบ',
+          src:'ยังไม่มีคำตอบเขียนที่ประเมินได้ (AI ให้ 0 ทั้ง 3 ข้อ) — เปิดดูคำตอบจริงที่ปุ่ม 📝 ตรวจสอบอัตนัย แล้วให้คะแนนเองได้ ระบบจะไม่เดาระดับให้' };
+      } else {
+        out.CM=cmScore([rvAi.ai1,rvAi.ai2,rvAi.ai3],' (AI ตรวจ)','คะแนนอัตนัยจาก AI บันทึกอัตโนมัติ — รอครูยืนยัน/ปรับที่ปุ่ม 📝 ตรวจสอบอัตนัย');
+      }
     } else if(kruCM!=null){
       out.CM={ st:'score', pct:Math.round(kruCM/4*1000)/10, level:lvOf(kruCM/4*100), n:1,
         parts:[{ label:'ครูประเมินจากการสังเกต (เฉลี่ยด้านสื่อสาร)', pct:Math.round(kruCM/4*1000)/10, txt:(Math.round(kruCM*100)/100)+'/4' }],
@@ -35340,8 +36354,13 @@ var CORE6ENG = (function(){
       out.CM={ st:((ev.c||[]).length?'pending':'partial'), pct:null, n:0, need:1, dims:cmDims(null),
         src:'คำตอบเขียน 3 ข้อในด่านกาญ 2050 — '+((ev.c||[]).length?'รอผลตรวจ (AI จะบันทึกให้ทันทีในรุ่นนี้ · ครูดูที่ปุ่ม 📝 ตรวจสอบอัตนัย)':'ยังไม่ได้ทำด่านกาญ 2050') };
     }
-    var TOTAL_STAGES=12;
-    var doneKeys={}; (ev.p||[]).forEach(function(r){ if(num(r.sc)>0) doneKeys[String(r.sid||'')]=1; });
+    /* [บล็อก O2 · บั๊ก 4 · มติครู] ตัวหารมาจากรายชื่อด่านจริง ไม่ใช่เลขฝังตาย
+       และนับเฉพาะด่านที่อยู่ในรายชื่อ — ของเดิมนับ "ทุก stage_id ที่คะแนน >0" โดยไม่มี whitelist
+       แถวรหัสแปลกปลอม (ด่านที่ถูกถอดออกไปแล้ว · ข้อมูลเก่าจากรุ่นก่อน · รหัสพิมพ์ผิด)
+       จึงดันตัวเศษให้เกินตัวหารได้ — ตอนนี้เกินไม่ได้อีกแล้วทั้งสองทาง */
+    var TOTAL_STAGES=P2_SM_STAGES.length;
+    var doneKeys={}; (ev.p||[]).forEach(function(r){ var sid0=String(r.sid||'');
+      if(num(r.sc)>0&&P2_SM_STAGES.indexOf(sid0)>=0) doneKeys[sid0]=1; });
     var nDone=Object.keys(doneKeys).length;
     var coverage=Math.min(1,nDone/TOTAL_STAGES);
     var impN=0, impSum=0, byStage={};
@@ -35971,7 +36990,15 @@ function clsLoadStats(){
         sbFetchAll('/rest/v1/events?kind=eq.question&select='+SEL_Q+'&student_id=in.('+ch.join(',')+')'),
         sbFetchAll('/rest/v1/events?kind=in.(progress,boss,capstone,pilok,peer)&select='+SEL_O+'&student_id=in.('+ch.join(',')+')'),
         /* [V.7.80] ครูประเมินสมรรถนะจากการสังเกต (surveys.kind=kru_assess) — โหลดไม่ได้ = ข้าม ไม่ให้ทั้งหน้าล้ม */
-        sbFetchAll('/rest/v1/surveys?kind=eq.kru_assess&select=student_id,payload,created_at&student_id=in.('+ch.join(',')+')').catch(function(){ return []; })
+        /* [บล็อก N14 · บั๊ก 6 จุดที่ 4] อันตรายที่สุดในเจ็ดจุด: คืน [] แล้วเดินต่อเหมือนไม่มีอะไรเกิดขึ้น
+           แต่ TW/SM/CM ใช้คะแนนครูสังเกตเป็นตัวตั้งตามโมเดล → หายไปเฉย ๆ = คะแนน "ต่ำกว่าจริง"
+           ซึ่งอ่านไม่ออกจากหน้าจอเลย (ไม่ใช่ช่องว่าง แต่เป็นตัวเลขที่ผิด)
+           คง fallback เดิม (return []) ไว้ เพราะทั้งหน้าต้องไม่ล้มเพราะโหลดส่วนเสริมไม่ได้ */
+        sbFetchAll('/rest/v1/surveys?kind=eq.kru_assess&select=student_id,payload,created_at&student_id=in.('+ch.join(',')+')').catch(function(e){
+          try{ console.error('[หน้าครู · kru_assess] โหลดคะแนนที่ครูประเมินจากการสังเกตไม่สำเร็จ'+
+            ' — TW/SM/CM ของนักเรียนชุดนี้จะคิดโดยไม่มีคะแนนครู (ต่ำกว่าความเป็นจริง):', (e&&e.message)||e, e); }catch(e2){}
+          try{ clsStatsWarn('โหลดคะแนนที่ครูประเมินจากการสังเกตไม่สำเร็จ — ด้านทำงานเป็นทีม/จัดการตนเอง/สื่อสาร อาจต่ำกว่าความเป็นจริง'); }catch(e2){}
+          return []; })
       ]);
     }).then(function(rr){
       (rr[0]||[]).forEach(function(e){
@@ -36021,7 +37048,10 @@ function clsLoadStats(){
     lch.forEach(function(ch2){
       lp=lp.then(function(){ return sbFetch('/rest/v1/competency_results?select=student_id,a,b,c,d,total,level,ctc,stm,crt,prb,data_status&run_id=eq.LEGACY-SHEETS&student_id=in.('+ch2.join(',')+')'); })
         .then(function(rows2){ (rows2||[]).forEach(function(r2){ S(r2.student_id).legacy=r2; }); })
-        .catch(function(){});
+        /* [บล็อก N15 · บั๊ก 6 จุดที่ 5] ผลสรุปเก่าที่ย้ายมาจากชีต (LEGACY-SHEETS) โหลดไม่ได้ = ช่อง
+           "เทียบข้อมูลเดิม" หายเงียบ · fallback เดิม (ข้ามไป) คงไว้ เพราะเป็นข้อมูลประกอบไม่ใช่ตัวหลัก */
+        .catch(function(e){ try{ console.error('[หน้าครู · LEGACY-SHEETS] โหลดผลสรุปเดิมที่ย้ายมาจากชีตไม่สำเร็จ'+
+          ' — คอลัมน์เทียบข้อมูลเดิมจะว่าง:', (e&&e.message)||e, e); }catch(e2){} });
     });
     return lp;
   });
@@ -36035,8 +37065,13 @@ function clsLoadStats(){
       /* [ตรวจระบบ รอบ 17 · A6] ดูคำอธิบายที่ตัวรวมอีกตัว — เลขครั้งเริ่มที่ 3 ได้ */
       if(!pick.length) pick=bl.slice().sort(function(a,b){ return (a.t||0)-(b.t||0); }).slice(0,2);
       pick.forEach(function(r){ if(r.sc>s.boss) s.boss=r.sc; });
-      try{ s.v2=CV2.compute(s.ev); }catch(e){ s.v2=null; }
-      try{ s.c6=CORE6ENG.compute(s.ev,s.v2,s); }catch(e){ s.c6=null; }
+      /* [บล็อก N12/N13 · บั๊ก 6 จุดที่ 2-3] เดิมเงียบสนิท — เด็กคนที่เครื่องคิดคะแนนพังจะขึ้น "–"
+         ปนอยู่กับเด็กที่ยังไม่ได้เล่นจริง ๆ แยกไม่ออกเลยว่าอันไหนคือ "ไม่มีข้อมูล" อันไหนคือ "คิดไม่ได้"
+         คง fallback เดิม (null) ไว้ทุกจุด เพื่อไม่ให้ทั้งตารางล้มเพราะเด็กคนเดียว */
+      try{ s.v2=CV2.compute(s.ev); }catch(e){ s.v2=null;
+        try{ console.error('[หน้าครู · CV2.compute] คิดคะแนน HOTS ของนักเรียน '+k+' ไม่สำเร็จ — ช่องนี้จะว่าง:', (e&&e.message)||e, e); }catch(e2){} }
+      try{ s.c6=CORE6ENG.compute(s.ev,s.v2,s); }catch(e){ s.c6=null;
+        try{ console.error('[หน้าครู · CORE6ENG.compute] คิดสมรรถนะ 6 ด้านของนักเรียน '+k+' ไม่สำเร็จ — ช่องนี้จะว่าง:', (e&&e.message)||e, e); }catch(e2){} }
       /* [V.7.80] มีคำตอบเขียนแล้วแต่ครูยังไม่กดยืนยัน (AI บันทึกชั่วคราวอยู่) → ใช้ทำตัวเลขบนปุ่ม 📝 ตรวจสอบอัตนัย */
       s.capPend=((s.ev.c||[]).length>0)&&!(s.ev.c||[]).some(function(r){ return r.trv!=null&&r.trv!==''; });
       delete s.ev; /* คิดเสร็จแล้ว ไม่เก็บข้อมูลดิบไว้กินหน่วยความจำ */ }
@@ -36051,7 +37086,15 @@ function clsLoadStats(){
       grp.forEach(function(st3){ if(!stats[st3.id]||!(stats[st3.id].plays>0)){ stats[st3.id]=Object.assign({},src,{shared:true}); } });
     });
     cls.stats=stats; cls.statsReady=true; clsRender();
-  }).catch(function(e){ cls.statsReady=true; clsRender(); });
+  }).catch(function(e){
+    /* [บล็อก N11 · บั๊ก 6 จุดที่ 1 — จุดหลักตามรายงาน] เดิมกลืน error ทั้งก้อนแล้ววาดหน้าต่อ
+       ผลคือทั้งห้องขึ้น "–" เหมือนเด็กไม่เคยเล่น โดยไม่มีอะไรบอกว่าโหลดล้ม
+       fallback เดิม (statsReady=true + clsRender) คงไว้ครบ — แค่ไม่เงียบอีกต่อไป */
+    try{ console.error('[หน้าครู · clsLoadStats] โหลด/คำนวณคะแนนทั้งห้องไม่สำเร็จ'+
+      ' — ตารางจะแสดงเป็นค่าว่างทั้งที่ข้อมูลอาจมีอยู่จริง:', (e&&e.message)||e, e); }catch(e2){}
+    try{ clsStatsWarn('โหลดคะแนนของนักเรียนไม่สำเร็จ — ตารางคะแนนที่เห็นตอนนี้ยังไม่ใช่ข้อมูลจริงทั้งหมด'); }catch(e2){}
+    cls.statsReady=true; clsRender();
+  });
 }
 function clsStatOf(stu){
   var s=(cls.stats&&cls.stats[stu.id])||null;
@@ -37194,9 +38237,12 @@ function clsRowSel(id, on){
 }
 var CLS_LV_CLR={6:'#7c3aed',5:'#16a34a',4:'#d97706',3:'#64748b'};
 /* [ตามคำขอครู V.7.68 ข้อ 6] คะแนนเต็มของ "เก็บ" และ "สอบ"
-   เก็บ = ผลรวมคะแนนดีที่สุดของทุกด่านสะสม (12 ด่าน/ภารกิจ × 10) = 120 + ด่านบอส 30 = 150
-   สอบ = ด่านบอส (ปีศาจข้อสอบ) เต็ม 30 */
-var CLS_MAX_COLLECTED=150, CLS_MAX_BOSS=30;
+   เก็บ = ผลรวมคะแนนดีที่สุดของทุกด่านสะสม · สอบ = ด่านบอส (ปีศาจข้อสอบ) เต็ม 30
+   [บล็อก O3 · บั๊ก 4] เดิมเขียนไว้ว่า "(12 ด่าน × 10) = 120 + บอส 30 = 150"
+   แต่ด่านที่ไม่ใช่บอสมี 13 ด่าน → เพดานจริง 13×10 + 30 = 160
+   ผลของเลขที่ค้าง: เด็กที่เล่นครบทุกด่านโชว์ 160/150 = 106.7% ได้ (clsAchLevel ไม่มี clamp)
+   ตอนนี้คิดจาก P2_SM_STAGES ด้วยกติกา cap เดียวกับ clsLoadStats — ไม่ฝังเลขตายอีก */
+var CLS_MAX_COLLECTED=p2MaxCollected(), CLS_MAX_BOSS=30;
 function clsScoresHtml(r){
   var studs=(cls.students||[]).filter(function(s){return s.classroom_id===r.id;})
     .sort(function(a,b){ return (Number(a.student_number)||999)-(Number(b.student_number)||999); });
@@ -37395,6 +38441,7 @@ function clsRender(){
       '<span class="muted" style="font-size:12px;flex:1">ห้องเรียนของครู: '+cls.rooms.length+' ห้อง</span>'+
     '</div>');
   var h='';
+  try{ h+=clsWarnBannerHTML(); }catch(e){}   /* [บล็อก N10 · บั๊ก 6] โหลดคะแนนไม่ครบ = ต้องเห็นบนจอ ไม่ใช่รู้แค่ใน console */
   try{ h+=DEMO.bannerHTML(); }catch(e){}   /* [แก้ตามครู ข้อ 6] เตือนตลอดเวลาว่ากำลังดูข้อมูลจำลอง */
   // [ตามคำขอ] แนะนำผูก Google เมื่อยังไม่ผูก — ข้อมูลจะได้อยู่ถาวรและเปิดได้ทุกเครื่อง
   if(!(cls.teacher&&cls.teacher.is_anonymous===false)){
@@ -38609,7 +39656,10 @@ var CBE8 = {
          เดิมคืน null ทำให้สูตรเปลี่ยนรูปเงียบ ๆ (M กลายเป็นหลักฐานระหว่างเรียนล้วน)
          แล้วตัวเลขกระโดดในวันที่ครูกดตรวจ ทั้งที่ตัวเด็กไม่ได้เปลี่ยนอะไรเลย */
       var sa=0,na=0; ['ai1','ai2','ai3'].forEach(function(k){ var v=Number(cap[k]); if(cap[k]!=null&&cap[k]!==''&&!isNaN(v)){ sa+=v; na++; } });
-      if(na) return { pct:Math.round(sa/(na*4)*1000)/10, provisional:true,
+      /* [บล็อก O13 · บั๊ก 5 ชนิดเดียวกัน] AI ให้ 0 ครบทุกข้อ = "ยังไม่ได้พิมพ์คำตอบ" ไม่ใช่ "ได้ 0 คะแนน"
+         ตกไปใช้บรรทัดล่าง (รอครูตรวจ) แทนการประกาศคะแนน 0 เป็นผลชั่วคราว
+         คะแนนที่ครูตรวจเอง (cw1-3 ข้างบน) ไม่ถูกแตะ — ครูให้ 0 ยังเป็น 0 ตามเดิม */
+      if(na&&sa>0) return { pct:Math.round(sa/(na*4)*1000)/10, provisional:true,
         parts:[{label:'คำตอบเขียน '+na+' ข้อ (AI ตรวจชั่วคราว — รอครูยืนยัน)', txt:sa+'/'+(na*4)}],
         src:'กาญ 2050 — คำตอบเขียน (ยังรอครูตรวจ)' };
       return { pct:null, parts:[], src:'รอครูตรวจคำตอบเขียน (ช่อง 💬 การสื่อสาร)' };
@@ -38889,6 +39939,140 @@ var DASH4 = {
   }
 };
 
+/* ══ [บล็อก V · พรอมต์ 45] ท่อส่งใบรายงานผลเข้า Dashboard กลาง (rpc_submit_report) ══
+   เกมเป็นเจ้าของการคิดคะแนน — ตรงนี้คือ "รายงานผลที่คิดเสร็จแล้ว" ไม่มีการคิดใหม่แม้แต่ช่องเดียว
+   ใช้ CBE8 เท่านั้น · run_id 'live' เท่านั้น · ส่งพลาด = เงียบ ไม่ขัดจังหวะครู (รอบหน้าส่งใหม่เอง) */
+var GP2_HUB = {
+  VER: 'V.8.15-p2-2569.79',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
+  CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
+  KEY: 'gp2_hub_sent_v1',               /* ลายเซ็นผลที่ส่งสำเร็จแล้ว รายนักเรียน (กันยิงถี่) */
+  LVNAME: ['เริ่มต้น', 'กำลังพัฒนา', 'สามารถ', 'เหนือความคาดหวัง'],
+  NO_SUMM: { SM: 1, TW: 1 },            /* สองด้านนี้ไม่มีขารวบยอดในรุ่นนี้ (CAP_MAP ไม่มีคีย์) — ฐาน minor 100% */
+  _busy: false, _wait: 0, _queued: null, _saidWhy: 0,
+
+  _memo() { try { return JSON.parse(localStorage.getItem(this.KEY) || '{}') || {}; } catch (e) { return {}; } },
+  _saveMemo(m) { try { localStorage.setItem(this.KEY, JSON.stringify(m)); } catch (e) {} },
+  _hash(s) { var h = 5381, i; for (i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return 'h' + (h >>> 0).toString(36) + '_' + s.length; },
+  _lvWord(lv) { return this.LVNAME[lv - CBE8.set.lvBase] || null; },
+
+  /* ── ใบที่ 1 ผลสัมฤทธิ์ — เลขชุดเดียวกับหน้าจอครู (s มาจาก clsLoadStats · กรองภาคแล้ว) ── */
+  _achOf(s) {
+    if (!s || !s.pb || !Object.keys(s.pb).length) return null;   /* ยังไม่เคยเล่นภาค 2 = ไม่มีใบผลสัมฤทธิ์ (ห้ามส่งค่าที่ไม่ได้วัด) */
+    var units = {};
+    for (var k in s.pb) units[k] = s.pb[k];                      /* รายด่าน คีย์ = P2_SM_STAGES */
+    if (s.bossN > 0) units['_boss'] = s.boss;                    /* คะแนนสอบบอส — ข้อมูลประกอบ (_) ส่งเฉพาะเมื่อสอบจริง */
+    if (s.cap > 0) units['_cap24'] = s.cap;                      /* กาญ 2050 ดิบ /24 — 0 อาจแปลว่ายังไม่เล่น จึงไม่ส่ง 0 */
+    var played = P2_SM_STAGES.filter(function (k2) { return k2 in s.pb; });
+    var a = clsAchLevel(s.collected, CLS_MAX_COLLECTED);
+    return {
+      score: s.collected,
+      max_score: CLS_MAX_COLLECTED,                              /* = p2MaxCollected() = 160 (ครูสั่ง 160 ทั้งสองภาค) */
+      grade_label: a ? (a.lv ? 'ระดับ ' + a.lv + ' ' + (CORE6_LVNAME[a.lv] || '') : 'ยังไม่ถึงเกณฑ์') : null,
+      progress_percent: Math.round(played.length / P2_SM_STAGES.length * 1000) / 10,
+      unit_scores: units,
+      criteria_note: 'ภาค 2 · คะแนนเก็บ = ผลรวมคะแนนดีที่สุดต่อด่าน 14 ด่าน (ด่านละ 0-10 · ด่าน 8 บอส 0-30) '
+        + '· คะแนนสอบบอส (_boss) เป็นข้อมูลประกอบ ไม่บวกซ้ำ · ระดับ 80/70/60/50'
+    };
+  },
+
+  /* ── ใบที่ 2 สมรรถนะ 6 ด้าน จาก CBE8 ที่วัดจริงเท่านั้น — ด้านไม่มีหลักฐาน = ไม่มีแถว ── */
+  _compsOf(comp) {
+    var self = this, S = CBE8.set;
+    /* บันทึกเกณฑ์จริง ณ เวลาที่คิด (ครูปรับเกณฑ์ได้ — ห้ามใส่ค่า default · พรอมต์ 45 ข้อ 8) */
+    var noteBase = 'CBE8 ' + this.VER + ' · minor' + S.wMinor + '/sum' + S.wSum
+      + ' · ช่วง ' + S.r1 + '/' + S.r2 + '/' + S.r3 + ' · ฐานระดับ ' + S.lvBase
+      + ' · ผสมย่อย ' + Math.round(CBE8.MIX_OVERALL * 100) + '/' + Math.round(CBE8.MIX_SUB * 100);
+    var rows = [];
+    CBE8.COMPS.forEach(function (cd) {
+      var c = cd[0], r = comp && comp[c];
+      if (!r || (r.M == null && r.lv == null)) return;           /* ไม่มีหลักฐาน = ไม่ส่งแถว */
+      rows.push({
+        code: c,                                                 /* HT/NS ส่งตรง ๆ — gp_comp_code ฝั่งฐานแปลง HOT/SN ให้ (พรอมต์ 45 ข้อ 2) */
+        score: r.M,
+        level: r.lv,
+        level_label: r.lv != null ? self._lvWord(r.lv) : null,   /* "คำ" นำเสมอ ตามมาตรฐานเว็บกลาง */
+        evidence: self.NO_SUMM[c] ? 'observed' : 'scored',       /* ห้ามมี self_report จากเกมนี้เด็ดขาด */
+        criteria_note: self.NO_SUMM[c]
+          ? noteBase + ' · ฐาน minor 100% (ยังไม่มีหลักฐานรวบยอด) — คนละฐานกับด้านอื่น'
+          : noteBase,
+        sub_scores: {                                            /* คีย์ _ = ข้อมูลประกอบ เว็บกลางไม่ตีเป็นคะแนน */
+          _basis: self.NO_SUMM[c] ? 'minor100_no_summative' : 'minor30+summ70',
+          _status: r.status || null,
+          _cmp_T: r.T != null ? r.T : null,
+          _cmp_P: r.P != null ? r.P : null,
+          _cmp_S: r.S != null ? r.S : null,                      /* ผลเทียบตนเอง = ข้อมูลประกอบเท่านั้น ไม่ใช่แถวคะแนน */
+          _finalized: r.status === 'FINALIZED',
+          _provisional: !!(r.summ && r.summ.provisional)         /* ธงจริงของ CM อยู่ใน summ (ตรวจที่ _summative แล้ว) */
+        }
+      });
+    });
+    return rows;
+  },
+
+  _payloadOf(sid, s, comp) {
+    var ach = this._achOf(s), comps = this._compsOf(comp);
+    if (!ach && !comps.length) return null;                      /* ไม่มีสักใบที่วัดจริง = ไม่ส่ง */
+    return { p_game_code: this.CODE, p_game_version: this.VER, p_student: sid,
+      p_run_id: 'live', p_achievement: ach, p_competencies: comps };
+  },
+
+  /* ส่ง 1 คน — คืน promise ที่ไม่มีวัน reject (พลาด = 'fail' เงียบ ๆ ไม่เก็บลายเซ็น → รอบหน้าส่งใหม่) */
+  sendOne(sid, s, comp) {
+    var self = this;
+    var pay = this._payloadOf(sid, s, comp);
+    if (!pay) return Promise.resolve('skip');
+    var sig = this._hash(JSON.stringify(pay));                   /* ยังไม่ใส่ computed_at = ลายเซ็นนิ่งเทียบข้ามรอบได้ */
+    if (this._memo()[sid] === sig) return Promise.resolve('same');
+    var whenISO = new Date().toISOString();                      /* เวลาที่ "เกมคิดผลชุดนี้" — ฐานเก็บเป็น computed_at */
+    if (pay.p_achievement) pay.p_achievement.computed_at = whenISO;
+    pay.p_competencies.forEach(function (r) { r.computed_at = whenISO; });
+    return sbEnsure()
+      .then(function () { return sbFetch('/rest/v1/rpc/rpc_submit_report', { method: 'POST', body: JSON.stringify(pay) }); })
+      .then(function () { var m = self._memo(); m[sid] = sig; self._saveMemo(m); return 'sent'; })
+      .catch(function (e) {
+        try {
+          if (!self._saidWhy && /PGRST|function|not found|schema/i.test(String(e && e.message || ''))) {
+            self._saidWhy = 1;
+            console.error('[บล็อก V] ส่งใบรายงานผลเข้า Dashboard กลางไม่ได้ — ฐานยังไม่มี rpc_submit_report (ต้องรัน 43_REPORT_CARDS.sql ฝั่งเว็บกลางก่อน) · หน้าครูทำงานต่อปกติ');
+          }
+        } catch (e2) {}
+        return 'fail';
+      });
+  },
+
+  /* จุดเรียกจากท้าย clsV8Render — ส่งเฉพาะตอนที่ "เลขบนจอ = เลขที่ส่ง" */
+  schedule(studs, by) {
+    var self = this;
+    try {
+      if (window.DEMO && DEMO.on) return;                        /* โหมดตัวอย่างห้ามเขียนฐาน — เงียบ ไม่เด้ง toast */
+      if (typeof CLSPART !== 'undefined' && CLSPART.get() !== 'p2') return;   /* กันพลาด (แท็บนี้บังคับ p2 อยู่แล้ว) */
+      if (!/-p2-/.test(this.VER)) return;                        /* ห้ามส่งรุ่นไร้ป้ายภาคเด็ดขาด */
+      if (this._busy) { this._queued = [studs, by]; return; }    /* ระหว่างส่งมีวาดใหม่ (ครูกดยืนยัน) → ต่อคิวรอบเดียว */
+      this._busy = true;
+      var run = function () {
+        /* ใบที่ 1 ใช้สถิติจาก clsLoadStats — ยังโหลดไม่เสร็จก็รอสั้น ๆ (สูงสุด ~18 วิ) แล้วส่งเท่าที่มีจริง */
+        if (!cls.statsReady && (self._wait = self._wait + 1) < 12) { setTimeout(run, 1500); return; }
+        self._wait = 0;
+        var chain = Promise.resolve();
+        (studs || []).forEach(function (st) {
+          chain = chain.then(function () {
+            var comp = null;
+            try { comp = CBE8.compute(by[st.id] || { evd: [], cap: [], pr: [] }); } catch (e) { comp = null; }
+            return self.sendOne(st.id, (cls.stats || {})[st.id] || null, comp);
+          }).then(function (r) {
+            if (r === 'sent') return new Promise(function (ok) { setTimeout(ok, 120); });   /* เว้นจังหวะเฉพาะตอนยิงจริง */
+          });
+        });
+        chain.then(function () {
+          self._busy = false;
+          var q = self._queued; self._queued = null;
+          if (q) self.schedule(q[0], q[1]);
+        });
+      };
+      run();
+    } catch (e) { this._busy = false; }
+  }
+};
 var _cv8Cache=null;
 function clsV8Render(studs, by){
   _cv8Cache={ studs:studs, by:by };
@@ -38905,7 +40089,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.10-p2-2569.74 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.15-p2-2569.79 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };
@@ -38929,7 +40113,14 @@ function clsV8Render(studs, by){
     '</tr></thead><tbody>'+rows+'</tbody></table></div>'+
     '<div class="muted" style="font-size:11.5px;margin-top:8px;line-height:1.7">แตะช่องคะแนนเพื่อดูที่มาของหลักฐาน · ระดับ T/P/S · เหตุผลของสถานะ และคำถามยืนยันสำหรับด้านที่ต้องตรวจสอบ<br>'+
     'ข้อสอบปรนัย/แบบทดสอบหลังเรียน = หลักฐานสนับสนุนและผลสัมฤทธิ์ (ดูที่ตารางคะแนนเดิม) — ไม่รวมในคะแนนหลัก V.8</div>';
-  try { DASH4.fill(studs, by); } catch (e) {}   /* [เฟส 4 · 4.3] */
+  /* [บล็อก N17 · บั๊ก 6 จุดที่ 7] แผงพัฒนาการหายทั้งแผงแบบเงียบ ๆ — ครูนึกว่ายังไม่มีข้อมูลพัฒนาการ
+     fallback เดิม (ข้ามไป ไม่ให้ตารางหลักล้มตาม) คงไว้ */
+  try { DASH4.fill(studs, by); } catch (e) {   /* [เฟส 4 · 4.3] */
+    try { console.error('[หน้าครู · DASH4.fill] เติมแผงพัฒนาการไม่สำเร็จ — แผงนี้จะว่างทั้งที่ตารางหลักปกติ:', (e && e.message) || e, e); } catch (e2) {}
+  }
+  /* [บล็อก V · พรอมต์ 45] เลข CBE8 ชุดที่เพิ่งวาดบนจอครู = ชุดเดียวกับที่ส่งเข้า Dashboard กลาง
+     (เกณฑ์ตรวจรับข้อ 2) · ส่งเฉพาะคนที่ค่าเปลี่ยนจากที่ส่งสำเร็จครั้งก่อน · พลาด = เงียบ */
+  try { GP2_HUB.schedule(studs, by); } catch (e) { }
 }
 function clsV8Detail(si, c){
   var det=$('cv8-det-'+si), td=$('cv8-det-td-'+si);
