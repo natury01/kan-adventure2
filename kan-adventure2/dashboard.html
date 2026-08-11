@@ -2687,7 +2687,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.17-p2-2569.81',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.19-p2-2569.83',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -3505,12 +3505,15 @@ function clsLoadCounts(){
   if(!cls.rooms.length) return Promise.resolve();
   var ids=cls.rooms.map(function(r){return r.id;}).join(',');
   var base='id,classroom_id,student_number,first_name,last_name,collected_score,boss_score';
-  /* group_ref/external_ref = ข้อมูลกลุ่มบัญชีเดิม — ถ้าฐานข้อมูลยังไม่รันแพตช์ล่าสุด (ไม่มีคอลัมน์) ให้ถอยไปแบบเดิม */
-  return sbFetchAll('/rest/v1/students?select='+base+',external_ref,group_ref,character_name&classroom_id=in.('+ids+')')
+  /* group_ref/external_ref = ข้อมูลกลุ่มบัญชีเดิม — ถ้าฐานข้อมูลยังไม่รันแพตช์ล่าสุด (ไม่มีคอลัมน์) ให้ถอยไปแบบเดิม
+     [บล็อก AD · เอกสารกลาง #47] is_active มากับชุดคอลัมน์ใหม่ — ฐานที่ยังไม่รัน 46 จะเข้าทาง fallback
+     ซึ่งไม่มีคอลัมน์นี้ = ทุกแถวถือว่าใช้งานปกติ (กติกา x.is_active !== false เดียวกับเว็บกลาง) */
+  return sbFetchAll('/rest/v1/students?select='+base+',external_ref,group_ref,character_name,is_active&classroom_id=in.('+ids+')')
     .catch(function(){ return sbFetchAll('/rest/v1/students?select='+base+'&classroom_id=in.('+ids+')'); })
     .then(function(rows){
       cls.students=rows||[];
-      cls.students.forEach(function(s){ cls.counts[s.classroom_id]=(cls.counts[s.classroom_id]||0)+1; });
+      /* [บล็อก AD · #47] คนที่ครูปิดการใช้งาน: ยังอยู่ในรายชื่อ (ติดป้ายให้เห็น) แต่ไม่นับในยอดรวมของห้อง */
+      cls.students.forEach(function(s){ if(s.is_active!==false) cls.counts[s.classroom_id]=(cls.counts[s.classroom_id]||0)+1; });
     /* [บล็อก N16 · บั๊ก 6 จุดที่ 6] โหลดรายชื่อล้ม = cls.students ว่าง = ทั้งหน้าดูเหมือน "ห้องยังไม่มีนักเรียน"
        ซึ่งครูอ่านผิดได้ง่ายมากว่าเด็กยังไม่เข้าห้อง · fallback เดิม (ปล่อยว่าง ไม่ล้มทั้งหน้า) คงไว้ */
     }).catch(function(e){
@@ -6350,19 +6353,31 @@ function clsRosterHtml(r){
 }
 function clsFillRoster(){
   if(!cls.open) return;
-  sbEnsure().then(function(){ return sbFetch('/rest/v1/students?classroom_id=eq.'+cls.open+'&select=id,student_number,first_name,last_name,join_pin,character_name').catch(function(){ return sbFetch('/rest/v1/students?classroom_id=eq.'+cls.open+'&select=id,student_number,first_name,last_name,join_pin'); }); })
+  /* [บล็อก AD · #47] ขอ is_active มาด้วย — ฐานเก่าไม่มีคอลัมน์จะตกไปทางเดิมเอง (ทุกคน = ใช้งานปกติ) */
+  sbEnsure().then(function(){ return sbFetch('/rest/v1/students?classroom_id=eq.'+cls.open+'&select=id,student_number,first_name,last_name,join_pin,character_name,is_active').catch(function(){ return sbFetch('/rest/v1/students?classroom_id=eq.'+cls.open+'&select=id,student_number,first_name,last_name,join_pin,character_name').catch(function(){ return sbFetch('/rest/v1/students?classroom_id=eq.'+cls.open+'&select=id,student_number,first_name,last_name,join_pin'); }); }); })
   .then(function(rows){
     cls.roster=(rows||[]).sort(function(a,b){ return (Number(a.student_number)||999)-(Number(b.student_number)||999); });
     var el=$('cls-roster-tbl'); if(!el) return;
     if(!cls.roster.length){ el.innerHTML='<div class="muted" style="font-size:13px">ยังไม่มีรายชื่อ — เพิ่มจากฟอร์มด้านบน หรือให้นักเรียนพิมพ์ชื่อเองตอนเข้าห้อง</div>'; return; }
     el.innerHTML='<table class="cls-tbl"><tr><th style="width:60px">เลขที่</th><th>ชื่อ</th><th>นามสกุล</th><th title="ชื่อที่แสดงในเกม/กระดานคะแนน — นักเรียนตั้งเองตอนเข้าห้อง หรือครูแก้ให้">🎮 ชื่อในเกม</th><th style="width:70px" title="PIN สำหรับเข้าห้อง (ตั้งเมื่อต้องการกันเพื่อนแตะชื่อผิดคน)">PIN</th><th style="width:120px"></th></tr>'+
-      cls.roster.map(function(s){ return '<tr><td>'+esc(s.student_number||'')+'</td><td>'+esc(s.first_name||'')+'</td><td>'+esc(s.last_name||'')+'</td>'+
+      cls.roster.map(function(s){ var off=(s.is_active===false);
+        /* [บล็อก AD · #47] คนที่ปิดการใช้งาน: แถวจาง + ป้ายเทา — ข้อมูลอยู่ครบ เปิดกลับได้ทุกเมื่อ */
+        return '<tr'+(off?' style="opacity:.55"':'')+'><td>'+esc(s.student_number||'')+'</td><td>'+esc(s.first_name||'')+(off?' <span style="background:#64748b;color:#fff;border-radius:8px;padding:1px 7px;font-size:10.5px;white-space:nowrap">ปิดการใช้งาน</span>':'')+'</td><td>'+esc(s.last_name||'')+'</td>'+
         '<td>'+(s.character_name?'<span style="color:#7c3aed;font-weight:700">'+esc(s.character_name)+'</span>':'<span class="muted">–</span>')+'</td>'+
         '<td>'+esc(s.join_pin||'–')+'</td>'+
         '<td><button class="btn-ghost" style="padding:3px 9px;font-size:12px;color:#1d4ed8" onclick="clsEditStudent(\''+esc(s.id)+'\')">✏️ แก้ไข</button> '+
+        (s.is_active!==undefined?('<button class="btn-ghost" style="padding:3px 9px;font-size:12px;color:'+(off?'#16a34a':'#b45309')+'" onclick="clsToggleActive(\''+esc(s.id)+'\','+(off?'true':'false')+')" title="ปิดการใช้งานแทนการลบ — ข้อมูลและผลการเล่นอยู่ครบ เปิดกลับได้ทุกเมื่อ">'+(off?'▶ เปิดใช้งาน':'⏸ ปิดการใช้งาน')+'</button> '):'')+
         '<button class="btn-ghost" style="padding:3px 9px;font-size:12px;color:#b91c1c" onclick="clsDelStudent(\''+esc(s.id)+'\')">ลบ</button></td></tr>'; }).join('')+
       '</table>';
   }).catch(function(e){ var el=$('cls-roster-tbl'); if(el) el.innerHTML='<div class="err" style="display:block">โหลดรายชื่อไม่สำเร็จ: '+esc(e&&e.message||'')+'</div>'; });
+}
+/* [บล็อก AD · เอกสารกลาง #47] ปิด/เปิดการใช้งานนักเรียน — ทางเลือกที่ย้อนกลับได้แทนการลบถาวร
+   (ปุ่มโผล่เฉพาะเมื่อฐานมีคอลัมน์ is_active แล้ว คือรัน 46_CLASSROOM_MANAGE.sql ของเว็บกลางแล้ว) */
+function clsToggleActive(id,to){
+  var on=(to===true||to==='true');
+  sbEnsure().then(function(){ return sbFetch('/rest/v1/students?id=eq.'+id,{method:'PATCH',body:JSON.stringify({is_active:on})}); })
+  .then(function(){ toast(on?'เปิดใช้งานแล้ว':'ปิดการใช้งานแล้ว — ข้อมูลอยู่ครบ เปิดกลับได้ทุกเมื่อ'); return clsAfterAuth(); })
+  .catch(function(e){ alert('ทำไม่สำเร็จ: '+String(e&&e.message||'')+'\n(ฐานข้อมูลต้องรัน 46_CLASSROOM_MANAGE.sql ของเว็บกลางก่อน)'); });
 }
 /* [เฟส 3d ตามคำขอ] ครูเจ้าของห้องแก้ข้อมูลนักเรียนได้เอง (เลขที่/ชื่อ/นามสกุล/PIN) — สิทธิ์คุมด้วย RLS ห้องของตัวเองเท่านั้น */
 function clsEditStudent(id){
@@ -7596,7 +7611,7 @@ var DASH4 = {
    เกมเป็นเจ้าของการคิดคะแนน — ตรงนี้คือ "รายงานผลที่คิดเสร็จแล้ว" ไม่มีการคิดใหม่แม้แต่ช่องเดียว
    ใช้ CBE8 เท่านั้น · run_id 'live' เท่านั้น · ส่งพลาด = เงียบ ไม่ขัดจังหวะครู (รอบหน้าส่งใหม่เอง) */
 var GP2_HUB = {
-  VER: 'V.8.17-p2-2569.81',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
+  VER: 'V.8.19-p2-2569.83',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
   CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
   KEY: 'gp2_hub_sent_v1',               /* ลายเซ็นผลที่ส่งสำเร็จแล้ว รายนักเรียน (กันยิงถี่) */
   LVNAME: ['เริ่มต้น', 'กำลังพัฒนา', 'สามารถ', 'เหนือความคาดหวัง'],
@@ -7752,7 +7767,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.17-p2-2569.81 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.19-p2-2569.83 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };

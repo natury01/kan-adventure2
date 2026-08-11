@@ -3216,12 +3216,17 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
 }
 
 @media (min-height: 501px) {
-  /* [บล็อก W7] ผังแนวตั้ง: แผงออร่า/สัตว์เลี้ยงจาก 4 คอลัมน์ตายตัว → แถวกว้างเท่าที่ว่างจริง
-     (7 ใบเรียงแถวเดียว · ถ้าวันหน้ามีของมากจนขึ้นแถวสอง จอ 16:9 ยังรับได้ ~2 แถว) */
+  /* [บล็อก W7 · แก้รอบ 2 ตามภาพครู 11 ส.ค.] เดิมใช้ grid auto-fit + 1fr → มีการ์ดแค่ 3-4 ใบ
+     ช่องถูกยืดถ่างเต็มความกว้างจอ ครูทักว่า "ระยะห่างการวางไอเท็มไม่พอดีเลย ห่างกันเกิน"
+     เปลี่ยนเป็น flex เกาะกลุ่มกลางจอ ช่องไฟคงที่ (แบบเดียวกับตารางการ์ดตัวละครที่ผ่านตาครูแล้ว)
+     ของเยอะค่อยห่อขึ้นแถวใหม่เอง · และดึงแผงการ์ดขึ้นชิดใต้แถบแท็บ (align-self:start)
+     ให้กระจก→แท็บ→การ์ดต่อกันเป็นก้อนเดียว ไม่ลอยห่างกลางที่ว่างบนจอสูง */
   #character-select-screen .shop-aura-grid {
-    grid-template-columns: repeat(auto-fit, minmax(calc(var(--vw) * 13), 1fr));
-    justify-items: center; width: 100%;
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch;
+    gap: calc(var(--vw) * 0.9);
+    width: auto; max-width: 100%;
   }
+  #character-select-screen > .cs-tab-panel { align-self: start; }
 }
 @media (min-height: 501px) and (max-aspect-ratio: 149/90) {
   /* [บล็อก W7ข] จอไม่ใช่ 16:9 → กรอบเกม letterbox: viewport 768 แต่กรอบจริงสูง 576
@@ -3232,7 +3237,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
   #character-select-screen .shop-aura-card { width: calc(var(--vw) * 9.5); padding: calc(var(--vw) * 0.4) calc(var(--vw) * 0.5); }
 }
 
-/* [บล็อก X] ปุ่ม Dashboard มุมซ้ายบนหน้าแรก: วงกลมไอคอน → เม็ดยา "🏫 สร้างห้องเรียน/หน้าครู"
+/* [บล็อก X] ปุ่ม Dashboard มุมซ้ายบนหน้าแรก: วงกลมไอคอน → เม็ดยา "🏫 สร้างห้องเรียน"
    .btn-icon เดิมบังคับกลม (border-radius 50%) และจัตุรัส — เขียนทับเฉพาะปุ่มนี้ปุ่มเดียว */
 #btn-open-classroom-mgr {
   width: auto; border-radius: calc(var(--vw) * 2.2);
@@ -3245,6 +3250,34 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
 }
 .mobile-fit #game-wrapper #btn-open-classroom-mgr { width: auto !important; }
 .mobile-fit #game-wrapper #btn-open-classroom-mgr .cmgr-label { font-size: max(12px, calc(var(--vw) * 1.1)); }
+
+/* [บล็อก Z] ครูสั่งเอาป้ายโซน (ขุนเขาชายแดน/สายน้ำตะวันตก/เมืองมรดกริมแคว/ประตูกาญจน์ 2050)
+   ออกจากแผนที่ — รกตา · ซ่อนทั้งชิ้น ไม่กินพื้นที่ ไม่รับคลิก */
+#worldmap-screen .wm-zone-chip { display: none !important; }
+
+/* [บล็อก AA8] หน้าตราผู้พิทักษ์ 2 ชั้น — แถวตราหลัก 6 ดวง + หัวข้อคั่น + บรรทัดนับรวม */
+.badges-count-line { text-align: center; font-size: max(11px, calc(var(--vw) * 0.95)); font-weight: 800;
+  color: #ffe6a8; margin: calc(var(--vw) * 0.05) 0 calc(var(--vw) * 0.2); }
+.badges-sec-head { text-align: center; font-size: max(11px, calc(var(--vw) * 0.85)); font-weight: 800;
+  color: #d8f2e2; opacity: 0.92; margin: calc(var(--vw) * 0.15) 0; }
+.badges-core-row { display: flex; justify-content: center; gap: calc(var(--vw) * 0.45); flex-wrap: wrap; }
+.badge-core { box-sizing: border-box; width: calc(var(--vw) * 6.6); min-width: 56px;
+  padding: calc(var(--vw) * 0.3) calc(var(--vw) * 0.15); border-radius: calc(var(--vw) * 0.8);
+  background: rgba(255,255,255,0.06); border: max(1px, calc(var(--vw) * 0.14)) solid rgba(255,255,255,0.18);
+  opacity: 0.45; filter: grayscale(0.7); text-align: center; }
+.badge-core.earned { opacity: 1; filter: none; border-color: #ffd54a;
+  box-shadow: 0 0 calc(var(--vw) * 0.8) rgba(255,213,74,0.35); }
+.badge-core-icon { font-size: max(18px, calc(var(--vw) * 1.6)); line-height: 1.25; }
+.badge-core-name { font-size: max(11px, calc(var(--vw) * 0.7)); font-weight: 800; color: #fff; }
+.mobile-fit #game-wrapper .badge-core-name { font-size: 12px !important; }
+
+/* [บล็อก AC] หมอกแห่งการผจญภัย: แคนวาสทับหมุดด่าน (z3) — หมุดโซนมืดจึงจมอยู่ใต้หมอกจริง ๆ
+   ส่วนด่านที่เข้าได้ถูกเจาะรูแสงไว้จึงเห็นชัดเต็มดวง · ไม่รับคลิก ทุกปุ่มกดทะลุได้ตามปกติ */
+#wm-fog-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none; }
+/* ของใช้ประจำหน้าแผนที่ต้องลอยเหนือหมอกเสมอ (หมอกมีไว้คลุม "แผ่นดิน" ไม่ใช่แผงควบคุม) */
+#worldmap-screen .worldmap-dock, #worldmap-screen .wm-protector-bar,
+#worldmap-screen .wm-status-panel, #worldmap-screen #wm-status-panel, #worldmap-screen .wm-status,
+#worldmap-screen #wm-team-legend { z-index: 8; }
 </style>
 </head>
 <body>
@@ -3310,7 +3343,8 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
           </div>
           <!-- [ปรับปรุงตามคำขอ] ชื่อเกมเดิมย่อเล็กลงและย้ายมาไว้ล่างสุดของจอ (ภาพพื้นหลังใหม่มีป้ายชื่อเกมสไตล์ป้ายไม้วาดมาให้แล้ว) -->
           <!-- [ภาค 2] บอกให้ชัดว่านี่คือเกมคนละภาค + เด็กที่ยังเล่นภาค 1 ไม่จบ กดกลับไปเล่นต่อได้ทันที -->
-          <div class="p2-badge">📖 ภาค 2 · ทีมผู้พิทักษ์เมืองกาญจน์</div>
+          <!-- [บล็อก Y · ครู 11 ส.ค. รอบ 3] ป้าย "ภาค 2 · ทีมผู้พิทักษ์เมืองกาญจน์" ถอดออกตามคำสั่ง
+               (ชื่อภาคจะไปอยู่บนภาพหน้าปกใหม่ที่ครูกำลังเจนแทน) -->
           <a id="p2-link-part1" class="p2-link" href="https://www.gameplearn.com/kan-adventure" target="_blank" rel="noopener">ยังเล่น <b>ภาค 1</b> ไม่จบใช่ไหม? กดที่นี่เพื่อไปเล่นต่อ →</a>
           <div class="start-caption">
             <!-- [รอบ 45 ตามคำขอ #1] เปลี่ยนชื่อเกมเป็น "ผจญภัยกาญจนบุรี" + แท็กไลน์เป็นเครดิตผู้ออกแบบ -->
@@ -3356,7 +3390,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
         <!-- [รอบ 63] ไอคอนเข้า Dashboard สมรรถนะ (สำหรับครู) — Dashboard ฝังในไฟล์เกมนี้ไฟล์เดียวจบ เปิดในแท็บใหม่ (ส่งลิงก์ backend ให้อัตโนมัติ) ครูล็อกอินด้วย admin/adminkru -->
         <!-- [ตามคำขอครู V.7.66 ข้อ 2] เอาปุ่ม Dashboard ออก เหลือ "ปุ่มห้องเรียน" ปุ่มเดียว (หน้าห้องเรียนมีทุกอย่างอยู่แล้ว) -->
         <button id="btn-open-dashboard" class="btn btn-icon" style="display:none" title="Dashboard ครู" onclick="openEmbeddedDashboard('cls')">📊</button>
-        <button id="btn-open-classroom-mgr" class="btn btn-icon corner-tl" title="ห้องเรียนของครู — สร้างห้อง/ดูคะแนน/จัดการข้อมูล" onclick="openEmbeddedDashboard('cls')">🏫<span class="cmgr-label">สร้างห้องเรียน/หน้าครู</span></button>
+        <button id="btn-open-classroom-mgr" class="btn btn-icon corner-tl" title="ห้องเรียนของครู — สร้างห้อง/ดูคะแนน/จัดการข้อมูล" onclick="openEmbeddedDashboard('cls')">🏫<span class="cmgr-label">สร้างห้องเรียน</span></button>
         <!-- [รอบ 63] ปุ่มแบบประเมินความพึงพอใจ ย้ายไปมุมขวาล่างของ World Map (ดู #btn-open-satisfaction ในหน้า worldmap) -->
 
         <!-- [FIX M1] ย้ายจากมุมขวาบน (right:calc(var(--vw) * 2)) ที่ถูกปุ่มเสียง global ทับสนิทจนกดไม่ได้เลย มาไว้ข้างปุ่มโหมดทีวีฝั่งซ้าย -->
@@ -3495,7 +3529,12 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
         <div class="badges-bg-photo"></div>
         <button id="btn-badges-maker" class="btn btn-icon corner-br btn-maker-glow" title="ออกแบบและพัฒนา">👨‍🏫</button>
         <div class="leaderboard-box badges-box">
-          <div class="leaderboard-title">🎖️ เหรียญตรานักสำรวจ</div>
+          <div class="leaderboard-title">🎖️ ตราผู้พิทักษ์</div>
+          <!-- [บล็อก AA3] ระบบตราเดียว 2 ชั้น: หลัก 6 ดวง (วิจัย เงื่อนไขเดิม) + เกียรติยศ 12 ดวง -->
+          <div id="badges-count-line" class="badges-count-line"></div>
+          <div class="badges-sec-head">⭐ ตราผู้พิทักษ์หลัก — ผ่านด่านสมรรถนะทั้ง 6</div>
+          <div id="badges-core-row" class="badges-core-row"></div>
+          <div class="badges-sec-head">🏅 ตราเกียรติยศผู้พิทักษ์</div>
           <div id="badges-grid" class="badges-grid"></div>
           <!-- [รอบ 55 แก้บัค] เหรียญเกิน 8 อัน → แบ่งหน้าแบบเดียวกับหน้าเป้/สถิติ (เดิมกริดยืดจนปุ่มกลับหลุดจอ) -->
           <div id="badges-pager" class="shop-pager hidden">
@@ -3526,7 +3565,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
       <div id="readaloud-ask-modal" class="modal-overlay hidden">
         <div class="modal-box">
           <div class="modal-title">🗣️ เปิดระบบช่วยอ่านไหม?</div>
-          <div class="modal-text">ระบบจะอ่านโจทย์ ตัวเลือก และบทสนทนาให้ฟังทุกด่าน เหมาะสำหรับเพื่อนที่ยังอ่านไม่คล่อง<br>เปลี่ยนใจทีหลังได้ที่เมนู ⚙️ ตั้งค่า</div>
+          <div class="modal-text">ระบบจะอ่านเนื้อหา บทสนทนา ภารกิจ และวิธีเล่นให้ฟังทุกหน้า เหมาะสำหรับเพื่อนที่ยังอ่านไม่คล่อง<br>เปลี่ยนใจทีหลังได้ที่เมนู ⚙️ ตั้งค่า</div>
           <div class="modal-buttons" style="display:flex; gap:calc(var(--vw) * 1); justify-content:center;">
             <button id="btn-readaloud-yes" class="btn btn-primary" style="font-size:calc(var(--vw) * 1.3);">🔊 เปิดช่วยอ่าน</button>
             <button id="btn-readaloud-no" class="btn btn-secondary" style="font-size:calc(var(--vw) * 1.3);">ไม่เปิด อ่านเองได้</button>
@@ -3687,7 +3726,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
             </div>
           </div>
           <div class="lobby-panel">
-            <div class="lobby-panel-title">🎖️ เหรียญตราสมรรถนะ</div>
+            <div class="lobby-panel-title">🎖️ ตราผู้พิทักษ์</div>
             <div id="lobby-badges-grid" class="lobby-badges-grid"></div>
             <div id="lobby-badges-count" class="lobby-panel-hint"></div>
           </div>
@@ -3697,7 +3736,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
           <button id="btn-lobby-character" class="btn btn-secondary">🧑 ตัวละคร</button>
           <button id="btn-lobby-shop" class="btn btn-secondary">🛒 ร้านค้า</button>
           <button id="btn-lobby-leaderboard" class="btn btn-secondary">🏆 อันดับ</button>
-          <button id="btn-lobby-badges" class="btn btn-secondary">🎖️ เหรียญตรา</button>
+          <button id="btn-lobby-badges" class="btn btn-secondary">🎖️ ตราผู้พิทักษ์</button>
           <!-- [รอบ 51 ตามคำขอ] ถอดปุ่ม 👨‍🏫 ออกจาก Lobby — เปลี่ยนเป็นข้อความเครดิตด้านล่างของหน้าแทน (จุดผูกอีเวนต์เดิมมี null-guard อยู่แล้ว ปลอดภัย) -->
         </div>
         <button id="btn-lobby-maker" class="btn btn-icon corner-br btn-maker-glow" title="ออกแบบและพัฒนา">👨‍🏫</button>
@@ -3720,7 +3759,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
           <button id="btn-worldmap-home" class="btn btn-icon" title="หน้าแรก">🏠</button>
           <button id="btn-worldmap-lobby" class="btn btn-icon" title="กลับห้องพักคอย">🏕️</button>
           <button id="btn-worldmap-leaderboard" class="btn btn-icon" title="กระดานอันดับ">🏆</button>
-          <button id="btn-worldmap-badges" class="btn btn-icon" title="เหรียญตรา">🎖️</button>
+          <button id="btn-worldmap-badges" class="btn btn-icon" title="ตราผู้พิทักษ์">🎖️</button>
           <button id="btn-worldmap-notebook" class="btn btn-icon" title="สมุดนักสำรวจ — บันทึกของเราจากทุกด่าน">📓</button><!-- [V.8 BUILD 2] -->
           <button id="btn-worldmap-summary" class="btn btn-icon" title="สรุปการผจญภัยวันนี้ — ได้ตราอะไร เก่งขึ้นด้านไหน">🌅</button><!-- [V.8 BUILD 3] -->
           <!-- [รอบ 51 ตามคำขอ] ถอดปุ่ม 👨‍🏫 ออกจาก World Map — เปลี่ยนเป็นข้อความเครดิตด้านล่างของหน้าแทน -->
@@ -3804,6 +3843,8 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
           <polyline class="worldmap-trail-line"
             points="10,82 27,88 44,80 61,87 78,80 90,65 74,57 55,50 36,54 18,48 18,32 40,24 56,20 72,16" /><!-- [รอบ 54] จุดปลายทางขยับตามโหนด: mg3(40,24) → 2050(56,20) → บอส(72,16) ระยะเท่ากัน -->
         </svg>
+        <!-- [บล็อก AC] ชั้นหมอกมืดคลุมโซนที่ยังไปไม่ถึง — เจาะรูแสงเฉพาะด่านที่เข้าได้ (วาดโดย WMFOG.draw) -->
+        <canvas id="wm-fog-canvas" width="2" height="2"></canvas>
         <button id="stage-node-1" class="stage-node unlocked" style="left:10%; top:82%;">
           <span class="stage-node-num"><canvas class="stage-node-canvas" data-key="1" width="90" height="90"></canvas></span>
           <span class="stage-node-stars"></span>
@@ -4329,7 +4370,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
    ด่านที่ผ่านในภาคหนึ่งจะไปโผล่ว่า 'ผ่านแล้ว' ในอีกภาค (ตราหลุด/ประตูเปิดเอง/คะแนนเพี้ยน) */
 const GAME_PART = 2;
 const PART1_URL = 'https://www.gameplearn.com/kan-adventure';
-const GAME_VERSION = 'V.8.17-p2-2569.81'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
+const GAME_VERSION = 'V.8.19-p2-2569.83'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
     ฝั่งเกม (1) ลบปุ่มวิ่ง ◀▶ + ป้ายสอนปัดของ V.7 ที่ชี้ผิดด่าน (2) แว่นขยายด่านนิเวศแตะครั้งเดียวติด
     (3) ซ่อนหมวดไอเทมที่ยังต่อเข้าด่านเรือธงไม่ได้ (ของที่ซื้อแล้วยังอยู่ในเซฟครบ)
     (4) หรี่เพลงอัตโนมัติระหว่างอ่านออกเสียงแล้วคืนเมื่ออ่านจบ (5) หน้าเข้าระบบแยกช่องโค้ดห้องออกจากชื่อในเกมชัดเจน + เตือนเมื่อพิมพ์สลับ
@@ -5096,8 +5137,8 @@ const DIALOGUE = {
       this.portraitEl.style.backgroundImage = 'none';
     }
     this._startTypewriter(text, opts.onComplete);
-    // [รอบ 54 ตามคำขอ] โหมดอ่านให้ฟัง: อ่านบทสนทนาทุกบรรทัดพร้อมชื่อผู้พูด (จุดรวมบทพูดทั้งเกม — ครอบคลุมทุกด่านอัตโนมัติ)
-    try { if (typeof ReadAloud !== 'undefined' && ReadAloud.on) ReadAloud.speak([(characterName ? characterName + ': ' : '') + text]); } catch (e) {}
+    // [บล็อก AB1 · ครูสั่ง 11 ส.ค. 2569] โหมดอ่านให้ฟัง: อ่านเฉพาะเนื้อความ ไม่อ่านชื่อ NPC/ตัวละคร (จุดรวมบทพูดทั้งเกม — ครอบคลุมทุกด่านอัตโนมัติ)
+    try { if (typeof ReadAloud !== 'undefined' && ReadAloud.on) ReadAloud.speak([text]); } catch (e) {}
   },
 
   hide() {
@@ -10657,54 +10698,40 @@ const LEARNING_MEDIA = {
 const RESEARCH_REPLAY_STAGES = [1, 3, 'hellfire', 'mg1', 4, 5, 'pilok', 'mg2', 6, 7, 'mg3']; /* [V.8] ด่าน 2 ผนวกเข้าด่าน 1 */
 function _badgeDone(d, k) { return !!(d.stages && d.stages[k] && d.stages[k].completed); }
 function _badgeAtt(d, k) { return Math.max(1, Number(d.stageAttempts && d.stageAttempts[k]) || 1); }
+/* ══ [บล็อก AA · ครูเคาะ 11 ส.ค.] ตราเกียรติยศผู้พิทักษ์ 12 ดวง — แทนเหรียญนักสำรวจทั้งชุด ══
+   คู่กับตราผู้พิทักษ์หลัก 6 ดวง (getProtectorState — เครื่องมือวิจัย ไม่แตะ) รวมเป็น 18
+   "จบกระบวนการ" (ผ่านครบทุกด่าน ไม่บังคับดาว) = ได้แน่นอน 12/18 · อีก 6 = ระดับความเป็นเลิศ
+   ทุกดวงคำนวณสดจากเซฟ — ยกเว้นธง selfImproved ที่ saveStageProgress ตั้งให้ถาวร */
+const _BADGE_ALL14 = [1, 3, 4, 5, 6, 7, 8, 'mg1', 'mg2', 'mg3', 'hellfire', 'pilok', 'water', 'balance2050'];
+function _badgeStars(d, k) { const en = d.stages && d.stages[k]; return (en && en.completed) ? (Number(en.stars) || 0) : -1; }
 const BADGE_DEFS = [
-  { id: 'first_step', icon: '🥾', name: 'นักสำรวจมือใหม่', desc: 'ผ่านด่าน 1 นักสืบสะพานแคว (V.8) เริ่มการผจญภัย',
-    check: (d) => _badgeDone(d, 1) },
-  { id: 'historian', icon: '📜', name: 'นักประวัติศาสตร์น้อย', desc: 'ผ่านด่านนักสืบสะพานแคว (รวมสุสานฯ) ถ้ำกระแซ และมินิเกมเรียงเหตุการณ์',
-    check: (d) => _badgeDone(d, 1) && _badgeDone(d, 3) && _badgeDone(d, 'mg1') }, /* [V.8] ด่าน 2 ผนวกเข้าด่าน 1 */
-  { id: 'railway_survivor', icon: '🛤️', name: 'ผู้รอดเส้นทางสายมรณะ', desc: 'ผ่านด่านช่องเขาขาด เส้นทางรถไฟสายมรณะ',
-    check: (d) => _badgeDone(d, 'hellfire') },
-  { id: 'water_adventurer', icon: '💧', name: 'นักผจญภัยลุ่มน้ำแคว', desc: 'ผ่านด่านน้ำตก เขื่อน และมินิเกมจัดการน้ำ',
-    check: (d) => _badgeDone(d, 4) && _badgeDone(d, 5) && _badgeDone(d, 'mg2') },
-  { id: 'frontier_miner', icon: '⛏️', name: 'นักขุดขุมทรัพย์ปิล๊อก', desc: 'ผ่านด่านเหมืองปิล๊อก ชายแดนตะวันตก',
-    check: (d) => _badgeDone(d, 'pilok') },
-  { id: 'frontier_explorer', icon: '🧭', name: 'นักบุกเบิกพงไพร', desc: 'ผ่านต้นจามจุรียักษ์ สะพานมอญ เจดีย์สามองค์ และมินิเกมแผนที่',
-    check: (d) => _badgeDone(d, 6) && _badgeDone(d, 7) && _badgeDone(d, 'mg3') },
-  { id: 'kanchana_champion', icon: '👑', name: 'ผู้พิชิตกาญจนบุรี', desc: 'ปราบปีศาจข้อสอบด่านสุดท้าย และผ่านภารกิจกาญจนบุรี 2050',
-    check: (d) => _badgeDone(d, 8) && _badgeDone(d, 'balance2050') },
-  { id: 'medal_challenger', icon: '🏅', name: 'ยอดนักฝึกปรือ', desc: 'กลับไปคว้าชัยใน “รอบชิงเหรียญ” (เล่นซ้ำ) ครบทุกด่านทักษะและมินิเกม',
-    check: (d) => RESEARCH_REPLAY_STAGES.every(k => _badgeDone(d, k) && _badgeAtt(d, k) >= 2) },
-  { id: 'kanchana_legend', icon: '🏆', name: 'ตำนานแห่งกาญจนบุรี', desc: 'เก็บครบทั้ง 8 เหรียญ พิชิตการผจญภัยกาญจนบุรีอย่างสมบูรณ์',
-    check: (d) => BADGE_DEFS.slice(0, 8).every(b => { try { return b.check(d); } catch (e) { return false; } }) },
-
-  /* ══ [บล็อก T · คำสั่งครู 11 ส.ค. ข้อ 7] เหรียญใหม่ 4 เหรียญ ตามเกณฑ์ตัวอย่างของครูเป๊ะ ๆ ══
-     ทุกเหรียญ "อ่าน" เซฟอย่างเดียว ไม่เขียนอะไร ไม่แตะการวัดสมรรถนะ
-     ต่อท้ายรายการเสมอ — เหรียญตำนาน (slice 0-8) จึงไม่ถูกกระทบ */
-  { id: 'guardian_six', icon: '🛡️', name: 'ผู้พิทักษ์เต็มยศ', desc: 'ผ่านด่านหลักครบ 6 ด่าน ได้ตราผู้พิทักษ์ครบทุกดวง',
-    check: (d) => { try { return getProtectorState(d).count >= (V8.REQUIRED_BADGES || 6); } catch (e) { return false; } } },
-  { id: 'triple_star_six', icon: '🌟', name: 'ดาวสามพราวฟ้า', desc: 'เก็บ 3 ดาวครบทุกด่านหลักทั้ง 6 ด่าน',
-    /* คีย์ด่านหลักอ่านจาก V8.FLAGSHIP ตัวจริง — เพิ่ม/ย้ายด่านหลักเมื่อไรเหรียญตามให้เอง
-       การแปลงคีย์เลขทำแบบเดียวกับ getProtectorState (เซฟเก็บ 1 เป็น number แต่ 'mg1' เป็น string) */
-    check: (d) => { try {
-      return Object.keys(V8.FLAGSHIP).every((sid) => {
-        const key = (String(sid) === String(Number(sid))) ? Number(sid) : sid;
-        const en = d.stages && d.stages[key];
-        return !!(en && en.completed && Number(en.stars) >= 3);
-      });
-    } catch (e) { return false; } } },
-  { id: 'all_paths', icon: '🗺️', name: 'ผู้พิชิตทุกเส้นทาง', desc: 'ผ่านครบทั้ง 14 ด่าน รวมมินิเกมและด่านพิเศษทุกด่าน',
-    /* รายชื่อชุดเดียวกับ P2_SM_STAGES ของหน้าครู (14 ด่านที่ส่งความคืบหน้า) */
-    check: (d) => { try {
-      return [1, 3, 4, 5, 6, 7, 8, 'mg1', 'mg2', 'mg3', 'hellfire', 'pilok', 'water', 'balance2050']
-        .every((k) => _badgeDone(d, k));
-    } catch (e) { return false; } } },
-  { id: 'balance_perfect', icon: '🌏', name: 'สุดยอดผู้พิทักษ์สมดุล', desc: 'พิชิตกาญจนบุรี 2050 ด้วยคะแนนเต็มร้อย',
-    /* "เต็ม" = normScore 10 (สเกลวิจัย 0-10 = 100% ของด่าน) — นิยามเดียวที่ไม่ขึ้นกับ
-       ว่ารอบนั้นมีข้อเขียน AI หรือไม่ (คะแนนดิบเต็ม 240 หรือ 360 ก็ได้ 10 เท่ากัน) */
+  { id: 'guard_all6', icon: '🎖️', name: 'ผู้พิทักษ์ฝึกหัด', desc: 'ผ่านด่านสมรรถนะครบทั้ง 6 ด่าน',
+    check: (d) => { try { return Object.keys(V8.FLAGSHIP).every(k => _badgeDone(d, k)); } catch (e) { return false; } } },
+  { id: 'guard_star2', icon: '✨', name: 'ดาวคู่ผู้พิทักษ์', desc: 'ได้ 2 ดาวขึ้นไปครบทุกด่านสมรรถนะ',
+    check: (d) => { try { return Object.keys(V8.FLAGSHIP).every(k => _badgeStars(d, k) >= 2); } catch (e) { return false; } } },
+  { id: 'guard_star3', icon: '🌟', name: 'ดาวสามผู้พิทักษ์', desc: 'ได้ 3 ดาวครบทุกด่านสมรรถนะ',
+    check: (d) => { try { return Object.keys(V8.FLAGSHIP).every(k => _badgeStars(d, k) >= 3); } catch (e) { return false; } } },
+  { id: 'all_paths', icon: '🗺️', name: 'นักเดินทางครบเส้นทาง', desc: 'ผ่านครบทั้ง 14 ด่าน รวมมินิเกมและด่านพิเศษ',
+    check: (d) => { try { return _BADGE_ALL14.every(k => _badgeDone(d, k)); } catch (e) { return false; } } },
+  { id: 'land_star2', icon: '💫', name: 'ดาวคู่ทั่วแผ่นดิน', desc: 'ได้ 2 ดาวขึ้นไปครบทั้ง 14 ด่าน',
+    check: (d) => { try { return _BADGE_ALL14.every(k => _badgeStars(d, k) >= 2); } catch (e) { return false; } } },
+  { id: 'land_star3', icon: '🌠', name: 'ดาวสามทั่วแผ่นดิน', desc: 'ได้ 3 ดาวครบทั้ง 14 ด่าน — สุดยอดแห่งความพยายาม',
+    check: (d) => { try { return _BADGE_ALL14.every(k => _badgeStars(d, k) >= 3); } catch (e) { return false; } } },
+  { id: 'cap_clear', icon: '🌏', name: 'ผู้พิชิตกาญ 2050', desc: 'ผ่านภารกิจกาญจนบุรี 2050: พิทักษ์สมดุล',
+    check: (d) => _badgeDone(d, 'balance2050') },
+  { id: 'cap_star3', icon: '🏆', name: 'กาญ 2050 ระดับตำนาน', desc: 'พิชิตกาญจนบุรี 2050 ระดับ 3 ดาว',
     check: (d) => { try {
       const en = d.stages && d.stages['balance2050'];
-      return !!(en && en.completed && Number(en.normScore) >= 10 - 1e-9);
-    } catch (e) { return false; } } }
+      return !!(en && en.completed && (Number(en.stars) >= 3 || Number(en.normScore) >= 10 - 1e-9));
+    } catch (e) { return false; } } },
+  { id: 'boss_win', icon: '👑', name: 'ผู้ปราบปีศาจข้อสอบ', desc: 'เอาชนะปีศาจข้อสอบ ด่านสุดท้ายของการผจญภัย',
+    check: (d) => _badgeDone(d, 8) },
+  { id: 'self_better', icon: '📈', name: 'นักพัฒนาตนเอง', desc: 'เล่นด่านเดิมซ้ำแล้วทำผลงานได้ดีกว่าเดิม',
+    check: (d) => !!d.selfImproved },
+  { id: 'special_all', icon: '🧭', name: 'ผู้พิทักษ์เส้นทางพิเศษ', desc: 'ผ่านด่านพิเศษครบ 3: ช่องเขาขาด · เหมืองปิล๊อก · ปริศนาสายน้ำ',
+    check: (d) => _badgeDone(d, 'hellfire') && _badgeDone(d, 'pilok') && _badgeDone(d, 'water') },
+  { id: 'mg_master', icon: '🎮', name: 'เซียนมินิเกม', desc: 'ผ่านมินิเกมครบทั้ง 3',
+    check: (d) => _badgeDone(d, 'mg1') && _badgeDone(d, 'mg2') && _badgeDone(d, 'mg3') }
 ];
 
 function getEarnedBadges(data) {
@@ -22027,6 +22054,8 @@ function saveStageProgress(stageId, score, stars, timeSpentSec, completed, normS
        ซึ่งขัดกับหลักของโครงการที่ถือว่า "การเล่นซ้ำ = หลักฐานการจัดการตนเอง"
        ตอนนี้เล่นซ้ำแล้วทำได้ดีขึ้น = ได้เหรียญ · ทำได้เท่าเดิม/แย่ลง = ไม่ได้เหรียญ แต่หลักฐานยังบันทึกครบเหมือนเดิมทุกประการ */
     const _improved = !isFirstClear && ((score || 0) > ((prevEntry && prevEntry.score) || 0) || (stars || 0) > ((prevEntry && prevEntry.stars) || 0));
+    /* [บล็อก AA2] ตราเกียรติยศ "นักพัฒนาตนเอง" — จำถาวรว่าเคยเล่นซ้ำแล้วดีขึ้นอย่างน้อยหนึ่งครั้ง */
+    if (_improved) data.selfImproved = true;
     const clearMultiplier = isFirstClear ? 1 : (_improved ? 0.3 : 0);
     // [รอบ 38] ปรับสมดุลเหรียญ "ที่ได้รับ" ขึ้น (ไม่ลดราคาสินค้าในร้าน) — เดิมเล่นครบทุกด่านได้ ~450 เหรียญ ซื้อของได้แค่ชิ้นสองชิ้น
     //   ทำให้เล่นจบรอบแรกมีเหรียญพอซื้อของหลากหลาย (ตัวละคร/สัตว์เลี้ยง/ออร่าหลายอย่าง) แต่ยังเหลือของพรีเมียมให้ไล่เก็บด้วยการเล่นซ้ำ
@@ -23132,12 +23161,14 @@ function isStageUnlocked(key) {
      ผ่านบทนำแล้ว → ทุกด่านเปิดหมด เลือกเส้นทางเองได้เต็มที่ (การเลือกเองคือหลักฐาน SM ชั้นดี)
      ประตูสุดท้าย: กาญ 2050 เปิดเมื่อตราผู้พิทักษ์ครบ 6 ดวง · ปีศาจข้อสอบ (ผลสัมฤทธิ์) ต่อจากกาญ 2050 */
   if (key === 1) return true;
-  /* [เฟส 4 · 4.4] ด่านพิเศษปริศนาสายน้ำ: เปิดหลังบทนำเหมือนด่านอื่น แต่ไม่นับเป็นตราผู้พิทักษ์
-     (ไม่มีใน V8.FLAGSHIP → getProtectorState ไม่นับ → ประตูกาญ 2050 ไม่ถูกกระทบแม้แต่นิดเดียว) */
-  if (key === 'water') return !!(data.stages[1] && data.stages[1].completed);
-  if (key === 'balance2050') return getProtectorState(data).count >= V8.REQUIRED_BADGES;
-  if (key === 8) return !!(data.stages['balance2050'] && data.stages['balance2050'].completed);
-  return !!(data.stages[1] && data.stages[1].completed);
+  if (key === 'balance2050') return getProtectorState(data).count >= V8.REQUIRED_BADGES;      /* ประตูวิจัย — คงเดิมเป๊ะ */
+  if (key === 8) return !!(data.stages['balance2050'] && data.stages['balance2050'].completed); /* บอสต่อจากกาญ 2050 — คงเดิมเป๊ะ */
+  /* [บล็อก AC · ครูสั่ง 11 ส.ค. 2569 รอบ 5] แผนที่เปิดทีละโซนตามเส้นทาง:
+     ด่านเปิดเมื่ออยู่ห่างจากด่านที่ "ผ่านแล้ว" ไม่เกิน 2 ช่วงบนเส้นทางแผนที่ (WMFOG.ADJ = เส้น trail บนภาพ)
+     · ผ่านบทนำ → มีทางไปต่อ ~2 ด่าน · ผ่านด่านไหน โซนรอบด่านนั้นสว่างออกไปเรื่อย ๆ ตามที่เด็กเลือกเดิน
+     · ด่านพิเศษปริศนาสายน้ำย้ายเข้าระบบเดียวกัน (อยู่โซนขุนเขา — ยังไม่นับตราผู้พิทักษ์เหมือนเดิม)
+     · โหมดสาธิต/ผู้ดูแล/ด่านที่เคยผ่านแล้ว: เงื่อนไขด้านบนคืนค่า true ก่อนถึงบรรทัดนี้อยู่แล้ว */
+  return WMFOG.canPlay(key, data);
   /* (โซ่ปลดล็อกตามลำดับของ V.7 ถูกแทนด้วยโลกเปิด — เกราะกันเซฟเก่าด้านบนยังคุ้มครองด่านที่เคยผ่านเสมอ) */
 
 }
@@ -23166,14 +23197,18 @@ async function renderWorldMapStatus() {
   const wmBadgeGrid = document.getElementById('wm-status-badges-grid');
   if (wmBadgeGrid) {
     const earnedBadges = new Set(getEarnedBadges(data).map(b => b.id));
+    /* [บล็อก AA5] แถบนี้โชว์ตราเกียรติยศ 12 — ตราหลัก 6 มีแถบผู้พิทักษ์ของตัวเองด้านล่างแผนที่อยู่แล้ว
+       ตัวเลขที่บอกเด็กนับรวมทั้งระบบ 18 ดวง ตามเป้าที่ครูใช้ประกาศ */
     wmBadgeGrid.innerHTML = BADGE_DEFS.map(b =>
       `<div class="wm-status-badge${earnedBadges.has(b.id) ? ' earned' : ''}" title="${escapeHtml(b.name + ' — ' + b.desc)}">${b.icon}</div>`
     ).join('');
     const wmBadgeHint = document.getElementById('wm-status-badges-hint');
     if (wmBadgeHint) {
-      wmBadgeHint.textContent = earnedBadges.size >= BADGE_DEFS.length
-        ? `🎉 เก็บครบทุกเหรียญสมรรถนะแล้ว ${BADGE_DEFS.length}/${BADGE_DEFS.length}!`
-        : `ได้แล้ว ${earnedBadges.size}/${BADGE_DEFS.length} เหรียญ — ผ่านด่านต่อไปเพื่อสะสมเพิ่มนะ!`;
+      let _prot = 0; try { _prot = getProtectorState(data).count; } catch (e) {}
+      const _tot = _prot + earnedBadges.size, _max = (V8.REQUIRED_BADGES || 6) + BADGE_DEFS.length;
+      wmBadgeHint.textContent = _tot >= _max
+        ? `🎉 เก็บตราผู้พิทักษ์ครบ ${_max}/${_max} ดวงแล้ว!`
+        : `ตราผู้พิทักษ์ ${_tot}/${_max} ดวง — ผ่านด่านต่อไปเพื่อสะสมเพิ่มนะ!`;
     }
   }
 
@@ -23239,7 +23274,9 @@ async function renderLobby() {
       `<div class="lobby-badge${earned.has(b.id) ? ' earned' : ''}" title="${escapeHtml(b.name + ' — ' + b.desc)}">${b.icon}</div>`
     ).join('');
     const countEl = document.getElementById('lobby-badges-count');
-    if (countEl) countEl.innerHTML = `ได้แล้ว ${earned.size}/${BADGE_DEFS.length} เหรียญ<br>กดปุ่ม 🎖️ เหรียญตรา เพื่อดูเงื่อนไข`;
+    /* [บล็อก AA6] นับรวมระบบเดียว 18 ดวง (หลัก 6 + เกียรติยศ 12) ตามเป้าที่ครูใช้ประกาศ */
+    let _protLb = 0; try { _protLb = getProtectorState(data).count; } catch (e) {}
+    if (countEl) countEl.innerHTML = `ตราผู้พิทักษ์ ${_protLb + earned.size}/${(V8.REQUIRED_BADGES || 6) + BADGE_DEFS.length} ดวง<br>กดปุ่ม 🎖️ ตราผู้พิทักษ์ เพื่อดูเงื่อนไข`;
   }
 
   // [ใหม่] กระดานอันดับย่อ Top 5 ใน Lobby (ปุ่ม 🏆 อันดับ เดิมยังใช้ดูแบบเต็มจอได้เหมือนเดิม)
@@ -24253,7 +24290,7 @@ const V8 = {
 function _wireStartBg() {
   try {
     const dir = (typeof V8 !== 'undefined' && V8.ASSET_DIR) ? V8.ASSET_DIR : 'assets/';
-    document.documentElement.style.setProperty('--bg-photo-main', "url('" + dir + "start_bg.jpg')");
+    document.documentElement.style.setProperty('--bg-photo-main', "url('" + dir + "start_cover2.webp')");   /* [บล็อก AE] ปกภาค 2 ของครู (ป้ายไม้ชื่อเกม + คู่หูนักสำรวจ + ช้าง) */
   } catch (e) {}
 }
 try { _wireStartBg(); } catch (e) {}   /* [ระยะ 2.1] ต่อ URL ภาพพื้นหลังหน้าแรกทันที */
@@ -26879,7 +26916,7 @@ const KAN2050V2 = {
                            (el) => el.classList.add('has-art')); } catch (e) {}
     try { if (typeof ReadAloud !== 'undefined' && ReadAloud.on) ReadAloud.speak([act.name, act.sub.replace(/<br>/g, ' ')]); } catch (e) {}
     if (act.n === 3) { AUDIO.playImpact && AUDIO.playImpact(1.4); } else { AUDIO.playChime && AUDIO.playChime(); }
-    ov.querySelector('.dt-btn').onclick = () => ov.remove();
+    ov.querySelector('.dt-btn').onclick = () => { try { ReadAloud.stop(); } catch (e) {} ov.remove(); };  /* [บล็อก AB5] ปิดป้ายองก์ = หยุดเสียงอ่านทันที */
   },
 
   /* ---------- องก์ 3: ช่วงป้องกันเมือง "คืนพายุ" (ก่อนแถลงข่าว/ส่งภารกิจ)
@@ -28279,6 +28316,7 @@ function v8Confetti(container, n) {
 }
 function v8SpeakEl(el) {
   try {
+    if (el && el.isConnected === false) return;   /* [บล็อก AB8] การ์ดถูกปิดไปแล้ว = ไม่อ่านของที่ไม่อยู่บนจอ */
     const t = (el.innerText || '').replace(/\s+/g, ' ').trim().slice(0, 600);
     if (!t) return;
     if (typeof ReadAloud !== 'undefined' && ReadAloud.ok()) ReadAloud.speak([t]);
@@ -28288,6 +28326,9 @@ function v8SpeakEl(el) {
 const _vkOverlayB3 = VK.overlay.bind(VK);
 VK.overlay = function (innerHTML, wide) {
   const ov = _vkOverlayB3(innerHTML, wide);
+  /* [บล็อก AB4 · ครูสั่ง 11 ส.ค. 2569] การ์ดถูกปิดเมื่อไร (ทุกทางปิดเรียก ov.remove() เหมือนกันหมด)
+     เสียงอ่านของการ์ดต้องหยุดทันที — ไม่อ่านค้างข้ามไปสถานการณ์ถัดไป */
+  try { const _rm0 = ov.remove.bind(ov); ov.remove = function () { try { ReadAloud.stop(); } catch (e) {} _rm0(); }; } catch (e) {}
   try {
     const card = ov.querySelector('.dt-card');
     if (card && typeof ReadAloud !== 'undefined' && ReadAloud.ok()) {
@@ -28329,9 +28370,103 @@ function v8LaunchBoss() {
   _launchBoss();
 }
 
+/* ══ [บล็อก AC · ครูสั่ง 11 ส.ค. 2569 รอบ 5] หมอกแห่งการผจญภัยบนแผนที่โลก ══
+   หลัก: ด่านเรียงเป็นเส้นทางเดียวกับเส้น trail ที่วาดบนภาพแผนที่ (ดู #worldmap-path-svg)
+   เด็กเห็นเฉพาะโซนสว่าง = ด่านที่เปิด · โซนที่ยังไปไม่ถึงถูกหมอกมืดคลุมทั้งหมุดทั้งเส้นทาง
+   ชั้นหมอกเป็นแคนวาสวางทับ (z-index 4) เจาะรูแสงรอบด่านที่เข้าได้ · ไม่รับคลิก (pointer-events none)
+   จึงไม่กระทบการกดหมุด/ปุ่มใด ๆ และไม่แตะการคิดคะแนนแม้แต่บรรทัดเดียว */
+const WMFOG = {
+  /* เพื่อนบ้านตาม "ตำแหน่งจริงของหมุดบนภาพแผนที่รอบ 2" (วัดจากหมุดที่ครูตกลงตำแหน่งแล้ว)
+     ทุกเส้นเชื่อมคือหมุดที่อยู่ติดกันบนภาพ — หมอกจึงเปิด "ด้านใกล้เคียง" ตามที่ครูสั่งจริง ๆ
+     (กาญ 2050 กับบอสไม่อยู่ในผัง — สองด่านนั้นเปิดด้วยประตูวิจัยของตัวเองเท่านั้น ดู isStageUnlocked)
+     พิกัดจอ ณ วันวัด: 1(870,634) mg1(938,546) 3(586,541) water(709,500) 6(468,630)
+     hellfire(456,406) 4(723,382) pilok(211,467) 5(387,254) 7(307,140) mg3(549,121)
+     mg2(788,117) 2050(1006,123) 8(996,301) learn(1071,414) */
+  ADJ: {
+    '1': ['mg1', '3'],                       /* บทนำอยู่ล่างขวา — เปิดทางซ้าย (ถ้ำกระแซ) กับขวา (มินิเกม 1) */
+    'mg1': ['1', 'water'],
+    '3': ['1', '6', 'water', 'hellfire'],
+    'water': ['3', '4', 'mg1'],
+    '6': ['3', 'hellfire', 'pilok'],
+    'hellfire': ['6', '3', '5'],
+    'pilok': ['6', '5'],
+    '4': ['water', 'mg1', 'mg2'],
+    '5': ['hellfire', 'pilok', '7', 'mg3'],
+    '7': ['5', 'mg3'],
+    'mg3': ['5', '7', 'mg2'],
+    'mg2': ['mg3', '4']
+  },
+  REACH: 1,   /* เปิดเฉพาะด่านที่ "ติดกับ" ด่านที่ผ่านแล้ว → ผ่านบทนำแล้วมีให้เลือก 2 ด่าน แล้วค่อยขยาย */
+  open(data) {
+    const dist = {}; const q = [];
+    try {
+      Object.keys(this.ADJ).forEach((k) => {
+        const e = data.stages && data.stages[k];
+        if (e && e.completed) { dist[k] = 0; q.push(k); }
+      });
+    } catch (e) {}
+    while (q.length) {
+      const k = q.shift();
+      if (dist[k] >= this.REACH) continue;
+      (this.ADJ[k] || []).forEach((n) => { if (!(n in dist)) { dist[n] = dist[k] + 1; q.push(n); } });
+    }
+    const set = { '1': true };                          /* บทนำเปิดเสมอ */
+    Object.keys(dist).forEach((k) => { set[k] = true; });
+    return set;
+  },
+  canPlay(key, data) { return this.open(data)[String(key)] === true; },
+  /* วาดหมอก: มืดทั้งแผ่น → แต้มก้อนหมอกจาง ๆ → เจาะรูแสงรอบด่านที่เข้าได้ + ห้องเรียนรู้ */
+  draw() {
+    try {
+      const cv = document.getElementById('wm-fog-canvas');
+      const scr = document.getElementById('worldmap-screen');
+      if (!cv || !scr) return;
+      const W = Math.max(2, Math.round(scr.clientWidth)), H = Math.max(2, Math.round(scr.clientHeight));
+      if (cv.width !== W) cv.width = W;
+      if (cv.height !== H) cv.height = H;
+      const ctx = cv.getContext('2d');
+      ctx.clearRect(0, 0, W, H);
+      /* โหมดสาธิต/ผู้ดูแล = ทุกด่านเปิด = แผนที่สว่างทั้งแผ่น ไม่มีหมอก */
+      if ((typeof DEMO_MODE !== 'undefined' && DEMO_MODE) || (typeof isAdminUser === 'function' && isAdminUser())) return;
+      ctx.fillStyle = 'rgba(9, 14, 26, 0.82)';
+      ctx.fillRect(0, 0, W, H);
+      for (let i = 0; i < 14; i++) {          /* ก้อนหมอกนิ่ง ๆ ให้ดูเป็นหมอกจริง ไม่ใช่จอดำ (ไม่มีลูป ไม่กิน CPU) */
+        const gx = ((i * 733) % 97) / 97 * W, gy = ((i * 389) % 89) / 89 * H;
+        const gr = (0.10 + ((i * 271) % 13) / 13 * 0.10) * W;
+        const g = ctx.createRadialGradient(gx, gy, gr * 0.15, gx, gy, gr);
+        g.addColorStop(0, 'rgba(150,170,205,0.10)'); g.addColorStop(1, 'rgba(150,170,205,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(gx, gy, gr, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'destination-out';
+      const sr = scr.getBoundingClientRect();
+      if (sr.width < 2) { ctx.globalCompositeOperation = 'source-over'; return; }
+      const kx = W / sr.width, ky = H / sr.height;
+      const lit = ['learn'];
+      ['1', '3', '4', '5', '6', '7', '8', 'mg1', 'mg2', 'mg3', 'hellfire', 'pilok', 'water', 'balance2050']
+        .forEach((k) => { try { if (isStageUnlocked(typeof k === 'string' && /^[0-9]+$/.test(k) ? Number(k) : k)) lit.push(k); } catch (e) {} });
+      lit.forEach((k) => {
+        const el = document.getElementById('stage-node-' + k);
+        if (!el) return;
+        const er = el.getBoundingClientRect();
+        const x = ((er.left + er.right) / 2 - sr.left) * kx, y = ((er.top + er.bottom) / 2 - sr.top) * ky;
+        const r = Math.max(W * 0.105, 84);   /* พอดีหมุด+ป้ายชื่อ — ไม่กว้างจนแสงเลยไปโดนหมุดล็อกข้าง ๆ (บอสอยู่ห่างห้องเรียนรู้แค่ ~136px) */
+        const g = ctx.createRadialGradient(x, y, r * 0.4, x, y, r);
+        g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+      });
+      ctx.globalCompositeOperation = 'source-over';
+    } catch (e) {}
+  }
+};
+try {
+  window.addEventListener('resize', () => {
+    try { const s = document.getElementById('worldmap-screen'); if (s && s.classList.contains('active')) WMFOG.draw(); } catch (e) {}
+  });
+} catch (e) {}
 function refreshWorldMap() {
   const data = getSaveData();
   renderWorldMapStatus();
+  try { WMFOG.draw(); } catch (e) {}   /* [บล็อก AC] วาดหมอกใหม่ทุกครั้งที่กลับเข้าแผนที่ (ผ่านด่านเพิ่ม = โซนสว่างขยาย) */
   // [ใหม่ รอบ 23] ป้ายเด้งบนปุ่มร้านค้าเมื่อเหรียญพอซื้อของชิ้นใหม่ (เย้ายวนแบบโปร่งใส ไม่มีนับเวลา/ของหลอก)
   const _shopBadge = document.getElementById('wm-shop-badge');
   if (_shopBadge) _shopBadge.classList.toggle('hidden', !getAffordableUnownedItem(data));
@@ -28346,6 +28481,7 @@ function refreshWorldMap() {
     { id: 'stage-node-4', key: 4, label: '🎒 น้ำตกเอราวัณ & เขื่อนศรีนครินทร์' },
     { id: 'stage-node-5', key: 5, label: '🚤 เขื่อนวชิราลงกรณ & น้ำพุร้อนหินดาด' },
     { id: 'stage-node-pilok', key: 'pilok', label: 'เหมืองปิล๊อก-อีต่อง' },
+    { id: 'stage-node-water', key: 'water', label: 'ปริศนาสายน้ำ (ด่านพิเศษ)' },   /* [บล็อก AC6] เข้าระบบคลาสเหมือนด่านอื่น */
     { id: 'stage-node-6', key: 6, label: '🔎 ต้นจามจุรียักษ์' },
     { id: 'stage-node-mg2', key: 'mg2', label: 'จัดการน้ำในเขื่อน' },
     { id: 'stage-node-7', key: 7, label: '🏛️ สะพานมอญ & เมืองบาดาล & เจดีย์สามองค์' },
@@ -28407,10 +28543,129 @@ function refreshWorldMap() {
    ============================================================ */
 // เฟดระหว่างเปลี่ยนฉาก: ทึบดำทันที (ไม่มี transition กันเห็นสลับฉากตอนยังไม่ทัน) แล้วค่อยเฟดจางออกเผยฉากใหม่
 // สลับ DOM จริงยังคง "ทันที" เหมือนเดิมทุกจุด (ไม่หน่วงเวลา) เพื่อไม่กระทบ logic เดิมที่พึ่งพา currentStage/state หลัง showScreen()
+/* ══ [บล็อก AB · ครูสั่ง 11 ส.ค. 2569 รอบ 4 ข้อ 3] ผู้ช่วยอ่านประจำหน้า ══
+   (1) เปลี่ยนหน้าเมื่อไร เสียงอ่านเดิมหยุดทันที (เกี่ยวไว้หัว showScreen ข้างล่าง)
+   (2) ถึงหน้าที่มีเนื้อหา/ผลด่าน/วิธีเล่น อ่านให้ฟังเองโดยไม่ต้องกดปุ่ม (เมื่อเปิดโหมดช่วยอ่าน)
+   (3) เนื้อหาที่เปลี่ยนภายในหน้าเดิม (พลิกหน้าวิธีเล่น · เลือกบทเรียน · ขั้นภารกิจกาญ 2050 ·
+       แผงมินิเกม 1 · แบบประเมินตนเอง) อ่านของใหม่เอง และเสียงเก่าถูกยกเลิกก่อนเสมอ
+   เป็นชั้นเสียงอ่านล้วน ๆ — ไม่แตะการคิดคะแนน/การบันทึกผลใด ๆ ทั้งสิ้น */
+const RA2 = {
+  _t: 0, _ct: 0, _ct2: 0, _mt: 0, _st: 0, _lastCap: '', _lastLearn: '',
+  /* หน้าไหนอ่านอะไร — เลือกเฉพาะกล่องเนื้อความ ไม่อ่านปุ่ม/แต้ม/ชื่อตัวละคร */
+  MAP: {
+    'howtoplay-screen':   ['.htp-title', '#htp-page-title', '#htp-lines', '#htp-caption'],
+    'learning-screen':    ['.learning-title', '.learning-sub'],
+    'badges-screen':      ['#badges-count-line'],
+    'stage-clear-screen': ['#clear-title', '#clear-tier', '#clear-score', '#clear-message'],
+    'stage-fail-screen':  ['#fail-title', '#fail-message', '#fail-encourage'],
+    'victory-screen':     ['#victory-title', '#victory-congrats', '#victory-tier']
+  },
+  _texts(root, sels) {
+    const parts = [];
+    sels.forEach((q) => root.querySelectorAll(q).forEach((el) => {
+      try { const cs = getComputedStyle(el); if (cs.display === 'none' || cs.visibility === 'hidden') return; } catch (e) {}
+      String(el.innerText || '').split(/\n+/).forEach((s) => { s = s.trim(); if (s.length > 1) parts.push(s); });
+    }));
+    return parts;
+  },
+  onScreen(id) {
+    clearTimeout(this._t);
+    const sels = this.MAP[id];
+    if (!sels) return;
+    /* หน่วงให้ render ของหน้านั้นวางเนื้อหาเสร็จก่อนค่อยอ่าน — ถ้าผู้เล่นรีบไปหน้าอื่นก่อน = ไม่อ่าน */
+    this._t = setTimeout(() => {
+      try {
+        if (typeof ReadAloud === 'undefined' || !ReadAloud.on) return;
+        const scr = document.getElementById(id);
+        if (!scr || !scr.classList.contains('active')) return;
+        const parts = this._texts(scr, sels);
+        if (parts.length) ReadAloud.speak(parts.slice(0, 60), true);
+      } catch (e) {}
+    }, 700);
+  },
+  /* เฝ้าเนื้อหาที่เปลี่ยนภายในหน้าเดิม — ครอบคลุม "สถานการณ์เปลี่ยนแต่หน้าไม่เปลี่ยน" */
+  watch() {
+    const ob = (el, fn, opts) => { try { if (el) new MutationObserver(fn).observe(el, opts); } catch (e) {} };
+    /* วิธีเล่น: กดถัดไป/ก่อนหน้า = หน้าย่อยใหม่ → อ่านหน้าย่อยนั้น (speak() ยกเลิกเสียงเก่าก่อนเองเสมอ) */
+    ob(document.getElementById('htp-lines'), () => this.onScreen('howtoplay-screen'), { childList: true, subtree: true });
+    /* ห้องเรียนรู้: เด็กแตะเลือกบทเรียน → อ่านบทเรียนนั้นให้เอง (เดิมต้องกดปุ่ม 🔊 เอง — ปุ่มยังอยู่เหมือนเดิม) */
+    const learn = document.getElementById('learning-content');
+    ob(learn, () => {
+      clearTimeout(this._ct2);
+      this._ct2 = setTimeout(() => {
+        try {
+          if (typeof ReadAloud === 'undefined' || !ReadAloud.on) return;
+          const scr = document.getElementById('learning-screen');
+          if (!scr || !scr.classList.contains('active')) return;
+          const t = (learn.innerText || '').trim();
+          if (!t || t === this._lastLearn) return;
+          this._lastLearn = t;
+          ReadAloud.readElement(learn);
+        } catch (e) {}
+      }, 650);
+    }, { childList: true, subtree: true });
+    /* ด่านกาญจนบุรี 2050: เนื้อภารกิจแต่ละขั้นอยู่ใน #cap-body — ขั้นเปลี่ยนจริงค่อยอ่านใหม่ ไม่อ่านซ้ำเนื้อเดิม */
+    const cap = document.getElementById('cap-body');
+    ob(cap, () => {
+      clearTimeout(this._ct);
+      this._ct = setTimeout(() => {
+        try {
+          if (typeof ReadAloud === 'undefined' || !ReadAloud.on) return;
+          const scr = document.getElementById('capstone-screen');
+          if (!scr || !scr.classList.contains('active')) return;
+          const t = (cap.innerText || '').trim();
+          if (!t || t === this._lastCap) return;
+          this._lastCap = t;
+          ReadAloud.readElement(cap);
+        } catch (e) {}
+      }, 750);
+    }, { childList: true, subtree: true });
+    /* มินิเกม 1 (เรียงเหตุการณ์): แผงโผล่ = อ่านชื่อเกม+วิธีเล่น · แผงถูกซ่อน = หยุดเสียงทันที */
+    const mg1 = document.getElementById('mg1-panel');
+    ob(mg1, () => {
+      try {
+        if (mg1.classList.contains('hidden')) { try { ReadAloud.stop(); } catch (e) {} return; }
+        if (typeof ReadAloud === 'undefined' || !ReadAloud.on) return;
+        clearTimeout(this._mt);
+        this._mt = setTimeout(() => {
+          try {
+            if (mg1.classList.contains('hidden')) return;
+            const parts = this._texts(mg1, ['.mg1-title', '.mg1-instructions']);
+            if (parts.length) ReadAloud.speak(parts, true);
+          } catch (e) {}
+        }, 500);
+      } catch (e) {}
+    }, { attributes: true, attributeFilter: ['class'] });
+    /* แบบประเมินตนเอง/แบบสอบถาม: เปิดแผ่นแล้วอ่านชื่อ+คำชี้แจงให้ฟัง (คำถามรายข้อให้เด็กไล่ทำทีละข้อ
+       — อ่านรวดเดียวทั้งหลายสิบข้อจะยาวหลายนาที) · ปิดแผ่น = หยุดเสียงทันที */
+    const sat = document.getElementById('sat-survey');
+    ob(sat, () => {
+      try {
+        if (!sat.classList.contains('on')) { try { ReadAloud.stop(); } catch (e) {} return; }
+        if (typeof ReadAloud === 'undefined' || !ReadAloud.on) return;
+        clearTimeout(this._st);
+        this._st = setTimeout(() => {
+          try {
+            if (!sat.classList.contains('on')) return;
+            const parts = this._texts(sat, ['#sat-title', '.sat-intro']);
+            if (parts.length) ReadAloud.speak(parts, true);
+          } catch (e) {}
+        }, 550);
+      } catch (e) {}
+    }, { attributes: true, attributeFilter: ['class'] });
+    /* ปิดหน้าต่างตั้งค่า = ตัดเสียงทดลองเสียงอ่าน/เสียงที่ยังพูดอยู่ (สถานการณ์เปลี่ยน เสียงห้ามค้าง) */
+    try {
+      const bc = document.getElementById('btn-audio-settings-close');
+      if (bc) bc.addEventListener('click', () => { try { speechSynthesis.cancel(); } catch (e) {} });
+    } catch (e) {}
+  }
+};
 function showScreen(id) {
   // [FIX] กัน id ผิด/ไม่มีจริง — เดิมถ้าพลาดจะ throw กลาง fade แล้วจอดำค้างถาวร
   const target = document.getElementById(id);
   if (!target || !target.classList.contains('screen')) { console.error('[showScreen] ไม่พบหน้าจอ:', id); return; }
+  try { ReadAloud.stop(); } catch (e) {}   /* [บล็อก AB3] เปลี่ยนหน้า = เสียงอ่านเดิมหยุดทันที ไม่ค้างข้ามหน้า (ทุกกรณี รวมเข้าคัตซีน) */
+  try { RA2.onScreen(id); } catch (e) {}   /* [บล็อก AB2] แล้วค่อยอ่านเนื้อหาของหน้าใหม่ ถ้าเปิดโหมดช่วยอ่านไว้ */
   const fadeOverlay = document.getElementById('scene-fade-overlay');
   fadeOverlay.style.transition = 'none';
   fadeOverlay.classList.add('fade-active');
@@ -29010,10 +29265,24 @@ function _renderTeacherStatsPage() {
 function renderBadges() {
   const data = getSaveData();
   const earned = new Set(getEarnedBadges(data).map(b => b.id));
+  /* [บล็อก AA4] ชั้นที่ 1: ตราผู้พิทักษ์หลัก 6 ดวง — อ่านสถานะจากเงื่อนไขเดิม (ด่านสมรรถนะผ่าน) */
+  const coreEl = document.getElementById('badges-core-row');
+  let protCount = 0;
+  try { protCount = getProtectorState(data).count; } catch (e) {}
+  if (coreEl) {
+    coreEl.innerHTML = Object.keys(V8.FLAGSHIP).map((sid) => {
+      const f = V8.FLAGSHIP[sid];
+      const en = data.stages && data.stages[sid];
+      const done = !!(en && en.completed);
+      return `<div class="badge-core${done ? ' earned' : ''}" title="${escapeHtml(f.badgeName + ' — ด่าน ' + sid + ' ' + f.compName)}">` +
+        `<div class="badge-core-icon">${f.icon}</div><div class="badge-core-name">${escapeHtml(f.badgeName)}</div></div>`;
+    }).join('');
+  }
+  const cl = document.getElementById('badges-count-line');
+  if (cl) cl.textContent = `ได้แล้ว ${protCount + earned.size}/${(V8.REQUIRED_BADGES || 6) + BADGE_DEFS.length} ดวง · หลัก ${protCount}/${V8.REQUIRED_BADGES || 6} · เกียรติยศ ${earned.size}/${BADGE_DEFS.length}`;
   const gridEl = document.getElementById('badges-grid');
-  // [รอบ 55 แก้บัค] เหรียญเกิน 8 อัน (ตอนนี้ 10) ทำกริดยืดจนปุ่ม "กลับแผนที่" หลุดจอ → แบ่งหน้า 8 อัน/หน้า (ตาราง 4×2 พอดีจอเสมอ)
-  // [รอบใหม่] เหรียญ 9 ใบ แสดงครบในหน้าเดียว (ตาราง 3×3) พอดีจอ ไม่มีแถบเลื่อน/ไม่ต้องแบ่งหน้า
-  const { pageItems, page, totalPages } = _pagerSlice('badges', BADGE_DEFS, Math.max(9, BADGE_DEFS.length));
+  /* ตราเกียรติยศ 12 ดวง = ตาราง 4×3 หน้าเดียวเสมอ */
+  const { pageItems, page, totalPages } = _pagerSlice('badges', BADGE_DEFS, Math.max(12, BADGE_DEFS.length));
   gridEl.innerHTML = pageItems.map(b => `
     <div class="badge-card${earned.has(b.id) ? ' earned' : ''}">
       <div class="badge-icon">${b.icon}</div>
@@ -29570,7 +29839,7 @@ function wireAuthEvents() {
         speechSynthesis.cancel();
         /* [แก้ตามครู] อ่านทีละวลี ไม่รวดเดียวติดกัน */
         const v = ReadAloud.pickVoice(speechSynthesis.getVoices());
-        ReadAloud.phrases('ต้องการเปิดระบบช่วยอ่านไหม? ถ้าเปิด ระบบจะอ่านโจทย์และตัวเลือกให้ฟังทุกด่าน กดปุ่มซ้ายเพื่อเปิด กดปุ่มขวาถ้าอ่านเองได้').forEach(function (q) {
+        ReadAloud.phrases('ต้องการเปิดระบบช่วยอ่านไหม? ถ้าเปิด ระบบจะอ่านเนื้อหา บทสนทนา ภารกิจ และวิธีเล่นให้ฟังทุกหน้า กดปุ่มซ้ายเพื่อเปิด กดปุ่มขวาถ้าอ่านเองได้').forEach(function (q) {
           const u = new SpeechSynthesisUtterance(q);
           u.lang = 'th-TH'; if (v) u.voice = v; u.rate = 0.9;
           speechSynthesis.speak(u);
@@ -30146,6 +30415,7 @@ function wireEvents() {
   }
   // [รอบ 54 ตามคำขอ] โหมดอ่านให้ฟัง — init จากค่าที่จำไว้ + toggle ในเมนูตั้งค่า + ปุ่มอ่านของห้องเรียนรู้/ด่านกาญ 2050
   try { ReadAloud.init(); } catch (e) {}
+  try { RA2.watch(); } catch (e) {}   /* [บล็อก AB7] เฝ้าเนื้อหาที่เปลี่ยนในหน้าเดิม (วิธีเล่น/บทเรียน/กาญ 2050/มินิเกม 1/แบบประเมิน) */
   {
     const _raCb = document.getElementById('toggle-readaloud');
     if (_raCb) {
@@ -30423,7 +30693,7 @@ function wireEvents() {
   document.getElementById('stage-node-3').addEventListener('click', () => {
     AUDIO.unlock(); AUDIO.playSFX('click');
     if (!isStageUnlocked(3)) {
-      DIALOGUE.updateDialogue('ไขคดีบทนำที่ 🕵️ ด่านนักสืบสะพานแควให้สำเร็จก่อน แล้วแผนที่ทั้ง 3 โซนจะเปิดให้เลือกผจญภัยได้อิสระเลย!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
+      DIALOGUE.updateDialogue('ด่านนี้ยังอยู่ในหมอกอยู่เลย — ผ่านด่านที่อยู่ในโซนสว่างก่อน หมอกแถวนี้ถึงจะเปิดออกนะ!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
       return;
     }
     _launchStage(3, Stage3); // [ใหม่ #6] เข้าด่านผ่านฉาก Intro
@@ -30433,7 +30703,7 @@ function wireEvents() {
   document.getElementById('stage-node-hellfire').addEventListener('click', () => {
     AUDIO.unlock(); AUDIO.playSFX('click');
     if (!isStageUnlocked('hellfire')) {
-      DIALOGUE.updateDialogue('ไขคดีบทนำที่ 🕵️ ด่านนักสืบสะพานแควให้สำเร็จก่อน แล้วแผนที่ทั้ง 3 โซนจะเปิดให้เลือกผจญภัยได้อิสระเลย!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
+      DIALOGUE.updateDialogue('ด่านนี้ยังอยู่ในหมอกอยู่เลย — ผ่านด่านที่อยู่ในโซนสว่างก่อน หมอกแถวนี้ถึงจะเปิดออกนะ!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
       return;
     }
     _launchStage('hellfire', StageHellfire);
@@ -30443,7 +30713,7 @@ function wireEvents() {
   document.getElementById('stage-node-4').addEventListener('click', () => {
     AUDIO.unlock(); AUDIO.playSFX('click');
     if (!isStageUnlocked(4)) {
-      DIALOGUE.updateDialogue('ไขคดีบทนำที่ 🕵️ ด่านนักสืบสะพานแควให้สำเร็จก่อน แล้วแผนที่ทั้ง 3 โซนจะเปิดให้เลือกผจญภัยได้อิสระเลย!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
+      DIALOGUE.updateDialogue('ด่านนี้ยังอยู่ในหมอกอยู่เลย — ผ่านด่านที่อยู่ในโซนสว่างก่อน หมอกแถวนี้ถึงจะเปิดออกนะ!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
       return;
     }
     _launchStage(4, Stage4); // [ใหม่ #6] เข้าด่านผ่านฉาก Intro
@@ -30453,7 +30723,7 @@ function wireEvents() {
   document.getElementById('stage-node-5').addEventListener('click', () => {
     AUDIO.unlock(); AUDIO.playSFX('click');
     if (!isStageUnlocked(5)) {
-      DIALOGUE.updateDialogue('ไขคดีบทนำที่ 🕵️ ด่านนักสืบสะพานแควให้สำเร็จก่อน แล้วแผนที่ทั้ง 3 โซนจะเปิดให้เลือกผจญภัยได้อิสระเลย!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
+      DIALOGUE.updateDialogue('ด่านนี้ยังอยู่ในหมอกอยู่เลย — ผ่านด่านที่อยู่ในโซนสว่างก่อน หมอกแถวนี้ถึงจะเปิดออกนะ!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
       return;
     }
     _launchStage(5, Stage5); // [ใหม่ #6] เข้าด่านผ่านฉาก Intro
@@ -30463,7 +30733,7 @@ function wireEvents() {
   document.getElementById('stage-node-pilok').addEventListener('click', () => {
     AUDIO.unlock(); AUDIO.playSFX('click');
     if (!isStageUnlocked('pilok')) {
-      DIALOGUE.updateDialogue('ไขคดีบทนำที่ 🕵️ ด่านนักสืบสะพานแควให้สำเร็จก่อน แล้วแผนที่ทั้ง 3 โซนจะเปิดให้เลือกผจญภัยได้อิสระเลย!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
+      DIALOGUE.updateDialogue('ด่านนี้ยังอยู่ในหมอกอยู่เลย — ผ่านด่านที่อยู่ในโซนสว่างก่อน หมอกแถวนี้ถึงจะเปิดออกนะ!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
       return;
     }
     _launchStage('pilok', StagePilok);
@@ -30473,7 +30743,7 @@ function wireEvents() {
   document.getElementById('stage-node-6').addEventListener('click', () => {
     AUDIO.unlock(); AUDIO.playSFX('click');
     if (!isStageUnlocked(6)) {
-      DIALOGUE.updateDialogue('ไขคดีบทนำที่ 🕵️ ด่านนักสืบสะพานแควให้สำเร็จก่อน แล้วแผนที่ทั้ง 3 โซนจะเปิดให้เลือกผจญภัยได้อิสระเลย!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
+      DIALOGUE.updateDialogue('ด่านนี้ยังอยู่ในหมอกอยู่เลย — ผ่านด่านที่อยู่ในโซนสว่างก่อน หมอกแถวนี้ถึงจะเปิดออกนะ!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
       return;
     }
     _launchStage(6, Stage6); // [ใหม่ #6] เข้าด่านผ่านฉาก Intro
@@ -30481,7 +30751,7 @@ function wireEvents() {
   /* [เฟส 4 · 4.4] ด่านพิเศษปริศนาสายน้ำ */
   document.getElementById('stage-node-water').addEventListener('click', () => {
     AUDIO.unlock(); AUDIO.playSFX('click');
-    if (!isStageUnlocked('water')) { DIALOGUE.updateDialogue('ด่านพิเศษนี้เปิดหลังผ่านด่านนักสืบแล้วนะ', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() }); return; }
+    if (!isStageUnlocked('water')) { DIALOGUE.updateDialogue('ด่านพิเศษนี้ยังอยู่ในหมอก — เดินทางผ่านโซนสว่างขึ้นมาถึงแถบขุนเขาก่อนนะ', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() }); return; }
     _launchStage('water', StageWater);
   });
 
@@ -30489,7 +30759,7 @@ function wireEvents() {
   document.getElementById('stage-node-mg2').addEventListener('click', () => {
     AUDIO.unlock(); AUDIO.playSFX('click');
     if (!isStageUnlocked('mg2')) {
-      DIALOGUE.updateDialogue('ไขคดีบทนำที่ 🕵️ ด่านนักสืบสะพานแควให้สำเร็จก่อน แล้วแผนที่ทั้ง 3 โซนจะเปิดให้เลือกผจญภัยได้อิสระเลย!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
+      DIALOGUE.updateDialogue('ด่านนี้ยังอยู่ในหมอกอยู่เลย — ผ่านด่านที่อยู่ในโซนสว่างก่อน หมอกแถวนี้ถึงจะเปิดออกนะ!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
       return;
     }
     _launchStage('mg2', Minigame2); // [ใหม่ #6] เข้าด่านผ่านฉาก Intro
@@ -30499,7 +30769,7 @@ function wireEvents() {
   document.getElementById('stage-node-7').addEventListener('click', () => {
     AUDIO.unlock(); AUDIO.playSFX('click');
     if (!isStageUnlocked(7)) {
-      DIALOGUE.updateDialogue('ไขคดีบทนำที่ 🕵️ ด่านนักสืบสะพานแควให้สำเร็จก่อน แล้วแผนที่ทั้ง 3 โซนจะเปิดให้เลือกผจญภัยได้อิสระเลย!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
+      DIALOGUE.updateDialogue('ด่านนี้ยังอยู่ในหมอกอยู่เลย — ผ่านด่านที่อยู่ในโซนสว่างก่อน หมอกแถวนี้ถึงจะเปิดออกนะ!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
       return;
     }
     _launchStage(7, Stage7); // [ใหม่ #6] เข้าด่านผ่านฉาก Intro
@@ -30509,7 +30779,7 @@ function wireEvents() {
   document.getElementById('stage-node-mg3').addEventListener('click', () => {
     AUDIO.unlock(); AUDIO.playSFX('click');
     if (!isStageUnlocked('mg3')) {
-      DIALOGUE.updateDialogue('ไขคดีบทนำที่ 🕵️ ด่านนักสืบสะพานแควให้สำเร็จก่อน แล้วแผนที่ทั้ง 3 โซนจะเปิดให้เลือกผจญภัยได้อิสระเลย!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
+      DIALOGUE.updateDialogue('ด่านนี้ยังอยู่ในหมอกอยู่เลย — ผ่านด่านที่อยู่ในโซนสว่างก่อน หมอกแถวนี้ถึงจะเปิดออกนะ!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
       return;
     }
     _launchStage('mg3', Minigame3); // [ใหม่ #6] เข้าด่านผ่านฉาก Intro
@@ -30548,7 +30818,7 @@ function wireEvents() {
   document.getElementById('stage-node-mg1').addEventListener('click', () => {
     AUDIO.unlock(); AUDIO.playSFX('click');
     if (!isStageUnlocked('mg1')) {
-      DIALOGUE.updateDialogue('ไขคดีบทนำที่ 🕵️ ด่านนักสืบสะพานแควให้สำเร็จก่อน แล้วแผนที่ทั้ง 3 โซนจะเปิดให้เลือกผจญภัยได้อิสระเลย!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
+      DIALOGUE.updateDialogue('ด่านนี้ยังอยู่ในหมอกอยู่เลย — ผ่านด่านที่อยู่ในโซนสว่างก่อน หมอกแถวนี้ถึงจะเปิดออกนะ!', 'ครูภูมิ', { onComplete: () => DIALOGUE.hide() });
       return;
     }
     _launchStage('mg1', Minigame1); // [ใหม่ #6] เข้าด่านผ่านฉาก Intro
@@ -31931,7 +32201,10 @@ function clsjLookup(){
     if(!rows||!rows.length){ btn.disabled=false; btn.textContent='🔎 ตรวจโค้ด'; clsjErr('ไม่พบห้องเรียนจากโค้ดนี้ — ตรวจกับครูอีกครั้งนะ'); return; }
     clsjState.room=rows[0]; clsjState.room.join_key=key;
     try{ localStorage.setItem('cls_last_key',key); }catch(err){}
-    return clsjRpc('rpc_get_roster',{p_join_key:key}).then(function(ros){ clsjState.roster=ros||[]; clsjRoster(); });
+    return clsjRpc('rpc_get_roster',{p_join_key:key}).then(function(ros){
+      /* [บล็อก AD · เอกสารกลาง #47] นักเรียนที่ครูปิดการใช้งานไม่ขึ้นให้เลือกตอนเข้าห้อง
+         อ่านแบบทนคอลัมน์หาย: แถวที่ไม่มี is_active = ใช้งานปกติ (กติกาเดียวกับเว็บกลาง) */
+      clsjState.roster=(ros||[]).filter(function(x){ return x && x.is_active!==false; }); clsjRoster(); });
   }).catch(function(err){ btn.disabled=false; btn.textContent='🔎 ตรวจโค้ด'; clsjErr('เชื่อมต่อไม่สำเร็จ: '+(err&&err.message||'ลองใหม่อีกครั้ง')); });
 }
 function clsjStuBtn(s,i){
@@ -35087,7 +35360,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.17-p2-2569.81',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.19-p2-2569.83',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -35905,12 +36178,15 @@ function clsLoadCounts(){
   if(!cls.rooms.length) return Promise.resolve();
   var ids=cls.rooms.map(function(r){return r.id;}).join(',');
   var base='id,classroom_id,student_number,first_name,last_name,collected_score,boss_score';
-  /* group_ref/external_ref = ข้อมูลกลุ่มบัญชีเดิม — ถ้าฐานข้อมูลยังไม่รันแพตช์ล่าสุด (ไม่มีคอลัมน์) ให้ถอยไปแบบเดิม */
-  return sbFetchAll('/rest/v1/students?select='+base+',external_ref,group_ref,character_name&classroom_id=in.('+ids+')')
+  /* group_ref/external_ref = ข้อมูลกลุ่มบัญชีเดิม — ถ้าฐานข้อมูลยังไม่รันแพตช์ล่าสุด (ไม่มีคอลัมน์) ให้ถอยไปแบบเดิม
+     [บล็อก AD · เอกสารกลาง #47] is_active มากับชุดคอลัมน์ใหม่ — ฐานที่ยังไม่รัน 46 จะเข้าทาง fallback
+     ซึ่งไม่มีคอลัมน์นี้ = ทุกแถวถือว่าใช้งานปกติ (กติกา x.is_active !== false เดียวกับเว็บกลาง) */
+  return sbFetchAll('/rest/v1/students?select='+base+',external_ref,group_ref,character_name,is_active&classroom_id=in.('+ids+')')
     .catch(function(){ return sbFetchAll('/rest/v1/students?select='+base+'&classroom_id=in.('+ids+')'); })
     .then(function(rows){
       cls.students=rows||[];
-      cls.students.forEach(function(s){ cls.counts[s.classroom_id]=(cls.counts[s.classroom_id]||0)+1; });
+      /* [บล็อก AD · #47] คนที่ครูปิดการใช้งาน: ยังอยู่ในรายชื่อ (ติดป้ายให้เห็น) แต่ไม่นับในยอดรวมของห้อง */
+      cls.students.forEach(function(s){ if(s.is_active!==false) cls.counts[s.classroom_id]=(cls.counts[s.classroom_id]||0)+1; });
     /* [บล็อก N16 · บั๊ก 6 จุดที่ 6] โหลดรายชื่อล้ม = cls.students ว่าง = ทั้งหน้าดูเหมือน "ห้องยังไม่มีนักเรียน"
        ซึ่งครูอ่านผิดได้ง่ายมากว่าเด็กยังไม่เข้าห้อง · fallback เดิม (ปล่อยว่าง ไม่ล้มทั้งหน้า) คงไว้ */
     }).catch(function(e){
@@ -38750,19 +39026,31 @@ function clsRosterHtml(r){
 }
 function clsFillRoster(){
   if(!cls.open) return;
-  sbEnsure().then(function(){ return sbFetch('/rest/v1/students?classroom_id=eq.'+cls.open+'&select=id,student_number,first_name,last_name,join_pin,character_name').catch(function(){ return sbFetch('/rest/v1/students?classroom_id=eq.'+cls.open+'&select=id,student_number,first_name,last_name,join_pin'); }); })
+  /* [บล็อก AD · #47] ขอ is_active มาด้วย — ฐานเก่าไม่มีคอลัมน์จะตกไปทางเดิมเอง (ทุกคน = ใช้งานปกติ) */
+  sbEnsure().then(function(){ return sbFetch('/rest/v1/students?classroom_id=eq.'+cls.open+'&select=id,student_number,first_name,last_name,join_pin,character_name,is_active').catch(function(){ return sbFetch('/rest/v1/students?classroom_id=eq.'+cls.open+'&select=id,student_number,first_name,last_name,join_pin,character_name').catch(function(){ return sbFetch('/rest/v1/students?classroom_id=eq.'+cls.open+'&select=id,student_number,first_name,last_name,join_pin'); }); }); })
   .then(function(rows){
     cls.roster=(rows||[]).sort(function(a,b){ return (Number(a.student_number)||999)-(Number(b.student_number)||999); });
     var el=$('cls-roster-tbl'); if(!el) return;
     if(!cls.roster.length){ el.innerHTML='<div class="muted" style="font-size:13px">ยังไม่มีรายชื่อ — เพิ่มจากฟอร์มด้านบน หรือให้นักเรียนพิมพ์ชื่อเองตอนเข้าห้อง</div>'; return; }
     el.innerHTML='<table class="cls-tbl"><tr><th style="width:60px">เลขที่</th><th>ชื่อ</th><th>นามสกุล</th><th title="ชื่อที่แสดงในเกม/กระดานคะแนน — นักเรียนตั้งเองตอนเข้าห้อง หรือครูแก้ให้">🎮 ชื่อในเกม</th><th style="width:70px" title="PIN สำหรับเข้าห้อง (ตั้งเมื่อต้องการกันเพื่อนแตะชื่อผิดคน)">PIN</th><th style="width:120px"></th></tr>'+
-      cls.roster.map(function(s){ return '<tr><td>'+esc(s.student_number||'')+'</td><td>'+esc(s.first_name||'')+'</td><td>'+esc(s.last_name||'')+'</td>'+
+      cls.roster.map(function(s){ var off=(s.is_active===false);
+        /* [บล็อก AD · #47] คนที่ปิดการใช้งาน: แถวจาง + ป้ายเทา — ข้อมูลอยู่ครบ เปิดกลับได้ทุกเมื่อ */
+        return '<tr'+(off?' style="opacity:.55"':'')+'><td>'+esc(s.student_number||'')+'</td><td>'+esc(s.first_name||'')+(off?' <span style="background:#64748b;color:#fff;border-radius:8px;padding:1px 7px;font-size:10.5px;white-space:nowrap">ปิดการใช้งาน</span>':'')+'</td><td>'+esc(s.last_name||'')+'</td>'+
         '<td>'+(s.character_name?'<span style="color:#7c3aed;font-weight:700">'+esc(s.character_name)+'</span>':'<span class="muted">–</span>')+'</td>'+
         '<td>'+esc(s.join_pin||'–')+'</td>'+
         '<td><button class="btn-ghost" style="padding:3px 9px;font-size:12px;color:#1d4ed8" onclick="clsEditStudent(\''+esc(s.id)+'\')">✏️ แก้ไข</button> '+
+        (s.is_active!==undefined?('<button class="btn-ghost" style="padding:3px 9px;font-size:12px;color:'+(off?'#16a34a':'#b45309')+'" onclick="clsToggleActive(\''+esc(s.id)+'\','+(off?'true':'false')+')" title="ปิดการใช้งานแทนการลบ — ข้อมูลและผลการเล่นอยู่ครบ เปิดกลับได้ทุกเมื่อ">'+(off?'▶ เปิดใช้งาน':'⏸ ปิดการใช้งาน')+'</button> '):'')+
         '<button class="btn-ghost" style="padding:3px 9px;font-size:12px;color:#b91c1c" onclick="clsDelStudent(\''+esc(s.id)+'\')">ลบ</button></td></tr>'; }).join('')+
       '</table>';
   }).catch(function(e){ var el=$('cls-roster-tbl'); if(el) el.innerHTML='<div class="err" style="display:block">โหลดรายชื่อไม่สำเร็จ: '+esc(e&&e.message||'')+'</div>'; });
+}
+/* [บล็อก AD · เอกสารกลาง #47] ปิด/เปิดการใช้งานนักเรียน — ทางเลือกที่ย้อนกลับได้แทนการลบถาวร
+   (ปุ่มโผล่เฉพาะเมื่อฐานมีคอลัมน์ is_active แล้ว คือรัน 46_CLASSROOM_MANAGE.sql ของเว็บกลางแล้ว) */
+function clsToggleActive(id,to){
+  var on=(to===true||to==='true');
+  sbEnsure().then(function(){ return sbFetch('/rest/v1/students?id=eq.'+id,{method:'PATCH',body:JSON.stringify({is_active:on})}); })
+  .then(function(){ toast(on?'เปิดใช้งานแล้ว':'ปิดการใช้งานแล้ว — ข้อมูลอยู่ครบ เปิดกลับได้ทุกเมื่อ'); return clsAfterAuth(); })
+  .catch(function(e){ alert('ทำไม่สำเร็จ: '+String(e&&e.message||'')+'\n(ฐานข้อมูลต้องรัน 46_CLASSROOM_MANAGE.sql ของเว็บกลางก่อน)'); });
 }
 /* [เฟส 3d ตามคำขอ] ครูเจ้าของห้องแก้ข้อมูลนักเรียนได้เอง (เลขที่/ชื่อ/นามสกุล/PIN) — สิทธิ์คุมด้วย RLS ห้องของตัวเองเท่านั้น */
 function clsEditStudent(id){
@@ -39996,7 +40284,7 @@ var DASH4 = {
    เกมเป็นเจ้าของการคิดคะแนน — ตรงนี้คือ "รายงานผลที่คิดเสร็จแล้ว" ไม่มีการคิดใหม่แม้แต่ช่องเดียว
    ใช้ CBE8 เท่านั้น · run_id 'live' เท่านั้น · ส่งพลาด = เงียบ ไม่ขัดจังหวะครู (รอบหน้าส่งใหม่เอง) */
 var GP2_HUB = {
-  VER: 'V.8.17-p2-2569.81',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
+  VER: 'V.8.19-p2-2569.83',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
   CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
   KEY: 'gp2_hub_sent_v1',               /* ลายเซ็นผลที่ส่งสำเร็จแล้ว รายนักเรียน (กันยิงถี่) */
   LVNAME: ['เริ่มต้น', 'กำลังพัฒนา', 'สามารถ', 'เหนือความคาดหวัง'],
@@ -40152,7 +40440,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.17-p2-2569.81 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.19-p2-2569.83 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };
