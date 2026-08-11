@@ -2457,19 +2457,21 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
 #character-select-screen.active { display: grid; }
 #character-select-screen {
   position: relative;
-  /* [บล็อก S2] คอลัมน์กว้างเท่าเนื้อหา + จัดทั้งคู่กลางจอ — การ์ดเกาะข้างกระจกเป็นก้อนเดียว
-     (เดิมคอลัมน์ขวาเป็น 1fr แล้วการ์ดถูกจับกึ่งกลางของที่ว่างกว้าง ๆ → ช่องโบ๋กลางจอ) */
-  grid-template-columns: auto minmax(0, max-content);
-  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  /* [บล็อก W1 · คำสั่งครู 11 ส.ค. รอบ 2] กระจกบนตรงกลาง · แผงไอเท็ม (แท็บ+การ์ด) ล่างตรงกลาง
+     คอลัมน์เดียว · แถว cards = minmax(0,1fr) ดูดที่ว่างที่เหลือ → ทั้งหน้าสูงไม่เกินจอโดยโครงสร้าง
+     (ผัง 2 คอลัมน์ของ S2 ย้ายไปอยู่ใน @media จอเตี้ย <500px สำหรับมือถือแนวนอนเท่านั้น) */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
   grid-template-areas:
-    "title title"
-    "dress tabs"
-    "dress cards"
-    "act   act";
-  justify-content: center; align-content: stretch;
+    "title"
+    "dress"
+    "tabs"
+    "cards"
+    "act";
+  justify-content: stretch; align-content: stretch;
   justify-items: center; align-items: center;
-  gap: calc(var(--vw) * 0.45) calc(var(--vw) * 2.4);
-  padding: calc(var(--vw) * 0.8) calc(var(--vw) * 1.3);
+  gap: calc(var(--vw) * 0.35);
+  padding: calc(var(--vw) * 0.55) calc(var(--vw) * 1.3) calc(var(--vw) * 0.7);
   box-sizing: border-box;
 }
 #character-select-screen > .char-select-title { grid-area: title; margin: 0; }
@@ -2493,7 +2495,10 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
   /* ขนาดช่องกับขนาดรูปกลาง ผูกกันด้วยตัวแปรคู่นี้ — แก้ที่เดียวขยับพร้อมกันทั้งแผง
      max() กับหน่วย px เสมอ กันเป้ากดต่ำกว่า 44 px บนมือถือแนวนอน (--vw = 6.9 px) */
   --cs-slot: max(48px, calc(var(--vw) * 6.4));
-  --cs-fig: max(124px, calc(var(--vw) * 20));
+  /* [บล็อก W2] ผูกเพดานรูปกลางกับความสูงจอ — ผังแนวตั้งพึ่งความสูงเป็นหลัก
+     30vh: จอ 720px → กระจก ~216px เหลือที่ให้แผงการ์ดหนึ่งแถว + ตัวแบ่งหน้า ◀▶ เสมอ
+     (ตอนใช้ 37vh การ์ดโหมดปลดล็อกครบล้นกรอบล่าง 93px — t_dressroom ข้อ 6b จับได้) */
+  --cs-fig: max(124px, min(calc(var(--vw) * 20), 30vh));
   position: static; right: auto; top: auto; transform: none;
   width: auto; max-width: none; margin: 0; pointer-events: auto; z-index: 6;
   display: flex; flex-direction: column; align-items: center;
@@ -2580,7 +2585,18 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
    แนวตั้งเหลือน้อยมาก: ตัดคำบรรยายยาวกับป้ายสัตว์เลี้ยงบนการ์ดออก
    ทั้งสองอย่างซ้ำกับแผงสวมใส่ที่โชว์อยู่ข้าง ๆ แล้ว จึงไม่ได้เสียข้อมูลอะไร */
 @media (max-height: 500px) {
-  #character-select-screen { gap: calc(var(--vw) * 0.3) calc(var(--vw) * 0.8);
+  /* [บล็อก W3] จอเตี้ย: กลับไปผังกระจกซ้าย-การ์ดขวาของ S2 — แนวตั้งใส่ 390px ไม่ลง
+     ถ้าฝืนต้องย่อกระจก/แท็บ/การ์ดต่ำกว่าเกณฑ์จอสัมผัส 44px ที่ครูตั้งไว้ */
+  #character-select-screen {
+    grid-template-columns: auto minmax(0, max-content);
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "title title"
+      "dress tabs"
+      "dress cards"
+      "act   act";
+    justify-content: center;
+    gap: calc(var(--vw) * 0.3) calc(var(--vw) * 0.8);
     padding: calc(var(--vw) * 0.5) calc(var(--vw) * 0.9); }
   #character-select-screen > #cs-mirror { --cs-fig: max(112px, calc(var(--vw) * 16.5));
     padding: calc(var(--vw) * 0.45) calc(var(--vw) * 0.6); }
@@ -3192,6 +3208,43 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
    ตัวเลือกแบบเดียวกับเฟส G1f (.mobile-fit #game-wrapper + !important) เฉพาะจอสัมผัส คอมไม่ขยับ */
 .mobile-fit .auth-tab { min-height: 44px; }
 .mobile-fit #game-wrapper .auth-tab { font-size: 12.5px !important; line-height: 1.25 !important; }
+
+/* [บล็อก W6] คำบรรยายใต้ชื่อการ์ดตัวละครยาวไม่เท่ากัน (2-4 บรรทัด) ทำให้ความสูงแถวเดา
+   ไม่ได้ — ตัดที่ 2 บรรทัดเท่ากันทุกใบ (ข้อความเต็มยังอ่านได้จาก aria-label/ชื่อบนการ์ด) */
+#character-select-screen .char-select-desc {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+}
+
+@media (min-height: 501px) {
+  /* [บล็อก W7] ผังแนวตั้ง: แผงออร่า/สัตว์เลี้ยงจาก 4 คอลัมน์ตายตัว → แถวกว้างเท่าที่ว่างจริง
+     (7 ใบเรียงแถวเดียว · ถ้าวันหน้ามีของมากจนขึ้นแถวสอง จอ 16:9 ยังรับได้ ~2 แถว) */
+  #character-select-screen .shop-aura-grid {
+    grid-template-columns: repeat(auto-fit, minmax(calc(var(--vw) * 13), 1fr));
+    justify-items: center; width: 100%;
+  }
+}
+@media (min-height: 501px) and (max-aspect-ratio: 149/90) {
+  /* [บล็อก W7ข] จอไม่ใช่ 16:9 → กรอบเกม letterbox: viewport 768 แต่กรอบจริงสูง 576
+     ทุกขนาดในบล็อกนี้อิง --vh ของกรอบเกม (px ต่อ 1% เหมือน --vw) */
+  #character-select-screen > #cs-mirror { --cs-fig: max(112px, calc(var(--vh) * 28)); }
+  #character-select-screen .char-select-portrait { width: calc(var(--vw) * 5.5); height: calc(var(--vw) * 7.4); }
+  #character-select-screen .char-select-card { padding: calc(var(--vw) * 0.5); gap: calc(var(--vw) * 0.25); }
+  #character-select-screen .shop-aura-card { width: calc(var(--vw) * 9.5); padding: calc(var(--vw) * 0.4) calc(var(--vw) * 0.5); }
+}
+
+/* [บล็อก X] ปุ่ม Dashboard มุมซ้ายบนหน้าแรก: วงกลมไอคอน → เม็ดยา "🏫 สร้างห้องเรียน/หน้าครู"
+   .btn-icon เดิมบังคับกลม (border-radius 50%) และจัตุรัส — เขียนทับเฉพาะปุ่มนี้ปุ่มเดียว */
+#btn-open-classroom-mgr {
+  width: auto; border-radius: calc(var(--vw) * 2.2);
+  display: inline-flex; align-items: center; gap: calc(var(--vw) * 0.5);
+  padding: 0 calc(var(--vw) * 1.1) 0 calc(var(--vw) * 0.85);
+}
+#btn-open-classroom-mgr .cmgr-label {
+  font-size: max(11px, calc(var(--vw) * 0.92));
+  font-weight: 800; line-height: 1.15; white-space: nowrap;
+}
+.mobile-fit #game-wrapper #btn-open-classroom-mgr { width: auto !important; }
+.mobile-fit #game-wrapper #btn-open-classroom-mgr .cmgr-label { font-size: max(12px, calc(var(--vw) * 1.1)); }
 </style>
 </head>
 <body>
@@ -3303,7 +3356,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
         <!-- [รอบ 63] ไอคอนเข้า Dashboard สมรรถนะ (สำหรับครู) — Dashboard ฝังในไฟล์เกมนี้ไฟล์เดียวจบ เปิดในแท็บใหม่ (ส่งลิงก์ backend ให้อัตโนมัติ) ครูล็อกอินด้วย admin/adminkru -->
         <!-- [ตามคำขอครู V.7.66 ข้อ 2] เอาปุ่ม Dashboard ออก เหลือ "ปุ่มห้องเรียน" ปุ่มเดียว (หน้าห้องเรียนมีทุกอย่างอยู่แล้ว) -->
         <button id="btn-open-dashboard" class="btn btn-icon" style="display:none" title="Dashboard ครู" onclick="openEmbeddedDashboard('cls')">📊</button>
-        <button id="btn-open-classroom-mgr" class="btn btn-icon corner-tl" title="ห้องเรียนของครู — สร้างห้อง/ดูคะแนน/จัดการข้อมูล" onclick="openEmbeddedDashboard('cls')">🏫</button>
+        <button id="btn-open-classroom-mgr" class="btn btn-icon corner-tl" title="ห้องเรียนของครู — สร้างห้อง/ดูคะแนน/จัดการข้อมูล" onclick="openEmbeddedDashboard('cls')">🏫<span class="cmgr-label">สร้างห้องเรียน/หน้าครู</span></button>
         <!-- [รอบ 63] ปุ่มแบบประเมินความพึงพอใจ ย้ายไปมุมขวาล่างของ World Map (ดู #btn-open-satisfaction ในหน้า worldmap) -->
 
         <!-- [FIX M1] ย้ายจากมุมขวาบน (right:calc(var(--vw) * 2)) ที่ถูกปุ่มเสียง global ทับสนิทจนกดไม่ได้เลย มาไว้ข้างปุ่มโหมดทีวีฝั่งซ้าย -->
@@ -4276,7 +4329,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
    ด่านที่ผ่านในภาคหนึ่งจะไปโผล่ว่า 'ผ่านแล้ว' ในอีกภาค (ตราหลุด/ประตูเปิดเอง/คะแนนเพี้ยน) */
 const GAME_PART = 2;
 const PART1_URL = 'https://www.gameplearn.com/kan-adventure';
-const GAME_VERSION = 'V.8.15-p2-2569.79'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
+const GAME_VERSION = 'V.8.17-p2-2569.81'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
     ฝั่งเกม (1) ลบปุ่มวิ่ง ◀▶ + ป้ายสอนปัดของ V.7 ที่ชี้ผิดด่าน (2) แว่นขยายด่านนิเวศแตะครั้งเดียวติด
     (3) ซ่อนหมวดไอเทมที่ยังต่อเข้าด่านเรือธงไม่ได้ (ของที่ซื้อแล้วยังอยู่ในเซฟครบ)
     (4) หรี่เพลงอัตโนมัติระหว่างอ่านออกเสียงแล้วคืนเมื่ออ่านจบ (5) หน้าเข้าระบบแยกช่องโค้ดห้องออกจากชื่อในเกมชัดเจน + เตือนเมื่อพิมพ์สลับ
@@ -29674,7 +29727,7 @@ function _renderCharSelectCharacterGrid() {
   grid.innerHTML = '';
   // [ปรับตามคำขอ] แบ่งหน้าเหมือนหน้า Shop — 2 แถว x 4 คอลัมน์ = 8 ตัวต่อหน้า เกินกว่านี้กดเปลี่ยนหน้า ◀▶ (ไม่ใช้แถบเลื่อนขึ้นลง) เพื่อไม่ให้ตัวละครหลุดเฟรม
   const ownedIds = PLAYABLE_CHARACTER_KEYS.filter(id => owned.indexOf(id) !== -1);
-  const { pageItems, page, totalPages } = _pagerSlice('csChar', ownedIds, 8);
+  const { pageItems, page, totalPages } = _pagerSlice('csChar', ownedIds, 4); /* [บล็อก W5] แถวเดียว/หน้า — แถบล่างของผังแนวตั้งสูงพอเสมอ */
   pageItems.forEach((id, idx) => {
     const cfg = CHAR_CONFIG[id];
     const card = document.createElement('button');
@@ -35034,7 +35087,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.15-p2-2569.79',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.17-p2-2569.81',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -39943,7 +39996,7 @@ var DASH4 = {
    เกมเป็นเจ้าของการคิดคะแนน — ตรงนี้คือ "รายงานผลที่คิดเสร็จแล้ว" ไม่มีการคิดใหม่แม้แต่ช่องเดียว
    ใช้ CBE8 เท่านั้น · run_id 'live' เท่านั้น · ส่งพลาด = เงียบ ไม่ขัดจังหวะครู (รอบหน้าส่งใหม่เอง) */
 var GP2_HUB = {
-  VER: 'V.8.15-p2-2569.79',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
+  VER: 'V.8.17-p2-2569.81',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
   CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
   KEY: 'gp2_hub_sent_v1',               /* ลายเซ็นผลที่ส่งสำเร็จแล้ว รายนักเรียน (กันยิงถี่) */
   LVNAME: ['เริ่มต้น', 'กำลังพัฒนา', 'สามารถ', 'เหนือความคาดหวัง'],
@@ -39986,12 +40039,22 @@ var GP2_HUB = {
     CBE8.COMPS.forEach(function (cd) {
       var c = cd[0], r = comp && comp[c];
       if (!r || (r.M == null && r.lv == null)) return;           /* ไม่มีหลักฐาน = ไม่ส่งแถว */
+      /* [45 ภาคผนวกรอบ 2] FINALIZED = ครูตัดสินทับ → ส่ง decided_by:'teacher' + ค่าที่เอนจินคิดไว้
+         ⚠️ ต่างจากร่างของเว็บกลางหนึ่งจุด (แจ้งในเอกสารตอบแล้ว): ในสโตเรจของเกม fin.lv ถูกเก็บ
+         เสมอแม้ครู "แค่ยืนยันของเดิม" (ปุ่มยืนยันรายคน/เป็นชุดใส่ lv ทุกครั้ง) — ใช้กติกา
+         fin.lv != null ตามร่างจะทำให้ทุกการยืนยันกลายเป็น "ครูตัดสินเอง" ทั้งหน้าเว็บ
+         จึงเทียบกับระดับที่เอนจินคิดแทน: ต่างกันจริงเท่านั้นถึงนับว่าครูเปลี่ยน */
+      var engLv = CBE8.lvOf(r.M);                                /* ระดับจากคะแนนหลัก ก่อนครูทับ */
+      var overridden = (r.status === 'FINALIZED' && r.fin && r.fin.lv != null && r.fin.lv !== engLv);
       rows.push({
         code: c,                                                 /* HT/NS ส่งตรง ๆ — gp_comp_code ฝั่งฐานแปลง HOT/SN ให้ (พรอมต์ 45 ข้อ 2) */
         score: r.M,
         level: r.lv,
         level_label: r.lv != null ? self._lvWord(r.lv) : null,   /* "คำ" นำเสมอ ตามมาตรฐานเว็บกลาง */
         evidence: self.NO_SUMM[c] ? 'observed' : 'scored',       /* ห้ามมี self_report จากเกมนี้เด็ดขาด */
+        decided_by: overridden ? 'teacher' : 'game',             /* ครูเปลี่ยนระดับจริงเท่านั้น = teacher */
+        system_level: overridden ? engLv : null,                 /* ค่าที่เอนจินคิดไว้ก่อนครูทับ */
+        system_score: overridden ? r.M : null,
         criteria_note: self.NO_SUMM[c]
           ? noteBase + ' · ฐาน minor 100% (ยังไม่มีหลักฐานรวบยอด) — คนละฐานกับด้านอื่น'
           : noteBase,
@@ -40089,7 +40152,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.15-p2-2569.79 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.17-p2-2569.81 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };

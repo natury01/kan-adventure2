@@ -2687,7 +2687,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.15-p2-2569.79',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.17-p2-2569.81',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -7596,7 +7596,7 @@ var DASH4 = {
    เกมเป็นเจ้าของการคิดคะแนน — ตรงนี้คือ "รายงานผลที่คิดเสร็จแล้ว" ไม่มีการคิดใหม่แม้แต่ช่องเดียว
    ใช้ CBE8 เท่านั้น · run_id 'live' เท่านั้น · ส่งพลาด = เงียบ ไม่ขัดจังหวะครู (รอบหน้าส่งใหม่เอง) */
 var GP2_HUB = {
-  VER: 'V.8.15-p2-2569.79',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
+  VER: 'V.8.17-p2-2569.81',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
   CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
   KEY: 'gp2_hub_sent_v1',               /* ลายเซ็นผลที่ส่งสำเร็จแล้ว รายนักเรียน (กันยิงถี่) */
   LVNAME: ['เริ่มต้น', 'กำลังพัฒนา', 'สามารถ', 'เหนือความคาดหวัง'],
@@ -7639,12 +7639,22 @@ var GP2_HUB = {
     CBE8.COMPS.forEach(function (cd) {
       var c = cd[0], r = comp && comp[c];
       if (!r || (r.M == null && r.lv == null)) return;           /* ไม่มีหลักฐาน = ไม่ส่งแถว */
+      /* [45 ภาคผนวกรอบ 2] FINALIZED = ครูตัดสินทับ → ส่ง decided_by:'teacher' + ค่าที่เอนจินคิดไว้
+         ⚠️ ต่างจากร่างของเว็บกลางหนึ่งจุด (แจ้งในเอกสารตอบแล้ว): ในสโตเรจของเกม fin.lv ถูกเก็บ
+         เสมอแม้ครู "แค่ยืนยันของเดิม" (ปุ่มยืนยันรายคน/เป็นชุดใส่ lv ทุกครั้ง) — ใช้กติกา
+         fin.lv != null ตามร่างจะทำให้ทุกการยืนยันกลายเป็น "ครูตัดสินเอง" ทั้งหน้าเว็บ
+         จึงเทียบกับระดับที่เอนจินคิดแทน: ต่างกันจริงเท่านั้นถึงนับว่าครูเปลี่ยน */
+      var engLv = CBE8.lvOf(r.M);                                /* ระดับจากคะแนนหลัก ก่อนครูทับ */
+      var overridden = (r.status === 'FINALIZED' && r.fin && r.fin.lv != null && r.fin.lv !== engLv);
       rows.push({
         code: c,                                                 /* HT/NS ส่งตรง ๆ — gp_comp_code ฝั่งฐานแปลง HOT/SN ให้ (พรอมต์ 45 ข้อ 2) */
         score: r.M,
         level: r.lv,
         level_label: r.lv != null ? self._lvWord(r.lv) : null,   /* "คำ" นำเสมอ ตามมาตรฐานเว็บกลาง */
         evidence: self.NO_SUMM[c] ? 'observed' : 'scored',       /* ห้ามมี self_report จากเกมนี้เด็ดขาด */
+        decided_by: overridden ? 'teacher' : 'game',             /* ครูเปลี่ยนระดับจริงเท่านั้น = teacher */
+        system_level: overridden ? engLv : null,                 /* ค่าที่เอนจินคิดไว้ก่อนครูทับ */
+        system_score: overridden ? r.M : null,
         criteria_note: self.NO_SUMM[c]
           ? noteBase + ' · ฐาน minor 100% (ยังไม่มีหลักฐานรวบยอด) — คนละฐานกับด้านอื่น'
           : noteBase,
@@ -7742,7 +7752,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.15-p2-2569.79 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.17-p2-2569.81 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };
