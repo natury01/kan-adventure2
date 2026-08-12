@@ -232,7 +232,7 @@ html, body {
 .guest-menu-btn:hover { transform: translateY(calc(var(--vw) * -0.1)); filter: brightness(1.1); }
 
 /* Character Select Screen */
-#character-select-screen { background: radial-gradient(ellipse at center, #2a5a4a 0%, #10241c 80%); }
+#character-select-screen { background: radial-gradient(ellipse at center, #24406b 0%, #0d1a30 80%); }
 .char-select-coins { position: absolute; top: calc(var(--vw) * 2); right: calc(var(--vw) * 10.5); background: linear-gradient(180deg,#3a2a10,#2a1c0a); /* [FIX M2] พ้นแนวปุ่มเสียง/ตั้งค่า */
   border: calc(var(--vw) * 0.16) solid #ffd54a; border-radius: calc(var(--vw) * 2); padding: calc(var(--vw) * 0.6) calc(var(--vw) * 1.4); color: #ffe8a0; font-size: calc(var(--vw) * 1.3); font-weight: 800;
   box-shadow: 0 calc(var(--vw) * 0.3) calc(var(--vw) * 1) rgba(0,0,0,0.4); }
@@ -278,7 +278,7 @@ html, body {
 #char-select-page-label { position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(var(--vw) * 7); z-index: 20; }
 
 /* ร้านค้า — เปิดใช้ได้ตั้งแต่ต้นเกม ซื้อ/สวมใส่ออร่า */
-#shop-screen { background: radial-gradient(ellipse at center, #2a3a1a 0%, #101c10 80%); }
+#shop-screen { background: radial-gradient(ellipse at center, #2a3550 0%, #0e1526 80%); }
 .shop-header { display: flex; align-items: center; gap: calc(var(--vw) * 1.5); margin-bottom: calc(var(--vw) * 0.6); }
 .shop-title { font-size: calc(var(--vw) * 2.2); font-weight: 800; color: #fff8e6; text-shadow: 0 calc(var(--vw) * 0.3) 0 #b5651d; }
 .shop-coins { background: linear-gradient(180deg,#3a2a10,#2a1c0a); border: calc(var(--vw) * 0.16) solid #ffd54a; border-radius: calc(var(--vw) * 2);
@@ -372,7 +372,7 @@ html, body {
 .auth-logout-hint { font-size: calc(var(--vw) * 0.8); color: #d9ecf7; opacity: 0.75; text-align: center; margin-top: calc(var(--vw) * 0.6); cursor: pointer; text-decoration: underline; }
 
 /* Leaderboard Screen */
-#leaderboard-screen { background: radial-gradient(ellipse at center, #1a3a2e 0%, #08120e 85%); } /* [Task #94] ใช้พื้นหลังโทนเดียวกับโหมดจอทีวีเดิม (เข้มกว่า อ่านชัดเต็มจอ) เพราะรวมหน้าเป็นหนึ่งเดียวแล้ว */
+#leaderboard-screen { background: radial-gradient(ellipse at center, #16264a 0%, #070d1a 85%); } /* [Task #94] ใช้พื้นหลังโทนเดียวกับโหมดจอทีวีเดิม (เข้มกว่า อ่านชัดเต็มจอ) เพราะรวมหน้าเป็นหนึ่งเดียวแล้ว */
 .leaderboard-box { width: calc(var(--vw) * 34); max-height: 84%; background: rgba(0,0,0,0.22); /* [FIX M26] อิงกรอบเกม */
   border: calc(var(--vw) * 0.15) solid rgba(255,255,255,0.18); border-radius: calc(var(--vw) * 1.4); padding: calc(var(--vw) * 2) calc(var(--vw) * 2.4);
   display: flex; flex-direction: column; }
@@ -607,7 +607,7 @@ body.lowfx .cap-twist-banner { animation: none; }
   box-shadow: 0 calc(var(--vw) * 0.3) 0 rgba(0,0,0,0.3), 0 0 calc(var(--vw) * 1.2) rgba(127,224,176,0.65); }
 .learn-node .stage-node-label { background: rgba(27,72,116,0.92); color: #eafff4; font-weight: 800; }
 
-#learning-screen { background: radial-gradient(ellipse at center, #2a5040 0%, #101f18 85%); }
+#learning-screen { background: radial-gradient(ellipse at center, #22385a 0%, #0c1526 85%); }
 .learning-box { width: calc(var(--vw) * 84); height: calc(var(--vh) * 88); display: flex; flex-direction: column;
   background: rgba(0,0,0,0.25); border: calc(var(--vw) * 0.15) solid rgba(255,255,255,0.16); border-radius: calc(var(--vw) * 1.3);
   padding: calc(var(--vw) * 1) calc(var(--vw) * 1.4); }
@@ -728,14 +728,14 @@ body.lowfx .cap-twist-banner { animation: none; }
   left: max(calc(var(--vw) * 2), calc(var(--sal, 0px) + var(--vw) * 0.6)); z-index: 50; pointer-events: auto; background: rgba(228,84,74,0.55); }
 .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(10,8,10,0.6); display: flex; align-items: center; justify-content: center; z-index: 70; pointer-events: auto; }
-.modal-box { background: linear-gradient(180deg,#2a5a4a,#10241c); border-radius: calc(var(--vw) * 1.2); padding: calc(var(--vw) * 2.4) calc(var(--vw) * 3);
+.modal-box { background: linear-gradient(180deg,#24406b,#0d1a30); border-radius: calc(var(--vw) * 1.2); padding: calc(var(--vw) * 2.4) calc(var(--vw) * 3);
   text-align: center; box-shadow: 0 calc(var(--vw) * 0.6) calc(var(--vw) * 2) rgba(0,0,0,0.5); border: calc(var(--vw) * 0.15) solid rgba(255,255,255,0.18); max-width: calc(var(--vw) * 32); }
 .modal-title { font-size: calc(var(--vw) * 1.5); font-weight: 800; color: #fff8e6; margin-bottom: calc(var(--vw) * 0.8); }
 .modal-text { font-size: calc(var(--vw) * 1); color: #d9ecf7; opacity: 0.85; margin-bottom: calc(var(--vw) * 1.8); }
 .modal-buttons { display: flex; gap: calc(var(--vw) * 1.2); justify-content: center; }
 
 /* World Map */
-#worldmap-screen { background: linear-gradient(160deg,#cfe8d0,#8fc4a8); position: relative; }
+#worldmap-screen { background: linear-gradient(160deg,#cfd8e8,#8fa4c4); position: relative; }
 .worldmap-title { position: absolute; top: calc(var(--vw) * 1.8); left: 50%; transform: translateX(-50%);
   color: #1a3a2a; font-size: calc(var(--vw) * 1.6); font-weight: 800; z-index: 11; text-shadow: 0 calc(var(--vw) * 0.1) calc(var(--vw) * 0.3) rgba(255,255,255,0.6); }
 /* ด็อกปุ่มมุมบน — จัดกลุ่มเป็นแผงเดียวมีพื้นหลังจางๆ ให้ดูเป็นระเบียบ แทนปุ่มลอยเดี่ยวๆ กระจายกันหลายจุด (แก้ปัญหา UI รกและเสี่ยงชนกัน) */
@@ -789,7 +789,7 @@ body.lowfx .cap-twist-banner { animation: none; }
 .wm-mini-lb-row.me { color: #5fd97e; font-weight: 800; }
 
 /* หน้า Lobby — จุดพักหลักก่อนเข้าแผนที่โลก (ดู renderLobby()/startLobbyAvatarLoop()) */
-#lobby-screen { background: radial-gradient(ellipse at center, #2a4a3a 0%, #0c1810 85%); }
+#lobby-screen { background: radial-gradient(ellipse at center, #1d3050 0%, #0a1428 85%); }
 .lobby-title { font-size: calc(var(--vw) * 2); font-weight: 800; color: #ffe070; text-shadow: 0 calc(var(--vw) * 0.25) 0 rgba(0,0,0,0.4); margin-bottom: calc(var(--vw) * 0.6); }
 /* กรอบสี่เหลี่ยมมุมโค้ง (ไม่ใช่วงกลม) ให้เห็นตัวละครเต็มตัวหัวจรดเท้า — เดิมเป็นวงกลมซึ่งตัดขาส่วนล่างออกจนดูเหมือนภาพไม่ขึ้น */
 .lobby-avatar { width: calc(var(--vw) * 18); height: calc(var(--vw) * 18); border-radius: calc(var(--vw) * 1.2); background: radial-gradient(ellipse at center, rgba(255,255,255,0.14), rgba(255,255,255,0.02));
@@ -3449,6 +3449,27 @@ body.lowfx .shadow-mon, body.lowfx .shadow-walk, body.lowfx .sm-defeat { display
   font-family: inherit; font-size: max(13px, calc(var(--vw) * 1)); font-weight: 800; cursor: pointer;
   color: #ffe9b8; background: rgba(9,15,30,0.8); border: 2px solid rgba(255,214,106,0.65);
   border-radius: 999px; padding: calc(var(--vw) * 0.4) calc(var(--vw) * 1.2); }
+
+/* [บล็อก AR · ฟีดแบ็กครู 12 ส.ค.] หน้าตราแบบย่อ + ป๊อปอัปรายละเอียด */
+.badge-card { cursor: pointer; }
+@media (hover: hover) { .badge-card:hover { filter: brightness(1.12); } }
+#badge-detail-pop { position: absolute; inset: 0; z-index: 30; display: flex; align-items: center;
+  justify-content: center; background: rgba(5,9,20,0.72); }
+#badge-detail-pop .bdp-card { max-width: min(86%, calc(var(--vw) * 34)); text-align: center;
+  background: linear-gradient(180deg, #1d3050, #0d1a30); border: calc(var(--vw) * 0.16) solid rgba(255,214,106,0.55);
+  border-radius: calc(var(--vw) * 1.4); padding: calc(var(--vw) * 1.6) calc(var(--vw) * 2);
+  box-shadow: 0 calc(var(--vw) * 1) calc(var(--vw) * 3) rgba(0,0,0,0.6); }
+#badge-detail-pop .bdp-card.earned { border-color: #ffd54a; background: linear-gradient(180deg, #2a3550, #14213a); }
+#badge-detail-pop .bdp-icon { font-size: calc(var(--vw) * 4.2); line-height: 1.1; }
+#badge-detail-pop .bdp-card:not(.earned) .bdp-icon { filter: grayscale(0.9) opacity(0.75); }
+#badge-detail-pop .bdp-name { font-size: max(15px, calc(var(--vw) * 1.5)); font-weight: 800; color: #ffe9b8;
+  margin-top: calc(var(--vw) * 0.4); }
+#badge-detail-pop .bdp-status { font-size: max(12px, calc(var(--vw) * 1)); font-weight: 700; color: #d9ecf7;
+  margin-top: calc(var(--vw) * 0.25); }
+#badge-detail-pop .bdp-desc { font-size: max(13px, calc(var(--vw) * 1.05)); color: #f2ede2; line-height: 1.65;
+  margin: calc(var(--vw) * 0.8) 0 calc(var(--vw) * 1.1); }
+#badge-detail-pop .btn { min-height: max(44px, calc(var(--vw) * 2.6)); min-width: max(96px, calc(var(--vw) * 9)); }
+.mobile-fit #badge-detail-pop .bdp-desc { font-size: max(13px, calc(var(--vw) * 1.5)); }
 </style>
 </head>
 <body>
@@ -4398,6 +4419,7 @@ body.lowfx .shadow-mon, body.lowfx .shadow-walk, body.lowfx .sm-defeat { display
           <!-- [ใหม่ Task #95] ปุ่มเครดิตต่อท้ายด้านล่างเมนูตั้งค่าเสียง — เปิด modal เดียวกับปุ่มเครดิตหน้าแรก -->
           <!-- [รอบ 45 ตามคำขอ #2+#5] เหลือแค่ไอคอน 👨‍🏫 (ไม่มีข้อความ) และจัดปุ่มเป็นแถวเดียว: เครดิตชิดซ้าย / ปิดชิดขวา -->
           <div class="modal-buttons" style="margin-top:calc(var(--vw) * 0.8); display:flex; justify-content:space-between; align-items:center; gap:calc(var(--vw) * 1);">
+            <button id="btn-admin-reset" class="btn btn-secondary hidden" type="button" title="เฉพาะบัญชีทดสอบ" style="font-size:calc(var(--vw) * 0.9); padding:calc(var(--vw) * 0.6) calc(var(--vw) * 1);">♻️ รีเซตความคืบหน้า (ทดสอบ)</button><!-- [บล็อก AR1] เห็นเฉพาะบัญชี admin -->
             <button id="btn-audio-maker" class="btn btn-secondary btn-maker-text-glow" title="ออกแบบและพัฒนา" style="font-size:calc(var(--vw) * 0.95); padding:calc(var(--vw) * 0.6) calc(var(--vw) * 1.2);">👨‍🏫 ออกแบบและพัฒนา</button><!-- [รอบ 52 ตามคำขอ] ใส่ข้อความคืนบนปุ่ม (ยังชิดซ้าย/ปิดชิดขวาเหมือนเดิม) -->
             <button id="btn-audio-settings-close" class="btn btn-secondary">ปิด</button>
           </div>
@@ -4541,7 +4563,7 @@ body.lowfx .shadow-mon, body.lowfx .shadow-walk, body.lowfx .sm-defeat { display
    ด่านที่ผ่านในภาคหนึ่งจะไปโผล่ว่า 'ผ่านแล้ว' ในอีกภาค (ตราหลุด/ประตูเปิดเอง/คะแนนเพี้ยน) */
 const GAME_PART = 2;
 const PART1_URL = 'https://www.gameplearn.com/kan-adventure';
-const GAME_VERSION = 'V.8.27-p2-2569.91'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
+const GAME_VERSION = 'V.8.28-p2-2569.92'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
     ฝั่งเกม (1) ลบปุ่มวิ่ง ◀▶ + ป้ายสอนปัดของ V.7 ที่ชี้ผิดด่าน (2) แว่นขยายด่านนิเวศแตะครั้งเดียวติด
     (3) ซ่อนหมวดไอเทมที่ยังต่อเข้าด่านเรือธงไม่ได้ (ของที่ซื้อแล้วยังอยู่ในเซฟครบ)
     (4) หรี่เพลงอัตโนมัติระหว่างอ่านออกเสียงแล้วคืนเมื่ออ่านจบ (5) หน้าเข้าระบบแยกช่องโค้ดห้องออกจากชื่อในเกมชัดเจน + เตือนเมื่อพิมพ์สลับ
@@ -24573,7 +24595,7 @@ const HowToPlay = {
         ['🥇', 'อันดับ 1-3 ได้ขึ้น<b>แท่นเชิดชูเกียรติ</b>พิเศษ พร้อมเหรียญทอง-เงิน-ทองแดง'],
       ],
       draw(ctx, W, H) {
-        HowToPlay._bg(ctx, W, H, '#1a3a2e', '#08120e');
+        HowToPlay._bg(ctx, W, H, '#1d3050', '#0b1526');
         const slots = [
           { place: 2, x: W / 2 - 150, standH: 70, medal: '🥈', color: '#c8d4e0' },
           { place: 1, x: W / 2, standH: 105, medal: '🥇', color: '#ffd54a' },
@@ -30323,7 +30345,7 @@ const LBSEASON = {
   }
 };
 
-const LB_SCOPES = [['room', '🚪 ห้องเรียน'], ['week', '🛡️ สัปดาห์นี้'], ['grade', '🎓 ชั้นเดียวกัน'], ['school', '🏫 โรงเรียน'], ['all', '🌏 ทั้งหมด']];
+const LB_SCOPES = [['room', '🚪 ห้องเรียน'], ['grade', '🎓 ชั้นเดียวกัน'], ['school', '🏫 โรงเรียน'], ['all', '🌏 ทั้งหมด']]; /* [บล็อก AR2 · ครูสั่ง 12 ส.ค.] ถอดแท็บสัปดาห์นี้ (ครูไม่เคยสั่งเพิ่ม) — โค้ด LBSEASON คงไว้แต่ไม่มีทางถูกเรียก */
 function setLbScope(sc) {
   if (_lbScope === sc) return;
   _lbScope = sc;
@@ -30743,17 +30765,48 @@ function renderBadges() {
     }).join('');
   }
   const cl = document.getElementById('badges-count-line');
-  if (cl) cl.textContent = `ได้แล้ว ${protCount + earned.size}/${(V8.REQUIRED_BADGES || 6) + BADGE_DEFS.length} ดวง · หลัก ${protCount}/${V8.REQUIRED_BADGES || 6} · เกียรติยศ ${earned.size}/${BADGE_DEFS.length}`;
+  if (cl) cl.textContent = `ได้แล้ว ${protCount + earned.size}/${(V8.REQUIRED_BADGES || 6) + BADGE_DEFS.length} ดวง · หลัก ${protCount}/${V8.REQUIRED_BADGES || 6} · เกียรติยศ ${earned.size}/${BADGE_DEFS.length} · 👆 แตะตราเพื่อดูวิธีได้รับ`;
   const gridEl = document.getElementById('badges-grid');
   /* ตราเกียรติยศ 12 ดวง = ตาราง 4×3 หน้าเดียวเสมอ */
   const { pageItems, page, totalPages } = _pagerSlice('badges', BADGE_DEFS, Math.max(12, BADGE_DEFS.length));
   gridEl.innerHTML = pageItems.map(b => `
-    <div class="badge-card${earned.has(b.id) ? ' earned' : ''}">
+    <div class="badge-card${earned.has(b.id) ? ' earned' : ''}" role="button" tabindex="0" onclick="showBadgeDetail('${b.id}')" onkeydown="if(event.key==='Enter')showBadgeDetail('${b.id}')">
       <div class="badge-icon">${b.icon}</div>
       <div class="badge-name">${escapeHtml(b.name)}</div>
-      <div class="badge-desc">${escapeHtml(b.desc)}</div>
     </div>`).join('');
   _renderPagerControls('badges-pager', 'badges-page-prev', 'badges-page-next', 'badges-page-label', page, totalPages);
+}
+
+/* [บล็อก AR4 · ครูสั่ง 12 ส.ค.] ป๊อปอัปรายละเอียดตรา — หน้าตราโชว์แค่ชื่อ แตะแล้วค่อยเห็นวิธีได้รับ
+   (โหมดช่วยอ่านอ่านให้ฟังด้วย · แตะพื้นหลังหรือปุ่มปิดเพื่อออก) */
+function showBadgeDetail(id) {
+  try {
+    const b = BADGE_DEFS.find((x) => x.id === id);
+    if (!b) return;
+    const got = getEarnedBadges(getSaveData()).some((x) => x.id === id);
+    const old = document.getElementById('badge-detail-pop');
+    if (old) old.remove();
+    const ov = document.createElement('div');
+    ov.id = 'badge-detail-pop';
+    ov.innerHTML = '<div class="bdp-card' + (got ? ' earned' : '') + '">' +
+      '<div class="bdp-icon">' + b.icon + '</div>' +
+      '<div class="bdp-name">' + escapeHtml(b.name) + '</div>' +
+      '<div class="bdp-status">' + (got ? '✅ ได้รับแล้ว' : '🔒 ยังไม่ได้รับ') + '</div>' +
+      '<div class="bdp-desc">📌 วิธีได้รับ: ' + escapeHtml(b.desc) + '</div>' +
+      '<button class="btn btn-primary" id="bdp-close" type="button">ปิด</button></div>';
+    ov.addEventListener('click', (e) => {
+      if (e.target === ov || (e.target && e.target.id === 'bdp-close')) {
+        try { ReadAloud.stop(); } catch (e2) {}
+        ov.remove();
+      }
+    });
+    document.getElementById('badges-screen').appendChild(ov);
+    try { AUDIO.playSFX('click'); } catch (e) {}
+    try {
+      if (typeof ReadAloud !== 'undefined' && ReadAloud.on)
+        ReadAloud.speak([b.name, got ? 'ได้รับแล้ว' : 'ยังไม่ได้รับ', 'วิธีได้รับ: ' + b.desc], true);
+    } catch (e) {}
+  } catch (e) { console.error('[AR4] showBadgeDetail:', e); }
 }
 
 /* MODULE 14: สื่อการเรียนรู้เพิ่มเติม — รูปจริง/วิดีโอสถานที่จริง */
@@ -31189,6 +31242,22 @@ function wireAuthEvents() {
     if (!username || !pin) {
       errEl.textContent = 'กรอกชื่อผู้ใช้และรหัสผ่านให้ครบก่อนนะ';
       errEl.classList.remove('hidden');
+      return;
+    }
+    /* [บล็อก AR1 · คำขอครู 12 ส.ค.] บัญชีทดสอบครู — ทำงานในเครื่องล้วน ไม่ผูกฐานข้อมูล
+       (ไม่มี cls_current = ไม่มีทางเขียนเซิร์ฟเวอร์/กระดาน/ข้อมูลวิจัย) · isAdminUser() เดิม
+       ปลดทุกด่าน+ปิดหมอกให้เอง · รหัสผ่านต้องตรงเป๊ะเท่านั้น พิมพ์ผิด = ไหลไปเช็กเซิร์ฟเวอร์ตามปกติ */
+    if (username.toLowerCase() === 'admin' && pin === 'Arkhom12345') {
+      try { localStorage.removeItem('cls_current'); } catch (e2) {}
+      try { localStorage.setItem('kanchanaburi_last_username', 'admin'); } catch (e2) {}
+      const dA = getSaveData();
+      dA.username = 'admin';
+      dA.adminTester = true;
+      if ((dA.coins || 0) < 9999) dA.coins = 9999;               /* เหรียญเยอะ ๆ ตามครูขอ — เติมถึงเพดานทุกครั้งที่เข้า */
+      writeSaveData(dA);
+      setAuthButtonsBusy(false);
+      AUDIO.playSFX('victory');
+      afterAuthSuccess();
       return;
     }
     /* [บล็อก R6] ช่องเดียวรับสองแบบ — รหัสผ่านบัญชีใหม่ (อังกฤษ+ตัวเลข 8-12)
@@ -31954,6 +32023,33 @@ function wireEvents() {
       };
     }
   } catch (e) { console.error('[AP4b] เดินสายวิดีโอไม่สำเร็จ:', e); }
+  /* [บล็อก AR1c] ปุ่มรีเซตของบัญชีทดสอบ — ล้างเฉพาะเซฟในเครื่องของ admin (ไม่ผูกฐาน = ไม่มีอะไรถูกส่งไปไหน) */
+  try {
+    const sb2 = document.getElementById('btn-audio-settings');
+    if (sb2 && !sb2.__adminWired) {
+      sb2.__adminWired = true;
+      sb2.addEventListener('click', () => {
+        try { document.getElementById('btn-admin-reset').classList.toggle('hidden', !isAdminUser()); } catch (e2) {}
+      });
+    }
+    const rb = document.getElementById('btn-admin-reset');
+    if (rb && !rb.__wired) {
+      rb.__wired = true;
+      rb.addEventListener('click', () => {
+        try {
+          if (!isAdminUser()) return;
+          const d = getSaveData();
+          d.stages = {}; d.stageAttempts = {}; d.walkItems = {}; d.microDone = {}; d.notebook = [];
+          d.coins = 9999; d.selfImproved = false;
+          writeSaveData(d);
+          try { AUDIO.playSFX('victory'); } catch (e2) {}
+          try { refreshWorldMap(); } catch (e2) {}
+          rb.textContent = '✅ รีเซตแล้ว — เหรียญ 9,999';
+          setTimeout(() => { try { rb.textContent = '♻️ รีเซตความคืบหน้า (ทดสอบ)'; } catch (e2) {} }, 2200);
+        } catch (e2) { console.error('[AR1c] รีเซตไม่สำเร็จ:', e2); }
+      });
+    }
+  } catch (e) { console.error('[AR1c] เดินสายปุ่มรีเซตไม่สำเร็จ:', e); }
   {
     const _raCb = document.getElementById('toggle-readaloud');
     if (_raCb) {
@@ -34164,7 +34260,18 @@ function clsjOpenWithKey(k){ clsjOpen(); var ki=document.getElementById('clsj-ke
       if(sc) window.clsjLoadRooms(sc.school_id);
       else if(jr){ jr.disabled=true; jr.innerHTML='<option value="">ห้องเรียน...</option>'; }
     };
-    js.addEventListener('focus',function(){ window.clsjLoadSchools(); });
+    js.addEventListener('focus',function(){ window.clsjLoadSchools();
+      /* [บล็อก AR5 · ครูสั่ง 12 ส.ค.] เคยเลือกโรงเรียนแล้วแตะช่องซ้ำ = เคลียร์ให้เลือกใหม่ได้ทันที
+         (datalist กรองตามข้อความในช่อง — ชื่อเต็มค้างอยู่ทำให้เห็นแค่โรงเรียนเดิม) */
+      if(js.value){ js.dataset.prev=js.value; js.value=''; }
+    });
+    js.addEventListener('blur',function(){
+      /* ออกโดยไม่เลือกอะไร = คืนค่าเดิมให้ (หน่วงสั้น ๆ รอ event change ของ datalist ทำงานก่อน) */
+      setTimeout(function(){
+        if(!js.value && js.dataset.prev){ js.value=js.dataset.prev; js.dataset.prev=''; try{ _jsPick(); }catch(e){} }
+        else if(js.value){ js.dataset.prev=''; }
+      },180);
+    });
     js.addEventListener('input',_jsPick);
     js.addEventListener('change',_jsPick);
   }
@@ -36898,7 +37005,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.27-p2-2569.91',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.28-p2-2569.92',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -41828,7 +41935,7 @@ var DASH4 = {
    เกมเป็นเจ้าของการคิดคะแนน — ตรงนี้คือ "รายงานผลที่คิดเสร็จแล้ว" ไม่มีการคิดใหม่แม้แต่ช่องเดียว
    ใช้ CBE8 เท่านั้น · run_id 'live' เท่านั้น · ส่งพลาด = เงียบ ไม่ขัดจังหวะครู (รอบหน้าส่งใหม่เอง) */
 var GP2_HUB = {
-  VER: 'V.8.27-p2-2569.91',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
+  VER: 'V.8.28-p2-2569.92',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
   CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
   KEY: 'gp2_hub_sent_v1',               /* ลายเซ็นผลที่ส่งสำเร็จแล้ว รายนักเรียน (กันยิงถี่) */
   LVNAME: ['เริ่มต้น', 'กำลังพัฒนา', 'สามารถ', 'เหนือความคาดหวัง'],
@@ -42074,7 +42181,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.27-p2-2569.91 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.28-p2-2569.92 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };
