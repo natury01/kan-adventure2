@@ -3404,6 +3404,51 @@ body.lowfx #game-wrapper.j-shake, body.lowfx .j-bump { animation: none; }
   border-radius: 999px; padding: calc(var(--vw) * 0.3) calc(var(--vw) * 0.9); }
 .mobile-fit #micro-root .micro-skip { min-height: 44px; font-size: max(13px, calc(var(--vw) * 1.2)); }
 .mobile-fit #micro-root .micro-hud { font-size: max(12px, calc(var(--vw) * 1.35)); }
+
+/* [บล็อก AO · เฟส 5D] มอนสเตอร์เงาแห่งการลืม — ชั้นนำเสนอริมจอ */
+.shadow-mon { position: absolute; right: calc(var(--vw) * 0.9); top: 46%; z-index: 7; pointer-events: none;
+  transform: scale(var(--sm-s, 1)); transform-origin: center bottom; transition: transform 0.4s cubic-bezier(.34,1.56,.64,1); }
+.shadow-mon .sm-body { display: block; font-size: calc(var(--vw) * 3.2); filter: drop-shadow(0 3px 6px rgba(10,16,34,0.55));
+  animation: smFloat 2.6s ease-in-out infinite; position: relative; }
+.shadow-mon .sm-tool { position: absolute; right: -18%; bottom: -6%; font-size: 0.55em; font-style: normal; }
+@keyframes smFloat { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(calc(var(--vw) * -0.4)) rotate(3deg); } }
+.shadow-mon .sm-bubble { position: absolute; right: 92%; top: -8%; white-space: nowrap; opacity: 0;
+  font-size: max(12px, calc(var(--vw) * 0.8)); font-weight: 700; color: #2a2440;
+  background: rgba(255,248,235,0.95); border: 1px solid rgba(255,214,106,0.9);
+  border-radius: calc(var(--vw) * 0.9) calc(var(--vw) * 0.9) calc(var(--vw) * 0.2) calc(var(--vw) * 0.9);
+  padding: calc(var(--vw) * 0.25) calc(var(--vw) * 0.7); transition: opacity 0.25s; }
+.shadow-mon .sm-bubble.show { opacity: 1; }
+.shadow-mon.sm-recoil .sm-body { animation: smRecoil 0.5s ease-out; }
+@keyframes smRecoil { 0% { transform: translateX(0); } 35% { transform: translateX(calc(var(--vw) * 1.4)) rotate(14deg); filter: brightness(1.6) drop-shadow(0 0 8px #ffe9a0); } 100% { transform: translateX(0); } }
+.shadow-mon.sm-giggle .sm-body { animation: smGiggle 0.45s ease-in-out; }
+@keyframes smGiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
+.shadow-mon.sm-dissolve { transition: opacity 0.8s, transform 0.8s; opacity: 0; transform: scale(0.2) rotate(30deg); }
+.sm-defeat { position: absolute; left: 50%; top: 20%; transform: translateX(-50%); z-index: 20; pointer-events: none;
+  font-size: max(14px, calc(var(--vw) * 1.4)); font-weight: 800; color: #ffd76a; text-shadow: 0 2px 8px rgba(0,0,0,0.85);
+  animation: smDefeat 2.5s ease-out forwards; }
+@keyframes smDefeat { 0% { opacity: 0; transform: translate(-50%, 10px) scale(0.7); } 15% { opacity: 1; transform: translate(-50%, 0) scale(1.08); } 25% { transform: translate(-50%, 0) scale(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -14px); } }
+/* ตัวกวนในฉากเดิน — ปุ่มจริง (แตะได้) ขนาด ≥44px บนจอสัมผัส */
+.shadow-walk { position: absolute; z-index: 8; transform: translate(-50%, -50%); cursor: pointer;
+  background: none; border: none; font-size: calc(var(--vw) * 2.6); min-width: max(44px, calc(var(--vw) * 3.2));
+  min-height: max(44px, calc(var(--vw) * 3.2)); filter: drop-shadow(0 3px 5px rgba(10,16,34,0.5));
+  animation: smFloat 2.2s ease-in-out infinite; padding: 0; }
+.shadow-walk.sw-puff { transition: opacity 0.6s, transform 0.6s; opacity: 0; transform: translate(-50%, -80%) scale(0.3) rotate(-20deg); }
+.sw-say { position: absolute; z-index: 9; transform: translate(-50%, -100%); pointer-events: none; white-space: nowrap;
+  font-size: max(12px, calc(var(--vw) * 0.8)); font-weight: 700; color: #2a2440;
+  background: rgba(255,248,235,0.95); border: 1px solid rgba(255,214,106,0.9); border-radius: 999px;
+  padding: calc(var(--vw) * 0.2) calc(var(--vw) * 0.7); }
+body.lowfx .shadow-mon, body.lowfx .shadow-walk, body.lowfx .sm-defeat { display: none; }
+@media (prefers-reduced-motion: reduce) { .shadow-mon, .shadow-walk, .sm-defeat { display: none !important; } }
+
+/* [บล็อก AP · เฟส 5E] ชั้นวิดีโอเปลี่ยนฉาก — โปร่งจนกว่าจะเล่นจริง (กันจอดำแวบตอนไม่มีไฟล์) */
+#vid-root { position: absolute; inset: 0; z-index: 60; background: transparent; opacity: 0; pointer-events: none; }
+#vid-root.on { background: #05070f; opacity: 1; pointer-events: auto; transition: opacity 0.3s; }
+#vid-root video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+#vid-root #vid-skip { position: absolute; right: calc(var(--vw) * 1.2); bottom: calc(var(--vw) * 1.2);
+  min-width: max(44px, calc(var(--vw) * 5)); min-height: max(44px, calc(var(--vw) * 2.8));
+  font-family: inherit; font-size: max(13px, calc(var(--vw) * 1)); font-weight: 800; cursor: pointer;
+  color: #ffe9b8; background: rgba(9,15,30,0.8); border: 2px solid rgba(255,214,106,0.65);
+  border-radius: 999px; padding: calc(var(--vw) * 0.4) calc(var(--vw) * 1.2); }
 </style>
 </head>
 <body>
@@ -4496,7 +4541,7 @@ body.lowfx #game-wrapper.j-shake, body.lowfx .j-bump { animation: none; }
    ด่านที่ผ่านในภาคหนึ่งจะไปโผล่ว่า 'ผ่านแล้ว' ในอีกภาค (ตราหลุด/ประตูเปิดเอง/คะแนนเพี้ยน) */
 const GAME_PART = 2;
 const PART1_URL = 'https://www.gameplearn.com/kan-adventure';
-const GAME_VERSION = 'V.8.23-p2-2569.87'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
+const GAME_VERSION = 'V.8.26-p2-2569.90'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
     ฝั่งเกม (1) ลบปุ่มวิ่ง ◀▶ + ป้ายสอนปัดของ V.7 ที่ชี้ผิดด่าน (2) แว่นขยายด่านนิเวศแตะครั้งเดียวติด
     (3) ซ่อนหมวดไอเทมที่ยังต่อเข้าด่านเรือธงไม่ได้ (ของที่ซื้อแล้วยังอยู่ในเซฟครบ)
     (4) หรี่เพลงอัตโนมัติระหว่างอ่านออกเสียงแล้วคืนเมื่ออ่านจบ (5) หน้าเข้าระบบแยกช่องโค้ดห้องออกจากชื่อในเกมชัดเจน + เตือนเมื่อพิมพ์สลับ
@@ -5806,6 +5851,193 @@ const Victory = {
    โชว์เหรียญตราสถานที่ (ไอคอนเดียวกับแผนที่โลก ขยายใหญ่) + ชื่อด่าน + อำเภอ + รูปแบบการเล่น
    ให้เด็กรู้ตัวก่อนว่า "กำลังจะไปที่ไหน เจออะไร" — เข้ากับเนื้อหาแต่ละด่านโดยอัตโนมัติ
    ============================================================ */
+/* ══ [บล็อก AP · เฟส 5E] VID — วิดีโอเปลี่ยนฉาก 2 จุด (เปิดเกม + ก่อนบอส) ══
+   เล่นจากไฟล์ assets/vid_opening.mp4 · assets/vid_boss.mp4 (ครูเจนภาพ→วิดีโอแล้ววางเอง)
+   กติกาเหล็ก: ไม่มีไฟล์/โหลดช้าเกิน 2.6 วิ = ไปต่อทันที ไม่มีทางจอดำค้าง · ปุ่มข้ามเสมอ ·
+   เล่นครั้งเดียวต่อเซสชัน · lowfx ไม่เล่นเลย — พังยังไงเกมก็เดินต่อได้เหมือนไม่มีระบบนี้ */
+const VID = {
+  ok() {
+    try { return !document.body.classList.contains('lowfx'); } catch (e) { return true; }
+  },
+  play(kind, done) {
+    done = done || function () {};
+    if (!this.ok()) { done(); return; }
+    let fin = false, started = false;
+    const gw = document.getElementById('game-wrapper');
+    if (!gw) { done(); return; }
+    const root = document.createElement('div');
+    root.id = 'vid-root';
+    root.innerHTML = '<video id="vid-player" playsinline preload="auto"></video>' +
+      '<button id="vid-skip" type="button">ข้ามวิดีโอ ⏭️</button>';
+    gw.appendChild(root);
+    const v = root.querySelector('video');
+    const end = () => {
+      if (fin) return;
+      fin = true;
+      try { v.pause(); } catch (e) {}
+      try { root.remove(); } catch (e) {}
+      try { done(); } catch (e) { console.error('[VID] done:', e); }
+    };
+    root.querySelector('#vid-skip').addEventListener('click', () => { try { AUDIO.playSFX('click'); } catch (e) {} end(); });
+    v.addEventListener('ended', end);
+    v.addEventListener('error', end);
+    v.addEventListener('playing', () => { started = true; root.classList.add('on'); });
+    setTimeout(() => { if (!started) end(); }, 2600);   /* ไฟล์ไม่มา = ผ่านเงียบ ๆ (ฉากเดิมของเกมทำหน้าที่แทน) */
+    setTimeout(() => { end(); }, 16000);                /* เพดานความยาว — สเปกขอ 5-8 วิ กันไฟล์ยาวผิดสเปกขังเด็ก */
+    try {
+      v.src = 'assets/vid_' + kind + '.mp4';
+      const pr = v.play();
+      if (pr && pr.catch) pr.catch(() => end());
+    } catch (e) { end(); }
+  }
+};
+/* ══ [บล็อก AO · เฟส 5D] SHADOW — มอนสเตอร์เงาแห่งการลืม (ชั้นนำเสนอ ไม่แตะการประเมิน) ══ */
+const SHADOW_DEFS = {
+  '1': { e: '🐛', name: 'หนอนแทะหลักฐาน', walk: 1, line: 'ฮิฮิ… หลักฐานน่าอร่อย~' },
+  '3': { e: '🦇', name: 'ค้างคาวข่าวลือ', walk: 1, line: 'ข่าวลือมาแล้วจ้า~ ฟังดี ๆ นะ' },
+  '5': { e: '🌊', name: 'เงาน้ำวน', line: 'น้ำวนหมุนติ้ว ๆ ~' },
+  'water': { e: '🌊', name: 'เงาน้ำวน', line: 'น้ำวนหมุนติ้ว ๆ ~' },
+  '6': { e: '🍄', name: 'ราหมอกลืม', line: 'ให้หมอกบังชื่อต้นไม้ดีกว่า~' },
+  '7': { e: '👻', name: 'เงาเมืองบาดาล', walk: 1, line: 'ใครจำเรื่องเก่า ๆ ได้บ้างน้า~' },
+  'pilok': { e: '🐹', name: 'ตุ่นสลับแร่', tool: '⛏️', line: 'สลับช่องแร่เล่นดีกว่า~' },
+  'balance2050': { e: '🌪️', name: 'ลมพายุ 2050', line: 'วู้ว~ พัดการ์ดปลิวเลย' }
+};
+const SHADOW = {
+  _key: null, _el: null, _size: 1, _hitN: 0, _bT: 0, _wm: null, _wRaf: 0,
+  okFx() {
+    try {
+      if (document.body.classList.contains('lowfx')) return false;
+      if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+    } catch (e) {}
+    return true;
+  },
+  /* ── ด่านประเมิน: โผล่ริมจอ ฟังเหตุการณ์จากเสียงเกม ── */
+  enter(key) {
+    key = String(key);
+    this.leave();
+    const d = SHADOW_DEFS[key];
+    if (!d || !this.okFx()) return;
+    this._key = key; this._size = 1; this._hitN = 0;
+    const gw = document.getElementById('game-wrapper');
+    if (!gw) return;
+    const el = document.createElement('div');
+    el.className = 'shadow-mon';
+    el.innerHTML = '<span class="sm-body">' + d.e + (d.tool ? '<i class="sm-tool">' + d.tool + '</i>' : '') + '</span>' +
+      '<span class="sm-bubble" id="sm-bubble"></span>';
+    gw.appendChild(el);
+    this._el = el;
+    this._say('👋 ' + d.name + ' โผล่มาแล้ว!', 2400);
+    setTimeout(() => { if (this._el === el) this._say(d.line, 2600); }, 3200);
+  },
+  leave() {
+    if (this._el) { try { this._el.remove(); } catch (e) {} }
+    this._el = null; this._key = null;
+  },
+  _say(txt, ms) {
+    const el = this._el && this._el.querySelector('.sm-bubble');
+    if (!el) return;
+    el.textContent = txt;
+    el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+    clearTimeout(this._bT);
+    this._bT = setTimeout(() => { try { el.classList.remove('show'); } catch (e) {} }, ms || 2200);
+  },
+  /* ตอบถูก → เงาหดตัวถอยหนี (ความรู้ทำให้เงาจาง) */
+  onCorrect() {
+    if (!this._el) return;
+    this._hitN++;
+    this._size = Math.max(0.5, this._size - 0.12);
+    this._el.style.setProperty('--sm-s', this._size);
+    this._el.classList.remove('sm-recoil'); void this._el.offsetWidth; this._el.classList.add('sm-recoil');
+    this._say(['โอ๊ย! ความรู้แสงจ้า~', 'แง! เงาจางลงแล้ว', 'เก่งจัง… ถอยดีกว่า'][this._hitN % 3], 1600);
+    try { const r = this._el.getBoundingClientRect(); JUICE.spark(r.left + r.width / 2, r.top + r.height / 2); } catch (e) {}
+  },
+  /* ตอบผิด → แค่หัวเราะสั้น ๆ ไม่โต ไม่ขวาง ไม่ซ้ำเติม */
+  onWrong() {
+    if (!this._el) return;
+    this._el.classList.remove('sm-giggle'); void this._el.offsetWidth; this._el.classList.add('sm-giggle');
+    this._say('คิก ๆ … ลองคิดอีกทีนะ', 1500);
+  },
+  /* ผ่านด่าน → สลายเป็นประกาย + ป้ายปราบสำเร็จ */
+  onScreen(id) {
+    if ((id === 'stage-clear-screen' || id === 'victory-screen') && this._el && this._key) {
+      const d = SHADOW_DEFS[this._key], el = this._el;
+      this._el = null; this._key = null;
+      try {
+        el.classList.add('sm-dissolve');
+        const r = el.getBoundingClientRect();
+        try { JUICE.spark(r.left + r.width / 2, r.top + r.height / 2, true); } catch (e) {}
+        const tag = document.createElement('div');
+        tag.className = 'sm-defeat';
+        tag.textContent = '✨ ปราบ ' + d.e + ' ' + d.name + ' สำเร็จ!';
+        document.getElementById('game-wrapper').appendChild(tag);
+        setTimeout(() => { try { tag.remove(); } catch (e) {} }, 2600);
+        setTimeout(() => { try { el.remove(); } catch (e) {} }, 900);
+      } catch (e) { try { el.remove(); } catch (e2) {} }
+    }
+    if (id === 'worldmap-screen' || id === 'lobby-screen') this.leave();   /* ออกจากด่าน = เก็บกวาด */
+  },
+  /* ── ตัวกวนในฉากเดิน: เดินวน หนีเมื่อเข้าใกล้/แตะ (ไม่แตะระบบเก็บของเลย) ── */
+  walkSpawn(sc, root) {
+    this.walkStop();
+    const d = SHADOW_DEFS[String(sc.key)];
+    if (!d || !d.walk || !this.okFx() || !root) return;
+    const m = document.createElement('button');
+    m.type = 'button';
+    m.className = 'shadow-walk';
+    m.textContent = d.e;
+    m.title = d.name;
+    root.appendChild(m);
+    const st = { x: 50, y: (sc.band[0] + sc.band[1]) / 2, a: Math.random() * 6.28, flee: 0, gone: false };
+    m.addEventListener('pointerdown', (e) => {
+      if (st.gone) return;
+      st.flee = 1.6; st.gone = true;
+      m.classList.add('sw-puff');
+      this._wSay(root, st.x, st.y, 'ว้าย! ไว้เจอกันใหม่~');
+      try { AUDIO.playSFX('click'); } catch (e2) {}
+      try { JUICE.spark(e.clientX, e.clientY); } catch (e2) {}
+      setTimeout(() => { try { m.remove(); } catch (e2) {} }, 700);
+    }, { passive: true });
+    this._wm = { m, st, sc };
+    const tick = () => {
+      if (!this._wm || this._wm.m !== m || !m.isConnected) return;
+      const p = (typeof WALK !== 'undefined' && WALK._p) ? WALK._p : null;
+      if (!st.gone) {
+        st.a += 0.02;
+        st.x += Math.cos(st.a) * 0.16;
+        st.y += Math.sin(st.a * 0.7) * 0.1;
+        if (p) {
+          const dd = Math.hypot(p.x - st.x, (p.y - st.y) * 1.4);
+          if (dd < 10) {   /* ผู้เล่นเข้าใกล้ = รีบเผ่น (ตัวกวนขี้ตกใจ) */
+            st.x += (st.x - p.x) / (dd || 1) * 1.4;
+            st.y += (st.y - p.y) / (dd || 1) * 0.9;
+          }
+        }
+        st.x = Math.max(6, Math.min(94, st.x));
+        st.y = Math.max(sc.band[0], Math.min(sc.band[1], st.y));
+        m.style.left = st.x + '%';
+        m.style.top = st.y + '%';
+      }
+      this._wRaf = requestAnimationFrame(tick);
+    };
+    this._wRaf = requestAnimationFrame(tick);
+  },
+  _wSay(root, x, y, txt) {
+    try {
+      const b = document.createElement('div');
+      b.className = 'sw-say';
+      b.textContent = txt;
+      b.style.left = x + '%'; b.style.top = (y - 8) + '%';
+      root.appendChild(b);
+      setTimeout(() => { try { b.remove(); } catch (e) {} }, 1400);
+    } catch (e) {}
+  },
+  walkStop() {
+    if (this._wRaf) cancelAnimationFrame(this._wRaf);
+    this._wRaf = 0;
+    if (this._wm) { try { this._wm.m.remove(); } catch (e) {} }
+    this._wm = null;
+  }
+};
 /* ══ [บล็อก AL · เฟส 5B] JUICE — ตอบสนองทุกคลิกทั้งเกม (ชั้นความสนุก ไม่แตะข้อมูลวิจัยใด ๆ)
    หลัก: วัดจากผลบนจอ (MutationObserver ตัวเลขเหรียญ) ไม่ hook โค้ดให้เหรียญแม้แต่บรรทัดเดียว
    เคารพ body.lowfx + prefers-reduced-motion เสมอ — ปิดแล้วเกมเดิมครบ 100% */
@@ -7047,6 +7279,81 @@ const PetRenderer = {
     return { phase: 'action', p: (cyc - 2200) / 1000 };
   },
 
+  /* [บล็อก AP · เฟส 5E] สัตว์จริงของกาญจนบุรี 3 ตัว — วาดเป็นโค้ดสไตล์เดียวกับตัวเดิม */
+  _draw_hornbill(ctx, phase, p, t) {
+    const flap = phase === 'jump' ? Math.sin(p * Math.PI * 2) * 8 : Math.sin(t / 260) * 3;
+    /* ปีก */
+    ctx.fillStyle = '#22262e';
+    ctx.beginPath(); ctx.ellipse(-6, -2 + flap * 0.3, 9, 5, -0.5, 0, Math.PI * 2); ctx.fill();
+    /* ตัวดำท้องขาว */
+    ctx.fillStyle = '#2b3038';
+    ctx.beginPath(); ctx.ellipse(0, 0, 10, 12, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#f4efe4';
+    ctx.beginPath(); ctx.ellipse(2, 5, 6, 7, 0, 0, Math.PI * 2); ctx.fill();
+    /* หาง */
+    ctx.fillStyle = '#f4efe4';
+    ctx.beginPath(); ctx.moveTo(-8, 6); ctx.lineTo(-16, 12 + flap * 0.4); ctx.lineTo(-7, 11); ctx.closePath(); ctx.fill();
+    /* หัว + โหนกปากเหลืองเอกลักษณ์นกเงือก */
+    ctx.fillStyle = '#2b3038';
+    ctx.beginPath(); ctx.arc(6, -10, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ffc23a';
+    ctx.beginPath(); ctx.moveTo(9, -13); ctx.quadraticCurveTo(20, -12, 19, -8); ctx.lineTo(9, -8); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#e89a1e';
+    ctx.beginPath(); ctx.moveTo(9, -16); ctx.quadraticCurveTo(16, -18, 17, -13); ctx.lineTo(10, -12); ctx.closePath(); ctx.fill();
+    /* ตา */
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(6.5, -11, 2.1, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#241a10'; ctx.beginPath(); ctx.arc(7, -11, 1.1, 0, Math.PI * 2); ctx.fill();
+    if (phase === 'action') { ctx.font = '9px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('🎶', 14, -20); }
+  },
+  _draw_yisok(ctx, phase, p, t) {
+    const sway = Math.sin(t / 300) * 4;
+    /* ฟองน้ำ */
+    ctx.globalAlpha = 0.5; ctx.fillStyle = '#bfe6ff';
+    ctx.beginPath(); ctx.arc(10, -14 - (t / 60 % 14), 1.6, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(4, -10 - (t / 80 % 10), 1.1, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 1;
+    /* ตัวปลาสีเงินอมทอง + แถบเกล็ดเข้มแบบยี่สก */
+    ctx.save(); ctx.rotate(sway * 0.02);
+    const g = ctx.createLinearGradient(0, -8, 0, 10);
+    g.addColorStop(0, '#c9b98a'); g.addColorStop(0.5, '#e8e2cf'); g.addColorStop(1, '#b8ceb8');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.ellipse(0, 0, 13, 8, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = 'rgba(90,84,58,0.5)'; ctx.lineWidth = 1;
+    for (let i = -1; i <= 1; i++) { ctx.beginPath(); ctx.moveTo(i * 4 - 2, -7); ctx.lineTo(i * 4 - 2, 7); ctx.stroke(); }
+    /* หางโบกจริง */
+    ctx.fillStyle = '#c9862e';
+    ctx.beginPath(); ctx.moveTo(-11, 0); ctx.quadraticCurveTo(-20, -8 + sway, -18, 0); ctx.quadraticCurveTo(-20, 8 + sway, -11, 0); ctx.closePath(); ctx.fill();
+    /* ครีบ + หน้า */
+    ctx.beginPath(); ctx.moveTo(0, -7); ctx.quadraticCurveTo(3, -13, 6, -7); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(8, -2, 2.4, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#241a10'; ctx.beginPath(); ctx.arc(8.7, -2, 1.2, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  },
+  _draw_whitedeer(ctx, phase, p, t) {
+    const trot = phase === 'jump' ? Math.sin(p * Math.PI * 2) * 3 : 0;
+    /* ขา */
+    ctx.strokeStyle = '#e8e2d8'; ctx.lineWidth = 2.6; ctx.lineCap = 'round';
+    [[-6, 4], [-2, 5], [3, 5], [7, 4]].forEach((L, i) => {
+      ctx.beginPath(); ctx.moveTo(L[0], L[1]); ctx.lineTo(L[0] + (i % 2 ? trot : -trot) * 0.6, 18); ctx.stroke();
+    });
+    /* ตัวขาวเผือก */
+    ctx.fillStyle = '#f6f2ea';
+    ctx.beginPath(); ctx.ellipse(0, 0, 12, 8, 0, 0, Math.PI * 2); ctx.fill();
+    /* คอ+หัว */
+    ctx.beginPath(); ctx.ellipse(9, -8, 4.5, 6, 0.5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(12, -13, 4.2, 0, Math.PI * 2); ctx.fill();
+    /* หูและเขาเล็กแบบเก้ง */
+    ctx.beginPath(); ctx.ellipse(9.5, -17, 1.6, 3, -0.4, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#c9b98a'; ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.moveTo(13.5, -16.5); ctx.lineTo(15.5, -21); ctx.stroke();
+    /* ตาแดงอ่อนแบบสัตว์เผือก + จมูก */
+    ctx.fillStyle = '#c97a7a'; ctx.beginPath(); ctx.arc(13, -13.5, 1.2, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#8a7a6a'; ctx.beginPath(); ctx.arc(15.8, -12, 1.3, 0, Math.PI * 2); ctx.fill();
+    /* หางสั้น */
+    ctx.fillStyle = '#f6f2ea';
+    ctx.beginPath(); ctx.ellipse(-12, -2, 2.4, 3.2, 0.6, 0, Math.PI * 2); ctx.fill();
+    if (phase === 'action') { ctx.font = '9px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('✨', -2, -16); }
+  },
   draw(ctx, petId, x, y, scale, t) {
     if (!petId || petId === 'none') return;
     const { phase, p } = this._phase(t);
@@ -9352,6 +9659,31 @@ const CHAR_CONFIG = {
     outfitPrimary: '#7a8a6b', outfitSecondary: '#4a5a3f',
     accentColor: '#c98a2e',
     weaponType: 'map-compass',
+    headwear: 'hat'
+  },
+  // [บล็อก AP · เฟส 5E] คู่นักสำรวจจากภาพปกภาค 2 — รางวัลสะสมตราผู้พิทักษ์หลักครบ 6 ดวง
+  nongFahsai: {
+    id: 'nongFahsai', name: 'น้องฟ้าใส', gender: 'female',
+    body: { w: 0.96, h: 0.99 },
+    skinTone: '#ffdfb8',
+    hairColorLight: '#3a2a1a', hairColorDark: '#1e130a',
+    hairStyle: 'twintail',
+    eyeColor: '#4a3320',
+    outfitPrimary: '#2e7cb8', outfitSecondary: '#1d4f8a',      /* ฟ้าน้ำแข็ง-น้ำเงินเที่ยงคืน ตามธีมรุ่งอรุณ */
+    accentColor: '#ffb648',
+    weaponType: 'map-compass',
+    headwear: 'sun-hat'
+  },
+  nongPhuphan: {
+    id: 'nongPhuphan', name: 'น้องภูผา', gender: 'male',
+    body: { w: 1.0, h: 1.0 },
+    skinTone: '#f2c896',
+    hairColorLight: '#2e2018', hairColorDark: '#170f08',
+    hairStyle: 'short',
+    eyeColor: '#3a2a18',
+    outfitPrimary: '#c9862e', outfitSecondary: '#8a5a1e',      /* กากี-อำพันชุดนักสำรวจจากปก */
+    accentColor: '#7fd4f5',
+    weaponType: 'camera',
     headwear: 'hat'
   },
   // ครูภูมิ — ครูผู้นำทางตัวหลักที่พูดแทบทุกด่าน แยกหน้าตาออกจากตัวละครผู้เล่นให้ชัดเจน
@@ -21460,7 +21792,10 @@ const AURA_CATALOG = [
   { id: 'green', name: 'ออร่าสีเขียวมรกต', color: '#3adf8a', price: 30 },
   { id: 'purple', name: 'ออร่าสีม่วงเวท', color: '#b06aff', price: 50 },
   { id: 'gold', name: 'ออร่าทองราชา', color: '#ffd54a', price: 80 },
-  { id: 'rainbow', name: 'ออร่าสายรุ้งในตำนาน', color: 'rainbow', price: 150 }
+  { id: 'rainbow', name: 'ออร่าสายรุ้งในตำนาน', color: 'rainbow', price: 150 },
+  /* [บล็อก AP · เฟส 5E] ออร่าเกียรติยศ — ปลดล็อกด้วยความสำเร็จเท่านั้น ไม่ใช้เหรียญ */
+  { id: 'copper', name: 'ออร่าเข็มทิศทองแดง', color: '#ff8f4a', price: 0 },
+  { id: 'crown2050', name: 'มงกุฎผู้พิทักษ์ 2050', color: '#fff2c8', price: 0 }
 ];
 function getOwnedAuras() {
   const data = getSaveData();
@@ -21479,7 +21814,19 @@ const STAGE_UNLOCKS = [
   { type: 'char', id: 'lungChangFai', stage: 5, stageLabel: 'ด่าน 5 เขื่อนวชิราลงกรณ' },
   { type: 'char', id: 'nongMonNoi',   stage: 7, stageLabel: 'ด่าน 7 สะพานมอญ' },
   { type: 'aura', id: 'gold',         stage: 8, stageLabel: 'ด่าน 8 ปราบปีศาจข้อสอบ' },
-  { type: 'aura', id: 'purple',       stage: 'balance2050', stageLabel: 'ภารกิจกาญจนบุรี 2050: พิทักษ์สมดุล' } // [รอบ 49 Capstone] รางวัลผ่านด่าน (ของตกแต่ง — ไม่มีผลต่อคะแนนสมรรถนะ)
+  { type: 'aura', id: 'purple',       stage: 'balance2050', stageLabel: 'ภารกิจกาญจนบุรี 2050: พิทักษ์สมดุล' }, // [รอบ 49 Capstone] รางวัลผ่านด่าน (ของตกแต่ง — ไม่มีผลต่อคะแนนสมรรถนะ)
+  /* [บล็อก AP · เฟส 5E] ชุดสะสมตามแผนที่ครูเคาะ — cond ใหม่เป็นการอ่านเซฟอย่างเดียว ไม่แตะกติกาตรา
+     u.stage ในรายการล่างเป็น "ข้อความโชว์ในร้านค้า" (การ์ดพิมพ์ 'ผ่านด่าน '+stage ตรง ๆ) · ตัวเช็กจริงคือ cond/key */
+  { type: 'pet',  id: 'hornbill',  cond: 'st', key: 'hellfire', stage: 'พิเศษช่องเขาขาด', stageLabel: 'ด่านพิเศษช่องเขาขาด',
+    fact: '🐦 นกเงือก — สัตว์ป่าผืนป่าตะวันตกกาญจนบุรี จับคู่รักเดียวตลอดชีวิต และช่วยกระจายเมล็ดพันธุ์ให้ป่าใหญ่' },
+  { type: 'pet',  id: 'yisok',     cond: 'st', key: 'water', stage: 'พิเศษปริศนาสายน้ำ', stageLabel: 'ด่านพิเศษปริศนาสายน้ำ',
+    fact: '🐟 ปลายี่สกไทย — ปลาน้ำจืดขนาดใหญ่ประจำแม่น้ำแควน้อย-แควใหญ่ ปัจจุบันหายากมาก ต้องช่วยกันอนุรักษ์' },
+  { type: 'pet',  id: 'whitedeer', cond: 'star2all', stage: '2★ ครบ 14 ด่าน', stageLabel: 'เก็บ 2★ ครบทั้ง 14 ด่าน',
+    fact: '🦌 เก้งเผือก — สัตว์หายากที่เคยพบในผืนป่ารอบเขื่อนศรีนครินทร์ ตัวสีขาวเพราะภาวะเผือกตามธรรมชาติ' },
+  { type: 'char', id: 'nongFahsai',  cond: 'main6', stage: 'ตราหลักครบ 6 ดวง', stageLabel: 'สะสมตราผู้พิทักษ์หลักครบ 6 ดวง' },
+  { type: 'char', id: 'nongPhuphan', cond: 'main6', stage: 'ตราหลักครบ 6 ดวง', stageLabel: 'สะสมตราผู้พิทักษ์หลักครบ 6 ดวง' },
+  { type: 'aura', id: 'copper',    cond: 'special3', stage: 'ด่านพิเศษครบ 3', stageLabel: 'ผ่านด่านพิเศษครบทั้ง 3 (ช่องเขาขาด·ปิล๊อก·สายน้ำ)' },
+  { type: 'aura', id: 'crown2050', cond: 'badges18', stage: 'ตราครบ 18 ดวง', stageLabel: 'สะสมตราผู้พิทักษ์ครบทั้ง 18 ดวง — เกียรติยศสูงสุด' }
 ];
 function getStageUnlock(type, id) { return STAGE_UNLOCKS.find(u => u.type === type && u.id === id) || null; }
 
@@ -21489,11 +21836,39 @@ function grantStageUnlocks(data) {
   const granted = [];
   if (!data || !data.stages) return granted;
   STAGE_UNLOCKS.forEach(u => {
-    const st = data.stages[u.stage];
-    if (!st || !st.completed) return;
+    /* [บล็อก AP] เงื่อนไขพิเศษของชุดสะสมเฟส 5E — อ่านอย่างเดียว ไม่แตะกติกาตรา/คะแนนใด ๆ */
+    if (u.cond === 'st') {
+      const s2 = data.stages[u.key];
+      if (!s2 || !s2.completed) return;
+    } else if (u.cond === 'main6') {
+      if (!['1', '3', '4', '5', '6', '7'].every(k => data.stages[k] && data.stages[k].completed)) return;
+    } else if (u.cond === 'special3') {
+      if (!['hellfire', 'pilok', 'water'].every(k => data.stages[k] && data.stages[k].completed)) return;
+    } else if (u.cond === 'star2all') {
+      const A14 = (typeof _BADGE_ALL14 !== 'undefined') ? _BADGE_ALL14 : ['1', '3', '4', '5', '6', '7', '8', 'mg1', 'mg2', 'mg3', 'hellfire', 'pilok', 'water', 'balance2050'];
+      if (!A14.every(k => { const s2 = data.stages[k]; return s2 && s2.completed && (Number(s2.stars) || 0) >= 2; })) return;
+    } else if (u.cond === 'badges18') {
+      let ok18 = false;
+      try {
+        ok18 = getEarnedBadges(data).length >= 12 &&
+          ['1', '3', '4', '5', '6', '7'].every(k => data.stages[k] && data.stages[k].completed);
+      } catch (e) { ok18 = false; }
+      if (!ok18) return;
+    } else {
+      const st = data.stages[u.stage];
+      if (!st || !st.completed) return;
+    }
     if (u.type === 'pet') {
       if (!data.ownedPets) data.ownedPets = ['none'];
-      if (data.ownedPets.indexOf(u.id) === -1) { data.ownedPets.push(u.id); granted.push(u); }
+      if (data.ownedPets.indexOf(u.id) === -1) {
+        data.ownedPets.push(u.id); granted.push(u);
+        /* [บล็อก AP] สัตว์กาญจนบุรีมีการ์ดความรู้จริง — จดลงสมุดนักสำรวจครั้งเดียวตอนปลดล็อก */
+        if (u.fact) {
+          data.notebook = data.notebook || [];
+          data.notebook.push({ t: Date.now(), stage: 'เพื่อนใหม่', note: u.fact });
+          while (data.notebook.length > 60) data.notebook.shift();
+        }
+      }
     } else if (u.type === 'aura') {
       if (!data.ownedAuras) data.ownedAuras = ['default'];
       if (data.ownedAuras.indexOf(u.id) === -1) { data.ownedAuras.push(u.id); granted.push(u); }
@@ -21751,7 +22126,11 @@ const PET_CATALOG = [
   { id: 'cat', name: 'น้องแมวเหมียว', emoji: '🐈', price: 40 },
   { id: 'owl', name: 'นกฮูกนักปราชญ์', emoji: '🦉', price: 60 },
   { id: 'elephant', name: 'ช้างน้อยเอราวัณ', emoji: '🐘', price: 100 },
-  { id: 'dragon', name: 'มังกรทองแห่งกาญจนบุรี', emoji: '🐉', price: 200 }
+  { id: 'dragon', name: 'มังกรทองแห่งกาญจนบุรี', emoji: '🐉', price: 200 },
+  /* [บล็อก AP · เฟส 5E] สัตว์จริงของกาญจนบุรี — รางวัลปลดล็อก ทุกตัวมีการ์ดความรู้ลงสมุดนักสำรวจ */
+  { id: 'hornbill', name: 'นกเงือกป่าตะวันตก', emoji: '🐦', price: 0 },
+  { id: 'yisok', name: 'ปลายี่สกน้อยแม่น้ำแคว', emoji: '🐟', price: 0 },
+  { id: 'whitedeer', name: 'เก้งเผือกแห่งผืนป่าเขื่อน', emoji: '🦌', price: 0 }
 ];
 function getOwnedPets() {
   const data = getSaveData();
@@ -25745,7 +26124,13 @@ var CBE8 = {
       parts.push({ label:'รวมสองแหล่ง (คุณภาพรวมด่าน '+Math.round(CBE8.MIX_OVERALL*100)+'% + ด้านย่อย '+Math.round(CBE8.MIX_SUB*100)+'%)',
         txt:Math.round(pct)+'%' });
     } else if(pct==null){ pct=subPct; }
-    return { pct:(pct==null?null:Math.round(pct*10)/10), parts:parts, n:evd.length,
+    /* [บล็อก AQ · มติแชตมาตรฐาน 11 ส.ค.] คะแนนด้านย่อยเป็นตัวเลขตรง ๆ สำหรับ sub_scores
+       (additive ล้วน — pct/parts/สูตรผสมเดิมไม่ถูกแตะแม้แต่ค่าเดียว) */
+    var subOut=null;
+    Object.keys(bySub).forEach(function(s2){ var a=bySub[s2]; if(!a.length) return;
+      var av=a.reduce(function(x,y){return x+y;},0)/a.length;
+      if(!subOut) subOut={}; subOut[s2]=Math.round(av*1000)/10; });
+    return { pct:(pct==null?null:Math.round(pct*10)/10), parts:parts, n:evd.length, subPct:subOut,
       src:'บัญชีหลักฐานพฤติกรรม (Evidence Ledger) '+evd.length+' รายการ' };
   },
   _summative(c, stu){
@@ -29217,8 +29602,10 @@ const WALK = {
     };
     this._raf = requestAnimationFrame(loop);
     try { if (typeof ReadAloud !== 'undefined' && ReadAloud.on) ReadAloud.speak([sc.title, sc.hint], true); } catch (e) {}
+    try { SHADOW.walkSpawn(sc, root); } catch (e) {}   /* [บล็อก AO] ตัวกวนประจำฉาก (ถ้ามี) — ไม่แตะระบบเก็บของ */
   },
   stop() {
+    try { SHADOW.walkStop(); } catch (e) {}
     this._run++;
     if (this._raf) cancelAnimationFrame(this._raf);
     this._raf = 0;
@@ -29742,6 +30129,7 @@ function showScreen(id) {
   try { ReadAloud.stop(); } catch (e) {}   /* [บล็อก AB3] เปลี่ยนหน้า = เสียงอ่านเดิมหยุดทันที ไม่ค้างข้ามหน้า (ทุกกรณี รวมเข้าคัตซีน) */
   try { RA2.onScreen(id); } catch (e) {}   /* [บล็อก AB2] แล้วค่อยอ่านเนื้อหาของหน้าใหม่ ถ้าเปิดโหมดช่วยอ่านไว้ */
   try { JUICE.onScreen(id); } catch (e) {}  /* [บล็อก AL] ฉลองผ่านด่าน/ชนะบอส — สั่นเบา+ประกาย (เคารพ lowfx) */
+  try { SHADOW.onScreen(id); } catch (e) {} /* [บล็อก AO] ผ่านด่าน = ปราบเงาสลายเป็นประกาย · ออกด่าน = เก็บกวาด */
   const fadeOverlay = document.getElementById('scene-fade-overlay');
   fadeOverlay.style.transition = 'none';
   fadeOverlay.classList.add('fade-active');
@@ -31001,7 +31389,7 @@ function wireAuthEvents() {
 }
 
 // เฟส 3 (Module 4): รายชื่อตัวละครที่เลือกเล่นได้ทั้งหมด — 2 ตัวหลัก (ฟรี) + 6 ตัวละครร้านค้า (ต้องซื้อก่อน)
-const PLAYABLE_CHARACTER_KEYS = ['nongKan', 'nongKwae', 'lungChangFai', 'piNakTharani', 'pranPaAnurak', 'nongMonNoi', 'changPhapPrawattisat', 'thahanRaksaDan', 'nongMiao', 'kaptanLek', 'nongTekBall', 'nakaThara', 'mawetNamphu', 'nakKhudMuang', 'khwanChang', 'nakDontri']; // [รอบ39 #B] +นาคา/หมอเวท/นักขุด [รอบ40 #2] +ควาญช้าง/นักดนตรี
+const PLAYABLE_CHARACTER_KEYS = ['nongKan', 'nongKwae', 'lungChangFai', 'piNakTharani', 'pranPaAnurak', 'nongMonNoi', 'changPhapPrawattisat', 'thahanRaksaDan', 'nongMiao', 'kaptanLek', 'nongTekBall', 'nakaThara', 'mawetNamphu', 'nakKhudMuang', 'khwanChang', 'nakDontri', 'nongFahsai', 'nongPhuphan']; // [รอบ39 #B] +นาคา/หมอเวท/นักขุด [รอบ40 #2] +ควาญช้าง/นักดนตรี [บล็อก AP] +คู่นักสำรวจจากปก
 const CHARACTER_SHOP_PRICE = {
   piNakTharani: 130, pranPaAnurak: 160,   // [รอบ37 #4] เอา lungChangFai ออกจากร้าน (เหลือ 8 ตัวเด่น — ยังได้เป็นรางวัลผ่านด่าน 5)
   nongMonNoi: 120, changPhapPrawattisat: 200, thahanRaksaDan: 350,
@@ -31028,6 +31416,8 @@ const CHARACTER_DESC = {
   mawetNamphu: 'หมอเวทผู้กุมพลังไอร้อนใต้พิภพจากน้ำพุร้อนหินดาด',
   nakKhudMuang: 'ฮีโร่นักขุดเหมืองแร่ดีบุกปิล๊อก บึกบึนด้วยอีเต้อคู่ใจ',
   khwanChang: 'ควาญช้างผู้กล้าคู่เมืองกาญจน์ ถือขอช้างสวมงอบ',
+  nongFahsai: 'นักสำรวจหญิงจากภาพปก ผู้ถือแผนที่นำทางรุ่งอรุณ — รางวัลตราหลักครบ 6 ดวง',
+  nongPhuphan: 'นักสำรวจชายจากภาพปก ช่างภาพหมวกปีกกว้าง — รางวัลตราหลักครบ 6 ดวง',
   nakDontri: 'นักดนตรีพื้นบ้านผู้บรรเลงซอไทยกล่อมขุนเขา'
 };
 function getOwnedCharacters() {
@@ -31519,6 +31909,51 @@ function wireEvents() {
       St.__walkWrapped = true;
     });
   } catch (e) { console.error('[AM2] ผูกฉากเดิน 4 ด่านไม่สำเร็จ:', e); }
+  /* [บล็อก AO · เฟส 5D] เดินสายมอนสเตอร์เงา — สังเกตการณ์ล้วน ไม่แตะเอนจินคำถามแม้แต่บรรทัดเดียว */
+  try {
+    /* รู้ว่ากำลังเข้าด่านไหนจากประตูกลาง _launchStage (ทางเข้าด่านจริงทุกทางผ่านจุดนี้) */
+    if (typeof _launchStage === 'function' && !window.__shadowLaunch) {
+      window.__shadowLaunch = _launchStage;
+      _launchStage = function (key, stage) { try { SHADOW.enter(key); } catch (e) {} return window.__shadowLaunch(key, stage); };
+    }
+    /* รู้ว่าตอบถูก/ผิดจาก "เสียงเกม" — จุดต่อจุดเดียว ใช้ได้ทุกด่าน (ท่าเดียวกับตัวเฝ้าเหรียญ AL) */
+    if (typeof AUDIO !== 'undefined' && AUDIO.playSFX && !AUDIO.__shadowTap) {
+      const _sfx = AUDIO.playSFX.bind(AUDIO);
+      AUDIO.playSFX = function (name) {
+        try { if (name === 'correct') SHADOW.onCorrect(); else if (name === 'wrong') SHADOW.onWrong(); } catch (e) {}
+        return _sfx.apply(null, arguments);
+      };
+      AUDIO.__shadowTap = true;
+    }
+  } catch (e) { console.error('[AO2] เดินสายมอนสเตอร์เงาไม่สำเร็จ:', e); }
+  /* [บล็อก AP · เฟส 5E] วิดีโอ 2 จุด: กดเริ่มผจญภัยครั้งแรกของเซสชัน + ก่อนเข้าด่านบอส */
+  try {
+    const bs = document.getElementById('btn-start');
+    if (bs && !bs.__vidWired) {
+      bs.__vidWired = true;
+      bs.addEventListener('click', () => {
+        try {
+          if (sessionStorage.getItem('vid_opening_played')) return;
+          sessionStorage.setItem('vid_opening_played', '1');
+          VID.play('opening');
+        } catch (e) {}
+      });
+    }
+    if (typeof _launchStage === 'function' && !window.__vidLaunch) {
+      window.__vidLaunch = _launchStage;
+      _launchStage = function (key, stage) {
+        try {
+          if (String(key) === '8' && !sessionStorage.getItem('vid_boss_played') && VID.ok()) {
+            sessionStorage.setItem('vid_boss_played', '1');
+            const a0 = key, a1 = stage;
+            VID.play('boss', () => window.__vidLaunch(a0, a1));
+            return;
+          }
+        } catch (e) {}
+        return window.__vidLaunch(key, stage);
+      };
+    }
+  } catch (e) { console.error('[AP4b] เดินสายวิดีโอไม่สำเร็จ:', e); }
   {
     const _raCb = document.getElementById('toggle-readaloud');
     if (_raCb) {
@@ -36463,7 +36898,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.23-p2-2569.87',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.26-p2-2569.90',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -36630,7 +37065,7 @@ var DEMO = {
       return Promise.resolve(by);
     };
     clsRender();
-    try{ if(CLSTAB.get()==='v8') clsV8Load(roomId); }catch(e){}
+    try{ if(CLSTAB.get()==='v8'){ try{ CLSPART.set('p2'); }catch(e2){} clsV8Load(roomId); } }catch(e){}   /* [บล็อก AQ] เข้าห้องด้วยแท็บ 🧪 = บังคับมุมมองภาค 2 เหมือน CLSTAB.set */
     toast('เปิดโหมดข้อมูลตัวอย่างแล้ว — ไม่ได้เขียนลงฐานข้อมูล');
   },
 
@@ -38386,8 +38821,8 @@ var CLSPART = {
    → ยุบมาเป็นหน้าเดียว สลับด้วยแท็บ · รายชื่อเรียงเหมือนกัน · ปุ่มเดิมยังใช้ได้ทุกปุ่ม
    ============================================================ */
 var CLSTAB = {
-  KEY:'cls_room_tab',
-  get(){ try{ return localStorage.getItem(this.KEY)||'scores'; }catch(e){ return 'scores'; } },
+  KEY:'cls_room_tab_v2',   /* [บล็อก AQ · มติแชตมาตรฐาน] คีย์ใหม่ = รีเซ็ตค่าที่เครื่องครูจำไว้หนึ่งครั้ง ให้ทุกคนเจอแท็บ 🧪 ก่อน */
+  get(){ try{ return localStorage.getItem(this.KEY)||'v8'; }catch(e){ return 'scores'; } },
   set(v,rid){ try{ localStorage.setItem(this.KEY,v); }catch(e){}
     /* [แก้ตามครู] แท็บเทียบเกณฑ์เป็นของภาค 2 — บังคับมุมมองให้ตรงกันเสมอ กันตัวเลขเพี้ยน */
     if(v==='v8'){ try{ CLSPART.set('p2'); }catch(e){} }
@@ -41079,7 +41514,13 @@ var CBE8 = {
       parts.push({ label:'รวมสองแหล่ง (คุณภาพรวมด่าน '+Math.round(CBE8.MIX_OVERALL*100)+'% + ด้านย่อย '+Math.round(CBE8.MIX_SUB*100)+'%)',
         txt:Math.round(pct)+'%' });
     } else if(pct==null){ pct=subPct; }
-    return { pct:(pct==null?null:Math.round(pct*10)/10), parts:parts, n:evd.length,
+    /* [บล็อก AQ · มติแชตมาตรฐาน 11 ส.ค.] คะแนนด้านย่อยเป็นตัวเลขตรง ๆ สำหรับ sub_scores
+       (additive ล้วน — pct/parts/สูตรผสมเดิมไม่ถูกแตะแม้แต่ค่าเดียว) */
+    var subOut=null;
+    Object.keys(bySub).forEach(function(s2){ var a=bySub[s2]; if(!a.length) return;
+      var av=a.reduce(function(x,y){return x+y;},0)/a.length;
+      if(!subOut) subOut={}; subOut[s2]=Math.round(av*1000)/10; });
+    return { pct:(pct==null?null:Math.round(pct*10)/10), parts:parts, n:evd.length, subPct:subOut,
       src:'บัญชีหลักฐานพฤติกรรม (Evidence Ledger) '+evd.length+' รายการ' };
   },
   _summative(c, stu){
@@ -41387,7 +41828,7 @@ var DASH4 = {
    เกมเป็นเจ้าของการคิดคะแนน — ตรงนี้คือ "รายงานผลที่คิดเสร็จแล้ว" ไม่มีการคิดใหม่แม้แต่ช่องเดียว
    ใช้ CBE8 เท่านั้น · run_id 'live' เท่านั้น · ส่งพลาด = เงียบ ไม่ขัดจังหวะครู (รอบหน้าส่งใหม่เอง) */
 var GP2_HUB = {
-  VER: 'V.8.23-p2-2569.87',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
+  VER: 'V.8.26-p2-2569.90',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
   CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
   KEY: 'gp2_hub_sent_v1',               /* ลายเซ็นผลที่ส่งสำเร็จแล้ว รายนักเรียน (กันยิงถี่) */
   LVNAME: ['เริ่มต้น', 'กำลังพัฒนา', 'สามารถ', 'เหนือความคาดหวัง'],
@@ -41424,7 +41865,7 @@ var GP2_HUB = {
     var self = this, S = CBE8.set;
     /* บันทึกเกณฑ์จริง ณ เวลาที่คิด (ครูปรับเกณฑ์ได้ — ห้ามใส่ค่า default · พรอมต์ 45 ข้อ 8) */
     var noteBase = 'CBE8 ' + this.VER + ' · minor' + S.wMinor + '/sum' + S.wSum
-      + ' · ช่วง ' + S.r1 + '/' + S.r2 + '/' + S.r3 + ' · ฐานระดับ ' + S.lvBase
+      + ' · ช่วง ' + S.r1 + '/' + S.r2 + '/' + S.r3 + ' · ต่าง ±' + S.diff + ' · ฐานระดับ ' + S.lvBase
       + ' · ผสมย่อย ' + Math.round(CBE8.MIX_OVERALL * 100) + '/' + Math.round(CBE8.MIX_SUB * 100);
     var rows = [];
     CBE8.COMPS.forEach(function (cd) {
@@ -41449,15 +41890,26 @@ var GP2_HUB = {
         criteria_note: self.NO_SUMM[c]
           ? noteBase + ' · ฐาน minor 100% (ยังไม่มีหลักฐานรวบยอด) — คนละฐานกับด้านอื่น'
           : noteBase,
-        sub_scores: {                                            /* คีย์ _ = ข้อมูลประกอบ เว็บกลางไม่ตีเป็นคะแนน */
-          _basis: self.NO_SUMM[c] ? 'minor100_no_summative' : 'minor30+summ70',
-          _status: r.status || null,
-          _cmp_T: r.T != null ? r.T : null,
-          _cmp_P: r.P != null ? r.P : null,
-          _cmp_S: r.S != null ? r.S : null,                      /* ผลเทียบตนเอง = ข้อมูลประกอบเท่านั้น ไม่ใช่แถวคะแนน */
-          _finalized: r.status === 'FINALIZED',
-          _provisional: !!(r.summ && r.summ.provisional)         /* ธงจริงของ CM อยู่ใน summ (ตรวจที่ _summative แล้ว) */
-        }
+        sub_scores: (function () {
+          /* [บล็อก AQ · มติแชตมาตรฐาน] ด้านย่อยจริงเป็นตัวเลขตรง ๆ จาก _minor().subPct
+             คีย์สั้นตัวเล็ก (ctc/stm/crt/prb · a/b/c) ตามรูปไฟล์ 43 — คีย์ _ = ข้อมูลประกอบเช่นเดิม */
+          var o = {};
+          try {
+            var sp = r.minor && r.minor.subPct;
+            if (sp) Object.keys(sp).forEach(function (k) {
+              var short = k.indexOf(c + '-') === 0 ? k.slice(c.length + 1) : k;
+              o[String(short).toLowerCase()] = sp[k];
+            });
+          } catch (e) {}
+          o._basis = self.NO_SUMM[c] ? 'minor100_no_summative' : 'minor30+summ70';
+          o._status = r.status || null;
+          o._cmp_T = r.T != null ? r.T : null;
+          o._cmp_P = r.P != null ? r.P : null;
+          o._cmp_S = r.S != null ? r.S : null;                   /* ผลเทียบตนเอง = ข้อมูลประกอบเท่านั้น ไม่ใช่แถวคะแนน */
+          o._finalized = r.status === 'FINALIZED';
+          o._provisional = !!(r.summ && r.summ.provisional);     /* ธงจริงของ CM อยู่ใน summ (ตรวจที่ _summative แล้ว) */
+          return o;
+        })()
       });
     });
     return rows;
@@ -41622,7 +42074,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.23-p2-2569.87 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.26-p2-2569.90 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };

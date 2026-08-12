@@ -2687,7 +2687,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.23-p2-2569.87',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.26-p2-2569.90',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -2854,7 +2854,7 @@ var DEMO = {
       return Promise.resolve(by);
     };
     clsRender();
-    try{ if(CLSTAB.get()==='v8') clsV8Load(roomId); }catch(e){}
+    try{ if(CLSTAB.get()==='v8'){ try{ CLSPART.set('p2'); }catch(e2){} clsV8Load(roomId); } }catch(e){}   /* [บล็อก AQ] เข้าห้องด้วยแท็บ 🧪 = บังคับมุมมองภาค 2 เหมือน CLSTAB.set */
     toast('เปิดโหมดข้อมูลตัวอย่างแล้ว — ไม่ได้เขียนลงฐานข้อมูล');
   },
 
@@ -4610,8 +4610,8 @@ var CLSPART = {
    → ยุบมาเป็นหน้าเดียว สลับด้วยแท็บ · รายชื่อเรียงเหมือนกัน · ปุ่มเดิมยังใช้ได้ทุกปุ่ม
    ============================================================ */
 var CLSTAB = {
-  KEY:'cls_room_tab',
-  get(){ try{ return localStorage.getItem(this.KEY)||'scores'; }catch(e){ return 'scores'; } },
+  KEY:'cls_room_tab_v2',   /* [บล็อก AQ · มติแชตมาตรฐาน] คีย์ใหม่ = รีเซ็ตค่าที่เครื่องครูจำไว้หนึ่งครั้ง ให้ทุกคนเจอแท็บ 🧪 ก่อน */
+  get(){ try{ return localStorage.getItem(this.KEY)||'v8'; }catch(e){ return 'scores'; } },
   set(v,rid){ try{ localStorage.setItem(this.KEY,v); }catch(e){}
     /* [แก้ตามครู] แท็บเทียบเกณฑ์เป็นของภาค 2 — บังคับมุมมองให้ตรงกันเสมอ กันตัวเลขเพี้ยน */
     if(v==='v8'){ try{ CLSPART.set('p2'); }catch(e){} }
@@ -7303,7 +7303,13 @@ var CBE8 = {
       parts.push({ label:'รวมสองแหล่ง (คุณภาพรวมด่าน '+Math.round(CBE8.MIX_OVERALL*100)+'% + ด้านย่อย '+Math.round(CBE8.MIX_SUB*100)+'%)',
         txt:Math.round(pct)+'%' });
     } else if(pct==null){ pct=subPct; }
-    return { pct:(pct==null?null:Math.round(pct*10)/10), parts:parts, n:evd.length,
+    /* [บล็อก AQ · มติแชตมาตรฐาน 11 ส.ค.] คะแนนด้านย่อยเป็นตัวเลขตรง ๆ สำหรับ sub_scores
+       (additive ล้วน — pct/parts/สูตรผสมเดิมไม่ถูกแตะแม้แต่ค่าเดียว) */
+    var subOut=null;
+    Object.keys(bySub).forEach(function(s2){ var a=bySub[s2]; if(!a.length) return;
+      var av=a.reduce(function(x,y){return x+y;},0)/a.length;
+      if(!subOut) subOut={}; subOut[s2]=Math.round(av*1000)/10; });
+    return { pct:(pct==null?null:Math.round(pct*10)/10), parts:parts, n:evd.length, subPct:subOut,
       src:'บัญชีหลักฐานพฤติกรรม (Evidence Ledger) '+evd.length+' รายการ' };
   },
   _summative(c, stu){
@@ -7611,7 +7617,7 @@ var DASH4 = {
    เกมเป็นเจ้าของการคิดคะแนน — ตรงนี้คือ "รายงานผลที่คิดเสร็จแล้ว" ไม่มีการคิดใหม่แม้แต่ช่องเดียว
    ใช้ CBE8 เท่านั้น · run_id 'live' เท่านั้น · ส่งพลาด = เงียบ ไม่ขัดจังหวะครู (รอบหน้าส่งใหม่เอง) */
 var GP2_HUB = {
-  VER: 'V.8.23-p2-2569.87',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
+  VER: 'V.8.26-p2-2569.90',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
   CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
   KEY: 'gp2_hub_sent_v1',               /* ลายเซ็นผลที่ส่งสำเร็จแล้ว รายนักเรียน (กันยิงถี่) */
   LVNAME: ['เริ่มต้น', 'กำลังพัฒนา', 'สามารถ', 'เหนือความคาดหวัง'],
@@ -7648,7 +7654,7 @@ var GP2_HUB = {
     var self = this, S = CBE8.set;
     /* บันทึกเกณฑ์จริง ณ เวลาที่คิด (ครูปรับเกณฑ์ได้ — ห้ามใส่ค่า default · พรอมต์ 45 ข้อ 8) */
     var noteBase = 'CBE8 ' + this.VER + ' · minor' + S.wMinor + '/sum' + S.wSum
-      + ' · ช่วง ' + S.r1 + '/' + S.r2 + '/' + S.r3 + ' · ฐานระดับ ' + S.lvBase
+      + ' · ช่วง ' + S.r1 + '/' + S.r2 + '/' + S.r3 + ' · ต่าง ±' + S.diff + ' · ฐานระดับ ' + S.lvBase
       + ' · ผสมย่อย ' + Math.round(CBE8.MIX_OVERALL * 100) + '/' + Math.round(CBE8.MIX_SUB * 100);
     var rows = [];
     CBE8.COMPS.forEach(function (cd) {
@@ -7673,15 +7679,26 @@ var GP2_HUB = {
         criteria_note: self.NO_SUMM[c]
           ? noteBase + ' · ฐาน minor 100% (ยังไม่มีหลักฐานรวบยอด) — คนละฐานกับด้านอื่น'
           : noteBase,
-        sub_scores: {                                            /* คีย์ _ = ข้อมูลประกอบ เว็บกลางไม่ตีเป็นคะแนน */
-          _basis: self.NO_SUMM[c] ? 'minor100_no_summative' : 'minor30+summ70',
-          _status: r.status || null,
-          _cmp_T: r.T != null ? r.T : null,
-          _cmp_P: r.P != null ? r.P : null,
-          _cmp_S: r.S != null ? r.S : null,                      /* ผลเทียบตนเอง = ข้อมูลประกอบเท่านั้น ไม่ใช่แถวคะแนน */
-          _finalized: r.status === 'FINALIZED',
-          _provisional: !!(r.summ && r.summ.provisional)         /* ธงจริงของ CM อยู่ใน summ (ตรวจที่ _summative แล้ว) */
-        }
+        sub_scores: (function () {
+          /* [บล็อก AQ · มติแชตมาตรฐาน] ด้านย่อยจริงเป็นตัวเลขตรง ๆ จาก _minor().subPct
+             คีย์สั้นตัวเล็ก (ctc/stm/crt/prb · a/b/c) ตามรูปไฟล์ 43 — คีย์ _ = ข้อมูลประกอบเช่นเดิม */
+          var o = {};
+          try {
+            var sp = r.minor && r.minor.subPct;
+            if (sp) Object.keys(sp).forEach(function (k) {
+              var short = k.indexOf(c + '-') === 0 ? k.slice(c.length + 1) : k;
+              o[String(short).toLowerCase()] = sp[k];
+            });
+          } catch (e) {}
+          o._basis = self.NO_SUMM[c] ? 'minor100_no_summative' : 'minor30+summ70';
+          o._status = r.status || null;
+          o._cmp_T = r.T != null ? r.T : null;
+          o._cmp_P = r.P != null ? r.P : null;
+          o._cmp_S = r.S != null ? r.S : null;                   /* ผลเทียบตนเอง = ข้อมูลประกอบเท่านั้น ไม่ใช่แถวคะแนน */
+          o._finalized = r.status === 'FINALIZED';
+          o._provisional = !!(r.summ && r.summ.provisional);     /* ธงจริงของ CM อยู่ใน summ (ตรวจที่ _summative แล้ว) */
+          return o;
+        })()
       });
     });
     return rows;
@@ -7846,7 +7863,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.23-p2-2569.87 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.26-p2-2569.90 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };
