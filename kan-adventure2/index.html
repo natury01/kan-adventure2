@@ -3440,9 +3440,15 @@ body.lowfx #game-wrapper.j-shake, body.lowfx .j-bump { animation: none; }
 body.lowfx .shadow-mon, body.lowfx .shadow-walk, body.lowfx .sm-defeat { display: none; }
 @media (prefers-reduced-motion: reduce) { .shadow-mon, .shadow-walk, .sm-defeat { display: none !important; } }
 
-/* [บล็อก AP · เฟส 5E] ชั้นวิดีโอเปลี่ยนฉาก — โปร่งจนกว่าจะเล่นจริง (กันจอดำแวบตอนไม่มีไฟล์) */
-#vid-root { position: absolute; inset: 0; z-index: 60; background: transparent; opacity: 0; pointer-events: none; }
-#vid-root.on { background: #05070f; opacity: 1; pointer-events: auto; transition: opacity 0.3s; }
+/* [บล็อก AP · เฟส 5E + บล็อก AS · ครูสั่ง 12 ส.ค.] ชั้นวิดีโอเปลี่ยนฉาก
+   AS: คลุมจอทึบทันทีตั้งแต่วินาทีแรก — ปิดอาการ "หน้าถัดไปแวบมาก่อนวิดีโอ" ที่ครูเจอ
+   (ไฟล์วิดีโอฝังใน build แล้ว โหลดเร็ว · กรณีไฟล์หายจริงมียามถอยใน 2.6 วิเช่นเดิม) */
+#vid-root { position: absolute; inset: 0; z-index: 60; background: #05070f; opacity: 1; pointer-events: auto; }
+#vid-root .vid-wait { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  font-size: max(14px, calc(var(--vw) * 1.2)); font-weight: 700; color: #d9ecf7; opacity: 0.75;
+  animation: vidWait 1.1s ease-in-out infinite; pointer-events: none; }
+@keyframes vidWait { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.85; } }
+#vid-root.on .vid-wait { display: none; }
 #vid-root video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
 #vid-root #vid-skip { position: absolute; right: calc(var(--vw) * 1.2); bottom: calc(var(--vw) * 1.2);
   min-width: max(44px, calc(var(--vw) * 5)); min-height: max(44px, calc(var(--vw) * 2.8));
@@ -3470,6 +3476,35 @@ body.lowfx .shadow-mon, body.lowfx .shadow-walk, body.lowfx .sm-defeat { display
   margin: calc(var(--vw) * 0.8) 0 calc(var(--vw) * 1.1); }
 #badge-detail-pop .btn { min-height: max(44px, calc(var(--vw) * 2.6)); min-width: max(96px, calc(var(--vw) * 9)); }
 .mobile-fit #badge-detail-pop .bdp-desc { font-size: max(13px, calc(var(--vw) * 1.5)); }
+
+/* [บล็อก AS4→AT11 · ครูส่งโลโก้จริง 12 ส.ค.] ป้ายโลโก้ GamePlearn บนหัวการ์ดเข้าสู่ระบบ
+   ยังเป็น ::before ล้วน = ไม่เพิ่ม DOM ไม่ขยับผังจอ (ยาม t_pc ไม่เห็น pseudo-element)
+   พื้นขาวมนรับโลโก้ (ตัวโลโก้พื้นใส) — คมชัดบนฉากน้ำเงินเที่ยงคืนทุกจอ */
+#login-screen .auth-box { position: relative; }
+#login-screen .auth-box::before { content: ''; position: absolute;
+  top: calc(var(--vw) * -1.8); left: 50%; transform: translateX(-50%);
+  width: max(130px, calc(var(--vw) * 12.5)); height: max(34px, calc(var(--vw) * 3.3));
+  background: #fff url('assets/logo_gameplearn.webp') center / 86% auto no-repeat;
+  border: calc(var(--vw) * 0.14) solid rgba(255,214,106,0.75); border-radius: 999px;
+  box-shadow: 0 calc(var(--vw) * 0.25) calc(var(--vw) * 0.8) rgba(0,0,0,0.45); pointer-events: none; }
+.mobile-fit #login-screen .auth-box::before { width: max(150px, calc(var(--vw) * 16)); height: max(40px, calc(var(--vw) * 4.2)); }
+
+/* [บล็อก AS5] กล่องเลือกดูกระดานตอนไม่ผูกห้อง */
+.lb-browse-row { display: flex; gap: calc(var(--vw) * 0.6); justify-content: center; align-items: center;
+  flex-wrap: wrap; width: 100%; margin-bottom: calc(var(--vw) * 0.6); }
+.lb-browse-note { font-size: max(12px, calc(var(--vw) * 0.9)); font-weight: 700; color: #d9ecf7; }
+.lb-browse-sel { font-family: inherit; font-size: max(12.5px, calc(var(--vw) * 0.95)); font-weight: 700;
+  min-height: max(40px, calc(var(--vw) * 2.2)); max-width: calc(var(--vw) * 22);
+  color: #ffe9b8; background: rgba(9,15,30,0.8); border: 2px solid rgba(127,212,245,0.5);
+  border-radius: calc(var(--vw) * 0.8); padding: calc(var(--vw) * 0.25) calc(var(--vw) * 0.7); }
+.mobile-fit .lb-browse-sel { min-height: 44px; font-size: max(13px, calc(var(--vw) * 1.2)); }
+
+/* ══ [บล็อก AT] ประกาศนียบัตรแบบครู 12 ส.ค. — โลโก้จริง + หัวเรื่องยาวขึ้น + เว็บล่างสุด ══ */
+.cap-cert .cc-logo { display: block; height: calc(var(--cw)*7.2); max-width: 72%;
+  object-fit: contain; margin: 0 auto; }
+.cap-cert .cc-title { font-size: max(13px, calc(var(--cw)*3.05)); }
+.cap-cert .cc-site { font-size: max(12px, calc(var(--cw)*1.9)); font-weight: 800;
+  color: #8a6a1e; letter-spacing: 0.12em; }
 </style>
 </head>
 <body>
@@ -4563,7 +4598,7 @@ body.lowfx .shadow-mon, body.lowfx .shadow-walk, body.lowfx .sm-defeat { display
    ด่านที่ผ่านในภาคหนึ่งจะไปโผล่ว่า 'ผ่านแล้ว' ในอีกภาค (ตราหลุด/ประตูเปิดเอง/คะแนนเพี้ยน) */
 const GAME_PART = 2;
 const PART1_URL = 'https://www.gameplearn.com/kan-adventure';
-const GAME_VERSION = 'V.8.28-p2-2569.92'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
+const GAME_VERSION = 'V.8.30-p2-2569.94'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
     ฝั่งเกม (1) ลบปุ่มวิ่ง ◀▶ + ป้ายสอนปัดของ V.7 ที่ชี้ผิดด่าน (2) แว่นขยายด่านนิเวศแตะครั้งเดียวติด
     (3) ซ่อนหมวดไอเทมที่ยังต่อเข้าด่านเรือธงไม่ได้ (ของที่ซื้อแล้วยังอยู่ในเซฟครบ)
     (4) หรี่เพลงอัตโนมัติระหว่างอ่านออกเสียงแล้วคืนเมื่ออ่านจบ (5) หน้าเข้าระบบแยกช่องโค้ดห้องออกจากชื่อในเกมชัดเจน + เตือนเมื่อพิมพ์สลับ
@@ -5876,7 +5911,7 @@ const Victory = {
 /* ══ [บล็อก AP · เฟส 5E] VID — วิดีโอเปลี่ยนฉาก 2 จุด (เปิดเกม + ก่อนบอส) ══
    เล่นจากไฟล์ assets/vid_opening.mp4 · assets/vid_boss.mp4 (ครูเจนภาพ→วิดีโอแล้ววางเอง)
    กติกาเหล็ก: ไม่มีไฟล์/โหลดช้าเกิน 2.6 วิ = ไปต่อทันที ไม่มีทางจอดำค้าง · ปุ่มข้ามเสมอ ·
-   เล่นครั้งเดียวต่อเซสชัน · lowfx ไม่เล่นเลย — พังยังไงเกมก็เดินต่อได้เหมือนไม่มีระบบนี้ */
+   เล่นซ้ำได้ทุกครั้ง (ครูสั่ง 12 ส.ค.) · lowfx ไม่เล่นเลย — พังยังไงเกมก็เดินต่อได้เหมือนไม่มีระบบนี้ */
 const VID = {
   ok() {
     try { return !document.body.classList.contains('lowfx'); } catch (e) { return true; }
@@ -5890,6 +5925,7 @@ const VID = {
     const root = document.createElement('div');
     root.id = 'vid-root';
     root.innerHTML = '<video id="vid-player" playsinline preload="auto"></video>' +
+      '<div class="vid-wait">🎬 กำลังเปิดวิดีโอ…</div>' +
       '<button id="vid-skip" type="button">ข้ามวิดีโอ ⏭️</button>';
     gw.appendChild(root);
     const v = root.querySelector('video');
@@ -24955,6 +24991,7 @@ const V8ASSETS = {
     bg_2050_council_hall: 'bg_2050_council_hall.webp', bg_2050_planning_board: 'bg_2050_planning_board.webp',
     bg_2050_storm_night: 'bg_2050_storm_night.webp', bg_2050_dawn: 'bg_2050_dawn.webp',
     bg_2050_time_gate: 'bg_2050_time_gate.webp', cert_guardian_bg: 'cert_guardian_bg.webp',
+    logo_gameplearn: 'logo_gameplearn.webp',   /* [บล็อก AT] โลโก้จริงจากครู 12 ส.ค. */
     card2050_farmer: 'card2050_farmer.webp', card2050_elder: 'card2050_elder.webp',
     card2050_engineer: 'card2050_engineer.webp', card2050_kid_mayor: 'card2050_kid_mayor.webp'
   },
@@ -26326,6 +26363,29 @@ const CERT = {
   get() { try { return getSaveData().guardianCert || null; } catch (e) { return null; } },
   has() { return !!this.get(); },
 
+  /* [บล็อก AT · ครูสั่ง 12 ส.ค.] ชื่อบนใบ: ชื่อ-นามสกุลจริงมาก่อน → ไม่มีจึงใช้ชื่อในเกม
+     แหล่งชื่อจริง: profile ที่ผูกตอนล็อกอิน (first/lastName จากทะเบียนนักเรียน) →
+     รายชื่อสมาชิกห้อง (member_names — เล่นกลุ่มได้ทุกชื่อคั่นด้วย "และ") → ชื่อในเกม → ชื่อบัญชี */
+  certName(d) {
+    try {
+      const p = (d && d.profile) || {};
+      const real = ((p.firstName || '') + ' ' + (p.lastName || '')).trim();
+      if (real) return real;
+      const b = (typeof SBTee !== 'undefined' && SBTee.bind) ? SBTee.bind() : null;
+      if (b && b.member_names && b.member_names.length) {
+        const ns = b.member_names.map((s) => String(s || '').trim()).filter(Boolean);
+        if (ns.length) return ns.join(' และ ');
+      }
+    } catch (e) {}
+    return ((d && d.profile && d.profile.characterName) || (d && d.username) || getPlayerConfig().name);
+  },
+  /* ตราเกียรติยศ (ชุด 18 ดวงหน้าเหรียญตรา) — ใบใหม่ฝังค่า ณ วันออกใบ (hb) ·
+     ใบเก่าไม่มี hb = นับสดจากเซฟปัจจุบัน (อ่านอย่างเดียว ไม่แตะกติกาตรา) */
+  honorN(data) {
+    if (data && data.hb != null) return Number(data.hb);
+    try { return getEarnedBadges(getSaveData()).length; } catch (e) { return 0; }
+  },
+
   /* [บล็อก D5d] เดิมมี _wrap() ตัดบรรทัดด้วย split(' ') อยู่ตรงนี้ — ถอดออกแล้ว
      เพราะภาษาไทยไม่มีช่องว่างระหว่างคำ มันจึงไม่เคยตัดได้จริงและปล่อยให้ข้อความล้นกรอบ
      ตัวแทนคือ line() ใน toCanvas ที่ย่อขนาดอักษรจนพอดีกรอบแทน */
@@ -26374,8 +26434,15 @@ const CERT = {
       while (sz > 14 && c.measureText(String(txt)).width > MAXW) { sz -= 2; c.font = weight + ' ' + sz + 'px ' + F; }
       c.fillText(String(txt), W / 2, yy);
     };
-    line('www.GamePlearn.com', 36, '700', '#8a6a1e', 140);
-    line('🎖️ ประกาศนียบัตรผู้พิทักษ์เมืองกาญจน์', 64, '800', '#14406b', 228);
+    /* [บล็อก AT] โลโก้จริงบนสุด — ภาพยังไม่มา/เครื่องออฟไลน์ = เว้นไว้ ไม่พังไม่ค้าง */
+    try {
+      const lg = V8ASSETS._img && V8ASSETS._img['logo_gameplearn'];
+      if (lg && lg.width) {
+        const lh = 116, lw = lh * (lg.width / lg.height);
+        c.drawImage(lg, (W - lw) / 2, 72, lw, lh);
+      }
+    } catch (e) {}
+    line('เกมเพลิน (www.GamePlearn.com) : ผจญภัยกาญจนบุรี ภาค 2', 46, '800', '#14406b', 246);
     line('ขอมอบประกาศนียบัตรฉบับนี้ไว้เพื่อแสดงว่า', 32, '400', '#5a5a45', 292);
 
     /* ชื่อผู้รับ */
@@ -26386,10 +26453,9 @@ const CERT = {
 
     /* ตราผู้พิทักษ์ 6 ดวง (ด่านพิเศษไม่นับ — จำนวนมาจาก V8.FLAGSHIP เท่านั้น) */
     line(String(data.badges || ''), 60, '400', '#3a3a2a', 486);
-    line(this.badgeLine(data), 32, '700', '#7a5a12', 540);
 
-    /* ข้อความรับรอง */
-    let y = 606;
+    /* ข้อความรับรอง — ถ้อยคำตามแบบครู (บล็อก AT · บรรทัดนับตรารวมอยู่ในเนื้อความแล้ว) */
+    let y = 566;
     this.bodyLines(data).forEach((t) => { line(t, 34, '400', '#3a3a2a', y); y += 48; });
     if (data.storm) {
       line('⛈️ คืนพายุ: ทีมเรารับมือสำเร็จ ' + data.storm + '%' + (data.warned ? ' (ชุมชนซ้อมมาดี ได้เวลารับมือเพิ่ม)' : ''),
@@ -26426,8 +26492,9 @@ const CERT = {
 
     /* ท้ายกระดาษ */
     c.textAlign = 'center';
-    line(String(data.date || '') + ' · เกมผจญภัยกาญจนบุรี ภาค 2', 30, '400', '#8a7a4a', H - 118);
-    line('ลงชื่อ ..................................................... ครูผู้สอน', 24, '400', '#a09472', H - 66);
+    line(String(data.date || ''), 30, '400', '#8a7a4a', H - 138);
+    line('ลงชื่อ ..................................................... ครูผู้สอน', 24, '400', '#a09472', H - 92);
+    line('www.GamePlearn.com', 26, '700', '#8a6a1e', H - 54);   /* [บล็อก AT] เว็บย้ายมาล่างสุดตามครู */
     return cv;
   },
 
@@ -26437,7 +26504,7 @@ const CERT = {
   _blob(data) {
     /* รอภาพพื้นหลังให้เสร็จก่อน ไม่งั้นรูปที่บันทึกได้จะเป็นกระดาษเปล่าไม่มีลาย
        (ภาพเป็นไฟล์ในโดเมนเดียวกัน แคนวาสจึงไม่ถูก taint — toBlob ทำงานได้ปกติ) */
-    return V8ASSETS.load('cert_guardian_bg').catch(() => null).then(() => new Promise((res) => {
+    return Promise.all([V8ASSETS.load('cert_guardian_bg'), V8ASSETS.load('logo_gameplearn')]).catch(() => null).then(() => new Promise((res) => {
       const cv = this.toCanvas(data);
       if (cv.toBlob) cv.toBlob((b) => res(b), 'image/png');
       else res(null);
@@ -26460,7 +26527,7 @@ const CERT = {
       if (!b) return this.download(data, statusEl);
       const file = new File([b], this._fileName(data), { type: 'image/png' });
       if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
-        navigator.share({ files: [file], title: 'ประกาศนียบัตรผู้พิทักษ์เมืองกาญจน์' })
+        navigator.share({ files: [file], title: 'ประกาศนียบัตร เกมเพลิน : ผจญภัยกาญจนบุรี ภาค 2' })
           .then(() => { if (statusEl) statusEl.textContent = '📤 ส่งออกไปแล้ว'; })
           .catch(() => { if (statusEl) statusEl.textContent = 'ยกเลิกการแชร์'; });
       } else {
@@ -26502,14 +26569,12 @@ const CERT = {
 
   /* ข้อความรับรอง — ต้องสื่อว่าผ่าน "ทั้งเกม" ไม่ใช่เฉพาะด่านกาญ 2050 (ข้อ 8.2) */
   bodyLines(data) {
-    const tot = Number(data.badgeTotal || 6);
-    const n = (data.badgeN == null) ? tot : Number(data.badgeN);
-    const st = '⭐'.repeat(Math.max(0, Math.min(3, Number(data.stars) || 0)));
+    /* [บล็อก AT · ครูสั่ง 12 ส.ค.] ถ้อยคำตามแบบครูเป๊ะ: สำเร็จ → จำนวนเหรียญ+ตราจริง → วิธีการ */
+    const n = (data.badgeN == null) ? Number(data.badgeTotal || 6) : Number(data.badgeN);
     const L = [];
-    L.push(n >= tot
-      ? 'ได้เดินทางจนจบการผจญภัยครบทั้งเกม ทั้งด่านเรือธงทั้ง ' + tot + ' ด่าน และด่านรวบยอด สมดุลกาญจนบุรี 2050 ครบทั้งสามองก์ ' + st
-      : 'ได้ผ่านด่านเรือธง ' + n + ' ใน ' + tot + ' ด่าน และด่านรวบยอด สมดุลกาญจนบุรี 2050 ครบทั้งสามองก์ ' + st);
-    L.push('ด้วยการคิด วางแผน ฟังเสียงผู้คน และปรับตัวเมื่อพายุมา');
+    L.push('พิทักษ์เมืองกาญจนบุรีได้สำเร็จ');
+    L.push('ได้รับเหรียญผู้พิทักษ์จำนวน ' + n + ' เหรียญ และตราเกียรติยศจำนวน ' + this.honorN(data) + ' ดวง');
+    L.push('ด้วยการคิด วางแผน รับฟังผู้คน และปรับตัวตามสถานการณ์');
     if (data.duo) L.push('👥 สำเร็จร่วมกันแบบทีมผู้พิทักษ์คู่');
     return L;
   },
@@ -26542,16 +26607,18 @@ const CERT = {
 
   /* การ์ดเกียรติบัตรบนจอ (ใช้ทั้งตอนจบด่านรวบยอดและตอนเปิดดูย้อนหลัง) */
   cardHTML(data) {
+    /* [บล็อก AT] เรียงตามแบบครู 12 ส.ค.: โลโก้ → ชื่อเกม → มอบให้ → ชื่อ → ตรา →
+       เนื้อความใหม่ → ระดับ → วันที่ล้วน → เว็บล่างสุด (โลโก้โหลดไม่ได้ = ถอดตัวเองเงียบ ๆ) */
     return '<div class="cap-cert" id="cap-cert-card">' +
-      '<div class="cc-head">www.GamePlearn.com</div>' +
-      '<div class="cc-title">🎖️ ประกาศนียบัตรผู้พิทักษ์เมืองกาญจน์</div>' +
+      '<img class="cc-logo" src="' + V8ASSETS.url('logo_gameplearn') + '" alt="GamePlearn" onerror="this.remove()">' +
+      '<div class="cc-title">เกมเพลิน (www.GamePlearn.com) : ผจญภัยกาญจนบุรี ภาค 2</div>' +
       '<div class="cc-line cc-intro">ขอมอบประกาศนียบัตรฉบับนี้ไว้เพื่อแสดงว่า</div>' +
       '<div class="cc-name">' + VK.esc(data.name) + '</div>' +
       '<div class="cc-badges">' + VK.esc(data.badges) + '</div>' +
-      '<div class="cc-badgen">' + VK.esc(this.badgeLine(data)) + '</div>' +
       '<div class="cc-line cc-body">' + this.bodyLines(data).map((t) => VK.esc(t)).join('<br>') + '</div>' +
       '<div class="cc-lv">' + VK.esc(this.lvLine(data)) + '</div>' +
-      '<div class="cc-date">' + VK.esc(data.date) + ' · เกมผจญภัยกาญจนบุรี ภาค 2</div></div>';
+      '<div class="cc-date">' + VK.esc(data.date) + '</div>' +
+      '<div class="cc-site">www.GamePlearn.com</div></div>';
   },
   /* [ข้อ 7 · บล็อก D6] ปุ่มทั้งหมดอยู่แถวเดียวกันและกว้างเท่ากัน (flex:1 ใน CSS)
      ปุ่มที่หน้าจอนั้น ๆ มีเพิ่ม (ภูมิใจสุด ๆ / ปิด) ส่งเข้ามาทาง extra เพื่อให้อยู่แถวเดียวกันจริง */
@@ -27811,7 +27878,7 @@ const KAN2050V2 = {
     const S = StageBalance2050, s = S.s || {};
     const ix = s.ix || { eco: 60, so: 60, env: 60 };
     const d = getSaveData();
-    const name = (d.profile && (d.profile.characterName || d.profile.firstName)) || d.username || getPlayerConfig().name;
+    const name = CERT.certName(d);   /* [บล็อก AT] ชื่อจริง (ถ้ามี) มาก่อนชื่อในเกม — ครูสั่ง 12 ส.ค. */
     /* [ข้อ 8.4 · บล็อก D6] วันที่ไทยตรึงโซนเวลา ไม่อิงเครื่อง (เหตุผลเต็มอยู่ที่ CERT.thaiDate) */
     const dateTh = CERT.thaiDate();
     const badges = getProtectorState(d);
@@ -27826,6 +27893,7 @@ const KAN2050V2 = {
       badgeN: badges.count, badgeTotal: badges.total,
       lv: _lvr.lv, lvName: _lvr.name || '', lvM: _lvr.M, lvN: _lvr.n, lvPer: _lvr.per,
       stars: stars, date: dateTh, duo: (KAN2050V2.mode === 'duo'),
+      hb: (function () { try { return getEarnedBadges(d).length; } catch (e) { return null; } })(),   /* [บล็อก AT] ตราเกียรติยศ ณ วันออกใบ */
       storm: (s.stormDone && !s.stormSkipped) ? Math.round((s.stormScore || 0) * 100) : 0, warned: !!s.stormWarned,
       ix: { eco: Math.round(ix.eco), so: Math.round(ix.so), env: Math.round(ix.env) },
       at: new Date().toISOString(), gameVersion: (typeof GAME_VERSION !== 'undefined' ? GAME_VERSION : '')
@@ -30356,7 +30424,52 @@ function setLbScope(sc) {
 function renderLbScopeBar() {
   const bar = document.getElementById('lb-scope-bar'); if (!bar) return;
   const b = (typeof SBTee !== 'undefined' && SBTee.bind) ? SBTee.bind() : null;
-  if (!b || !b.join_key) { bar.innerHTML = ''; return; } // ยังไม่ผูกห้อง = ยังเลือกไม่ได้
+  if (!b || !b.join_key) {
+    /* [บล็อก AS5 · ครูสั่ง 12 ส.ค.] ไม่ผูกห้องก็เลือกดูได้ครบทุกขอบเขต:
+       🌏 ทั้งหมด ดูได้ทันที · ห้อง/ชั้น/โรงเรียน = เลือกจากรายการก่อน (ดูอย่างเดียว ไม่ใช่การเข้าห้อง) */
+    if (_lbScope === 'room' && !(window._lbBrowse && window._lbBrowse.jk)) _lbScope = 'all';
+    const brw = window._lbBrowse || {};
+    bar.innerHTML =
+      '<div class="lb-browse-row"><span class="lb-browse-note">👀 โหมดเลือกดู:</span>' +
+      '<select id="lb-browse-school" class="lb-browse-sel"><option value="">🏫 เลือกโรงเรียน...</option></select>' +
+      '<select id="lb-browse-room" class="lb-browse-sel"' + (brw.sid ? '' : ' disabled') + '><option value="">ห้องเรียน...</option></select></div>' +
+      LB_SCOPES.map(([k, label]) =>
+        '<button class="lb-scope-btn" onclick="setLbScope(\'' + k + '\')" style="font-family:inherit;cursor:pointer;border-radius:999px;padding:max(calc(var(--vw)*0.3),8px) max(calc(var(--vw)*1),14px);font-size:max(calc(var(--vw)*0.95),12.5px);min-height:max(calc(var(--vw)*2.2),40px);font-weight:800;border:2px solid ' +
+        (_lbScope === k ? '#ffd76a;background:#ffd76a;color:#4a2c00' : 'rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#ffe9b8') + '">' + label + '</button>').join('');
+    try {
+      const sSel = document.getElementById('lb-browse-school'), rSel = document.getElementById('lb-browse-room');
+      const fillSchools = (rows) => {
+        sSel.innerHTML = '<option value="">🏫 เลือกโรงเรียน...</option>' + rows.map((s) => {
+          const sid = String(s.school_id || s.id || '');
+          return '<option value="' + escapeHtml(sid) + '"' + (String(brw.sid || '') === sid ? ' selected' : '') + '>' + escapeHtml(s.name || '') + '</option>';
+        }).join('');
+      };
+      if (window._lbSchools) fillSchools(window._lbSchools);
+      else SBTee._rpc('rpc_list_schools', {}).then((t) => {
+        let rows = []; try { rows = JSON.parse(t || '[]'); } catch (e) {}
+        rows = (rows || []).filter((s) => String(s.name || '').trim() !== 'ผู้เล่นทั่วไป');
+        window._lbSchools = rows; fillSchools(rows);
+      }).catch(() => { sSel.innerHTML = '<option value="">โหลดรายชื่อโรงเรียนไม่ได้ — แตะ 🌏 ทั้งหมด ดูได้เลย</option>'; });
+      if (brw.sid) SBTee._rpc('rpc_list_classrooms', { p_school: brw.sid }).then((t) => {
+        let rows = []; try { rows = JSON.parse(t || '[]'); } catch (e) {}
+        rSel.innerHTML = '<option value="">ห้องเรียน...</option>' + (rows || []).map((r) =>
+          '<option value="' + escapeHtml(r.join_key || '') + '"' + (brw.jk === r.join_key ? ' selected' : '') + '>' + escapeHtml(r.name || '') + (r.academic_year ? ' · ปี ' + escapeHtml(String(r.academic_year)) : '') + '</option>').join('');
+        rSel.disabled = false;
+      }).catch(() => {});
+      sSel.onchange = () => {
+        window._lbBrowse = { sid: sSel.value, jk: '' };
+        _lbCache = null; _lbCacheAt = 0; _lbInflight = null;
+        renderLbScopeBar(); renderLeaderboard();
+      };
+      rSel.onchange = () => {
+        window._lbBrowse = { sid: (window._lbBrowse || {}).sid, jk: rSel.value };
+        _lbCache = null; _lbCacheAt = 0; _lbInflight = null;
+        if (rSel.value && _lbScope === 'all') _lbScope = 'room';   /* เลือกห้องแล้ว = พาไปดูห้องนั้นทันที */
+        renderLbScopeBar(); renderLeaderboard();
+      };
+    } catch (e) {}
+    return;
+  }
   bar.innerHTML = LB_SCOPES.map(([k, label]) =>
     '<button class="lb-scope-btn" onclick="setLbScope(\'' + k + '\')" style="font-family:inherit;cursor:pointer;border-radius:999px;padding:max(calc(var(--vw)*0.3),8px) max(calc(var(--vw)*1),14px);font-size:max(calc(var(--vw)*0.95),12.5px);min-height:max(calc(var(--vw)*2.2),40px);font-weight:800;border:2px solid ' +
     (_lbScope === k ? '#ffd76a;background:#ffd76a;color:#4a2c00' : 'rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#ffe9b8') + '">' + label + '</button>').join('');
@@ -30371,6 +30484,8 @@ function getLeaderboardCached(maxAgeMs) {
   if (_lbInflight) return _lbInflight; // มีคำขอกำลังวิ่งอยู่ — เกาะไปด้วย ไม่ยิงซ้ำ
   // [เฟส 3c] ผูกห้องเรียนอยู่ → ใช้กระดานอันดับ "รายห้อง" จาก Supabase (เร็วกว่า + เห็นเฉพาะเพื่อนร่วมห้องตัวเอง) · มีปัญหาเมื่อไรถอยกลับไปดึงจาก Sheets อัตโนมัติ
   const _bnd = (typeof SBTee !== 'undefined' && SBTee.bind) ? SBTee.bind() : null;
+  /* [บล็อก AS5] ไม่ผูกห้องแต่เลือกห้องจากกล่องเลือกดู → ใช้ join_key ที่เลือกแทน (ดูอย่างเดียว ไม่ใช่การเข้าห้อง) */
+  const _bndM = _bnd || ((window._lbBrowse && window._lbBrowse.jk) ? { join_key: window._lbBrowse.jk, member_ids: [], username: '' } : null);
   const _mapLbRows = rows => {
     rows = rows.filter(r => (Number(r.collected) || 0) > 0 || (Number(r.boss) || 0) > 0); // โชว์เฉพาะคนที่เริ่มเล่นแล้ว (เหมือนกระดานเดิม)
     /* [แก้ตามครู V.7.64] เล่นเป็นกลุ่ม 2-3 คน → ขึ้นกระดานแค่รายการเดียว — SQL v764 กรองฝั่งเซิร์ฟเวอร์แล้ว
@@ -30379,7 +30494,7 @@ function getLeaderboardCached(maxAgeMs) {
     rows.forEach(r => {
       const cn = String(r.cname || '').trim().toLowerCase().replace(/\s+/g, ' ');
       const k = cn ? cn + '|' + (Number(r.collected) || 0) + '|' + (Number(r.boss) || 0) : 'id:' + String(r.sid || '');
-      const mine = _bnd && _bnd.member_ids && _bnd.member_ids.indexOf(String(r.sid || '')) >= 0;
+      const mine = _bndM && _bndM.member_ids && _bndM.member_ids.indexOf(String(r.sid || '')) >= 0;
       if (_dd[k]) { if (mine) _dd[k].row = r; return; }
       const slot = { row: r }; _dd[k] = slot; _ordered.push(slot);
     });
@@ -30387,14 +30502,14 @@ function getLeaderboardCached(maxAgeMs) {
     const _nmSeen = {};
     return _ordered.map(sl => sl.row).map(r => {
       const sid = String(r.sid || '');
-      const mine = _bnd.member_ids && _bnd.member_ids.indexOf(sid) >= 0;
+      const mine = _bndM && _bndM.member_ids && _bndM.member_ids.indexOf(sid) >= 0;
       /* [แก้ตามครู V.7.64] กระดานอันดับโชว์ "ชื่อในเกม" อย่างเดียวทุกขอบเขต — ไม่โชว์ชื่อจริง ไม่ติดชื่อห้องต่อท้าย */
       let nm = (r.cname && String(r.cname).trim()) || ('นักสำรวจ' + (r.student_number ? ' #' + r.student_number : ''));
       const _nk = nm.toLowerCase();
       _nmSeen[_nk] = (_nmSeen[_nk] || 0) + 1;
       if (_nmSeen[_nk] > 1) nm += ' (' + _nmSeen[_nk] + ')';
       return {
-        username: mine ? _bnd.username : ('c' + sid.replace(/-/g, '').slice(0, 7)), // ชื่อบัญชีคงที่จากรหัสนักเรียน (สูตรเดียวกับ clsjUser)
+        username: mine ? _bndM.username : ('c' + sid.replace(/-/g, '').slice(0, 7)), // ชื่อบัญชีคงที่จากรหัสนักเรียน (สูตรเดียวกับ clsjUser)
         characterName: nm,
         totalScore: Number(r.collected) || 0, bossScore: Number(r.boss) || 0,
         /* [ใหม่ V.7.69 ตามคำขอครู] โชว์เหรียญตราของทุกคนบนกระดาน ไม่ใช่เฉพาะของตัวเอง */
@@ -30402,24 +30517,28 @@ function getLeaderboardCached(maxAgeMs) {
       };
     });
   };
-  const _sbReq = (_bnd && _bnd.join_key)
+  const _sbReq = (_bndM && _bndM.join_key)
     ? ((_lbScope === 'room' || _lbScope === 'week')   /* [เฟส 3 · 3.6] มุมมองสัปดาห์ใช้ข้อมูลรายห้องชุดเดิม ไม่ยิงคำขอเพิ่ม */
         /* [บล็อก U · ครูข้อ 8] กระดานภาค 2 ของตัวเอง — ห้ามถอยไป rpc_leaderboard ของภาค 1
            เด็ดขาด (จะกลายเป็นโชว์คะแนนภาค 1 ซึ่งคือบั๊กเดิมที่ครูสั่งแก้) */
-        ? SBTee._rpc('rpc_leaderboard2', { p_join_key: _bnd.join_key })
-        : SBTee._rpc('rpc_leaderboard2_scope', { p_join_key: _bnd.join_key, p_scope: _lbScope })
-            .catch(() => SBTee._rpc('rpc_leaderboard2', { p_join_key: _bnd.join_key })) /* scope ยังไม่มา → ถอยเป็นรายห้องภาค 2 */
+        ? SBTee._rpc('rpc_leaderboard2', { p_join_key: _bndM.join_key })
+        : SBTee._rpc('rpc_leaderboard2_scope', { p_join_key: _bndM.join_key, p_scope: _lbScope })
+            .catch(() => SBTee._rpc('rpc_leaderboard2', { p_join_key: _bndM.join_key })) /* scope ยังไม่มา → ถอยเป็นรายห้องภาค 2 */
       ).then(t => { let rows = []; try { rows = JSON.parse(t || '[]'); } catch (e) {} return _mapLbRows(rows); })
         .catch(e => {
           if (/PGRST|function|not found|schema/i.test(String(e && e.message || '')))
             console.error('[U] กระดานภาค 2 ยังไม่พร้อม — ครูยังไม่ได้รัน SQL_ภาค2_กระดานอันดับภาค2.sql (กระดานจะว่างไว้ ไม่โชว์เลขภาค 1 ผิด ๆ)');
           throw e;
         })
-    : Promise.reject(new Error('ยังไม่ได้ผูกห้องเรียน'));
+    : (_lbScope === 'all'
+        /* [บล็อก AS5] แท็บ "ทั้งหมด" ไม่ต้องมีโค้ดห้อง — กิ่ง global ของ SQL ไม่ใช้ join_key อยู่แล้ว */
+        ? SBTee._rpc('rpc_leaderboard2_scope', { p_join_key: '', p_scope: 'all' })
+            .then(t => { let rows = []; try { rows = JSON.parse(t || '[]'); } catch (e) {} return _mapLbRows(rows); })
+        : Promise.reject(new Error('ยังไม่ได้เลือกห้อง')));
   _lbInflight = _sbReq
-    .catch(() => { window._lbNeedJoin = !(_bnd && _bnd.join_key); return []; }) /* [เฟส 3e] ไม่มี Sheets ให้ถอยแล้ว — กระดานเป็นรายห้องจาก Supabase เท่านั้น */
+    .catch(() => { window._lbNeedJoin = !(_bndM && _bndM.join_key); return []; }) /* [เฟส 3e] ไม่มี Sheets ให้ถอยแล้ว — กระดานเป็นรายห้องจาก Supabase เท่านั้น */
     .then(list => {
-      if (_bnd && _bnd.join_key && list) window._lbNeedJoin = false;
+      if (((_bndM && _bndM.join_key) || _lbScope === 'all') && list) window._lbNeedJoin = false;
       _lbInflight = null;
       if (list.length || !_lbCache) { _lbCache = list; _lbCacheAt = Date.now(); }
       return _lbCache;
@@ -30568,7 +30687,7 @@ async function renderLeaderboard() {
     }
     if (list.length === 0) {
       listEl.innerHTML = window._lbNeedJoin
-        ? '<div class="tv-lb-empty">กระดานอันดับเป็นแบบ "รายห้องเรียน" แล้ว — เข้าห้องเรียน (แตะชื่อตัวเองจากแท็บแรกของหน้าเข้าสู่ระบบ) เพื่อดูอันดับของห้องเธอนะ</div>'
+        ? '<div class="tv-lb-empty">เลือกโรงเรียนและห้องเรียนจากกล่อง 👀 ด้านบนเพื่อดูขอบเขตนี้ — หรือแตะ 🌏 ทั้งหมด ดูนักผจญภัยทุกคนที่เล่นภาค 2 ได้ทันที</div>'
         : '<div class="tv-lb-empty">ยังไม่มีใครผ่านด่านเลย ลองเป็นคนแรกที่ผ่านด่าน 1 ดูสิ! (ถ้าเพิ่งผ่านด่านไปแล้วแต่ยังไม่ขึ้น ลองกลับมาเปิดหน้านี้ใหม่อีกครั้ง)</div>';
       pagerEl.classList.add('hidden');
       return;
@@ -31297,15 +31416,22 @@ function wireAuthEvents() {
     /* วินิจฉัยสาเหตุให้ชัด — เด็กอ่านแล้วรู้ว่าต้องทำอะไรต่อ */
     let msg = 'เข้าสู่ระบบไม่สำเร็จ ลองใหม่อีกครั้ง';
     try {
-      if (openRow && openRow.__nofunc) msg = 'ระบบสมาชิกยังตั้งค่าไม่เสร็จ — แจ้งครูให้รัน SQL_ภาค2_สมัครสมาชิกผู้เล่นทั่วไป ใน Supabase ก่อน';
-      else if (openRow && openRow.__offline) msg = 'เชื่อมต่ออินเทอร์เน็ตไม่ได้ — ตรวจสัญญาณแล้วลองใหม่';
+      if (openRow && openRow.__offline) msg = 'เชื่อมต่ออินเทอร์เน็ตไม่ได้ — ตรวจสัญญาณแล้วลองใหม่';
       else {
-        const chk = await sbOpenCheck(username);
-        if (chk && chk.exists === true) msg = 'พบบัญชี "' + username + '" แต่รหัสผ่านไม่ถูกต้อง — ลองพิมพ์ใหม่อีกครั้งนะ';
-        else {
-          let legacyFound = null;
-          if (PIN_FORMAT_RE.test(pin)) { try { legacyFound = await sbLegacyCheck(username); } catch (e3) {} }
-          if (legacyFound === true) msg = 'พบบัญชี (แบบเดิม) "' + username + '" แต่ PIN ไม่ถูกต้อง — ลองพิมพ์ใหม่ หรือถามครู (ครูดู/แก้ PIN ได้ที่หน้า 🏫 รายชื่อนักเรียน)';
+        /* [บล็อก AS3 · ครูแจ้ง 12 ส.ค.] คนกรอก PIN ตัวเลข = อาจเป็นบัญชีภาค 1 (ระบบลองทาง
+           rpc_legacy ให้ไปแล้วข้างบน) — ต้องได้คำวินิจฉัยของบัญชีเดิมก่อนเสมอ ห้ามให้ข้อความ
+           "ระบบสมัครใหม่ยังไม่ตั้งค่า" มาบังสาเหตุจริงเหมือนที่ครูเจอ */
+        let legacyFound = null;
+        if (PIN_FORMAT_RE.test(pin)) { try { legacyFound = await sbLegacyCheck(username); } catch (e3) {} }
+        if (legacyFound === true) {
+          msg = 'พบบัญชีเดิม (ภาค 1) "' + username + '" แต่ PIN ไม่ถูกต้อง — ลองพิมพ์ใหม่ หรือถามครู (ครูดู/แก้ PIN ได้ที่หน้า 🏫 รายชื่อนักเรียน)';
+        } else if (openRow && openRow.__nofunc) {
+          msg = (legacyFound === false)
+            ? 'ไม่พบบัญชีเดิม (ภาค 1) ชื่อ "' + username + '" — เช็กตัวสะกด/PIN กับครู · ส่วนระบบสมัครใหม่ยังไม่เปิด (ครูยังไม่ได้รัน SQL สมัครสมาชิก)'
+            : 'ระบบสมาชิกยังตั้งค่าไม่เสร็จ — แจ้งครูให้รัน SQL_ภาค2_สมัครสมาชิกผู้เล่นทั่วไป ใน Supabase ก่อน · บัญชีภาค 1 ใช้ PIN ตัวเลขเดิมได้เลย';
+        } else {
+          const chk = await sbOpenCheck(username);
+          if (chk && chk.exists === true) msg = 'พบบัญชี "' + username + '" แต่รหัสผ่านไม่ถูกต้อง — ลองพิมพ์ใหม่อีกครั้งนะ';
           else if (chk && chk.exists === false) msg = 'ไม่พบบัญชี "' + username + '" — แตะแท็บ "สมัครสมาชิกใหม่" เพื่อสมัครก่อน หรือเข้าเล่นผ่านแท็บ "เข้าห้องเรียน"';
           else msg = 'ไม่พบชื่อผู้ใช้/รหัสผ่านนี้ หรือเชื่อมต่อไม่ได้ — ลองใหม่ หรือเข้าเล่นผ่านแท็บ "เข้าห้องเรียน"';
         }
@@ -31995,25 +32121,21 @@ function wireEvents() {
       AUDIO.__shadowTap = true;
     }
   } catch (e) { console.error('[AO2] เดินสายมอนสเตอร์เงาไม่สำเร็จ:', e); }
-  /* [บล็อก AP · เฟส 5E] วิดีโอ 2 จุด: กดเริ่มผจญภัยครั้งแรกของเซสชัน + ก่อนเข้าด่านบอส */
+  /* [บล็อก AP · เฟส 5E + บล็อก AS · ครูสั่ง 12 ส.ค.] วิดีโอ 2 จุด: กดเริ่มผจญภัย + ก่อนเข้าด่านบอส
+     ครูสั่ง: เล่นซ้ำได้ทุกครั้ง (มีปุ่มข้ามอยู่แล้ว ไม่ต้องกลัวเด็กเบื่อ) — ตัดธงครั้งเดียวต่อเซสชันออก */
   try {
     const bs = document.getElementById('btn-start');
     if (bs && !bs.__vidWired) {
       bs.__vidWired = true;
       bs.addEventListener('click', () => {
-        try {
-          if (sessionStorage.getItem('vid_opening_played')) return;
-          sessionStorage.setItem('vid_opening_played', '1');
-          VID.play('opening');
-        } catch (e) {}
+        try { VID.play('opening'); } catch (e) {}
       });
     }
     if (typeof _launchStage === 'function' && !window.__vidLaunch) {
       window.__vidLaunch = _launchStage;
       _launchStage = function (key, stage) {
         try {
-          if (String(key) === '8' && !sessionStorage.getItem('vid_boss_played') && VID.ok()) {
-            sessionStorage.setItem('vid_boss_played', '1');
+          if (String(key) === '8' && VID.ok()) {
             const a0 = key, a1 = stage;
             VID.play('boss', () => window.__vidLaunch(a0, a1));
             return;
@@ -37005,7 +37127,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.28-p2-2569.92',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.30-p2-2569.94',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -41935,7 +42057,7 @@ var DASH4 = {
    เกมเป็นเจ้าของการคิดคะแนน — ตรงนี้คือ "รายงานผลที่คิดเสร็จแล้ว" ไม่มีการคิดใหม่แม้แต่ช่องเดียว
    ใช้ CBE8 เท่านั้น · run_id 'live' เท่านั้น · ส่งพลาด = เงียบ ไม่ขัดจังหวะครู (รอบหน้าส่งใหม่เอง) */
 var GP2_HUB = {
-  VER: 'V.8.28-p2-2569.92',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
+  VER: 'V.8.30-p2-2569.94',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
   CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
   KEY: 'gp2_hub_sent_v1',               /* ลายเซ็นผลที่ส่งสำเร็จแล้ว รายนักเรียน (กันยิงถี่) */
   LVNAME: ['เริ่มต้น', 'กำลังพัฒนา', 'สามารถ', 'เหนือความคาดหวัง'],
@@ -42181,7 +42303,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.28-p2-2569.92 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.30-p2-2569.94 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };
