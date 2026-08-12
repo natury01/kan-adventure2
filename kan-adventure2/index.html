@@ -77,10 +77,10 @@ html, body {
 #scene-fade-overlay.fade-active { opacity: 1; }
 
 /* Loading Screen */
-#loading-screen { background: linear-gradient(160deg, #1b3a2f 0%, #0d1f18 100%); }
+#loading-screen { background: linear-gradient(160deg, #16264a 0%, #0a1428 100%); }
 .loading-box { width: 60%; text-align: center; color: #eafff0; }
 .loading-title { font-size: calc(var(--vw) * 2.6); font-weight: 700; margin-bottom: calc(var(--vw) * 2); letter-spacing: 0.05em;
-  text-shadow: 0 calc(var(--vw) * 0.3) 0 #0a5c3a; }
+  text-shadow: 0 calc(var(--vw) * 0.3) 0 #0a3c66; }
 .loading-bar-track { width: 100%; height: calc(var(--vw) * 1.6); background: rgba(255,255,255,0.15); border-radius: calc(var(--vw) * 1);
   overflow: hidden; border: calc(var(--vw) * 0.15) solid rgba(255,255,255,0.3); }
 .loading-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg,#ffd54a,#ff9d3d);
@@ -116,10 +116,10 @@ html, body {
 /* Start Screen */
 /* [UPGRADE] หน้าแรกโปร่งใสให้เห็นฉากแฟนตาซีเคลื่อนไหวบน canvas ด้านหลัง (ฉากเดียวกับหน้า login)
    คงวิเนตต์มืดจางๆ ไว้ให้ชื่อเกม/ปุ่มอ่านง่าย — เดิมเป็นสีพื้นทึบเปล่าๆ ดูจืดผิดกับหน้าอื่นทั้งเกม */
-#start-screen { background: radial-gradient(ellipse at center, rgba(16,36,28,0.10) 0%, rgba(8,18,14,0.52) 100%); }
+#start-screen { background: radial-gradient(ellipse at center, rgba(14,26,52,0.10) 0%, rgba(6,12,30,0.52) 100%); }
 
 /* ============ หน้า "วิธีเล่น" เต็มจอ (แบ่งหน้า + ภาพประกอบวาดสด) ============ */
-#howtoplay-screen { background: radial-gradient(ellipse at center, #24443a 0%, #0e2018 85%); justify-content: flex-start; padding-top: calc(var(--vw) * 1.6); }
+#howtoplay-screen { background: radial-gradient(ellipse at center, #1d3050 0%, #0b1526 85%); justify-content: flex-start; padding-top: calc(var(--vw) * 1.6); }
 .htp-title { font-size: calc(var(--vw) * 2.1); font-weight: 800; color: #fff8e6; text-shadow: 0 calc(var(--vw) * 0.25) 0 #b5651d; margin-bottom: calc(var(--vw) * 0.7); }
 .htp-body { display: flex; align-items: center; gap: calc(var(--vw) * 1.6); width: calc(var(--vw) * 84); flex: 1; min-height: 0; }
 .htp-illus-wrap { flex: 0 0 calc(var(--vw) * 32); display: flex; flex-direction: column; align-items: center; gap: calc(var(--vw) * 0.5); }
@@ -152,14 +152,14 @@ html, body {
   background: linear-gradient(to top, rgba(16,12,6,0.80) 0%, rgba(16,12,6,0.5) 60%, rgba(16,12,6,0) 100%); }
 .start-buttons { display: flex; gap: calc(var(--vw) * 1.5); align-items: center; }
 .start-btn.btn-primary { border: calc(var(--vw) * 0.2) solid rgba(255,226,150,0.6); box-shadow: 0 calc(var(--vw) * 0.4) 0 #c46a00, 0 calc(var(--vw) * 0.55) calc(var(--vw) * 1.3) rgba(20,10,0,0.55); }
-.start-btn.btn-secondary { border: calc(var(--vw) * 0.2) solid rgba(200,255,220,0.55); box-shadow: 0 calc(var(--vw) * 0.4) 0 #1c6e4d, 0 calc(var(--vw) * 0.55) calc(var(--vw) * 1.3) rgba(10,20,10,0.55); }
+.start-btn.btn-secondary { border: calc(var(--vw) * 0.2) solid rgba(200,232,255,0.55); box-shadow: 0 calc(var(--vw) * 0.4) 0 #1a4e78, 0 calc(var(--vw) * 0.55) calc(var(--vw) * 1.3) rgba(10,20,10,0.55); }
 .start-caption { display: flex; flex-direction: column; align-items: center; gap: calc(var(--vw) * 0.2); }
 .start-title { font-size: calc(var(--vw) * 1.5); font-weight: 800; color: #fff8e6; text-shadow: 0 calc(var(--vw) * 0.15) 0 #b5651d, 0 calc(var(--vw) * 0.25) calc(var(--vw) * 0.5) rgba(0,0,0,0.4); }
 .title-accent { color: #ffd54a; }
-.start-subtitle { font-size: calc(var(--vw) * 0.85); color: #d8f2e2; opacity: 0.85; }
+.start-subtitle { font-size: calc(var(--vw) * 0.85); color: #d9ecf7; opacity: 0.85; }
 /* [รอบ 51 ตามคำขอ] ข้อความเครดิตท้ายหน้า Lobby/World Map — ตำแหน่ง/ขนาดเดียวกับแท็กไลน์หน้าแรก แทนปุ่ม 👨‍🏫 เดิม */
 .screen-credit-line { position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(var(--vw) * 0.5);
-  font-size: calc(var(--vw) * 0.85); color: #d8f2e2; opacity: 0.85; text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+  font-size: calc(var(--vw) * 0.85); color: #d9ecf7; opacity: 0.85; text-shadow: 0 1px 3px rgba(0,0,0,0.7);
   pointer-events: none; z-index: 6; white-space: nowrap; }
 
 .btn { font-family: inherit; font-size: calc(var(--vw) * 1.2); font-weight: 700; padding: calc(var(--vw) * 1) calc(var(--vw) * 2.4);
@@ -168,8 +168,8 @@ html, body {
 .btn:active { transform: translateY(calc(var(--vw) * 0.1)) scale(0.97); }
 .btn-primary { background: linear-gradient(180deg,#ffca4a,#ff9d2e); color: #4a2a00;
   box-shadow: 0 calc(var(--vw) * 0.4) 0 #c46a00; }
-.btn-secondary { background: linear-gradient(180deg,#5fc79e,#2f9e73); color: #fff;
-  box-shadow: 0 calc(var(--vw) * 0.4) 0 #1c6e4d; }
+.btn-secondary { background: linear-gradient(180deg,#5fb8e8,#2e7cb8); color: #fff;
+  box-shadow: 0 calc(var(--vw) * 0.4) 0 #1a4e78; }
 .btn-icon { width: calc(var(--vw) * 3.2); height: calc(var(--vw) * 3.2); padding: 0; border-radius: 50%; font-size: calc(var(--vw) * 1.4);
   background: rgba(255,255,255,0.15); color: #fff; box-shadow: 0 calc(var(--vw) * 0.3) 0 rgba(0,0,0,0.25); }
 .corner-tl { position: absolute; top: calc(var(--vw) * 2); left: calc(var(--vw) * 2); }
@@ -219,15 +219,15 @@ html, body {
 }
 .btn-maker-text-glow { animation: makerTextGlowPulse 2.6s ease-in-out infinite; }
 @keyframes makerTextGlowPulse {
-  0%, 100% { box-shadow: 0 calc(var(--vw) * 0.4) 0 #1c6e4d, 0 0 calc(var(--vw) * 0.3) rgba(255,197,140,0.25); }
-  50% { box-shadow: 0 calc(var(--vw) * 0.4) 0 #1c6e4d, 0 0 calc(var(--vw) * 1.3) rgba(255,197,140,0.85); }
+  0%, 100% { box-shadow: 0 calc(var(--vw) * 0.4) 0 #1a4e78, 0 0 calc(var(--vw) * 0.3) rgba(255,197,140,0.25); }
+  50% { box-shadow: 0 calc(var(--vw) * 0.4) 0 #1a4e78, 0 0 calc(var(--vw) * 1.3) rgba(255,197,140,0.85); }
 }
 
 /* Guest Menu (Dev) — เมนูเล็กๆ มุมจอสำหรับข้ามด่านทดสอบระหว่างพัฒนา */
 .guest-menu-box { max-width: calc(var(--vw) * 46); }
 .guest-menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: calc(var(--vw) * 0.8); margin-top: calc(var(--vw) * 0.4); }
 .guest-menu-btn { padding: calc(var(--vw) * 0.7) calc(var(--vw) * 1); border-radius: calc(var(--vw) * 0.6); border: calc(var(--vw) * 0.12) solid rgba(255,255,255,0.25);
-  background: linear-gradient(180deg,#3a8a6a,#1a5a44); color: #fff; font-size: calc(var(--vw) * 0.85); font-weight: 700;
+  background: linear-gradient(180deg,#3a6a9a,#1a3a5e); color: #fff; font-size: calc(var(--vw) * 0.85); font-weight: 700;
   cursor: pointer; text-align: left; transition: transform 0.15s ease, filter 0.15s ease; }
 .guest-menu-btn:hover { transform: translateY(calc(var(--vw) * -0.1)); filter: brightness(1.1); }
 
@@ -252,18 +252,18 @@ html, body {
 .char-select-portrait { width: calc(var(--vw) * 7); height: calc(var(--vw) * 9.4); border-radius: calc(var(--vw) * 0.8); background: rgba(255,255,255,0.9); object-fit: contain;
   box-shadow: 0 calc(var(--vw) * 0.3) 0 rgba(0,0,0,0.25); }
 .char-select-name { font-size: calc(var(--vw) * 1); font-weight: 800; color: #fff8e6; text-align: center; }
-.char-select-desc { font-size: calc(var(--vw) * 0.75); color: #d8f2e2; opacity: 0.85; text-align: center; }
+.char-select-desc { font-size: calc(var(--vw) * 0.75); color: #d9ecf7; opacity: 0.85; text-align: center; }
 .char-select-card.selected .char-select-name { color: #ffd54a; }
-.char-select-pet-badge { font-size: calc(var(--vw) * 0.75); font-weight: 700; color: #bfffd8; background: rgba(20,60,40,0.55);
+.char-select-pet-badge { font-size: calc(var(--vw) * 0.75); font-weight: 700; color: #c9efff; background: rgba(18,42,74,0.55);
   padding: calc(var(--vw) * 0.15) calc(var(--vw) * 0.55); border-radius: calc(var(--vw) * 1); border: 1px solid rgba(191,255,216,0.4); }
 /* แท็บ + แผงตัวละคร/ออร่า/สัตว์เลี้ยง ในหน้าเป้ — ใช้สไตล์เดียวกับแท็บ Shop (.shop-tab-btn/.shop-tab-panel) แต่คลาสแยกกัน กัน switchShopTab() ไปยุ่งกับแท็บหน้านี้โดยไม่ได้ตั้งใจ */
-.cs-tab-btn { font-size: calc(var(--vw) * 0.95); font-weight: 800; color: #d8f2e2; background: rgba(255,255,255,0.08);
+.cs-tab-btn { font-size: calc(var(--vw) * 0.95); font-weight: 800; color: #d9ecf7; background: rgba(255,255,255,0.08);
   border: calc(var(--vw) * 0.14) solid rgba(255,255,255,0.18); border-radius: calc(var(--vw) * 1.4); padding: calc(var(--vw) * 0.5) calc(var(--vw) * 1.3); cursor: pointer;
   /* [ตรวจมือถือ V.7.64] จอเล็กปุ่มแท็บเหลือ ~19px — บังคับขั้นต่ำขนาดนิ้วแตะ (เครื่องเก่าไม่รู้จัก max() ใช้ค่าเดิมด้านบน) */
   font-size: max(calc(var(--vw) * 0.95), 12.5px); min-height: max(calc(var(--vw) * 2.2), 40px); padding: max(calc(var(--vw) * 0.5), 6px) max(calc(var(--vw) * 1.3), 14px);
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease; }
 .cs-tab-btn:hover { background: rgba(255,255,255,0.16); }
-.cs-tab-btn.active { background: linear-gradient(180deg,#5fc79e,#2f9e73); color: #fff; border-color: #2f9e73; }
+.cs-tab-btn.active { background: linear-gradient(180deg,#5fb8e8,#2e7cb8); color: #fff; border-color: #2e7cb8; }
 .cs-tab-panel { display: none; width: 100%; flex-direction: column; align-items: center; }
 .form-col { min-width: 0; } .form-col .form-input { max-width: 100%; box-sizing: border-box; } /* [ตรวจมือถือ V.7.64] กัน dropdown ห้องเรียนล้นขอบการ์ดบนจอแคบ */
 .cs-tab-panel.active { display: flex; }
@@ -283,7 +283,7 @@ html, body {
 .shop-title { font-size: calc(var(--vw) * 2.2); font-weight: 800; color: #fff8e6; text-shadow: 0 calc(var(--vw) * 0.3) 0 #b5651d; }
 .shop-coins { background: linear-gradient(180deg,#3a2a10,#2a1c0a); border: calc(var(--vw) * 0.16) solid #ffd54a; border-radius: calc(var(--vw) * 2);
   padding: calc(var(--vw) * 0.5) calc(var(--vw) * 1.3); color: #ffe8a0; font-size: calc(var(--vw) * 1.2); font-weight: 800; }
-.shop-subtitle { font-size: calc(var(--vw) * 1); color: #d8f2e2; opacity: 0.85; margin-bottom: calc(var(--vw) * 1); max-width: 60%; text-align: center; }
+.shop-subtitle { font-size: calc(var(--vw) * 1); color: #d9ecf7; opacity: 0.85; margin-bottom: calc(var(--vw) * 1); max-width: 60%; text-align: center; }
 /* ป้ายแจ้งเตือนซื้อสำเร็จ — โผล่จากด้านบนตรงกลาง ค้างชั่วครู่แล้วจางหายไปเอง (ดู showShopToast()) */
 .shop-toast { position: absolute; top: calc(var(--vw) * 6); left: 50%; transform: translateX(-50%) translateY(calc(var(--vw) * -1)); z-index: 40;
   background: linear-gradient(135deg, #ffd54a, #ff9a3a); color: #2a1c08; font-weight: 800; font-size: calc(var(--vw) * 1.2);
@@ -295,11 +295,11 @@ html, body {
 .shop-section-title { font-size: calc(var(--vw) * 1.05); font-weight: 800; color: #ffe070; margin: calc(var(--vw) * 1.2) 0 calc(var(--vw) * 0.7); text-shadow: 0 calc(var(--vw) * 0.15) 0 rgba(0,0,0,0.4); }
 /* แท็บหมวดหมู่ร้านค้า — สลับดูทีละหมวดแทนการเลื่อนยาวๆ ทั้งหน้า (ดู switchShopTab()) */
 .shop-tabs { display: flex; gap: calc(var(--vw) * 0.6); margin-bottom: calc(var(--vw) * 0.8); flex-wrap: wrap; justify-content: center; }
-.shop-tab-btn { font-size: calc(var(--vw) * 0.95); font-weight: 800; color: #d8f2e2; background: rgba(255,255,255,0.08);
+.shop-tab-btn { font-size: calc(var(--vw) * 0.95); font-weight: 800; color: #d9ecf7; background: rgba(255,255,255,0.08);
   border: calc(var(--vw) * 0.14) solid rgba(255,255,255,0.18); border-radius: calc(var(--vw) * 1.4); padding: calc(var(--vw) * 0.5) calc(var(--vw) * 1.3); cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease; }
 .shop-tab-btn:hover { background: rgba(255,255,255,0.16); }
-.shop-tab-btn.active { background: linear-gradient(180deg,#5fc79e,#2f9e73); color: #fff; border-color: #2f9e73; }
+.shop-tab-btn.active { background: linear-gradient(180deg,#5fb8e8,#2e7cb8); color: #fff; border-color: #2e7cb8; }
 .shop-tab-panel { display: none; width: 100%; flex-direction: column; align-items: center; }
 .shop-tab-panel.active { display: flex; }
 .shop-aura-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: calc(var(--vw) * 0.7); max-width: calc(var(--vw) * 66); } /* [ปรับปรุง] บีบระยะให้ทุกหมวดพอดีจอเดียว */
@@ -330,7 +330,7 @@ html, body {
    MODULE 19: Login / Signup Screen — เชื่อมกับ Google Sheet backend
    ============================================================ */
 /* พื้นหลังตกแต่งหน้า login เดิมเป็นแค่ gradient เรียบๆ — ตอนนี้วาดฉากแฟนตาซี 2.5D บน #game-canvas เบื้องหลังแทน (ดู startLoginBackgroundScene) จึงลด opacity สีพื้นนี้ลงให้เป็นแค่ชั้นกรองอ่อนๆ ไม่บังฉาก */
-#login-screen { background: radial-gradient(ellipse at center, rgba(20,40,32,0.15) 0%, rgba(10,20,16,0.35) 80%); }
+#login-screen { background: radial-gradient(ellipse at center, rgba(16,30,58,0.15) 0%, rgba(10,20,16,0.35) 80%); }
 .auth-box { width: calc(var(--vw) * 38); max-height: calc(var(--vh, 1vh) * 92); overflow-y: auto; overflow-x: hidden; background: rgba(0,0,0,0.22); /* [รอบ 65] คืนสกรอลล์ในการ์ด (max-height 92% ของกรอบเกม) เผื่อฟอร์มสมัคร 3 คน (ชื่อ+ห้อง+เลขที่ ทุกคน) สูงเกินจอ — ฟอร์ม 1-2 คนยังพอดีไม่มีแถบเลื่อน */
   border: calc(var(--vw) * 0.15) solid rgba(255,255,255,0.18); border-radius: calc(var(--vw) * 1.4); padding: calc(var(--vw) * 1.3) calc(var(--vw) * 2.2);
   display: flex; flex-direction: column; align-items: stretch; }
@@ -339,11 +339,11 @@ html, body {
 .auth-tabs { display: flex; gap: calc(var(--vw) * 0.6); margin-bottom: calc(var(--vw) * 0.8); }
 .auth-tab { flex: 1; font-family: inherit; font-size: calc(var(--vw) * 1); font-weight: 700; padding: calc(var(--vw) * 0.6);
   border: calc(var(--vw) * 0.12) solid rgba(255,255,255,0.25); border-radius: calc(var(--vw) * 0.8); background: rgba(255,255,255,0.06);
-  color: #d8f2e2; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
-.auth-tab.active { background: linear-gradient(180deg,#5fc79e,#2f9e73); color: #fff; border-color: transparent; }
+  color: #d9ecf7; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
+.auth-tab.active { background: linear-gradient(180deg,#5fb8e8,#2e7cb8); color: #fff; border-color: transparent; }
 .auth-form { display: flex; flex-direction: column; gap: calc(var(--vw) * 0.55); }
 .auth-form.hidden { display: none; }
-.form-label { font-size: calc(var(--vw) * 0.85); color: #d8f2e2; font-weight: 700; margin-bottom: calc(var(--vw) * -0.25); } /* [FIX] เดิม -calc(...) เป็น CSS ไม่ถูกต้อง ถูกเบราว์เซอร์ทิ้ง — ฟอร์มจึงยืดกว่าที่ออกแบบ */
+.form-label { font-size: calc(var(--vw) * 0.85); color: #d9ecf7; font-weight: 700; margin-bottom: calc(var(--vw) * -0.25); } /* [FIX] เดิม -calc(...) เป็น CSS ไม่ถูกต้อง ถูกเบราว์เซอร์ทิ้ง — ฟอร์มจึงยืดกว่าที่ออกแบบ */
 .form-input { font-family: inherit; font-size: calc(var(--vw) * 1); padding: calc(var(--vw) * 0.55) calc(var(--vw) * 0.9); border-radius: calc(var(--vw) * 0.7);
   border: calc(var(--vw) * 0.12) solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.92); color: #1a3a2a; outline: none; }
 .form-input:focus { border-color: #ffd54a; box-shadow: 0 0 0 calc(var(--vw) * 0.2) rgba(255,213,74,0.35); }
@@ -352,8 +352,8 @@ html, body {
 /* [รอบ 65] แยกสัดส่วน + โทนสี ผู้เล่นคนที่ 1-3 ในหน้าสมัคร ให้ไม่สับสน (เขียว=เจ้าของ · ฟ้า=คนที่2 · เหลือง=คนที่3) */
 .member-block { display: flex; flex-direction: column; gap: calc(var(--vw) * 0.5); padding: calc(var(--vw) * 0.7) calc(var(--vw) * 0.9); border-radius: calc(var(--vw) * 0.9); border-left: calc(var(--vw) * 0.4) solid transparent; }
 .member-head { font-size: calc(var(--vw) * 0.92); font-weight: 800; letter-spacing: .3px; }
-.member-1 { background: rgba(95,199,158,0.12); border-left-color: #5fc79e; }
-.member-1 .member-head { color: #93e8c2; }
+.member-1 { background: rgba(95,199,158,0.12); border-left-color: #5fb8e8; }
+.member-1 .member-head { color: #9fd8f0; }
 .member-2 { background: rgba(90,169,230,0.13); border-left-color: #5aa9e6; }
 .member-2 .member-head { color: #aed7f7; }
 .member-3 { background: rgba(240,190,90,0.14); border-left-color: #e9b84a; }
@@ -367,9 +367,9 @@ html, body {
 .auth-submit { margin-top: calc(var(--vw) * 0.4); }
 .auth-submit:disabled { opacity: 0.6; cursor: default; transform: none; filter: none; }
 .auth-guest-btn { margin-top: calc(var(--vw) * 0.7); align-self: center; font-size: calc(var(--vw) * 0.9); opacity: 0.85; }
-.auth-status { margin-top: calc(var(--vw) * 0.8); text-align: center; font-size: calc(var(--vw) * 0.85); color: #d8f2e2; opacity: 0.85; }
+.auth-status { margin-top: calc(var(--vw) * 0.8); text-align: center; font-size: calc(var(--vw) * 0.85); color: #d9ecf7; opacity: 0.85; }
 .auth-status.hidden { display: none; }
-.auth-logout-hint { font-size: calc(var(--vw) * 0.8); color: #d8f2e2; opacity: 0.75; text-align: center; margin-top: calc(var(--vw) * 0.6); cursor: pointer; text-decoration: underline; }
+.auth-logout-hint { font-size: calc(var(--vw) * 0.8); color: #d9ecf7; opacity: 0.75; text-align: center; margin-top: calc(var(--vw) * 0.6); cursor: pointer; text-decoration: underline; }
 
 /* Leaderboard Screen */
 #leaderboard-screen { background: radial-gradient(ellipse at center, #1a3a2e 0%, #08120e 85%); } /* [Task #94] ใช้พื้นหลังโทนเดียวกับโหมดจอทีวีเดิม (เข้มกว่า อ่านชัดเต็มจอ) เพราะรวมหน้าเป็นหนึ่งเดียวแล้ว */
@@ -387,7 +387,7 @@ html, body {
 .leaderboard-score { font-weight: 800; color: #ffd54a; white-space: nowrap; }
 .leaderboard-scores { display: flex; flex-direction: row; align-items: baseline; gap: calc(var(--vw) * 0.6); flex-shrink: 0; } /* [ปรับ] คะแนน+บอส อยู่แถวเดียวกัน ลดความสูงต่อแถว */
 .leaderboard-boss { font-size: calc(var(--vw) * 0.75); color: #ff9d6a; font-weight: 700; white-space: nowrap; }
-.leaderboard-empty { text-align: center; color: #d8f2e2; opacity: 0.75; font-size: calc(var(--vw) * 0.95); padding: calc(var(--vw) * 1.4) 0; }
+.leaderboard-empty { text-align: center; color: #d9ecf7; opacity: 0.75; font-size: calc(var(--vw) * 0.95); padding: calc(var(--vw) * 1.4) 0; }
 /* Top 3 ให้โดดเด่นเป็นพิเศษ: ออร่า/แสงเรืองรอบแถว + ตัวอักษรใหญ่ขึ้นตามอันดับ */
 .leaderboard-row.rank-1 {
   background: linear-gradient(90deg, rgba(255,213,74,0.35), rgba(255,213,74,0.1));
@@ -435,20 +435,20 @@ html, body {
 .tv-lb-row.rank-3 { background: linear-gradient(90deg, rgba(205,140,80,0.3), rgba(205,140,80,0.06));
   border: calc(var(--vw) * 0.14) solid #cd8c50; }
 .tv-lb-row.rank-3 .tv-lb-rank, .tv-lb-row.rank-3 .tv-lb-score { font-size: calc(var(--vw) * 1.6); }
-.tv-lb-empty { text-align: center; color: #d8f2e2; opacity: 0.75; font-size: calc(var(--vw) * 1.4); padding: calc(var(--vw) * 2) 0; }
+.tv-lb-empty { text-align: center; color: #d9ecf7; opacity: 0.75; font-size: calc(var(--vw) * 1.4); padding: calc(var(--vw) * 2) 0; }
 
 /* สถิติคำตอบนักเรียน (สำหรับครู) — ดึงจาก QuestionLog ผ่าน Apps Script action ใหม่ getQuestionStats เรียงข้อที่ตอบผิดบ่อยสุดไว้บนสุด */
 .teacher-stats-box { width: calc(var(--vw) * 56); max-height: calc(var(--vh) * 88); display: flex; flex-direction: column; align-items: center;
   background: rgba(10,18,14,0.55); border-radius: calc(var(--vw) * 1.4); padding: calc(var(--vw) * 2) calc(var(--vw) * 2.4); position: relative; }
 .teacher-stats-title { font-size: calc(var(--vw) * 1.7); font-weight: 800; color: #fff8e6; text-align: center; }
-.teacher-stats-subtitle { font-size: calc(var(--vw) * 0.95); color: #a8d8bc; margin: calc(var(--vw) * 0.5) 0 calc(var(--vw) * 1.2); text-align: center; }
+.teacher-stats-subtitle { font-size: calc(var(--vw) * 0.95); color: #aed6ea; margin: calc(var(--vw) * 0.5) 0 calc(var(--vw) * 1.2); text-align: center; }
 .teacher-stats-list { width: 100%; display: flex; flex-direction: column; gap: calc(var(--vw) * 0.5); overflow: visible; } /* [ปรับปรุงตามคำขอ] เดิมเลื่อนดูถ้าเกิน 58vh ตอนนี้แบ่งหน้าแทน (ดู _pagerSlice) */
 .teacher-stats-row { display: flex; align-items: center; gap: calc(var(--vw) * 1); padding: calc(var(--vw) * 0.7) calc(var(--vw) * 1); border-radius: calc(var(--vw) * 0.7);
   background: rgba(255,255,255,0.06); color: #fff; }
 .teacher-stats-rank { width: calc(var(--vw) * 2); text-align: center; font-weight: 800; color: #ffb0a0; font-size: calc(var(--vw) * 1.1); }
 .teacher-stats-info { flex: 1; min-width: 0; }
 .teacher-stats-q { font-size: calc(var(--vw) * 0.95); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.teacher-stats-meta { font-size: calc(var(--vw) * 0.75); color: #9fc7b0; margin-top: calc(var(--vw) * 0.2); }
+.teacher-stats-meta { font-size: calc(var(--vw) * 0.75); color: #a6c8dd; margin-top: calc(var(--vw) * 0.2); }
 .teacher-stats-rate { font-weight: 800; font-size: calc(var(--vw) * 1.2); color: #ff8a70; min-width: calc(var(--vw) * 4); text-align: right; }
 /* [รอบ 46 ตามคำขอ #2] สีเทียบผิด-ถูก + แถบสัดส่วนในแถวสถิติครู (แดง = สัดส่วนผิด, เขียว = สัดส่วนถูก) */
 .ts-wrong { color: #ff9a86; font-weight: 700; }
@@ -456,7 +456,7 @@ html, body {
 .ts-sep { opacity: 0.45; margin: 0 calc(var(--vw) * 0.15); }
 .ts-note { opacity: 0.65; }
 .ts-bar { margin-top: calc(var(--vw) * 0.3); height: calc(var(--vw) * 0.32); border-radius: calc(var(--vw) * 0.16);
-  background: #3f9a63; overflow: hidden; max-width: calc(var(--vw) * 22); }
+  background: #3f7a9a; overflow: hidden; max-width: calc(var(--vw) * 22); }
 .ts-bar span { display: block; height: 100%; background: #e05a48; border-radius: calc(var(--vw) * 0.16) 0 0 calc(var(--vw) * 0.16); }
 /* ============ [รอบ 49 Capstone] ด่านกาญจนบุรี 2050: ภารกิจพิทักษ์สมดุล ============ */
 #capstone-screen { background: linear-gradient(180deg, #10233c 0%, #16324f 55%, #1a3a44 100%); overflow: hidden; }
@@ -474,7 +474,7 @@ html, body {
 .cap-notice { flex: none; margin-top: calc(var(--vw) * 0.5); background: rgba(255,217,127,0.14); border: 1.5px dashed rgba(255,217,127,0.6); color: #ffe9b8; border-radius: calc(var(--vw) * 0.6); padding: calc(var(--vw) * 0.5) calc(var(--vw) * 1); font-size: calc(var(--vw) * 0.95); }
 .cap-body { flex: 1; overflow-y: auto; margin-top: calc(var(--vw) * 0.7); padding-right: calc(var(--vw) * 0.5); color: #eaf4ff; font-size: calc(var(--vw) * 1); line-height: 1.5; }
 .cap-footer { flex: none; display: flex; align-items: center; gap: calc(var(--vw) * 1); padding-top: calc(var(--vw) * 0.7); }
-.cap-footer-info { color: #9fd0b8; font-size: calc(var(--vw) * 0.9); flex: 1; }
+.cap-footer-info { color: #a8d2e6; font-size: calc(var(--vw) * 0.9); flex: 1; }
 .cap-h { font-family: 'Kanit', sans-serif; font-weight: 700; font-size: calc(var(--vw) * 1.2); color: #aee4ff; margin: calc(var(--vw) * 0.6) 0 calc(var(--vw) * 0.4); }
 .cap-sub { color: #c8daea; font-size: calc(var(--vw) * 0.92); margin-bottom: calc(var(--vw) * 0.4); }
 .cap-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(calc(var(--vw) * 15), 1fr)); gap: calc(var(--vw) * 0.6); }
@@ -581,7 +581,7 @@ body.lowfx .cap-twist-banner { animation: none; }
   16% { opacity: 1; transform: translate(-50%, -110%) scale(1.2); }
   100% { opacity: 0; transform: translate(calc(-50% + var(--dx, 0px)), -320%) scale(0.95) rotate(6deg); }
 }
-.teacher-stats-empty { text-align: center; color: #d8f2e2; opacity: 0.75; font-size: calc(var(--vw) * 1.1); padding: calc(var(--vw) * 2) 0; }
+.teacher-stats-empty { text-align: center; color: #d9ecf7; opacity: 0.75; font-size: calc(var(--vw) * 1.1); padding: calc(var(--vw) * 2) 0; }
 
 /* MODULE 5: เหรียญตรา/รางวัลตามสมรรถนะ */
 /* [ปรับตามคำขอ 15 ก.ค.] หน้านี้เดิมพื้นหลังโล่งๆ สีเข้มเรียบ (ไม่มี #badges-screen{background} ของตัวเอง) — ตอนนี้มีภาพพื้นหลังจริงแล้ว (.badges-bg-photo)
@@ -605,14 +605,14 @@ body.lowfx .cap-twist-banner { animation: none; }
 .learn-node .stage-node-num { width: calc(var(--vw) * 6.6); height: calc(var(--vw) * 6.6);
   background: radial-gradient(circle at 35% 30%, #7fe0b0, #1f8a5c); border: calc(var(--vw) * 0.22) solid rgba(255,255,255,0.9);
   box-shadow: 0 calc(var(--vw) * 0.3) 0 rgba(0,0,0,0.3), 0 0 calc(var(--vw) * 1.2) rgba(127,224,176,0.65); }
-.learn-node .stage-node-label { background: rgba(31,90,60,0.92); color: #eafff4; font-weight: 800; }
+.learn-node .stage-node-label { background: rgba(27,72,116,0.92); color: #eafff4; font-weight: 800; }
 
 #learning-screen { background: radial-gradient(ellipse at center, #2a5040 0%, #101f18 85%); }
 .learning-box { width: calc(var(--vw) * 84); height: calc(var(--vh) * 88); display: flex; flex-direction: column;
   background: rgba(0,0,0,0.25); border: calc(var(--vw) * 0.15) solid rgba(255,255,255,0.16); border-radius: calc(var(--vw) * 1.3);
   padding: calc(var(--vw) * 1) calc(var(--vw) * 1.4); }
 .learning-title { font-size: calc(var(--vw) * 1.7); font-weight: 800; color: #ffe070; text-align: center; text-shadow: 0 calc(var(--vw) * 0.2) 0 rgba(0,0,0,0.4); }
-.learning-sub { font-size: clamp(11px, calc(var(--vw) * 0.8), 16px); color: #bfe8d0; opacity: 0.85; text-align: center; margin: calc(var(--vw) * 0.2) 0 calc(var(--vw) * 0.6); }
+.learning-sub { font-size: clamp(11px, calc(var(--vw) * 0.8), 16px); color: #c6e4f5; opacity: 0.85; text-align: center; margin: calc(var(--vw) * 0.2) 0 calc(var(--vw) * 0.6); }
 .learning-body { flex: 1; display: flex; gap: calc(var(--vw) * 1); min-height: 0; }
 .learning-list { width: calc(var(--vw) * 21); display: flex; flex-direction: column; gap: calc(var(--vw) * 0.22); overflow-y: auto; }
 /* [ปรับตามคำขอ] บทเรียน 10 บทพอดีกรอบไม่มีแถบเลื่อน: แถวกระชับ + ชื่อยาวตัดด้วย … (ชื่อเต็มดูที่หัวเนื้อหาขวา) */
@@ -706,7 +706,7 @@ body.lowfx .cap-twist-banner { animation: none; }
   font-size: calc(var(--vw) * 0.9); }
 .btn-danger-soft:hover { filter: brightness(1.12); }
 .volume-row { display: flex; align-items: center; gap: calc(var(--vw) * 1); margin-bottom: calc(var(--vw) * 1.2); }
-.volume-row label { flex: 0 0 calc(var(--vw) * 9); font-size: calc(var(--vw) * 0.95); color: #d8f2e2; text-align: left; overflow-wrap: anywhere; line-height: 1.3; }
+.volume-row label { flex: 0 0 calc(var(--vw) * 9); font-size: calc(var(--vw) * 0.95); color: #d9ecf7; text-align: left; overflow-wrap: anywhere; line-height: 1.3; }
 .volume-row input[type="range"] { flex: 1; min-width: 0; accent-color: #ffd54a; height: calc(var(--vw) * 0.6); cursor: pointer; } /* [V.7.76] min-width:0 กันสไลเดอร์ดันแถวเกินกล่อง 3px */
 .volume-row input[type="range"] { height: max(calc(var(--vw) * 0.6), 28px); } /* [ตรวจมือถือ V.7.64] พื้นที่นิ้วจับสไลเดอร์ขั้นต่ำ 28px */
 /* [V.7.75] ปุ่มเลือกขนาดตัวอักษร + คำแนะนำเพิ่มลงหน้าจอโฮม */
@@ -731,7 +731,7 @@ body.lowfx .cap-twist-banner { animation: none; }
 .modal-box { background: linear-gradient(180deg,#2a5a4a,#10241c); border-radius: calc(var(--vw) * 1.2); padding: calc(var(--vw) * 2.4) calc(var(--vw) * 3);
   text-align: center; box-shadow: 0 calc(var(--vw) * 0.6) calc(var(--vw) * 2) rgba(0,0,0,0.5); border: calc(var(--vw) * 0.15) solid rgba(255,255,255,0.18); max-width: calc(var(--vw) * 32); }
 .modal-title { font-size: calc(var(--vw) * 1.5); font-weight: 800; color: #fff8e6; margin-bottom: calc(var(--vw) * 0.8); }
-.modal-text { font-size: calc(var(--vw) * 1); color: #d8f2e2; opacity: 0.85; margin-bottom: calc(var(--vw) * 1.8); }
+.modal-text { font-size: calc(var(--vw) * 1); color: #d9ecf7; opacity: 0.85; margin-bottom: calc(var(--vw) * 1.8); }
 .modal-buttons { display: flex; gap: calc(var(--vw) * 1.2); justify-content: center; }
 
 /* World Map */
@@ -740,7 +740,7 @@ body.lowfx .cap-twist-banner { animation: none; }
   color: #1a3a2a; font-size: calc(var(--vw) * 1.6); font-weight: 800; z-index: 11; text-shadow: 0 calc(var(--vw) * 0.1) calc(var(--vw) * 0.3) rgba(255,255,255,0.6); }
 /* ด็อกปุ่มมุมบน — จัดกลุ่มเป็นแผงเดียวมีพื้นหลังจางๆ ให้ดูเป็นระเบียบ แทนปุ่มลอยเดี่ยวๆ กระจายกันหลายจุด (แก้ปัญหา UI รกและเสี่ยงชนกัน) */
 .worldmap-dock { position: absolute; top: calc(var(--vw) * 2); display: flex; flex-direction: column; gap: calc(var(--vw) * 0.7);
-  background: rgba(10,24,16,0.32); border: calc(var(--vw) * 0.1) solid rgba(255,255,255,0.12); border-radius: calc(var(--vw) * 1.4);
+  background: rgba(9,18,38,0.32); border: calc(var(--vw) * 0.1) solid rgba(255,255,255,0.12); border-radius: calc(var(--vw) * 1.4);
   padding: calc(var(--vw) * 0.6); z-index: 15; backdrop-filter: blur(3px); }
 .worldmap-dock-tl { left: calc(var(--vw) * 2); align-items: center; }
 .worldmap-dock-tr { right: calc(var(--vw) * 2); top: calc(var(--vw) * 6); align-items: stretch; } /* [FIX M2] เลื่อนลงพ้นแนวปุ่มเสียง/ตั้งค่า global (เดิมปุ่ม "ร้านค้า" โดนทับ กดแล้วกลายเป็นปิดเสียง) */
@@ -752,7 +752,7 @@ body.lowfx .cap-twist-banner { animation: none; }
   position: absolute; top: calc(var(--vw) * 2); left: calc(var(--vw) * 7.3); right: auto; transform: none;
   display: flex; flex-direction: column; align-items: stretch; gap: calc(var(--vw) * 0.35); z-index: 12;
   width: calc(var(--vw) * 23); max-width: calc(var(--vw) * 29);
-  background: rgba(235,244,236,0.8); border: calc(var(--vw) * 0.1) solid rgba(26,58,42,0.25); border-radius: calc(var(--vw) * 0.8);
+  background: rgba(235,244,236,0.8); border: calc(var(--vw) * 0.1) solid rgba(22,42,78,0.25); border-radius: calc(var(--vw) * 0.8);
   padding: calc(var(--vw) * 0.42) calc(var(--vw) * 0.65); box-shadow: 0 calc(var(--vw) * 0.18) calc(var(--vw) * 0.45) rgba(0,0,0,0.18);
 } /* [ปรับตามคำขอ 15 ก.ค.] เดิมการ์ดกว้าง 34vw ทึบขาวสว่างจัด ดูโดดเด่นเกินไปจนบังด่านใกล้ๆ — ย่อขนาดลง ~30% + ลดความทึบ/เงาให้กลมกลืนกับด็อกไอคอนข้างๆ มากขึ้น */
 .wm-status-row1 { display: flex; align-items: center; gap: calc(var(--vw) * 0.6); position: relative; }
@@ -760,22 +760,22 @@ body.lowfx .cap-twist-banner { animation: none; }
 .wm-status-name { font-size: calc(var(--vw) * 0.8); font-weight: 800; color: #1a3a2a; text-align: left;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wm-status-stats { display: flex; align-items: center; gap: calc(var(--vw) * 0.5); flex-wrap: wrap; }
-.wm-status-item { font-size: calc(var(--vw) * 0.68); font-weight: 700; color: #2a4a34; white-space: nowrap; }
+.wm-status-item { font-size: calc(var(--vw) * 0.68); font-weight: 700; color: #22384e; white-space: nowrap; }
 /* Lobby: ภาพตัวละครที่สวมใส่ออร่า/สัตว์เลี้ยงจริง วาดสดๆ ในแถบสถานะ แทนที่จะมีแค่ชื่อ/ตัวเลขล้วนๆ */
 .wm-status-avatar { width: calc(var(--vw) * 2.5); height: calc(var(--vw) * 2.5); border-radius: 50%; background: rgba(255,255,255,0.5);
-  border: calc(var(--vw) * 0.1) solid rgba(26,58,42,0.3); flex-shrink: 0; }
-.wm-status-lb-btn { font-size: calc(var(--vw) * 0.62); font-weight: 700; color: #fff; background: #2f9e73; border: none;
+  border: calc(var(--vw) * 0.1) solid rgba(22,42,78,0.3); flex-shrink: 0; }
+.wm-status-lb-btn { font-size: calc(var(--vw) * 0.62); font-weight: 700; color: #fff; background: #2e7cb8; border: none;
   border-radius: calc(var(--vw) * 0.8); padding: calc(var(--vw) * 0.2) calc(var(--vw) * 0.65); cursor: pointer; white-space: nowrap; }
 .wm-status-lb-btn:hover { background: #268a63; }
 /* [ใหม่ตามคำขอ] แถวเหรียญสมรรถนะที่มีอยู่ — ได้แล้ว=สี ยังไม่ได้=เงา (แบบเดียวกับ Lobby .lobby-badge) + คำชวนสะสมเพิ่มแบบโปร่งใส ไม่กดดัน (หลักเดียวกับระบบเย้ายวนร้านค้ารอบ 23) */
 .wm-status-badges-row { display: flex; align-items: center; gap: calc(var(--vw) * 0.4);
-  border-top: calc(var(--vw) * 0.05) solid rgba(26,58,42,0.15); padding-top: calc(var(--vw) * 0.28); }
+  border-top: calc(var(--vw) * 0.05) solid rgba(22,42,78,0.15); padding-top: calc(var(--vw) * 0.28); }
 .wm-status-badges-grid { display: flex; gap: calc(var(--vw) * 0.2); flex-shrink: 0; flex-wrap: wrap; }
 .wm-status-badge { font-size: calc(var(--vw) * 0.8); width: calc(var(--vw) * 1.25); height: calc(var(--vw) * 1.25);
   display: flex; align-items: center; justify-content: center; border-radius: calc(var(--vw) * 0.28);
-  background: rgba(26,58,42,0.06); border: calc(var(--vw) * 0.05) solid transparent; filter: grayscale(1) opacity(0.35); }
+  background: rgba(22,42,78,0.06); border: calc(var(--vw) * 0.05) solid transparent; filter: grayscale(1) opacity(0.35); }
 .wm-status-badge.earned { filter: none; background: rgba(255,213,74,0.25); border-color: rgba(200,150,20,0.5); }
-.wm-status-badges-hint { font-size: calc(var(--vw) * 0.56); color: #2a4a34; opacity: 0.85; line-height: 1.25; flex: 1; min-width: 0; }
+.wm-status-badges-hint { font-size: calc(var(--vw) * 0.56); color: #22384e; opacity: 0.85; line-height: 1.25; flex: 1; min-width: 0; }
 /* กระดานผู้นำย่อ (Top 5) เด้งลงมาจากแถบสถานะเมื่อกดปุ่มอันดับ — [ปรับตามคำขอ] การ์ดย้ายมาฝั่งซ้ายจอแล้ว เปิดชิดซ้ายแทนขวา กันล้นขอบจอฝั่งขวา */
 .wm-mini-leaderboard {
   position: absolute; top: 100%; left: 0; right: auto; margin-top: calc(var(--vw) * 0.6); min-width: calc(var(--vw) * 15);
@@ -796,7 +796,7 @@ body.lowfx .cap-twist-banner { animation: none; }
   border: calc(var(--vw) * 0.22) solid rgba(255,224,120,0.6); box-shadow: 0 calc(var(--vw) * 0.5) calc(var(--vw) * 1.6) rgba(0,0,0,0.4); }
 .lobby-name { font-size: calc(var(--vw) * 1.5); font-weight: 800; color: #fff8e6; margin-top: calc(var(--vw) * 0.8); }
 .lobby-stats-row { display: flex; gap: calc(var(--vw) * 1.6); margin: calc(var(--vw) * 1) 0 calc(var(--vw) * 1.6); }
-.lobby-stat { font-size: calc(var(--vw) * 1.05); font-weight: 700; color: #d8f2e2; background: rgba(0,0,0,0.28);
+.lobby-stat { font-size: calc(var(--vw) * 1.05); font-weight: 700; color: #d9ecf7; background: rgba(0,0,0,0.28);
   padding: calc(var(--vw) * 0.4) calc(var(--vw) * 1.1); border-radius: calc(var(--vw) * 1); }
 .lobby-enter-btn { font-size: calc(var(--vw) * 1.3); padding: calc(var(--vw) * 0.9) calc(var(--vw) * 2.6); margin-bottom: calc(var(--vw) * 1.6); }
 .lobby-nav-row { display: flex; gap: calc(var(--vw) * 1); flex-wrap: wrap; justify-content: center; max-width: calc(var(--vw) * 60); }
@@ -814,7 +814,7 @@ body.lowfx .cap-twist-banner { animation: none; }
 .lobby-lb-row.me { background: rgba(255,213,74,0.22); border: calc(var(--vw) * 0.08) solid #ffd54a; }
 .lobby-lb-row .lb-nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
 .lobby-lb-row .lb-sc { color: #ffd54a; font-weight: 800; }
-.lobby-lb-empty { font-size: clamp(11px, calc(var(--vw) * 0.78), 15px); color: #d8f2e2; opacity: 0.75; text-align: center; padding: calc(var(--vw) * 0.6) 0; line-height: 1.4; }
+.lobby-lb-empty { font-size: clamp(11px, calc(var(--vw) * 0.78), 15px); color: #d9ecf7; opacity: 0.75; text-align: center; padding: calc(var(--vw) * 0.6) 0; line-height: 1.4; }
 .lobby-badges-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: calc(var(--vw) * 0.4); }
 .lobby-badge { font-size: calc(var(--vw) * 1.55); text-align: center; padding: calc(var(--vw) * 0.28) 0;
   background: rgba(255,255,255,0.05); border: calc(var(--vw) * 0.08) solid transparent; border-radius: calc(var(--vw) * 0.5);
@@ -1001,7 +1001,7 @@ body.lowfx .ls-train, body.lowfx .ls-cloud-1, body.lowfx .ls-cloud-2, body.lowfx
 .quiz-panel {
   position: absolute; left: 4%; right: 4%; bottom: 3%;
   background: linear-gradient(180deg, rgba(20,28,22,0.96), rgba(10,16,12,0.98));
-  border: calc(var(--vw) * 0.25) solid #5fc79e; border-radius: calc(var(--vw) * 1.2); padding: 1.5%;
+  border: calc(var(--vw) * 0.25) solid #5fb8e8; border-radius: calc(var(--vw) * 1.2); padding: 1.5%;
   z-index: 25; box-shadow: 0 calc(var(--vw) * 0.6) calc(var(--vw) * 2) rgba(0,0,0,0.5);
 }
 .quiz-panel.hidden { display: none; }
@@ -1080,7 +1080,7 @@ body.lowfx .ls-train, body.lowfx .ls-cloud-1, body.lowfx .ls-cloud-2, body.lowfx
 .clear-stars { font-size: calc(var(--vw) * 3.5); margin: calc(var(--vw) * 1.5) 0; }
 .clear-tier { font-size: calc(var(--vw) * 1.5); color: #ffe070; font-weight: 800; margin-bottom: calc(var(--vw) * 0.6); }
 .clear-score { font-size: calc(var(--vw) * 1.3); color: #fff; margin-bottom: calc(var(--vw) * 1); }
-.clear-message { font-size: calc(var(--vw) * 1.15); color: #bfe8d0; font-weight: 600; margin-bottom: calc(var(--vw) * 2); max-width: 55%; text-align: center; }
+.clear-message { font-size: calc(var(--vw) * 1.15); color: #c6e4f5; font-weight: 600; margin-bottom: calc(var(--vw) * 2); max-width: 55%; text-align: center; }
 /* หน้า Victory (หลังชนะบอส) — ตัวละครฉลองชัยวาดสดตรงกลางจอบน #game-canvas (ดู Victory module)
    เว้นที่ว่างตรงกลางด้วย .victory-spacer ให้ตัวละคร+เอฟเฟกต์ไม่โดนข้อความบัง */
 #victory-screen { text-shadow: 0 calc(var(--vw) * 0.2) calc(var(--vw) * 0.5) rgba(0,0,0,0.5); }
@@ -1099,7 +1099,7 @@ body.lowfx .ls-train, body.lowfx .ls-cloud-1, body.lowfx .ls-cloud-2, body.lowfx
 /* [ใหม่ Task #98] แผงสรุปคะแนนแบบการ์ดเด่น แทน .victory-score บรรทัดเดียวเดิม (ยังคงเว้นให้ .victory-spacer กันตัวละครโดนบังเหมือนเดิม) */
 .victory-score-panel {
   display: flex; align-items: stretch; justify-content: center; gap: calc(var(--vw) * 0.2);
-  background: linear-gradient(180deg, rgba(20,32,24,0.78), rgba(10,18,14,0.78));
+  background: linear-gradient(180deg, rgba(17,27,48,0.78), rgba(9,15,30,0.78));
   border: calc(var(--vw) * 0.14) solid rgba(255,213,74,0.75); border-radius: calc(var(--vw) * 1.1);
   padding: calc(var(--vw) * 0.5) calc(var(--vw) * 1.1); margin-bottom: calc(var(--vw) * 0.75);
   animation: victoryPanelGlow 2.6s ease-in-out infinite;
@@ -1182,15 +1182,15 @@ body.lowfx .ls-train, body.lowfx .ls-cloud-1, body.lowfx .ls-cloud-2, body.lowfx
 .media-nav button { min-width: 46px; min-height: 44px; font-size: 20px; font-weight: 800; border-radius: calc(var(--vw) * 0.5);
   border: calc(var(--vw) * 0.12) solid rgba(255,255,255,0.35); background: rgba(255,255,255,0.12); color: #ffe89a; cursor: pointer; }
 .media-nav button:hover { background: rgba(255,255,255,0.22); }
-.media-nav .media-count { font-weight: 800; color: #d8f2e2; min-width: 64px; text-align: center; }
+.media-nav .media-count { font-weight: 800; color: #d9ecf7; min-width: 64px; text-align: center; }
 .media-yt-note { font-size: calc(var(--vw) * 0.8); color: #ffd8b0; padding: calc(var(--vw) * 0.5); text-align: center; line-height: 1.5; }
-.media-credit { font-size: calc(var(--vw) * 0.8); color: #d8f2e2; opacity: 0.75; text-align: right; margin-bottom: calc(var(--vw) * 1); }
+.media-credit { font-size: calc(var(--vw) * 0.8); color: #d9ecf7; opacity: 0.75; text-align: right; margin-bottom: calc(var(--vw) * 1); }
 .media-credit a { color: #ffd54a; }
-.media-empty { text-align: center; color: #d8f2e2; opacity: 0.75; font-size: calc(var(--vw) * 0.95); padding: calc(var(--vw) * 2) 0; }
+.media-empty { text-align: center; color: #d9ecf7; opacity: 0.75; font-size: calc(var(--vw) * 0.95); padding: calc(var(--vw) * 2) 0; }
 /* [V.7.74 ข้อ 5 ตามที่ครูขอ "ปรับให้สวยงาม น่าอ่าน เป็นสัดส่วน"]
    เดิมที่มาของสื่อเป็นข้อความยาวต่อกันจนล้นบรรทัด (โดยเฉพาะ URL ที่ไม่มีช่องว่างให้ตัดคำ)
    ตอนนี้แยกเป็นการ์ดรายบทเรียน วางเป็นกริด 2 คอลัมน์บนจอกว้าง และแหล่งที่มาแสดงเป็นชิปสั้น ๆ (โดเมนอย่างเดียว) */
-.credits-list { overflow: visible; text-align: left; font-size: calc(var(--vw) * 0.9); color: #d8f2e2; line-height: 1.7;
+.credits-list { overflow: visible; text-align: left; font-size: calc(var(--vw) * 0.9); color: #d9ecf7; line-height: 1.7;
   display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(var(--vw) * 22)), 1fr));
   gap: calc(var(--vw) * 0.6); align-items: start; }
 .credits-list a { color: #ffd54a; }
@@ -1660,12 +1660,12 @@ body.v8-art-on #worldmap-screen .worldmap-terrain,
 body.v8-art-on #worldmap-screen .worldmap-tree { display: none; }
 body.v8-art-on #worldmap-screen .worldmap-fog { opacity: 0.35; }
 /* ป้ายชื่อด่านอ่านชัดบนภาพวาด */
-body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radius: calc(var(--vw)*0.5);
+body.v8-art-on .stage-node-label { background: rgba(17,26,46,0.72); border-radius: calc(var(--vw)*0.5);
   padding: calc(var(--vw)*0.12) calc(var(--vw)*0.5); text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 
 /* ป้ายโซน 3 โซน */
 .wm-zone-chip { position: absolute; z-index: 2; font-weight: 800; font-size: calc(var(--vw)*1.02);
-  color: #fff8e6; background: linear-gradient(135deg, rgba(31,61,47,0.85), rgba(17,38,28,0.85));
+  color: #fff8e6; background: linear-gradient(135deg, rgba(27,50,84,0.85), rgba(14,30,58,0.85));
   border: calc(var(--vw)*0.14) solid rgba(255,235,170,0.65); border-radius: 999px;
   padding: calc(var(--vw)*0.3) calc(var(--vw)*1.05); pointer-events: none;
   text-shadow: 0 1px 3px rgba(0,0,0,0.7); box-shadow: 0 calc(var(--vw)*0.25) calc(var(--vw)*0.8) rgba(0,0,0,0.35); }
@@ -1691,7 +1691,7 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
 /* เข็มทิศน้องสมดุล */
 .wm-compass-btn { position: absolute; left: calc(var(--vw)*1.2); bottom: calc(var(--vw)*4.2); z-index: 21;
   width: calc(var(--vw)*4.0); height: calc(var(--vw)*4.0); border-radius: 50%; border: calc(var(--vw)*0.18) solid #ffe9a8;
-  background: radial-gradient(circle at 32% 28%, #2f6b4f, #17402d 75%); color: #fff; font-size: calc(var(--vw)*1.9);
+  background: radial-gradient(circle at 32% 28%, #2f5f8a, #14304e 75%); color: #fff; font-size: calc(var(--vw)*1.9);
   cursor: pointer; box-shadow: 0 calc(var(--vw)*0.3) calc(var(--vw)*0.9) rgba(0,0,0,0.45); transition: transform 0.15s; }
 .wm-compass-btn:hover { transform: scale(1.08); }
 .wm-compass-btn .cmp-ping { position: absolute; inset: calc(var(--vw)*-0.45); border-radius: 50%;
@@ -1702,7 +1702,7 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
   border: calc(var(--vw)*0.18) solid #c9a95c; border-radius: calc(var(--vw)*1.1);
   padding: calc(var(--vw)*1.0) calc(var(--vw)*1.2); color: #2f2a18;
   box-shadow: 0 calc(var(--vw)*0.5) calc(var(--vw)*1.5) rgba(0,0,0,0.4); }
-.wm-compass-panel h4 { margin: 0 0 calc(var(--vw)*0.5); font-size: calc(var(--vw)*1.12); color: #155a3c; }
+.wm-compass-panel h4 { margin: 0 0 calc(var(--vw)*0.5); font-size: calc(var(--vw)*1.12); color: #14406b; }
 .wm-compass-panel .cmp-line { font-size: calc(var(--vw)*0.95); line-height: 1.45; margin-bottom: calc(var(--vw)*0.55); }
 .wm-compass-panel .cmp-sug { display: block; width: 100%; text-align: left; font-family: inherit; cursor: pointer;
   background: #ffffff; border: calc(var(--vw)*0.13) solid #d8c48a; border-radius: calc(var(--vw)*0.7);
@@ -1736,7 +1736,7 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
   animation: pcGlow 1.6s ease-in-out infinite alternate; }
 @keyframes pcGlow { from { box-shadow: 0 0 calc(var(--vw)*1.4) rgba(255,215,110,0.75); } to { box-shadow: 0 0 calc(var(--vw)*3.2) rgba(255,225,140,1); } }
 .protector-celebrate .pc-title { font-size: calc(var(--vw)*1.7); font-weight: 800; color: #8a5a12; margin-top: calc(var(--vw)*1.0); }
-.protector-celebrate .pc-name { font-size: calc(var(--vw)*1.35); font-weight: 800; color: #155a3c; margin-top: calc(var(--vw)*0.3); }
+.protector-celebrate .pc-name { font-size: calc(var(--vw)*1.35); font-weight: 800; color: #14406b; margin-top: calc(var(--vw)*0.3); }
 .protector-celebrate .pc-progress { font-size: calc(var(--vw)*1.0); margin-top: calc(var(--vw)*0.7); color: #5b4a1e; }
 .protector-celebrate .pc-note { font-size: calc(var(--vw)*0.9); margin-top: calc(var(--vw)*0.35); color: #6b6b5a; }
 
@@ -1763,7 +1763,7 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
 .dt-step.on { color: #1d2e12; background: #ffe06e; border-color: #fff3c0; }
 .dt-step.done { color: #d9f7e8; background: rgba(22,101,52,0.75); border-color: rgba(134,239,172,0.5); }
 .dt-folder { position: absolute; top: calc(var(--vw)*5.9); right: calc(var(--vw)*1.0); z-index: 12;
-  font-size: calc(var(--vw)*0.95); font-weight: 800; color: #fff; background: rgba(20,32,24,0.85);
+  font-size: calc(var(--vw)*0.95); font-weight: 800; color: #fff; background: rgba(17,27,48,0.85);
   border: calc(var(--vw)*0.13) solid rgba(255,235,170,0.55); border-radius: 999px;
   padding: calc(var(--vw)*0.3) calc(var(--vw)*0.9); }
 .dt-scene { position: absolute; inset: 0; z-index: 8; }
@@ -1781,7 +1781,7 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
 .dt-hotspot.got { animation: none; filter: grayscale(0.7); opacity: 0.45; cursor: default; }
 .dt-hotspot .hs-label { position: absolute; top: 105%; left: 50%; transform: translateX(-50%); white-space: nowrap;
   font-size: calc(var(--vw)*0.82); font-weight: 800; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.85);
-  background: rgba(20,30,24,0.72); border-radius: 999px; padding: calc(var(--vw)*0.1) calc(var(--vw)*0.55); }
+  background: rgba(17,26,46,0.72); border-radius: 999px; padding: calc(var(--vw)*0.1) calc(var(--vw)*0.55); }
 @keyframes dtPulse { 0%,100% { box-shadow: 0 0 calc(var(--vw)*0.7) rgba(255,220,120,0.7); } 50% { box-shadow: 0 0 calc(var(--vw)*1.7) rgba(255,230,150,1); } }
 /* การ์ดหลักฐาน (modal) */
 .dt-card-overlay { position: absolute; inset: 0; z-index: 30; background: rgba(8,12,10,0.72);
@@ -1805,7 +1805,7 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
   background: rgba(200,170,90,0.16); border-radius: calc(var(--vw)*0.7); margin-bottom: calc(var(--vw)*0.5); }
 .dt-card .dt-btn-row { display: flex; gap: calc(var(--vw)*0.7); justify-content: center; margin-top: calc(var(--vw)*1.0); flex-wrap: wrap; }
 .dt-btn { font-family: inherit; font-weight: 800; font-size: calc(var(--vw)*1.02); cursor: pointer;
-  border-radius: calc(var(--vw)*0.8); border: calc(var(--vw)*0.16) solid #2f6b4f;
+  border-radius: calc(var(--vw)*0.8); border: calc(var(--vw)*0.16) solid #2e5f8a;
   background: linear-gradient(180deg, #3f8f68, #2c6b4c); color: #fff;
   padding: calc(var(--vw)*0.6) calc(var(--vw)*1.6); box-shadow: 0 calc(var(--vw)*0.25) 0 #1c4632; transition: transform 0.1s; }
 .dt-btn:hover { transform: translateY(calc(var(--vw)*-0.1)); }
@@ -1941,7 +1941,7 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
 .rd-walker { position: absolute; top: calc(var(--vw)*-2.6); left: 50%; transform: translateX(-50%); font-size: calc(var(--vw)*2.2);
   filter: drop-shadow(0 calc(var(--vw)*0.2) calc(var(--vw)*0.3) rgba(0,0,0,0.5)); transition: all 0.4s; }
 .rd-msg-panel { position: absolute; right: calc(var(--vw)*1); top: calc(var(--vw)*3.2); z-index: 12; width: calc(var(--vw)*22);
-  background: rgba(20,32,24,0.9); border: calc(var(--vw)*0.15) solid rgba(255,235,170,0.55); border-radius: calc(var(--vw)*0.9);
+  background: rgba(17,27,48,0.9); border: calc(var(--vw)*0.15) solid rgba(255,235,170,0.55); border-radius: calc(var(--vw)*0.9);
   padding: calc(var(--vw)*0.7) calc(var(--vw)*0.9); font-size: calc(var(--vw)*0.9); }
 .rd-msg-panel b { color: #ffe9a8; }
 .rd-msg-line { background: rgba(255,255,255,0.1); border-radius: calc(var(--vw)*0.5); padding: calc(var(--vw)*0.28) calc(var(--vw)*0.55);
@@ -1986,7 +1986,7 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
   font-size: calc(var(--vw)*1.0); font-weight: 800; color: #1d2e12; background: #ffe06e; border-radius: 999px;
   padding: calc(var(--vw)*0.3) calc(var(--vw)*1.2); border: calc(var(--vw)*0.14) solid #fff3c0; }
 .rs-side { position: absolute; right: calc(var(--vw)*1); top: calc(var(--vw)*6.5); width: calc(var(--vw)*21); z-index: 12;
-  background: rgba(20,32,24,0.9); border: calc(var(--vw)*0.15) solid rgba(255,235,170,0.55); border-radius: calc(var(--vw)*0.9);
+  background: rgba(17,27,48,0.9); border: calc(var(--vw)*0.15) solid rgba(255,235,170,0.55); border-radius: calc(var(--vw)*0.9);
   padding: calc(var(--vw)*0.7) calc(var(--vw)*0.9); font-size: calc(var(--vw)*0.9); max-height: 72%; overflow-y: auto; }
 
 /* ---------- ด่านนักนิเวศน้อย (NS) ---------- */
@@ -2114,7 +2114,7 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
 .cap-cert::before { content: ''; position: absolute; inset: calc(var(--vw)*0.5); border: calc(var(--vw)*0.12) solid #c9a95c;
   border-radius: calc(var(--vw)*0.8); pointer-events: none; }
 .cap-cert .cc-head { font-size: calc(var(--vw)*0.85); font-weight: 800; letter-spacing: 0.3em; color: #8a6a1e; }
-.cap-cert .cc-title { font-size: calc(var(--vw)*1.9); font-weight: 800; color: #155a3c; margin: calc(var(--vw)*0.3) 0; }
+.cap-cert .cc-title { font-size: calc(var(--vw)*1.9); font-weight: 800; color: #14406b; margin: calc(var(--vw)*0.3) 0; }
 .cap-cert .cc-name { font-size: calc(var(--vw)*1.6); font-weight: 800; color: #7c4a03; border-bottom: calc(var(--vw)*0.14) dashed #c9a95c;
   display: inline-block; padding: 0 calc(var(--vw)*1.4) calc(var(--vw)*0.2); margin: calc(var(--vw)*0.4) 0; }
 .cap-cert .cc-badges { font-size: calc(var(--vw)*1.7); letter-spacing: 0.18em; margin: calc(var(--vw)*0.4) 0; }
@@ -2178,7 +2178,7 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
    [ภาค 2] ป้ายบอกภาค + ทางกลับไปเล่นภาค 1
    ============================================================ */
 .p2-badge { display: inline-block; margin: 0 auto calc(var(--vw)*0.42); padding: calc(var(--vw)*0.28) calc(var(--vw)*1.15);
-  border-radius: 999px; background: linear-gradient(180deg, #1a7a45, #14532d); color: #fdf6e3;
+  border-radius: 999px; background: linear-gradient(180deg, #1d4f8a, #12345e); color: #fdf6e3;
   font-weight: 800; font-size: calc(var(--vw)*1.02); letter-spacing: 0.01em;
   border: calc(var(--vw)*0.12) solid rgba(253,230,138,0.6);
   box-shadow: 0 calc(var(--vw)*0.14) calc(var(--vw)*0.55) rgba(0,0,0,0.4); }
@@ -2211,16 +2211,16 @@ body.v8-art-on .stage-node-label { background: rgba(20,30,24,0.72); border-radiu
 .cz-card:hover { transform: translateY(calc(var(--vw)*-0.16)); border-color: #b58f3c; }
 .cz-card.heard { border-color: #4ea36a; background: #f4fbf3; }
 .cz-card.open { border-color: #b58f3c; box-shadow: 0 0 0 calc(var(--vw)*0.16) rgba(181,143,60,0.3); }
-.cz-card.picked { border-color: #1a7a45; background: #e9f7ec; box-shadow: 0 0 0 calc(var(--vw)*0.2) rgba(26,122,69,0.35); }
+.cz-card.picked { border-color: #1d6fa8; background: #e8f3fb; box-shadow: 0 0 0 calc(var(--vw)*0.2) rgba(29,111,168,0.35); }
 /* [เฟส 3 · 3.4] ป้ายลำดับความเร่งด่วน — เห็นภาพลำดับทั้งชุดพร้อมกัน */
-.cz-card.picked .cz-tag { background: #1a7a45; color: #fff; border-radius: 999px; padding: 0 calc(var(--vw)*0.5); font-weight: 800; }
+.cz-card.picked .cz-tag { background: #1d6fa8; color: #fff; border-radius: 999px; padding: 0 calc(var(--vw)*0.5); font-weight: 800; }
 .cz-por { width: 100%; aspect-ratio: 3/4; border-radius: calc(var(--vw)*0.55); display: flex; align-items: center;
   justify-content: center; font-size: calc(var(--vw)*2.4); background: #efe7cf; background-size: cover; background-position: center top; }
 .cz-por.has-art { font-size: 0; }
 .cz-name { font-weight: 800; font-size: calc(var(--vw)*0.76); color: #22432f; line-height: 1.25; }
 .cz-want { font-size: calc(var(--vw)*0.7); color: #6b5b2e; line-height: 1.3; }
 .cz-tag { font-size: calc(var(--vw)*0.66); color: #8a7c52; font-weight: 700; }
-.cz-card.heard .cz-tag { color: #1a7a45; }
+.cz-card.heard .cz-tag { color: #1d6fa8; }
 .cz-detail { min-height: calc(var(--vw)*3.4); margin-top: calc(var(--vw)*0.7); }
 .cz-say { background: #fff8e2; border-radius: calc(var(--vw)*0.6); padding: calc(var(--vw)*0.6) calc(var(--vw)*0.9);
   font-size: calc(var(--vw)*0.88); color: #3b3320; line-height: 1.6; text-align: left; }
@@ -2960,7 +2960,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
   border-bottom-width: calc(var(--cw)*0.3); padding: 0 calc(var(--cw)*3) calc(var(--cw)*0.4); }
 .cap-cert .cc-badges { font-size: max(16px, calc(var(--cw)*4.2)); letter-spacing: 0.1em; margin: 0; }
 .cap-cert .cc-badgen { font-size: max(12px, calc(var(--cw)*2.2)); font-weight: 800; color: #7a5a12; }
-.cap-cert .cc-lv { font-size: max(12px, calc(var(--cw)*2.5)); font-weight: 800; color: #155a3c;
+.cap-cert .cc-lv { font-size: max(12px, calc(var(--cw)*2.5)); font-weight: 800; color: #14406b;
   background: rgba(21,90,60,0.10); border-radius: 999px;
   padding: calc(var(--cw)*0.55) calc(var(--cw)*2.2); max-width: 100%; }
 .cap-cert .cc-date { font-size: max(12px, calc(var(--cw)*2)); margin: 0; }
@@ -3259,7 +3259,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
 .badges-count-line { text-align: center; font-size: max(11px, calc(var(--vw) * 0.95)); font-weight: 800;
   color: #ffe6a8; margin: calc(var(--vw) * 0.05) 0 calc(var(--vw) * 0.2); }
 .badges-sec-head { text-align: center; font-size: max(11px, calc(var(--vw) * 0.85)); font-weight: 800;
-  color: #d8f2e2; opacity: 0.92; margin: calc(var(--vw) * 0.15) 0; }
+  color: #d9ecf7; opacity: 0.92; margin: calc(var(--vw) * 0.15) 0; }
 .badges-core-row { display: flex; justify-content: center; gap: calc(var(--vw) * 0.45); flex-wrap: wrap; }
 .badge-core { box-sizing: border-box; width: calc(var(--vw) * 6.6); min-width: 56px;
   padding: calc(var(--vw) * 0.3) calc(var(--vw) * 0.15); border-radius: calc(var(--vw) * 0.8);
@@ -3278,6 +3278,132 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
 #worldmap-screen .worldmap-dock, #worldmap-screen .wm-protector-bar,
 #worldmap-screen .wm-status-panel, #worldmap-screen #wm-status-panel, #worldmap-screen .wm-status,
 #worldmap-screen #wm-team-legend { z-index: 8; }
+/* [บล็อก AC7] เข็มทิศเรียกสายตาตอนเริ่มเกม — กะพริบเบา ๆ จนกว่าจะผ่านด่านแรก (ครูสั่ง 11 ส.ค.) */
+@keyframes wmCompassPing {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 214, 110, 0.85), 0 0 calc(var(--vw) * 1.1) rgba(255, 214, 110, 0.9); }
+  50% { box-shadow: 0 0 0 calc(var(--vw) * 0.85) rgba(255, 214, 110, 0), 0 0 calc(var(--vw) * 2.2) rgba(255, 228, 150, 1); }
+}
+.wm-compass-btn.wm-compass-callout { animation: wmCompassPing 1.6s ease-in-out infinite; }
+
+/* [บล็อก AF · เฟส 5A] ฉากเดินสำรวจ — ชั้นเดียวกับด่าน DOM (เหนือ canvas เกม ใต้ปุ่มออกด่าน z15) */
+#walk-root { position: absolute; inset: 0; z-index: 6; }
+#walk-canvas { width: 100%; height: 100%; display: block; touch-action: none; cursor: pointer; }
+.walk-obj { position: absolute; top: calc(var(--vw) * 1.1); left: 50%; transform: translateX(-50%);
+  max-width: 82%; background: rgba(12, 24, 44, 0.82); color: #ffeebe; font-weight: 800;
+  font-size: max(12px, calc(var(--vw) * 1.0)); line-height: 1.45; text-align: center;
+  padding: calc(var(--vw) * 0.55) calc(var(--vw) * 1.4); border-radius: calc(var(--vw) * 1.4);
+  border: max(1px, calc(var(--vw) * 0.12)) solid rgba(255, 214, 120, 0.55); pointer-events: none; }
+.walk-count { position: absolute; left: calc(var(--vw) * 1.2); bottom: calc(var(--vw) * 1.2);
+  background: rgba(12, 24, 44, 0.82); color: #d8ffe8; font-weight: 800;
+  font-size: max(12px, calc(var(--vw) * 1.0)); padding: calc(var(--vw) * 0.5) calc(var(--vw) * 1.1);
+  border-radius: calc(var(--vw) * 1.2); pointer-events: none; }
+.walk-card { text-align: center; }
+.walk-card .walk-card-ic { font-size: max(30px, calc(var(--vw) * 3)); line-height: 1.2; }
+.walk-card p { font-size: max(12px, calc(var(--vw) * 1.0)); line-height: 1.6; margin: calc(var(--vw) * 0.5) 0; }
+
+/* [บล็อก AG] การ์ดเนื้อหาด่าน: ไม่เอาแถบเลื่อนขึ้นลง — ย่อรูปให้พอดีจอแทน */
+.dt-card { scrollbar-width: none; }
+.dt-card::-webkit-scrollbar { display: none; width: 0; height: 0; }
+.dt-card .ev-img { max-height: 30vh; object-fit: contain; background: rgba(90, 70, 30, 0.06); }
+@media (max-height: 940px) {
+  .dt-card { max-height: 93%; }
+  .dt-card .ev-img { max-height: 25vh; }
+  .dt-card .dt-tag-panel { margin-top: calc(var(--vw) * 0.45) !important; }
+}
+@media (max-height: 700px) {
+  .dt-card .ev-img { max-height: 20vh; }
+}
+
+/* [บล็อก AH] แผนที่: หัวเรื่องออก + แถบตราผู้พิทักษ์ขึ้นบน (ตำแหน่งเดิมของหัวเรื่อง) */
+#worldmap-screen .worldmap-title { display: none !important; }
+#worldmap-screen .wm-protector-bar { bottom: auto; top: calc(var(--vw) * 0.9); }
+
+/* [บล็อก AI] จัดระเบียบหมุดแผนที่ตามครูสั่ง */
+#worldmap-screen .wm-comp-tag { display: none !important; }
+.stage-node-special::after, .stage-node-mini::after { display: none; }
+#stage-node-balance2050::after {
+  content: 'พิเศษ'; display: block; position: absolute; top: calc(var(--vw) * -0.7); left: 50%;
+  transform: translateX(-50%); font-size: max(11px, calc(var(--vw) * 0.62)); font-weight: 800;
+  color: #fff; background: linear-gradient(180deg, #8f5bd9, #5a2ca0);
+  padding: calc(var(--vw) * 0.08) calc(var(--vw) * 0.55); border-radius: calc(var(--vw) * 0.8);
+  white-space: nowrap; z-index: 4; }
+#stage-node-1::after, #stage-node-3::after, #stage-node-4::after,
+#stage-node-5::after, #stage-node-6::after, #stage-node-7::after {
+  content: 'ด่านหลัก'; display: block; position: absolute; top: calc(var(--vw) * -0.7); left: 50%;
+  transform: translateX(-50%); font-size: max(11px, calc(var(--vw) * 0.62)); font-weight: 800;
+  color: #3a2505; background: linear-gradient(180deg, #ffd54a, #e0a012);
+  padding: calc(var(--vw) * 0.08) calc(var(--vw) * 0.55); border-radius: calc(var(--vw) * 0.8);
+  white-space: nowrap; z-index: 4; }
+.mobile-fit #game-wrapper .stage-node::after { font-size: max(12px, calc(var(--vw) * 1.0)) !important; }
+/* ชื่อด่านขึ้นมาชิดใต้วงกลม ทับขอบล่างเล็กน้อย — ดาวและป้าย "ผ่าน" ตามหลังชื่อ */
+.stage-node .stage-node-label { order: 1; margin-top: calc(var(--vw) * -0.55); position: relative; z-index: 3; }
+.stage-node .stage-node-stars { order: 2; }
+.stage-node .stage-node-passed { order: 3; }
+
+/* ══ [บล็อก AL · เฟส 5B] จอยซ์พาส "รุ่งอรุณผู้พิทักษ์" ══ */
+#juice-layer { position: fixed; inset: 0; pointer-events: none; z-index: 9990; }
+#juice-layer .j-spark { position: absolute; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%;
+  background: radial-gradient(circle, #ffe89a 0%, #ffca4a 55%, rgba(255,202,74,0) 78%);
+  animation: jSpark 0.6s ease-out forwards; }
+#juice-layer .j-spark.ice { background: radial-gradient(circle, #d9f4ff 0%, #7fd4f5 55%, rgba(127,212,245,0) 78%); }
+@keyframes jSpark { 0% { transform: translate(0,0) scale(1); opacity: 1; } 100% { transform: translate(var(--jx), var(--jy)) scale(0.15); opacity: 0; } }
+#juice-layer .j-coin { position: absolute; font-size: 17px; margin: -9px 0 0 -9px; will-change: transform;
+  transition: transform 0.62s cubic-bezier(.5,-0.15,.55,1), opacity 0.62s ease-in; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4)); }
+#juice-layer .j-plus { position: absolute; font-family: inherit; font-weight: 800; font-size: 15px; line-height: 1;
+  color: #ffd76a; text-shadow: 0 1px 3px rgba(0,0,0,0.75); animation: jPlus 0.9s ease-out forwards; }
+@keyframes jPlus { 0% { transform: translateY(0); opacity: 0; } 18% { opacity: 1; } 100% { transform: translateY(-34px); opacity: 0; } }
+.j-bump { animation: jBump 0.45s cubic-bezier(.34,1.56,.64,1); }
+@keyframes jBump { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }
+#game-wrapper.j-shake { animation: jShake 0.4s ease-in-out; }
+@keyframes jShake { 0%, 100% { transform: translate(0,0); } 20% { transform: translate(-5px,2px); }
+  40% { transform: translate(4px,-2px); } 60% { transform: translate(-3px,1px); } 80% { transform: translate(2px,-1px); } }
+/* เครื่องช้า/ผู้ใช้ขอลดการเคลื่อนไหว = ปิดเอฟเฟกต์เสริมทั้งหมด (ของเดิมยังเล่นได้ครบ) */
+body.lowfx #juice-layer { display: none; }
+body.lowfx #game-wrapper.j-shake, body.lowfx .j-bump { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  #juice-layer { display: none; }
+  #game-wrapper.j-shake, .j-bump { animation: none !important; }
+}
+/* กดแล้วยุบ-สปริง — เฉพาะปุ่มที่ตรวจแล้วว่าไม่ใช้ transform จัดตำแหน่ง
+   (.btn มีสปริงของตัวเองอยู่แล้ว · .stage-node ใช้ translate(-50%,-50%) จัดกึ่งกลาง ห้ามแตะ) */
+#game-wrapper .dt-choice:active, #game-wrapper .quiz-option-btn:active, #game-wrapper .lq-opt:active,
+#game-wrapper .cz-card:active, #game-wrapper .guest-menu-btn:active, #game-wrapper .mg1-card:active,
+#game-wrapper .btn-icon:active, #game-wrapper .cs-tab-btn:active, #game-wrapper .shop-tab-btn:active,
+#game-wrapper .auth-tab:active, #game-wrapper .wm-zone-chip:active { transform: scale(0.96); }
+/* วงแหวนโฟกัสฟ้าน้ำแข็ง — เด็กที่ใช้คีย์บอร์ด/สวิตช์เห็นชัด (outline ไม่กินพื้นที่ผัง) */
+#game-wrapper button:focus-visible, #game-wrapper .dt-choice:focus-visible,
+#game-wrapper input:focus-visible, #game-wrapper select:focus-visible {
+  outline: max(2.5px, calc(var(--vw) * 0.2)) solid rgba(127,212,245,0.85); outline-offset: 2px; }
+/* คอมชี้เมาส์ = โกลว์อำพัน (จอสัมผัสไม่มี hover — ไม่โดน) */
+@media (hover: hover) {
+  #game-wrapper .btn:hover { filter: brightness(1.08) drop-shadow(0 0 calc(var(--vw) * 0.45) rgba(255,202,74,0.55)); }
+  #game-wrapper .dt-choice:hover, #game-wrapper .quiz-option-btn:hover, #game-wrapper .lq-opt:hover,
+  #game-wrapper .btn-icon:hover, #game-wrapper .guest-menu-btn:hover { filter: brightness(1.07); }
+}
+/* ลายผ้าขาวม้าอำพัน-น้ำแข็งจาง ๆ บนแถบสถานะแผนที่ — เอกลักษณ์ภาค 2 (ทาสีทับ ไม่ขยับผัง) */
+.worldmap-status-bar { background-image:
+  repeating-linear-gradient(90deg, rgba(255,214,106,0.06) 0, rgba(255,214,106,0.06) 10px,
+    rgba(127,212,245,0.05) 10px, rgba(127,212,245,0.05) 20px); }
+
+/* [บล็อก AN · เฟส 5C] มินิเกมแทรก — ชั้นเดียวกับฉากเดิน (เหนือ canvas เกม ใต้ปุ่มออกด่าน z15) */
+#micro-root { position: absolute; inset: 0; z-index: 6; }
+#micro-canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; }
+#micro-root .micro-hud { position: absolute; top: calc(var(--vw) * 0.8); left: 50%; transform: translateX(-50%);
+  max-width: 92%; text-align: center; font-size: max(12px, calc(var(--vw) * 1.0)); font-weight: 700;
+  color: #ffe9b8; background: rgba(9,15,30,0.72); border: 1px solid rgba(255,214,106,0.45);
+  border-radius: 999px; padding: calc(var(--vw) * 0.35) calc(var(--vw) * 1.2); pointer-events: none; }
+#micro-root .micro-big { position: absolute; top: 38%; left: 50%; transform: translate(-50%, -50%);
+  font-size: max(18px, calc(var(--vw) * 2.4)); font-weight: 800; color: #ffd76a;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8); pointer-events: none; text-align: center; max-width: 90%; }
+#micro-root .micro-big.pop { animation: microPop 0.5s cubic-bezier(.34,1.56,.64,1); }
+@keyframes microPop { 0% { transform: translate(-50%, -50%) scale(0.4); opacity: 0; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
+#micro-root .micro-skip { position: absolute; top: calc(var(--vw) * 0.8); right: calc(var(--vw) * 6.2);
+  min-width: max(44px, calc(var(--vw) * 4.4)); min-height: max(32px, calc(var(--vw) * 2.6));
+  font-family: inherit; font-size: max(12px, calc(var(--vw) * 0.9)); font-weight: 700; cursor: pointer;
+  color: #d9ecf7; background: rgba(9,15,30,0.72); border: 1px solid rgba(127,212,245,0.5);
+  border-radius: 999px; padding: calc(var(--vw) * 0.3) calc(var(--vw) * 0.9); }
+.mobile-fit #micro-root .micro-skip { min-height: 44px; font-size: max(13px, calc(var(--vw) * 1.2)); }
+.mobile-fit #micro-root .micro-hud { font-size: max(12px, calc(var(--vw) * 1.35)); }
 </style>
 </head>
 <body>
@@ -3487,7 +3613,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
         <button id="btn-leaderboard-maker" class="btn btn-icon corner-br btn-maker-glow" title="ออกแบบและพัฒนา">👨‍🏫</button>
         <div class="tv-lb-wrap">
           <div class="tv-lb-header">
-            <div class="tv-lb-title">🏆 กระดานอันดับนักสำรวจกาญจนบุรี</div>
+            <div class="tv-lb-title">🏆 กระดานอันดับผู้พิทักษ์กาญจนบุรี</div>
             <div class="tv-lb-subtitle">อัปเดตอัตโนมัติทุก 1 นาที</div>
             <!-- [ตามคำขอครู] เลือกขอบเขตอันดับ: ห้องเรียน / ชั้น (เช่น ป.4 ทุกห้อง) / โรงเรียน / ทั้งหมด -->
             <div id="lb-scope-bar" style="display:flex;gap:calc(var(--vw)*0.5);justify-content:center;margin-top:calc(var(--vw)*0.6);flex-wrap:wrap"></div>
@@ -4370,7 +4496,7 @@ body.lowfx #v8stage-root .dt-bg { transform: none; }
    ด่านที่ผ่านในภาคหนึ่งจะไปโผล่ว่า 'ผ่านแล้ว' ในอีกภาค (ตราหลุด/ประตูเปิดเอง/คะแนนเพี้ยน) */
 const GAME_PART = 2;
 const PART1_URL = 'https://www.gameplearn.com/kan-adventure';
-const GAME_VERSION = 'V.8.19-p2-2569.83'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
+const GAME_VERSION = 'V.8.23-p2-2569.87'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
     ฝั่งเกม (1) ลบปุ่มวิ่ง ◀▶ + ป้ายสอนปัดของ V.7 ที่ชี้ผิดด่าน (2) แว่นขยายด่านนิเวศแตะครั้งเดียวติด
     (3) ซ่อนหมวดไอเทมที่ยังต่อเข้าด่านเรือธงไม่ได้ (ของที่ซื้อแล้วยังอยู่ในเซฟครบ)
     (4) หรี่เพลงอัตโนมัติระหว่างอ่านออกเสียงแล้วคืนเมื่ออ่านจบ (5) หน้าเข้าระบบแยกช่องโค้ดห้องออกจากชื่อในเกมชัดเจน + เตือนเมื่อพิมพ์สลับ
@@ -5680,6 +5806,123 @@ const Victory = {
    โชว์เหรียญตราสถานที่ (ไอคอนเดียวกับแผนที่โลก ขยายใหญ่) + ชื่อด่าน + อำเภอ + รูปแบบการเล่น
    ให้เด็กรู้ตัวก่อนว่า "กำลังจะไปที่ไหน เจออะไร" — เข้ากับเนื้อหาแต่ละด่านโดยอัตโนมัติ
    ============================================================ */
+/* ══ [บล็อก AL · เฟส 5B] JUICE — ตอบสนองทุกคลิกทั้งเกม (ชั้นความสนุก ไม่แตะข้อมูลวิจัยใด ๆ)
+   หลัก: วัดจากผลบนจอ (MutationObserver ตัวเลขเหรียญ) ไม่ hook โค้ดให้เหรียญแม้แต่บรรทัดเดียว
+   เคารพ body.lowfx + prefers-reduced-motion เสมอ — ปิดแล้วเกมเดิมครบ 100% */
+const JUICE = {
+  _last: { x: 0, y: 0, t: 0 }, _live: 0, _on: false, _box: null,
+  ok() {
+    try {
+      if (document.body.classList.contains('lowfx')) return false;
+      if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+    } catch (e) {}
+    return true;
+  },
+  _root() {
+    if (this._box && this._box.isConnected) return this._box;
+    const d = document.createElement('div');
+    d.id = 'juice-layer';
+    document.body.appendChild(d);
+    this._box = d;
+    return d;
+  },
+  /* ประกายแสงเล็ก ๆ ตรงจุดแตะ — ทอง 2 : ฟ้าน้ำแข็ง 1 ตามธีมรุ่งอรุณ · จำกัดจำนวนกันเครื่องช้า */
+  spark(x, y, big) {
+    if (!this.ok() || this._live > 26) return;
+    const root = this._root(), n = big ? 10 : 5;
+    for (let i = 0; i < n; i++) {
+      const s = document.createElement('i');
+      s.className = 'j-spark' + (i % 3 === 2 ? ' ice' : '');
+      const a = Math.random() * 6.283, r = (big ? 46 : 26) * (0.45 + Math.random() * 0.55);
+      s.style.left = x + 'px'; s.style.top = y + 'px';
+      s.style.setProperty('--jx', (Math.cos(a) * r).toFixed(1) + 'px');
+      s.style.setProperty('--jy', (Math.sin(a) * r - (big ? 18 : 8)).toFixed(1) + 'px');
+      root.appendChild(s);
+      this._live++;
+      setTimeout(() => { try { s.remove(); } catch (e) {} this._live--; }, 640);
+    }
+  },
+  /* เหรียญลอยจาก "จุดที่เพิ่งกด" เข้ากระเป๋าจริง + ป้าย +N + กระเป๋าเด้งรับ */
+  coinFly(el, gain) {
+    if (!this.ok()) return;
+    const r = el.getBoundingClientRect();
+    if (!(r.width > 0)) return;
+    const fresh = Date.now() - this._last.t < 1600;
+    const sx = fresh ? this._last.x : r.left + r.width / 2;
+    const sy = fresh ? this._last.y : r.top + r.height / 2;
+    const root = this._root();
+    const n = Math.max(1, Math.min(5, Math.round(gain / 2)));
+    for (let i = 0; i < n; i++) {
+      const c = document.createElement('b');
+      c.className = 'j-coin'; c.textContent = '🪙';
+      c.style.left = sx + 'px'; c.style.top = sy + 'px';
+      root.appendChild(c);
+      const dx = (r.left + r.width / 2) - sx, dy = (r.top + r.height / 2) - sy;
+      setTimeout(() => { c.style.transform = 'translate(' + dx.toFixed(0) + 'px,' + dy.toFixed(0) + 'px) scale(0.5)'; c.style.opacity = '0.1'; }, 30 + i * 70);
+      setTimeout(() => { try { c.remove(); } catch (e) {} }, 800 + i * 70);
+    }
+    const f = document.createElement('b');
+    f.className = 'j-plus'; f.textContent = '+' + gain;
+    f.style.left = sx + 'px'; f.style.top = (sy - 10) + 'px';
+    root.appendChild(f);
+    setTimeout(() => { try { f.remove(); } catch (e) {} }, 950);
+    try {
+      clearTimeout(el._jbT);                                   /* กันไทเมอร์รอบก่อนถอดคลาสของรอบใหม่ (ได้เหรียญติด ๆ กัน) */
+      el.classList.remove('j-bump'); void el.offsetWidth; el.classList.add('j-bump');
+      el._jbT = setTimeout(() => { try { el.classList.remove('j-bump'); } catch (e) {} }, 520);
+    } catch (e) {}
+    this.spark(r.left + r.width / 2, r.top + r.height / 2);
+  },
+  /* จอสะเทือนเบา ๆ — เหตุการณ์ใหญ่เท่านั้น (ผ่านด่าน/ชนะบอส) */
+  shake() {
+    if (!this.ok()) return;
+    const w = document.getElementById('game-wrapper');
+    if (!w) return;
+    w.classList.remove('j-shake'); void w.offsetWidth; w.classList.add('j-shake');
+    setTimeout(() => { try { w.classList.remove('j-shake'); } catch (e) {} }, 460);
+  },
+  onScreen(id) {
+    if (id === 'stage-clear-screen' || id === 'victory-screen') {
+      this.shake();
+      try {
+        const w = document.getElementById('game-wrapper'), r = w.getBoundingClientRect();
+        this.spark(r.left + r.width / 2, r.top + r.height * 0.35, true);
+      } catch (e) {}
+    }
+  },
+  _watchCoin(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const read = () => { const v = parseInt(String(el.textContent || '').replace(/[^0-9]/g, ''), 10); return isNaN(v) ? null : v; };
+    let prev = read();
+    new MutationObserver(() => {
+      const now = read();
+      if (now == null) return;
+      const d = prev == null ? 0 : now - prev;
+      prev = now;
+      if (d > 0 && el.offsetParent) this.coinFly(el, d);   /* ลดลง (ซื้อของ) ไม่เล่นอนิเมชั่นได้เหรียญ */
+    }).observe(el, { childList: true, characterData: true, subtree: true });
+  },
+  init() {
+    if (this._on) return;
+    this._on = true;
+    const gw = document.getElementById('game-wrapper');
+    if (!gw) return;
+    gw.addEventListener('pointerdown', (e) => {
+      this._last = { x: e.clientX, y: e.clientY, t: Date.now() };
+      try {
+        /* ประกายเฉพาะของที่กดได้จริง — แตะพื้นฉากเดิน/ลากแผนที่ไม่มีประกาย (ไม่รกตา) */
+        const hit = e.target && e.target.closest && e.target.closest('button, .btn, .dt-choice, .cz-card, .lq-opt, .quiz-option-btn, .mg1-card, #dialogue-box, .wm-zone-chip, [role="button"]');
+        if (hit) this.spark(e.clientX, e.clientY);
+      } catch (e2) {}
+    }, { capture: true, passive: true });
+    ['wm-status-coins', 'lobby-coins', 'shop-coins-num', 'char-select-coins-num'].forEach((id) => {
+      try { this._watchCoin(id); } catch (e) {}
+    });
+  }
+};
+try { JUICE.init(); } catch (e) {}
+
 const StageIntro = {
   _run: 0, _iconCache: {},
   GENRE_LABEL: {
@@ -11653,7 +11896,7 @@ const Stage2 = {
 
     let holdMs = 200;
     if (opt.good) {
-      Particles.spawnBurst(960, 600, { colors: ['#ffe070', '#5fc79e', '#fff'], count: 14, speed: 3 });
+      Particles.spawnBurst(960, 600, { colors: ['#ffe070', '#7fd4f5', '#fff'], count: 14, speed: 3 });
       if (wasHazard) {
         AUDIO.playSFX('correct');
         this._triggerRockfall(true);
@@ -12371,7 +12614,7 @@ const StageRadio = {
       '<div style="display:inline-block;background:#fef9c3;border:2px solid #fcd34d;border-radius:calc(var(--vw)*0.6);padding:calc(var(--vw)*0.4) calc(var(--vw)*0.8);margin:calc(var(--vw)*0.3);font-weight:700">🚂 ป้ายเตือน: วันนี้มีรถไฟผ่าน! ช่องหลบภัยอยู่แผ่น ' + (map.shelter + 1) + '</div></div>' +
       (this.lv === 1 ? '<div style="font-size:calc(var(--vw)*0.82);color:#166534;font-weight:700">💡 คำใบ้ลูกเสือ: สารที่ดีบอก "จุดไหน + ทำอะไร" ให้ครบทุกจุดอันตราย</div>' : '') +
       '</div>' +
-      '<div style="background:rgba(20,32,24,0.92);border:calc(var(--vw)*0.15) solid rgba(255,235,170,0.55);border-radius:calc(var(--vw)*1);padding:calc(var(--vw)*0.9);margin-top:calc(var(--vw)*0.8)">' +
+      '<div style="background:rgba(17,27,48,0.92);border:calc(var(--vw)*0.15) solid rgba(255,235,170,0.55);border-radius:calc(var(--vw)*1);padding:calc(var(--vw)*0.9);margin-top:calc(var(--vw)*0.8)">' +
       '<b style="color:#ffe9a8">📻 แผ่นวลีแต่งสาร (เลือก <span id="rd-pick-n">0</span>/' + maxPick + ')</b><div id="rd-tiles">' +
       shuffled.map(t => '<button class="rd-tile" data-id="' + t.id + '">' + t.t + '</button>').join('') + '</div>' +
       '<div class="dt-btn-row"><button class="dt-btn" id="rd-send" disabled>ส่งสารวิทยุ 📡</button></div></div></div>';
@@ -12428,7 +12671,7 @@ const StageRadio = {
         Array.from({ length: 8 }, (_, i) =>
           '<div class="rd-plank" id="rd-p' + i + '"><span class="rd-num">' + (i + 1) + '</span><span id="rd-pc' + i + '"></span></div>').join('') +
         '</div><div class="rd-train" id="rd-train" style="display:none">🚂💨</div></div>' +
-        '<div id="rd-acts" style="position:absolute;bottom:calc(var(--vw)*1.2);left:50%;transform:translateX(-50%);z-index:12;text-align:center;background:rgba(20,32,24,0.88);border-radius:calc(var(--vw)*1);padding:calc(var(--vw)*0.6) calc(var(--vw)*1);border:calc(var(--vw)*0.14) solid rgba(255,235,170,0.5)"></div>'
+        '<div id="rd-acts" style="position:absolute;bottom:calc(var(--vw)*1.2);left:50%;transform:translateX(-50%);z-index:12;text-align:center;background:rgba(17,27,48,0.88);border-radius:calc(var(--vw)*1);padding:calc(var(--vw)*0.6) calc(var(--vw)*1);border:calc(var(--vw)*0.14) solid rgba(255,235,170,0.5)"></div>'
     });
     /* [ระยะ 2.4] ตัวละครจริงเดินข้ามสะพาน — ถ้าเครื่องยนต์ตัวละครใช้ไม่ได้ ถอยไปใช้อีโมจิเหมือนเดิม */
     const walker = document.createElement('span');
@@ -14132,7 +14375,7 @@ const Stage8 = {
           Particles.spawnImpactStar(this.enemyPos.x, this.enemyPos.y - 40, '#ffe070', playerUlt ? 120 : 90);
           Particles.spawnBurst(this.enemyPos.x, this.enemyPos.y - 40, { colors: ['#ffe070', '#5fd97e', '#9ae8ff', '#fff'], count: playerUlt ? 46 : 34, speed: playerUlt ? 6.6 : 5.6 });
           Particles.spawnLightRing(this.enemyPos.x, this.enemyPos.y - 40, '#5fd97e', playerUlt ? 170 : 130);
-          Particles.spawnShockwave(this.enemyPos.x, this.enemyPos.y + 56, playerUlt ? '#fff3bf' : '#bfffd8', playerUlt ? 220 : 160); // [#5]
+          Particles.spawnShockwave(this.enemyPos.x, this.enemyPos.y + 56, playerUlt ? '#fff3bf' : '#c9efff', playerUlt ? 220 : 160); // [#5]
           Particles.spawnSlashArc(this.enemyPos.x, this.enemyPos.y - 48, playerUlt ? '#fff8dc' : '#eafff4', playerUlt ? 120 : 95, -0.55);
           if (playerUlt) Particles.spawnSlashArc(this.enemyPos.x, this.enemyPos.y - 40, '#dff4ff', 105, 2.4); // ฟันไขว้ X สำหรับท่าไม้ตาย
           // ฟันซ้ำ (คอมโบ 2 จังหวะ / ท่าไม้ตาย 3 จังหวะ) ให้รู้สึกหนักแน่นกว่าโจมตีครั้งเดียว
@@ -23804,7 +24047,7 @@ const HowToPlay = {
     ctx.fillText('คำถาม... ?', 46, H - 74);
     ctx.fillStyle = 'rgba(255,255,255,0.14)';
     ctx.fillRect(44, H - 60, (W - 104) / 2, 30); ctx.fillRect(52 + (W - 104) / 2, H - 60, (W - 104) / 2, 30);
-    ctx.fillStyle = '#d8f2e2'; ctx.font = '15px sans-serif';
+    ctx.fillStyle = '#d9ecf7'; ctx.font = '15px sans-serif';
     ctx.fillText('ก. ตัวเลือก', 56, H - 40); ctx.fillText('ข. ตัวเลือก', 64 + (W - 104) / 2, H - 40);
   },
   _bg(ctx, W, H, top, bottom) {
@@ -25725,7 +25968,7 @@ const CERT = {
       c.fillText(String(txt), W / 2, yy);
     };
     line('www.GamePlearn.com', 36, '700', '#8a6a1e', 140);
-    line('🎖️ ประกาศนียบัตรผู้พิทักษ์เมืองกาญจน์', 64, '800', '#155a3c', 228);
+    line('🎖️ ประกาศนียบัตรผู้พิทักษ์เมืองกาญจน์', 64, '800', '#14406b', 228);
     line('ขอมอบประกาศนียบัตรฉบับนี้ไว้เพื่อแสดงว่า', 32, '400', '#5a5a45', 292);
 
     /* ชื่อผู้รับ */
@@ -25756,7 +25999,7 @@ const CERT = {
     c.beginPath();
     if (c.roundRect) c.roundRect((W - lvW) / 2, lvY, lvW, 62, 18); else c.rect((W - lvW) / 2, lvY, lvW, 62);
     c.fill();
-    line(lvTxt, 36, '800', '#155a3c', lvY + 43);
+    line(lvTxt, 36, '800', '#14406b', lvY + 43);
     y = lvY + 62;
 
     /* มิเตอร์เมือง 3 ตัว */
@@ -28421,6 +28664,15 @@ const WMFOG = {
       const cv = document.getElementById('wm-fog-canvas');
       const scr = document.getElementById('worldmap-screen');
       if (!cv || !scr) return;
+      /* [บล็อก AC7 · แก้ตามภาพจอครู] ถูกเรียกตอนหน้าแผนที่ซ่อนอยู่ (เช่นอีเวนต์ห้องเรียนสด
+         เด้ง refresh ระหว่างอยู่หน้าอื่น) → clientWidth เป็น 0 → เดิมทาหมอกลงแคนวาส 2×2
+         "โดยไม่ทันเจาะรูแสง" แล้วถูกยืดคลุมทั้งจอ = แผนที่มืดทึบทั้งแผ่นไม่มีรูสว่าง
+         ทางแก้: หน้าไม่โชว์ = ล้างแคนวาสให้ใสแล้วจบ — หมอกจริงวาดตอนหน้าโชว์เท่านั้น */
+      if (!scr.classList.contains('active') || (scr.clientWidth || 0) < 50) {
+        cv.width = 2; cv.height = 2;
+        try { cv.getContext('2d').clearRect(0, 0, 2, 2); } catch (e) {}
+        return;
+      }
       const W = Math.max(2, Math.round(scr.clientWidth)), H = Math.max(2, Math.round(scr.clientHeight));
       if (cv.width !== W) cv.width = W;
       if (cv.height !== H) cv.height = H;
@@ -28439,21 +28691,59 @@ const WMFOG = {
       }
       ctx.globalCompositeOperation = 'destination-out';
       const sr = scr.getBoundingClientRect();
-      if (sr.width < 2) { ctx.globalCompositeOperation = 'source-over'; return; }
+      if (sr.width < 2) { ctx.globalCompositeOperation = 'source-over'; ctx.clearRect(0, 0, W, H); return; }  /* [AC7] วัดไม่ได้ = ห้ามค้างเป็นม่านมืดไร้รู */
       const kx = W / sr.width, ky = H / sr.height;
       const lit = ['learn'];
       ['1', '3', '4', '5', '6', '7', '8', 'mg1', 'mg2', 'mg3', 'hellfire', 'pilok', 'water', 'balance2050']
         .forEach((k) => { try { if (isStageUnlocked(typeof k === 'string' && /^[0-9]+$/.test(k) ? Number(k) : k)) lit.push(k); } catch (e) {} });
+      const pos = {};
       lit.forEach((k) => {
         const el = document.getElementById('stage-node-' + k);
         if (!el) return;
         const er = el.getBoundingClientRect();
         const x = ((er.left + er.right) / 2 - sr.left) * kx, y = ((er.top + er.bottom) / 2 - sr.top) * ky;
-        const r = Math.max(W * 0.105, 84);   /* พอดีหมุด+ป้ายชื่อ — ไม่กว้างจนแสงเลยไปโดนหมุดล็อกข้าง ๆ (บอสอยู่ห่างห้องเรียนรู้แค่ ~136px) */
+        pos[k] = [x, y];
+        /* [AC7] ด่านบทนำได้รูสว่างใหญ่กว่าเพื่อน — ครูสั่ง "สว่างที่ด่านแรก ด่านบทนำ" ให้เด็กเห็นชัดว่าเริ่มตรงไหน */
+        const r = Math.max(W * (k === '1' ? 0.13 : 0.105), 84);
         const g = ctx.createRadialGradient(x, y, r * 0.4, x, y, r);
         g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
       });
+      /* [บล็อก AC8 · ครูสั่ง 11 ส.ค.] "เปิดด่านใหม่แล้ว ความสว่างต้องเชื่อมถึงกัน" —
+         เจาะทางเดินแสงนุ่ม ๆ ตามเส้นทางระหว่างทุกคู่ด่านที่เปิดแล้วทั้งสองฝั่ง (เช่น 1↔3)
+         ซ้อน 3 ชั้นจากกว้าง-จางไปแคบ-ชัด ให้ขอบทางนุ่มเหมือนรูแสงของหมุด */
+      try {
+        const rC = Math.max(W * 0.05, 40);
+        const CORR = [];
+        Object.keys(this.ADJ).forEach((a) => this.ADJ[a].forEach((b2) => { if (a < b2) CORR.push([a, b2]); }));
+        CORR.push(['mg3', 'balance2050'], ['balance2050', '8']);   /* ช่วงประตูวิจัย เชื่อมเมื่อเปิดจริงเท่านั้น */
+        ctx.lineCap = 'round'; ctx.strokeStyle = '#000';
+        CORR.forEach((pr2) => {
+          const A = pos[pr2[0]], B = pos[pr2[1]];
+          if (!A || !B) return;
+          [[rC * 2.0, 0.35], [rC * 1.3, 0.55], [rC * 0.7, 0.9]].forEach((wa) => {
+            ctx.globalAlpha = wa[1]; ctx.lineWidth = wa[0];
+            ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
+          });
+        });
+        ctx.globalAlpha = 1;
+      } catch (e) {}
+      /* [บล็อก AC7 · ครูสั่ง] เข็มทิศน้องสมดุล: สว่างเพียงเล็กน้อยในหมอก + กะพริบเรียกสายตา
+         จนกว่าจะผ่านด่านแรก (ตัวกะพริบเป็น CSS ที่ตัวปุ่ม — ดูคลาส wm-compass-callout) */
+      try {
+        const cb = document.getElementById('wm-compass-btn');
+        if (cb) {
+          const br = cb.getBoundingClientRect();
+          const cx2 = ((br.left + br.right) / 2 - sr.left) * kx, cy2 = ((br.top + br.bottom) / 2 - sr.top) * ky;
+          const rc = Math.max(W * 0.05, 46);
+          const g2 = ctx.createRadialGradient(cx2, cy2, rc * 0.3, cx2, cy2, rc);
+          g2.addColorStop(0, 'rgba(0,0,0,0.85)'); g2.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = g2; ctx.beginPath(); ctx.arc(cx2, cy2, rc, 0, Math.PI * 2); ctx.fill();
+          let anyDone = false;
+          try { const st = getSaveData().stages || {}; anyDone = Object.keys(st).some((kk) => st[kk] && st[kk].completed); } catch (e) {}
+          cb.classList.toggle('wm-compass-callout', !anyDone);
+        }
+      } catch (e) {}
       ctx.globalCompositeOperation = 'source-over';
     } catch (e) {}
   }
@@ -28543,6 +28833,791 @@ function refreshWorldMap() {
    ============================================================ */
 // เฟดระหว่างเปลี่ยนฉาก: ทึบดำทันที (ไม่มี transition กันเห็นสลับฉากตอนยังไม่ทัน) แล้วค่อยเฟดจางออกเผยฉากใหม่
 // สลับ DOM จริงยังคง "ทันที" เหมือนเดิมทุกจุด (ไม่หน่วงเวลา) เพื่อไม่กระทบ logic เดิมที่พึ่งพา currentStage/state หลัง showScreen()
+/* ══ [บล็อก AN · เฟส 5C] MICRO — มินิเกมแทรก 4 ชุด (ชั้นความสนุก ไม่แตะข้อมูลวิจัย) ══ */
+const MICRO_DEFS = {
+  run3: { kind: 'run', icon: '🏃', title: 'วิ่งเลียบผา!', sub: 'กระโดดข้ามก้อนหิน — แตะจอ หรือกด Space', dur: 28,
+    endWord: (s) => 'ข้ามได้ ' + s + ' ก้อน!' },
+  row5: { kind: 'row', icon: '🛶', title: 'พายเรือเก็บเสบียง!', sub: 'เลื่อนเรือขึ้น-ลงเก็บกล่อง 📦 หลบขอนไม้ — แตะเลนที่จะไป หรือกดลูกศรขึ้นลง', dur: 28,
+    endWord: (s) => 'เก็บเสบียงได้ ' + s + ' กล่อง!' },
+  seek1: { kind: 'seek', icon: '🔦', title: 'ส่องหาหลักฐานลับ!', sub: 'ลากไฟฉายหาแสงระยิบ 3 จุด แล้วแตะเก็บ', dur: 25,
+    endWord: (s) => 'พบหลักฐานลับ ' + s + '/3 จุด!' },
+  qte4: { kind: 'qte', icon: '🎒', title: 'จัดเป้ให้ทันจังหวะ!', sub: 'วงแหวนหดเข้าเป้า — แตะจอตอนซ้อนพอดี 3 ครั้ง', dur: 0,
+    labels: ['ใส่กระติกน้ำ', 'พับเสื้อกันฝน', 'ผูกเชือกเป้'], endWord: (s) => 'จัดเป้สำเร็จ ' + s + '/3 จังหวะ!' },
+  qte7: { kind: 'qte', icon: '🔔', title: 'ตีระฆังรับรุ่งอรุณ!', sub: 'วงแหวนหดเข้าเป้า — แตะจอตอนซ้อนพอดี 3 ครั้ง', dur: 0,
+    labels: ['ระฆังใบที่ 1', 'ระฆังใบที่ 2', 'ระฆังใบใหญ่'], endWord: (s) => 'ตีระฆังไพเราะ ' + s + '/3 ใบ!' }
+};
+const MICRO = {
+  _run: 0, _raf: 0, _cfg: null, _key: '', _done: null, _st: null, _kd: null, _exitHook: null, _last: 0,
+  active() { return !!document.getElementById('micro-root'); },
+  lowfx() { try { return document.body.classList.contains('lowfx'); } catch (e) { return false; } },
+  run(key, onDone) {
+    const cfg = MICRO_DEFS[key];
+    if (!cfg) { if (onDone) onDone(); return; }
+    try { this.stop(); } catch (e) {}
+    const my = ++this._run;
+    this._cfg = cfg; this._key = key; this._done = onDone;
+    const root = document.createElement('div');
+    root.id = 'micro-root';
+    root.innerHTML =
+      '<canvas id="micro-canvas"></canvas>' +
+      '<div class="micro-hud" id="micro-hud"></div>' +
+      '<div class="micro-big" id="micro-big"></div>' +
+      '<button class="micro-skip" id="micro-skip" type="button">ข้าม ⏭️</button>';
+    document.getElementById('game-wrapper').appendChild(root);
+    const cv = document.getElementById('micro-canvas');
+    const fit = () => { const r = root.getBoundingClientRect(); cv.width = Math.max(320, Math.round(r.width)); cv.height = Math.max(180, Math.round(r.height)); };
+    fit(); this._fit = fit;
+    try { window.addEventListener('resize', fit); } catch (e) {}
+    /* สถานะเริ่มต้นรายชนิด */
+    const st = { phase: 'count', t0: performance.now(), count: 3, score: 0, fx: [] };
+    if (cfg.kind === 'run') Object.assign(st, { py: 0, vy: 0, air: false, stun: 0, obs: [], nextObs: 1.0, sp: 34 });
+    if (cfg.kind === 'row') Object.assign(st, { lane: 1, things: [], next: 0.8, wob: 0 });
+    if (cfg.kind === 'seek') Object.assign(st, {
+      lx: 50, ly: 55,
+      tg: [{ x: 24, y: 68, got: false }, { x: 58, y: 44, got: false }, { x: 82, y: 74, got: false }]
+    });
+    if (cfg.kind === 'qte') Object.assign(st, { round: 0, r: 100, hitR: 26, speed: 46, judged: [], flash: 0 });
+    this._st = st;
+    /* อินพุต: แตะจอ = ปุ่มใหญ่ทั้งจอ · คีย์บอร์ดคอม */
+    cv.addEventListener('pointerdown', (e) => this._press(e), { passive: true });
+    cv.addEventListener('pointermove', (e) => {
+      if (this._cfg && this._cfg.kind === 'seek' && this._st && this._st.phase === 'play') {
+        const r = cv.getBoundingClientRect();
+        this._st.lx = (e.clientX - r.left) / r.width * 100;
+        this._st.ly = (e.clientY - r.top) / r.height * 100;
+      }
+    }, { passive: true });
+    this._kd = (e) => {
+      if (!this.active()) return;
+      const k = e.key.toLowerCase();
+      if (k === ' ' || k === 'spacebar') { this._press(null); e.preventDefault(); }
+      if (this._cfg.kind === 'row' && this._st && this._st.phase === 'play') {
+        if (k === 'arrowup' || k === 'w') { this._st.lane = Math.max(0, this._st.lane - 1); e.preventDefault(); }
+        if (k === 'arrowdown' || k === 's') { this._st.lane = Math.min(2, this._st.lane + 1); e.preventDefault(); }
+      }
+    };
+    window.addEventListener('keydown', this._kd);
+    document.getElementById('micro-skip').addEventListener('click', () => {
+      /* ข้ามได้เสมอ — ไม่มีเหรียญ แต่ไม่มีการตำหนิ (มาตรฐานเกมการศึกษา: ไม่ขังเด็กในความท้าทาย) */
+      try { AUDIO.playSFX('click'); } catch (e) {}
+      this._finish(true);
+    });
+    const ex = document.getElementById('btn-stage-exit');
+    if (ex) { this._exitHook = () => { try { MICRO.stop(); } catch (e) {} }; ex.addEventListener('click', this._exitHook, { once: true }); }
+    this._hud();
+    try { if (typeof ReadAloud !== 'undefined' && ReadAloud.on) ReadAloud.speak([cfg.title, cfg.sub], true); } catch (e) {}
+    const loop = (now) => {
+      if (my !== this._run || !this.active()) return;
+      this._tick(now); this._draw(now);
+      this._raf = requestAnimationFrame(loop);
+    };
+    this._raf = requestAnimationFrame(loop);
+  },
+  stop() {
+    this._run++;
+    if (this._raf) cancelAnimationFrame(this._raf);
+    this._raf = 0;
+    try { window.removeEventListener('keydown', this._kd); } catch (e) {}
+    try { window.removeEventListener('resize', this._fit); } catch (e) {}
+    try { const ex = document.getElementById('btn-stage-exit'); if (ex && this._exitHook) ex.removeEventListener('click', this._exitHook); } catch (e) {}
+    this._exitHook = null;
+    const root = document.getElementById('micro-root');
+    if (root) root.remove();
+  },
+  _hud() {
+    const el = document.getElementById('micro-hud'), c = this._cfg, st = this._st;
+    if (!el || !c || !st) return;
+    const tLeft = c.dur > 0 && st.phase === 'play' ? Math.max(0, Math.ceil(c.dur - (performance.now() - st.playT0) / 1000)) : null;
+    el.innerHTML = c.icon + ' <b>' + c.title + '</b> · ' + c.sub +
+      (tLeft != null ? ' · ⏱️ ' + tLeft : '') +
+      (c.kind === 'qte' ? ' · รอบ ' + Math.min(3, st.round + 1) + '/3' : (st.phase === 'play' ? ' · ได้ ' + st.score : ''));
+  },
+  _big(txt, ms) {
+    const el = document.getElementById('micro-big');
+    if (!el) return;
+    el.textContent = txt;
+    el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+    clearTimeout(this._bigT);
+    if (ms) this._bigT = setTimeout(() => { if (el.isConnected) el.textContent = ''; }, ms);
+  },
+  _press(e) {
+    const st = this._st, c = this._cfg;
+    if (!st) return;
+    if (st.phase !== 'play') return;
+    if (c.kind === 'run') {
+      if (!st.air && st.stun <= 0) { st.air = true; st.vy = -3.1; try { AUDIO.playSFX('click'); } catch (e2) {} }
+    } else if (c.kind === 'row') {
+      if (e) {
+        const cvv = document.getElementById('micro-canvas'), r = cvv.getBoundingClientRect();
+        const y = (e.clientY - r.top) / r.height * 100;
+        st.lane = y < 46 ? 0 : (y < 66 ? 1 : 2);
+      }
+    } else if (c.kind === 'seek') {
+      if (e) {
+        const cvv = document.getElementById('micro-canvas'), r = cvv.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width * 100, y = (e.clientY - r.top) / r.height * 100;
+        st.lx = x; st.ly = y;
+        st.tg.forEach((t) => {
+          if (!t.got && Math.hypot(t.x - x, (t.y - y) * 1.3) < 7 && Math.hypot(t.x - st.lx, (t.y - st.ly) * 1.3) < 16) {
+            t.got = true; st.score++;
+            this._pop(t.x, t.y); this._big('✨ เจอแล้ว!', 700);
+            try { AUDIO.playSFX('collect'); } catch (e2) { try { AUDIO.playSFX('click'); } catch (e3) {} }
+            if (st.score >= 3) this._finish();
+          }
+        });
+      }
+    } else if (c.kind === 'qte') {
+      const diff = Math.abs(st.r - st.hitR);
+      let word, gain;
+      if (diff < 7) { word = '🌟 เพอร์เฟกต์!'; gain = 1; }
+      else if (diff < 16) { word = '👍 ดีมาก!'; gain = 1; }
+      else { word = '😅 เกือบได้! ไปต่อ'; gain = 0; }
+      st.score += gain; st.judged.push(gain); st.flash = 1;
+      this._big(word, 800);
+      try { AUDIO.playSFX(gain ? 'correct' : 'click'); } catch (e2) {}
+      st.round++;
+      if (st.round >= 3) setTimeout(() => this._finish(), 700); else { st.r = 100; }
+    }
+  },
+  _pop(x, y) {
+    const st = this._st, n = this.lowfx() ? 4 : 12;
+    for (let i = 0; i < n; i++) st.fx.push({ x, y, a: i / n * 6.283, r: 0, t: 1 });
+  },
+  _tick(now) {
+    const st = this._st, c = this._cfg;
+    if (!st) return;
+    const dt = Math.min(0.05, (now - (this._last || now)) / 1000) || 0.016;
+    this._last = now;
+    st.fx.forEach((f) => { f.r += 46 * dt; f.t -= dt * 1.6; });
+    st.fx = st.fx.filter((f) => f.t > 0);
+    if (st.phase === 'count') {
+      const c3 = 3 - Math.floor((now - st.t0) / 700);
+      if (c3 !== st.count) { st.count = c3; if (c3 > 0) this._big(String(c3), 600); }
+      if (c3 <= 0) { st.phase = 'play'; st.playT0 = now; this._big('ไปเลย!', 700); }
+      return;
+    }
+    if (st.phase !== 'play') return;
+    this._hud();
+    if (c.dur > 0 && (now - st.playT0) / 1000 >= c.dur) { this._finish(); return; }
+    if (c.kind === 'run') {
+      if (st.stun > 0) st.stun -= dt;
+      if (st.air) {
+        st.vy += 9.2 * dt; st.py += st.vy;
+        if (st.py >= 0) { st.py = 0; st.vy = 0; st.air = false; }
+      }
+      st.nextObs -= dt;
+      const speedUp = Math.min(18, (now - st.playT0) / 1500);
+      if (st.nextObs <= 0) { st.obs.push({ x: 108, w: 4.2, h: 5 + Math.random() * 3 }); st.nextObs = 1.05 + Math.random() * 0.7 - speedUp * 0.015; }
+      st.obs.forEach((o) => { o.x -= (st.sp + speedUp) * dt; });
+      st.obs = st.obs.filter((o) => {
+        if (o.x < -6) { st.score++; this._pop(20, 74); return false; }
+        return true;
+      });
+      if (st.stun <= 0 && !st.air) {
+        st.obs.forEach((o) => {
+          if (o.x < 24 && o.x > 16.5) {
+            st.stun = 0.8; o.x = -10; this._big('อุ๊ย! สะดุด — ไม่เป็นไร ไปต่อ!', 900);
+            try { AUDIO.playSFX('wrong'); } catch (e2) {}
+          }
+        });
+      }
+    } else if (c.kind === 'row') {
+      st.next -= dt;
+      if (st.next <= 0) {
+        const lane = Math.floor(Math.random() * 3);
+        st.things.push({ x: 108, lane, box: Math.random() < 0.62 });
+        st.next = 0.75 + Math.random() * 0.55;
+      }
+      if (st.wob > 0) st.wob -= dt;
+      st.things.forEach((t) => { t.x -= 30 * dt; });
+      st.things = st.things.filter((t) => {
+        if (t.x < 10 || t.x > -8 && t.x < 22 && t.lane === st.lane) {
+          if (t.x < 22 && t.x > 12 && t.lane === st.lane) {
+            if (t.box) { st.score++; this._pop(18, 40 + st.lane * 20); try { AUDIO.playSFX('collect'); } catch (e2) { try { AUDIO.playSFX('click'); } catch (e3) {} } }
+            else if (st.wob <= 0) { st.wob = 0.7; this._big('โครม! เรือโคลง — พายต่อ!', 800); try { AUDIO.playSFX('wrong'); } catch (e2) {} }
+            return false;
+          }
+          return t.x >= -6;
+        }
+        return t.x >= -6;
+      });
+    } else if (c.kind === 'qte') {
+      st.r -= st.speed * dt;
+      if (st.flash > 0) st.flash -= dt * 3;
+      if (st.r <= 6) {   /* ปล่อยหลุดจังหวะ = นับเป็นรอบ ไม่ลงโทษ */
+        st.judged.push(0); st.round++;
+        this._big('หลุดจังหวะ — รอบใหม่!', 700);
+        if (st.round >= 3) { setTimeout(() => this._finish(), 500); st.phase = 'wait'; }
+        else st.r = 100;
+      }
+    }
+  },
+  _finish(skipped) {
+    const st = this._st, c = this._cfg;
+    if (!st || st.phase === 'end') return;
+    st.phase = 'end';
+    const done = this._done, key = this._key, score = st.score;
+    let coin = 0;
+    if (!skipped) {
+      try {
+        const data = getSaveData();
+        data.microDone = data.microDone || {};
+        if (!data.microDone[key]) { data.microDone[key] = true; coin = 3; data.coins = (data.coins || 0) + 3; }
+        writeSaveData(data);
+      } catch (e) {}
+      try { AUDIO.playSFX('victory'); } catch (e) {}
+      this._big('🎉 ' + c.endWord(score) + (coin ? ' · 🪙 +3' : ''), 1500);
+    }
+    setTimeout(() => {
+      this.stop();
+      if (done) try { done(); } catch (e) { console.error('[MICRO] onDone:', e); }
+    }, skipped ? 150 : 1500);
+  },
+  _draw(now) {
+    const cv = document.getElementById('micro-canvas');
+    if (!cv) return;
+    const ctx = cv.getContext('2d'), W = cv.width, H = cv.height, st = this._st, c = this._cfg;
+    const px = (v) => v / 100 * W, py = (v) => v / 100 * H;
+    /* ฉากหลังตามชนิด (โทนรุ่งอรุณ) */
+    const sky = ctx.createLinearGradient(0, 0, 0, H);
+    if (c.kind === 'seek') { sky.addColorStop(0, '#0c1226'); sky.addColorStop(1, '#1a2440'); }
+    else { sky.addColorStop(0, '#1d3050'); sky.addColorStop(1, c.kind === 'row' ? '#7fc4e8' : '#e8955c'); }
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+    if (c.kind === 'run') {
+      ctx.fillStyle = '#3a2e1e'; ctx.fillRect(0, py(80), W, H);
+      ctx.fillStyle = '#6e5a40'; ctx.fillRect(0, py(78), W, py(3));
+      /* ผาด้านหลัง */
+      ctx.fillStyle = 'rgba(42,36,58,0.5)';
+      ctx.beginPath(); ctx.moveTo(0, py(30)); ctx.lineTo(W, py(16)); ctx.lineTo(W, py(45)); ctx.lineTo(0, py(60)); ctx.closePath(); ctx.fill();
+      st.obs.forEach((o) => {
+        ctx.font = Math.round(py(o.h + 2)) + 'px sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText('🪨', px(o.x), py(79));
+      });
+      ctx.save();
+      ctx.translate(px(20), py(78 - (st.air ? -st.py * 4 : 0)) + (st.stun > 0 ? Math.sin(now / 30) * 2 : 0));
+      try { CharacterEngine.draw(ctx, getPlayerConfig(), 0, 0, Math.max(0.9, H / 560), st.air ? 'idle' : 'walk', now, st.stun > 0 ? 0.55 : 1); } catch (e) {}
+      ctx.restore();
+    } else if (c.kind === 'row') {
+      ctx.fillStyle = '#2e6f9a'; ctx.fillRect(0, py(30), W, H);
+      ctx.globalAlpha = 0.25; ctx.strokeStyle = '#dff4ff'; ctx.lineWidth = 2;
+      for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.moveTo(0, py(46 + i * 20) + Math.sin(now / 700 + i) * 3); ctx.lineTo(W, py(46 + i * 20) + Math.cos(now / 800 + i) * 3); ctx.stroke(); }
+      ctx.globalAlpha = 1;
+      st.things.forEach((t) => {
+        ctx.font = Math.round(py(7)) + 'px sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(t.box ? '📦' : '🪵', px(t.x), py(40 + t.lane * 20));
+      });
+      ctx.save();
+      ctx.translate(px(18), py(40 + st.lane * 20) + (st.wob > 0 ? Math.sin(now / 40) * 3 : 0));
+      ctx.font = Math.round(py(9)) + 'px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('🛶', 0, py(1.5));
+      try { CharacterEngine.draw(ctx, getPlayerConfig(), 0, -py(3.5), Math.max(0.62, H / 820), 'idle', now, 1); } catch (e) {}
+      ctx.restore();
+    } else if (c.kind === 'seek') {
+      /* จุดระยิบ */
+      st.tg.forEach((t) => {
+        if (t.got) return;
+        const tw = 0.35 + 0.3 * Math.sin(now / 300 + t.x);
+        ctx.globalAlpha = tw; ctx.font = Math.round(py(4.6)) + 'px sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText('✨', px(t.x), py(t.y));
+        ctx.globalAlpha = 1;
+      });
+      /* ม่านมืด + วงไฟฉาย */
+      ctx.save();
+      ctx.fillStyle = 'rgba(5,8,18,0.86)';
+      ctx.beginPath(); ctx.rect(0, 0, W, H);
+      ctx.arc(px(st.lx), py(st.ly), Math.max(W * 0.115, 70), 0, 6.283, true);
+      ctx.fill('evenodd');
+      ctx.restore();
+      ctx.strokeStyle = 'rgba(255,224,150,0.5)'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(px(st.lx), py(st.ly), Math.max(W * 0.115, 70), 0, 6.283); ctx.stroke();
+      st.tg.forEach((t) => {
+        if (t.got) { ctx.font = Math.round(py(4.6)) + 'px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('✅', px(t.x), py(t.y)); }
+      });
+    } else if (c.kind === 'qte') {
+      const cx = px(50), cy = py(56);
+      const lbl = c.labels[Math.min(2, st.round)] || '';
+      ctx.font = '700 ' + Math.max(14, Math.round(py(4))) + 'px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillStyle = '#ffe9b8'; ctx.fillText(lbl, cx, py(28));
+      ctx.font = Math.round(py(9)) + 'px sans-serif';
+      ctx.fillText(this._key === 'qte7' ? '🔔' : '🎒', cx, cy + py(3));
+      ctx.strokeStyle = '#7fd4f5'; ctx.lineWidth = Math.max(3, W * 0.004);
+      ctx.beginPath(); ctx.arc(cx, cy, py(st.hitR) * 0.55, 0, 6.283); ctx.stroke();
+      if (st.phase === 'play') {
+        ctx.strokeStyle = st.flash > 0 ? '#ffd76a' : '#ffffff'; ctx.lineWidth = Math.max(4, W * 0.006);
+        ctx.beginPath(); ctx.arc(cx, cy, py(st.r) * 0.55, 0, 6.283); ctx.stroke();
+      }
+    }
+    /* อนุภาคป๊อป */
+    st.fx.forEach((f) => {
+      ctx.globalAlpha = Math.max(0, f.t);
+      ctx.fillStyle = '#ffd76a';
+      ctx.beginPath(); ctx.arc(px(f.x) + Math.cos(f.a) * f.r, py(f.y) + Math.sin(f.a) * f.r, 3.2, 0, 6.283); ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+  }
+};
+/* ══ [บล็อก AF · เฟส 5A มติครู 11 ส.ค.] WalkCore — ฉากเดินสำรวจ-เก็บของ ══
+   ชั้นความสนุกที่ครอบนอกชั้นประเมิน: เดินถึงของ → การ์ดความรู้ (อ่านให้ฟังผ่านระบบ VK เดิม)
+   → เหรียญ +2 (ครั้งแรกของเซฟเท่านั้น กันฟาร์ม) + จดลงสมุดนักสำรวจ → ครบแล้วเดินหาเป้าหมาย
+   → ด่านเดิมเริ่มตามปกติทุกบรรทัด · ไม่มีคะแนนสมรรถนะจากฉากนี้โดยสิ้นเชิง */
+const WALK = {
+  _run: 0, _raf: 0, _p: null, _tgt: null, _keys: {}, _items: [], _sc: null, _done: null,
+  _amb: [], _burst: [], _kd: null, _ku: null, _t0: 0, _allGot: false, _exitHook: null,
+  active() { return !!document.getElementById('walk-root'); },
+  run(sc, onDone) {
+    try { this.stop(); } catch (e) {}
+    const my = ++this._run;
+    this._sc = sc; this._done = onDone; this._tgt = null; this._keys = {}; this._burst = [];
+    this._t0 = performance.now(); this._allGot = false;
+    const data = getSaveData();
+    const got = (data.walkItems && data.walkItems[sc.key]) || {};
+    this._items = sc.items.map((it) => Object.assign({ got: false, ever: !!got[it.id] }, it));
+    const root = document.createElement('div');
+    root.id = 'walk-root';
+    root.innerHTML =
+      '<canvas id="walk-canvas"></canvas>' +
+      '<div class="walk-obj" id="walk-obj"></div>' +
+      '<div class="walk-count" id="walk-count"></div>';
+    document.getElementById('game-wrapper').appendChild(root);
+    /* หมอกจาง ๆ ตอนเข้า */
+    const cv = document.getElementById('walk-canvas');
+    const fit = () => { const r = root.getBoundingClientRect(); cv.width = Math.max(320, Math.round(r.width)); cv.height = Math.max(180, Math.round(r.height)); };
+    fit();
+    this._fit = fit;
+    try { window.addEventListener('resize', fit); } catch (e) {}
+    this._p = { x: sc.start[0], y: sc.start[1], vx: 0, vy: 0, face: 1, moving: false };
+    this._amb = [];
+    for (let i = 0; i < 16; i++) this._amb.push({ x: (i * 631 % 97) / 97 * 100, y: (i * 389 % 89) / 89 * 100, s: 0.5 + (i * 271 % 13) / 13, ph: i * 0.7 });
+    /* คุมด้วยคีย์บอร์ด (คอม) — ลูกศร/WASD · ปิดตอนออกฉากเสมอ */
+    this._kd = (e) => {
+      if (!this.active()) return;
+      const k = e.key.toLowerCase();
+      if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd'].indexOf(k) >= 0) {
+        this._keys[k] = true; this._tgt = null; e.preventDefault();
+      }
+    };
+    this._ku = (e) => { delete this._keys[e.key.toLowerCase()]; };
+    window.addEventListener('keydown', this._kd);
+    window.addEventListener('keyup', this._ku);
+    /* คลิก/แตะจุดหมายแล้วเดินไปเอง (ใช้ได้ทั้งเมาส์และนิ้ว) */
+    cv.addEventListener('pointerdown', (e) => {
+      const r = cv.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width * 100, y = (e.clientY - r.top) / r.height * 100;
+      this._tgt = { x: Math.max(3, Math.min(97, x)), y: Math.max(sc.band[0], Math.min(sc.band[1], y)) };
+      try { AUDIO.playSFX('click'); } catch (e2) {}
+    });
+    /* ออกจากด่านกลางฉากเดิน = เก็บกวาดให้เรียบร้อย */
+    const ex = document.getElementById('btn-stage-exit');
+    if (ex) { this._exitHook = () => { try { WALK.stop(); } catch (e) {} }; ex.addEventListener('click', this._exitHook, { once: true }); }
+    this._hud();
+    const loop = (now) => {
+      if (my !== this._run || !this.active()) return;
+      this._tick(now); this._draw(now);
+      this._raf = requestAnimationFrame(loop);
+    };
+    this._raf = requestAnimationFrame(loop);
+    try { if (typeof ReadAloud !== 'undefined' && ReadAloud.on) ReadAloud.speak([sc.title, sc.hint], true); } catch (e) {}
+  },
+  stop() {
+    this._run++;
+    if (this._raf) cancelAnimationFrame(this._raf);
+    this._raf = 0;
+    try { window.removeEventListener('keydown', this._kd); } catch (e) {}
+    try { window.removeEventListener('keyup', this._ku); } catch (e) {}
+    try { window.removeEventListener('resize', this._fit); } catch (e) {}
+    try { const ex = document.getElementById('btn-stage-exit'); if (ex && this._exitHook) ex.removeEventListener('click', this._exitHook); } catch (e) {}
+    this._exitHook = null;
+    const root = document.getElementById('walk-root');
+    if (root) root.remove();
+  },
+  _hud() {
+    const sc = this._sc;
+    const left = this._items.filter(i => !i.got).length;
+    const obj = document.getElementById('walk-obj'), cnt = document.getElementById('walk-count');
+    if (obj) obj.innerHTML = left > 0 ? (sc.title + ' — ' + sc.hint) : ('✨ ครบแล้ว! ' + sc.goalHint);
+    if (cnt) cnt.innerHTML = '📓 ' + this._items.filter(i => i.got).length + '/' + this._items.length +
+      (left === 0 ? ' · ไปที่ ' + sc.goal.icon : '');
+  },
+  _tick(now) {
+    const p = this._p, sc = this._sc;
+    const dt = Math.min(0.05, (now - (this._last || now)) / 1000) || 0.016;
+    this._last = now;
+    let dx = 0, dy = 0;
+    const K = this._keys;
+    if (K['arrowleft'] || K['a']) dx -= 1;
+    if (K['arrowright'] || K['d']) dx += 1;
+    if (K['arrowup'] || K['w']) dy -= 1;
+    if (K['arrowdown'] || K['s']) dy += 1;
+    if (!dx && !dy && this._tgt) {
+      const tx = this._tgt.x - p.x, ty = this._tgt.y - p.y;
+      const d = Math.hypot(tx, ty);
+      if (d < 1.2) this._tgt = null; else { dx = tx / d; dy = ty / d; }
+    }
+    const SP = 26;                                   /* ความเร็วเดิน %จอ/วินาที */
+    const n = Math.hypot(dx, dy) || 1;
+    p.vx = dx / n * SP * dt; p.vy = dy / n * SP * dt * 0.8;
+    p.moving = !!(dx || dy);
+    if (dx) p.face = dx > 0 ? 1 : -1;
+    p.x = Math.max(3, Math.min(97, p.x + p.vx));
+    p.y = Math.max(sc.band[0], Math.min(sc.band[1], p.y + p.vy));
+    /* เก็บของ: เดินเข้าใกล้ */
+    this._items.forEach((it) => {
+      if (it.got) return;
+      if (Math.hypot(it.x - p.x, (it.y - p.y) * 1.4) < 5.2) { it.got = true; this._collect(it); }
+    });
+    if (!this._allGot && this._items.every(i => i.got)) { this._allGot = true; this._hud(); try { AUDIO.playSFX('victory'); } catch (e) {} }
+    /* ถึงเป้าหมาย (เปิดเฉพาะตอนเก็บครบ — ฉากสั้น ของแค่ 3-4 ชิ้น) */
+    if (this._allGot && Math.hypot(sc.goal.x - p.x, (sc.goal.y - p.y) * 1.4) < 6) {
+      const done = this._done; this.stop();
+      /* [บล็อก AN · เฟส 5C] ฉากไหนมีมินิเกมแทรก → เล่นคั่นก่อน แล้วค่อยเข้าด่านเดิม (ข้ามได้เสมอ) */
+      if (sc.micro && typeof MICRO !== 'undefined') {
+        try { MICRO.run(sc.micro, () => { if (done) try { done(); } catch (e) { console.error('[WALK] onDone:', e); } }); return; }
+        catch (e) { console.error('[AN] มินิเกมแทรกล้ม — ข้ามไปด่านเดิม:', e); }
+      }
+      if (done) try { done(); } catch (e) { console.error('[WALK] onDone:', e); }
+    }
+  },
+  _collect(it) {
+    try { AUDIO.playSFX('collect'); } catch (e) { try { AUDIO.playSFX('click'); } catch (e2) {} }
+    for (let i = 0; i < 14; i++) this._burst.push({ x: it.x, y: it.y, a: (i / 14) * Math.PI * 2, r: 0, t: 1 });
+    this._hud();
+    /* รางวัล (ครั้งแรกของเซฟเท่านั้น): เหรียญ +2 + จดสมุดนักสำรวจ — ตามมติครู */
+    try {
+      const data = getSaveData();
+      data.walkItems = data.walkItems || {};
+      data.walkItems[this._sc.key] = data.walkItems[this._sc.key] || {};
+      if (!data.walkItems[this._sc.key][it.id]) {
+        data.walkItems[this._sc.key][it.id] = true;
+        data.coins = (data.coins || 0) + 2;
+        data.notebook = data.notebook || [];
+        data.notebook.push({ t: Date.now(), stage: this._sc.nbStage, note: it.icon + ' ' + it.t + ' — ' + it.info });
+        while (data.notebook.length > 60) data.notebook.shift();
+        writeSaveData(data);
+      }
+    } catch (e) {}
+    /* การ์ดความรู้ — ใช้การ์ด VK เดิม (โหมดช่วยอ่านอ่านเอง + ปิดแล้วเสียงหยุดตามบล็อก AB) */
+    try {
+      const ov = VK.overlay(
+        '<div class="dt-card walk-card"><div class="walk-card-ic">' + it.icon + '</div>' +
+        '<b>' + it.t + '</b><p>' + it.info + '</p>' +
+        '<button class="dt-btn" id="walk-card-ok">เก็บใส่สมุดนักสำรวจ 📓</button></div>');
+      const b = ov.querySelector('#walk-card-ok');
+      if (b) b.onclick = () => { try { AUDIO.playSFX('click'); } catch (e) {} ov.remove(); };
+    } catch (e) {}
+  },
+  _drawProp(ctx, pr, W, H, now) {
+    const x = pr.x / 100 * W, y = pr.y / 100 * H;
+    const s = (0.75 + (pr.y - this._sc.band[0]) / (this._sc.band[1] - this._sc.band[0]) * 0.6) * (pr.s || 1);
+    ctx.save(); ctx.translate(x, y);
+    if (pr.k === 'tree') {
+      ctx.fillStyle = 'rgba(0,0,0,0.18)'; ctx.beginPath(); ctx.ellipse(0, 4 * s, 34 * s, 9 * s, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#5d4327'; ctx.fillRect(-6 * s, -52 * s, 12 * s, 56 * s);
+      const sway = Math.sin(now / 900 + pr.x) * 3 * s;
+      ctx.fillStyle = pr.c || '#3f7a3d';
+      ctx.beginPath(); ctx.ellipse(sway, -74 * s, 44 * s, 34 * s, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.10)';
+      ctx.beginPath(); ctx.ellipse(sway - 12 * s, -84 * s, 20 * s, 13 * s, 0, 0, Math.PI * 2); ctx.fill();
+    } else if (pr.k === 'bush') {
+      ctx.fillStyle = 'rgba(0,0,0,0.14)'; ctx.beginPath(); ctx.ellipse(0, 3 * s, 20 * s, 6 * s, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = pr.c || '#4c8a48';
+      ctx.beginPath(); ctx.ellipse(0, -8 * s, 20 * s, 13 * s, 0, 0, Math.PI * 2); ctx.fill();
+    } else if (pr.k === 'emoji') {
+      ctx.font = Math.round(26 * s) + 'px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(pr.e, 0, 0);
+    }
+    ctx.restore();
+  },
+  _draw(now) {
+    const cv = document.getElementById('walk-canvas');
+    if (!cv) return;
+    const ctx = cv.getContext('2d');
+    const W = cv.width, H = cv.height, sc = this._sc, p = this._p;
+    /* ท้องฟ้า-พื้น ตามธีมฉาก */
+    const sky = ctx.createLinearGradient(0, 0, 0, H * 0.42);
+    sky.addColorStop(0, sc.skyTop); sky.addColorStop(1, sc.skyBot);
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H * 0.42);
+    const gnd = ctx.createLinearGradient(0, H * 0.38, 0, H);
+    gnd.addColorStop(0, sc.gndTop); gnd.addColorStop(1, sc.gndBot);
+    ctx.fillStyle = gnd; ctx.fillRect(0, H * 0.38, W, H * 0.62);
+    if (sc.deco) sc.deco(ctx, W, H, now);
+    /* แสง/ฝุ่นลอย */
+    ctx.save();
+    this._amb.forEach((a) => {
+      const yy = (a.y + Math.sin(now / 1400 + a.ph) * 2) / 100 * H;
+      ctx.globalAlpha = 0.18 + 0.14 * Math.sin(now / 700 + a.ph);
+      ctx.fillStyle = sc.ambC || '#fff7c8';
+      ctx.beginPath(); ctx.arc(a.x / 100 * W, yy, 1.6 * a.s, 0, Math.PI * 2); ctx.fill();
+    });
+    ctx.restore();
+    /* วาดตามลำดับความลึก (y น้อยอยู่ไกล) */
+    const order = [];
+    (sc.props || []).forEach(pr => order.push({ y: pr.y, f: () => this._drawProp(ctx, pr, W, H, now) }));
+    this._items.forEach((it) => {
+      if (it.got) return;
+      order.push({ y: it.y, f: () => {
+        const x = it.x / 100 * W, y = it.y / 100 * H;
+        const pulse = 1 + Math.sin(now / 300 + it.x) * 0.12;
+        ctx.save();
+        ctx.globalAlpha = 0.55 + 0.3 * Math.sin(now / 300 + it.x);
+        ctx.fillStyle = '#ffe28a';
+        ctx.beginPath(); ctx.arc(x, y - 8, 16 * pulse, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = 1; ctx.font = '22px sans-serif'; ctx.textAlign = 'center';
+        ctx.fillText(it.icon, x, y);
+        ctx.restore();
+      } });
+    });
+    order.push({ y: sc.goal.y, f: () => {
+      const x = sc.goal.x / 100 * W, y = sc.goal.y / 100 * H;
+      ctx.save();
+      if (this._allGot) {
+        ctx.globalAlpha = 0.4 + 0.25 * Math.sin(now / 260);
+        ctx.fillStyle = '#9af7c0';
+        ctx.beginPath(); ctx.arc(x, y - 12, 30, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = this._allGot ? 1 : 0.75;
+      ctx.font = '34px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(sc.goal.icon, x, y);
+      ctx.restore();
+    } });
+    order.push({ y: p.y, f: () => {
+      const x = p.x / 100 * W, y = p.y / 100 * H;
+      const s = (0.9 + (p.y - sc.band[0]) / (sc.band[1] - sc.band[0]) * 0.75) * (H / 720) * 1.5;
+      ctx.save();
+      ctx.fillStyle = 'rgba(0,0,0,0.22)';
+      ctx.beginPath(); ctx.ellipse(x, y + 3, 22 * s, 7 * s, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.translate(x, y);
+      if (p.face < 0) ctx.scale(-1, 1);
+      try { CharacterEngine.draw(ctx, getPlayerConfig(), 0, 0, s, p.moving ? 'walk' : 'idle', now - this._t0, 1); } catch (e) {}
+      ctx.restore();
+    } });
+    order.sort((a, b) => a.y - b.y).forEach(o => o.f());
+    /* ประกายตอนเก็บของ */
+    this._burst = this._burst.filter(b => b.t > 0);
+    this._burst.forEach((b) => {
+      b.r += 1.6; b.t -= 0.045;
+      ctx.save(); ctx.globalAlpha = Math.max(0, b.t);
+      ctx.fillStyle = '#ffe9a8';
+      ctx.beginPath();
+      ctx.arc(b.x / 100 * W + Math.cos(b.a) * b.r * 2.2, b.y / 100 * H + Math.sin(b.a) * b.r * 1.4, 2.4, 0, Math.PI * 2);
+      ctx.fill(); ctx.restore();
+    });
+    /* จุดหมายที่แตะไว้ */
+    if (this._tgt) {
+      ctx.save(); ctx.globalAlpha = 0.5 + 0.3 * Math.sin(now / 200);
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(this._tgt.x / 100 * W, this._tgt.y / 100 * H, 9, 0, Math.PI * 2); ctx.stroke();
+      ctx.restore();
+    }
+  }
+};
+/* ── ฉากเดินของด่านนำร่อง 2 ด่าน (ความรู้แวดล้อม — คนละชุดกับคลังข้อสอบ/หลักฐานวิจัย) ── */
+const WALK_SCENES = {
+  s1: {
+    key: '1', nbStage: 'ทางเข้าสะพานแคว',
+    title: '🚶 เดินสำรวจทางเข้าสะพานแคว',
+    hint: 'ใช้ลูกศร หรือแตะ/คลิกจุดที่อยากไป — เก็บแสงระยิบให้ครบก่อนไปพบครูภูมิ',
+    goalHint: 'เดินไปหา 🧑‍🏫 ครูภูมิ ที่หัวสะพาน แล้วเริ่มไขคดี!',
+    skyTop: '#2a3f6e', skyBot: '#ff9d5c', gndTop: '#8a6a45', gndBot: '#4a3822',
+    ambC: '#ffd9a0', band: [42, 90], start: [12, 78],
+    goal: { icon: '🧑‍🏫', x: 88, y: 52 },
+    micro: 'seek1',                                  /* [บล็อก AN] ส่องหาจับเวลา — มติครู (ด่าน 6 มีแว่นขยายของจริงอยู่แล้ว) */
+    items: [
+      { id: 'loco', icon: '🚂', x: 30, y: 60, t: 'หัวรถจักรไอน้ำ',
+        info: 'หัวรถจักรไอน้ำแบบเดียวกับที่เคยวิ่งบนทางรถไฟสายมรณะ จัดแสดงไว้ให้คนรุ่นหลังได้เห็นของจริง' },
+      { id: 'sign', icon: '🪧', x: 56, y: 82, t: 'ป้ายสะพานข้ามแม่น้ำแคว',
+        info: 'สะพานเหล็กข้ามแม่น้ำแควใหญ่ เป็นส่วนหนึ่งของทางรถไฟสายไทย-พม่าสมัยสงครามโลกครั้งที่ 2' },
+      { id: 'river', icon: '🛶', x: 74, y: 68, t: 'แม่น้ำแควใหญ่',
+        info: 'แม่น้ำสายสำคัญของกาญจนบุรี ไหลไปรวมกับแควน้อยที่ตัวเมือง กลายเป็นแม่น้ำแม่กลอง' }
+    ],
+    props: [
+      { k: 'tree', x: 8, y: 52, s: 0.9, c: '#3f6e3d' }, { k: 'tree', x: 92, y: 88, s: 1.15, c: '#46703c' },
+      { k: 'bush', x: 22, y: 88 }, { k: 'bush', x: 66, y: 50 }, { k: 'bush', x: 44, y: 70 },
+      { k: 'emoji', x: 84, y: 44, e: '🌉', s: 1.6 }, { k: 'emoji', x: 15, y: 46, e: '🌸', s: 0.8 },
+      { k: 'emoji', x: 50, y: 90, e: '🌼', s: 0.8 }
+    ],
+    deco(ctx, W, H) {   /* แม่น้ำพาดมุมขวาบนของพื้น */
+      ctx.save();
+      const rv = ctx.createLinearGradient(W * 0.55, H * 0.38, W, H * 0.6);
+      rv.addColorStop(0, '#3e7fa8'); rv.addColorStop(1, '#7fc4e8');
+      ctx.fillStyle = rv;
+      ctx.beginPath();
+      ctx.moveTo(W * 0.62, H * 0.38); ctx.lineTo(W, H * 0.38); ctx.lineTo(W, H * 0.62); ctx.lineTo(W * 0.78, H * 0.52);
+      ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+  },
+  eco6: {
+    key: '6', nbStage: 'ลานต้นจามจุรี',
+    title: '🚶 เดินสำรวจลานใต้ต้นจามจุรียักษ์',
+    hint: 'ใช้ลูกศร หรือแตะ/คลิกจุดที่อยากไป — เก็บร่องรอยธรรมชาติให้ครบก่อนไปรับแว่นขยาย',
+    goalHint: 'เดินไปรับ 🔎 แว่นขยาย ใต้ต้นจามจุรี แล้วเริ่มส่องสำรวจ!',
+    skyTop: '#1f4d33', skyBot: '#a8d88a', gndTop: '#5d7a3a', gndBot: '#2e421e',
+    ambC: '#d8ffb0', band: [40, 90], start: [14, 80],
+    goal: { icon: '🔎', x: 86, y: 58 },
+    items: [
+      { id: 'pod', icon: '🌰', x: 32, y: 56, t: 'ฝักจามจุรี',
+        info: 'ฝักแก่สีน้ำตาล ข้างในมีเมล็ดกับเนื้อรสหวาน กระรอกและวัวควายชอบกินมาก' },
+      { id: 'feather', icon: '🪶', x: 50, y: 84, t: 'ขนนกกางเขน',
+        info: 'ขนนกร่วงอยู่ตามพื้น เป็นร่องรอยว่ามีนกอาศัยอยู่บนต้นไม้ใหญ่ต้นนี้' },
+      { id: 'anthole', icon: '🕳️', x: 68, y: 66, t: 'ทางเข้ารังมด',
+        info: 'รูเล็ก ๆ ข้างรากไม้คือประตูบ้านของมดใต้ดิน — มดช่วยพรวนดินให้รากต้นไม้แข็งแรง' },
+      { id: 'fungus', icon: '🍄', x: 24, y: 88, t: 'เห็ดบนขอนไม้',
+        info: 'เห็ดคือผู้ย่อยสลาย ช่วยเปลี่ยนขอนไม้ผุให้กลายเป็นดินอาหารของต้นไม้รุ่นต่อไป' }
+    ],
+    props: [
+      { k: 'tree', x: 50, y: 46, s: 2.1, c: '#2f6b2f' },   /* ต้นจามจุรียักษ์กลางฉาก */
+      { k: 'tree', x: 10, y: 60, s: 0.8, c: '#3f7a3d' }, { k: 'tree', x: 90, y: 86, s: 1.0, c: '#356b33' },
+      { k: 'bush', x: 30, y: 74 }, { k: 'bush', x: 74, y: 84 }, { k: 'bush', x: 60, y: 52 },
+      { k: 'emoji', x: 40, y: 44, e: '🦋', s: 0.8 }, { k: 'emoji', x: 18, y: 48, e: '🌼', s: 0.8 },
+      { k: 'emoji', x: 82, y: 74, e: '🐿️', s: 0.9 }
+    ],
+    deco(ctx, W, H, now) {   /* ลำแสงลอดใบไม้ */
+      ctx.save();
+      for (let i = 0; i < 4; i++) {
+        ctx.globalAlpha = 0.06 + 0.03 * Math.sin(now / 1200 + i);
+        ctx.fillStyle = '#fffbc0';
+        ctx.beginPath();
+        ctx.moveTo(W * (0.2 + i * 0.2), 0); ctx.lineTo(W * (0.27 + i * 0.2), 0);
+        ctx.lineTo(W * (0.17 + i * 0.2), H * 0.75); ctx.lineTo(W * (0.1 + i * 0.2), H * 0.75);
+        ctx.closePath(); ctx.fill();
+      }
+      ctx.restore();
+    }
+  },
+  r3: {
+    key: '3', nbStage: 'ทางเลียบผาถ้ำกระแซ',
+    title: '🚶 เดินสำรวจทางรถไฟเลียบผาถ้ำกระแซ',
+    hint: 'ใช้ลูกศร หรือแตะ/คลิกจุดที่อยากไป — เก็บร่องรอยการสื่อสารให้ครบ',
+    goalHint: 'เดินไปที่ 📻 จุดรับสัญญาณปากถ้ำ แล้วเริ่มภารกิจรับ-ส่งสาร!',
+    skyTop: '#1a2748', skyBot: '#e8955c', gndTop: '#6e5a40', gndBot: '#3a2e1e',
+    ambC: '#ffd9a0', band: [44, 90], start: [12, 80],
+    goal: { icon: '📻', x: 88, y: 56 },
+    micro: 'run3',
+    items: [
+      { id: 'sleeper', icon: '🛤️', x: 30, y: 62, t: 'รางรถไฟเลียบหน้าผา',
+        info: 'ทางรถไฟช่วงถ้ำกระแซเกาะอยู่บนหน้าผาริมแม่น้ำแควน้อย เป็นช่วงที่สร้างยากที่สุดช่วงหนึ่งของเส้นทางสายประวัติศาสตร์' },
+      { id: 'lantern', icon: '🏮', x: 54, y: 84, t: 'ตะเกียงเก่า',
+        info: 'สมัยก่อสร้างทางรถไฟ คนงานใช้แสงตะเกียงส่องทางในถ้ำและทำงานยามค่ำคืน' },
+      { id: 'echo', icon: '🔊', x: 72, y: 66, t: 'จุดเสียงสะท้อนในถ้ำ',
+        info: 'ในถ้ำเสียงจะสะท้อนก้องไปมา การส่งข่าวสารจึงต้องพูดชัดถ้อยชัดคำ — เหมือนนักสื่อสารที่ดีทำเสมอ' }
+    ],
+    props: [
+      { k: 'tree', x: 8, y: 56, s: 0.85, c: '#3f6e3d' }, { k: 'bush', x: 24, y: 88 }, { k: 'bush', x: 64, y: 52 },
+      { k: 'emoji', x: 90, y: 44, e: '⛰️', s: 1.7 }, { k: 'emoji', x: 44, y: 48, e: '🕸️', s: 0.7 },
+      { k: 'emoji', x: 16, y: 46, e: '🦇', s: 0.8 }
+    ],
+    deco(ctx, W, H) {   /* ผนังผาด้านขวา + ปากถ้ำมืด */
+      ctx.save();
+      const rk = ctx.createLinearGradient(W * 0.7, 0, W, H * 0.5);
+      rk.addColorStop(0, 'rgba(58,48,68,0)'); rk.addColorStop(1, 'rgba(34,28,44,0.55)');
+      ctx.fillStyle = rk;
+      ctx.beginPath(); ctx.moveTo(W * 0.72, H * 0.30); ctx.lineTo(W, H * 0.22); ctx.lineTo(W, H * 0.6); ctx.lineTo(W * 0.8, H * 0.52);
+      ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+  },
+  c4: {
+    key: '4', nbStage: 'เส้นทางน้ำตกเอราวัณ',
+    title: '🚶 เดินสำรวจเส้นทางขึ้นน้ำตกเอราวัณ',
+    hint: 'ใช้ลูกศร หรือแตะ/คลิกจุดที่อยากไป — เก็บของเตรียมเดินทางให้ครบ',
+    goalHint: 'เดินไปที่ 🎒 จุดจัดกระเป๋า แล้วเตรียมแผนเดินทาง!',
+    skyTop: '#24537a', skyBot: '#bfe8d8', gndTop: '#5d7a3a', gndBot: '#2e421e',
+    ambC: '#d8f6ff', band: [42, 90], start: [14, 82],
+    goal: { icon: '🎒', x: 87, y: 54 },
+    micro: 'qte4',
+    items: [
+      { id: 'map7', icon: '🗺️', x: 30, y: 58, t: 'แผนผังน้ำตก 7 ชั้น',
+        info: 'น้ำตกเอราวัณมีทั้งหมด 7 ชั้น นักเดินทางที่ดีดูแผนผังก่อนออกเดิน จะได้วางแผนแรงและเวลาให้พอ' },
+      { id: 'bottle', icon: '🧴', x: 52, y: 84, t: 'กระติกน้ำ',
+        info: 'ทางขึ้นชั้นบน ๆ ต้องเดินไกล การเตรียมน้ำดื่มให้พอคือหัวใจของการจัดการตนเอง' },
+      { id: 'bag', icon: '🗑️', x: 70, y: 66, t: 'ถุงเก็บขยะกลับ',
+        info: 'อุทยานฯ ขอให้นำขยะกลับลงมาทุกชิ้น — นักสำรวจที่ดีไม่ทิ้งอะไรไว้ให้ธรรมชาติ' }
+    ],
+    props: [
+      { k: 'tree', x: 10, y: 54, s: 0.95, c: '#2f6b2f' }, { k: 'tree', x: 90, y: 88, s: 1.05, c: '#356b33' },
+      { k: 'bush', x: 28, y: 76 }, { k: 'bush', x: 62, y: 50 },
+      { k: 'emoji', x: 82, y: 42, e: '💦', s: 1.5 }, { k: 'emoji', x: 40, y: 46, e: '🦋', s: 0.8 },
+      { k: 'emoji', x: 20, y: 90, e: '🌺', s: 0.8 }
+    ],
+    deco(ctx, W, H, now) {   /* ม่านน้ำตกมุมขวาบน */
+      ctx.save();
+      for (let i = 0; i < 3; i++) {
+        ctx.globalAlpha = 0.28 - i * 0.07;
+        ctx.fillStyle = '#bfe8ff';
+        const sway = Math.sin((now || 0) / 900 + i) * W * 0.004;
+        ctx.fillRect(W * (0.8 + i * 0.045) + sway, 0, W * 0.02, H * 0.42);
+      }
+      ctx.restore();
+    }
+  },
+  b5: {
+    key: '5', nbStage: 'ท่าเรือริมเขื่อน',
+    title: '🚶 เดินสำรวจท่าเรือหน่วยกู้ภัยริมเขื่อน',
+    hint: 'ใช้ลูกศร หรือแตะ/คลิกจุดที่อยากไป — ตรวจอุปกรณ์ทีมให้ครบ',
+    goalHint: 'เดินไปที่ 🚤 เรือกู้ภัย แล้วออกภารกิจกับทีม!',
+    skyTop: '#1d3050', skyBot: '#8fd0e8', gndTop: '#7a6a48', gndBot: '#3e3524',
+    ambC: '#cfeeff', band: [46, 90], start: [12, 82],
+    goal: { icon: '🚤', x: 88, y: 58 },
+    micro: 'row5',
+    items: [
+      { id: 'vest', icon: '🦺', x: 30, y: 60, t: 'เสื้อชูชีพ',
+        info: 'ก่อนลงเรือทุกครั้งต้องใส่ชูชีพ — กติกาความปลอดภัยข้อแรกที่ทีมกู้ภัยทุกคนต้องทำเหมือนกัน' },
+      { id: 'rope', icon: '🪢', x: 52, y: 84, t: 'เชือกกู้ภัย',
+        info: 'เชือกใช้ดึงคนและสิ่งของ ทีมที่ดีช่วยกันตรวจอุปกรณ์ก่อนออกเรือเสมอ' },
+      { id: 'radio', icon: '📡', x: 70, y: 64, t: 'วิทยุสื่อสารประจำเรือ',
+        info: 'ทีมกู้ภัยรายงานตำแหน่งถึงกันตลอดเวลา — รวมพลังเป็นทีมได้ต้องสื่อสารถึงกัน' }
+    ],
+    props: [
+      { k: 'tree', x: 8, y: 58, s: 0.8, c: '#3f7a3d' }, { k: 'bush', x: 26, y: 88 }, { k: 'bush', x: 60, y: 52 },
+      { k: 'emoji', x: 90, y: 42, e: '🌊', s: 1.4 }, { k: 'emoji', x: 78, y: 88, e: '🛟', s: 0.9 },
+      { k: 'emoji', x: 40, y: 46, e: '🕊️', s: 0.75 }
+    ],
+    deco(ctx, W, H, now) {   /* ผืนน้ำเหนือเขื่อนด้านขวา */
+      ctx.save();
+      const wv = ctx.createLinearGradient(W * 0.6, H * 0.35, W, H * 0.65);
+      wv.addColorStop(0, '#2e6f9a'); wv.addColorStop(1, '#7fc4e8');
+      ctx.fillStyle = wv;
+      ctx.beginPath(); ctx.moveTo(W * 0.66, H * 0.36); ctx.lineTo(W, H * 0.34); ctx.lineTo(W, H * 0.66); ctx.lineTo(W * 0.8, H * 0.56);
+      ctx.closePath(); ctx.fill();
+      ctx.globalAlpha = 0.35; ctx.strokeStyle = '#dff4ff'; ctx.lineWidth = 1.5;
+      for (let i = 0; i < 3; i++) {
+        const yy = H * (0.42 + i * 0.07) + Math.sin((now || 0) / 800 + i * 2) * 2;
+        ctx.beginPath(); ctx.moveTo(W * (0.7 + i * 0.04), yy); ctx.lineTo(W * (0.82 + i * 0.04), yy); ctx.stroke();
+      }
+      ctx.restore();
+    }
+  },
+  m7: {
+    key: '7', nbStage: 'สะพานมอญยามเช้า',
+    title: '🚶 เดินสำรวจสะพานมอญยามรุ่งอรุณ',
+    hint: 'ใช้ลูกศร หรือแตะ/คลิกจุดที่อยากไป — เก็บเรื่องราวของชุมชนให้ครบ',
+    goalHint: 'เดินไปที่ 🛕 ลานวัดวังก์วิเวการาม แล้วเริ่มภารกิจพลเมือง!',
+    skyTop: '#2a2f5e', skyBot: '#ffb37a', gndTop: '#8a6a45', gndBot: '#4a3822',
+    ambC: '#ffe2b8', band: [44, 90], start: [12, 80],
+    goal: { icon: '🛕', x: 88, y: 54 },
+    micro: 'qte7',
+    items: [
+      { id: 'plank', icon: '🪵', x: 30, y: 62, t: 'ไม้กระดานสะพาน',
+        info: 'สะพานมอญ (สะพานอุตตมานุสรณ์) เป็นสะพานไม้ที่ยาวที่สุดในประเทศไทย ชาวบ้านช่วยกันซ่อมทุกครั้งที่ชำรุด' },
+      { id: 'bowl', icon: '🥣', x: 54, y: 84, t: 'ขันใส่บาตรยามเช้า',
+        info: 'เช้ามืดชาวมอญจะใส่บาตรพระที่เดินข้ามสะพาน — ประเพณีงดงามที่สืบต่อกันมาหลายชั่วคน' },
+      { id: 'flag', icon: '🎏', x: 72, y: 66, t: 'ธงตะขาบ',
+        info: 'ธงตะขาบคือสัญลักษณ์งานบุญของชาวมอญ ชุมชนช่วยกันทำและแขวนไว้ที่วัดในวันสำคัญ' }
+    ],
+    props: [
+      { k: 'tree', x: 8, y: 56, s: 0.85, c: '#4a6e3d' }, { k: 'bush', x: 24, y: 88 }, { k: 'bush', x: 64, y: 52 },
+      { k: 'emoji', x: 86, y: 42, e: '🛕', s: 1.5 }, { k: 'emoji', x: 46, y: 46, e: '🕊️', s: 0.8 },
+      { k: 'emoji', x: 18, y: 46, e: '🌅', s: 1.0 }
+    ],
+    deco(ctx, W, H) {   /* เสาสะพานไม้พาดล่างซ้าย */
+      ctx.save();
+      ctx.fillStyle = 'rgba(74,56,34,0.75)';
+      ctx.fillRect(0, H * 0.52, W * 0.5, H * 0.035);
+      for (let i = 0; i < 6; i++) ctx.fillRect(W * (0.03 + i * 0.085), H * 0.55, W * 0.012, H * 0.16);
+      ctx.restore();
+    }
+  }
+};
 /* ══ [บล็อก AB · ครูสั่ง 11 ส.ค. 2569 รอบ 4 ข้อ 3] ผู้ช่วยอ่านประจำหน้า ══
    (1) เปลี่ยนหน้าเมื่อไร เสียงอ่านเดิมหยุดทันที (เกี่ยวไว้หัว showScreen ข้างล่าง)
    (2) ถึงหน้าที่มีเนื้อหา/ผลด่าน/วิธีเล่น อ่านให้ฟังเองโดยไม่ต้องกดปุ่ม (เมื่อเปิดโหมดช่วยอ่าน)
@@ -28666,6 +29741,7 @@ function showScreen(id) {
   if (!target || !target.classList.contains('screen')) { console.error('[showScreen] ไม่พบหน้าจอ:', id); return; }
   try { ReadAloud.stop(); } catch (e) {}   /* [บล็อก AB3] เปลี่ยนหน้า = เสียงอ่านเดิมหยุดทันที ไม่ค้างข้ามหน้า (ทุกกรณี รวมเข้าคัตซีน) */
   try { RA2.onScreen(id); } catch (e) {}   /* [บล็อก AB2] แล้วค่อยอ่านเนื้อหาของหน้าใหม่ ถ้าเปิดโหมดช่วยอ่านไว้ */
+  try { JUICE.onScreen(id); } catch (e) {}  /* [บล็อก AL] ฉลองผ่านด่าน/ชนะบอส — สั่นเบา+ประกาย (เคารพ lowfx) */
   const fadeOverlay = document.getElementById('scene-fade-overlay');
   fadeOverlay.style.transition = 'none';
   fadeOverlay.classList.add('fade-active');
@@ -30416,6 +31492,33 @@ function wireEvents() {
   // [รอบ 54 ตามคำขอ] โหมดอ่านให้ฟัง — init จากค่าที่จำไว้ + toggle ในเมนูตั้งค่า + ปุ่มอ่านของห้องเรียนรู้/ด่านกาญ 2050
   try { ReadAloud.init(); } catch (e) {}
   try { RA2.watch(); } catch (e) {}   /* [บล็อก AB7] เฝ้าเนื้อหาที่เปลี่ยนในหน้าเดิม (วิธีเล่น/บทเรียน/กาญ 2050/มินิเกม 1/แบบประเมิน) */
+  /* [บล็อก AF2 · เฟส 5A] ฉากเดินสำรวจนำหน้าด่านนำร่อง 2 ด่าน — start() เดิมถูกเรียกต่อทั้งก้อน
+     (ด่าน 6: ขั้นแว่นขยายส่องหา _explorePhase อยู่ครบทุกบรรทัด ตามเงื่อนไขครู) */
+  try {
+    if (typeof StageDetective !== 'undefined' && StageDetective.start && !StageDetective.__walkWrapped) {
+      const _dtStart = StageDetective.start.bind(StageDetective);
+      StageDetective.start = function () { WALK.run(WALK_SCENES.s1, () => _dtStart()); };
+      StageDetective.__walkWrapped = true;
+    }
+    if (typeof StageEco !== 'undefined' && StageEco.start && !StageEco.__walkWrapped) {
+      const _ecoStart = StageEco.start.bind(StageEco);
+      StageEco.start = function () { WALK.run(WALK_SCENES.eco6, () => _ecoStart()); };
+      StageEco.__walkWrapped = true;
+    }
+  } catch (e) { console.error('[AF2] ผูกฉากเดินไม่สำเร็จ:', e); }
+  /* [บล็อก AM · เฟส 5C] ฉากเดินครบ 6 ด่านสมรรถนะ — ด่านเดิมถูกเรียกต่อครบทุกบรรทัดเช่นเดิม */
+  try {
+    [[typeof StageRadio !== 'undefined' ? StageRadio : null, 'r3'],
+     [typeof StageCamp !== 'undefined' ? StageCamp : null, 'c4'],
+     [typeof StageRescue !== 'undefined' ? StageRescue : null, 'b5'],
+     [typeof StageCouncil !== 'undefined' ? StageCouncil : null, 'm7']].forEach(function (pair) {
+      const St = pair[0], sk = pair[1];
+      if (!St || !St.start || St.__walkWrapped) return;
+      const _orig = St.start.bind(St);
+      St.start = function () { WALK.run(WALK_SCENES[sk], () => _orig()); };
+      St.__walkWrapped = true;
+    });
+  } catch (e) { console.error('[AM2] ผูกฉากเดิน 4 ด่านไม่สำเร็จ:', e); }
   {
     const _raCb = document.getElementById('toggle-readaloud');
     if (_raCb) {
@@ -35360,7 +36463,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.19-p2-2569.83',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.23-p2-2569.87',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -40284,7 +41387,7 @@ var DASH4 = {
    เกมเป็นเจ้าของการคิดคะแนน — ตรงนี้คือ "รายงานผลที่คิดเสร็จแล้ว" ไม่มีการคิดใหม่แม้แต่ช่องเดียว
    ใช้ CBE8 เท่านั้น · run_id 'live' เท่านั้น · ส่งพลาด = เงียบ ไม่ขัดจังหวะครู (รอบหน้าส่งใหม่เอง) */
 var GP2_HUB = {
-  VER: 'V.8.19-p2-2569.83',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
+  VER: 'V.8.23-p2-2569.87',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
   CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
   KEY: 'gp2_hub_sent_v1',               /* ลายเซ็นผลที่ส่งสำเร็จแล้ว รายนักเรียน (กันยิงถี่) */
   LVNAME: ['เริ่มต้น', 'กำลังพัฒนา', 'สามารถ', 'เหนือความคาดหวัง'],
@@ -40424,6 +41527,85 @@ var GP2_HUB = {
     } catch (e) { this._busy = false; }
   }
 };
+/* ══ [บล็อก AK · เอกสารกลาง #54] ส่งผังมาตรฐาน/ตัวชี้วัด/สมรรถนะขึ้นทะเบียนกลางเอง ══
+   เว็บกลางเลิกกรอกผังด้วยมือแล้ว — เกมเป็นเจ้าของเนื้อหา ส่งเองผ่าน rpc_publish_standards
+   ส่งอะไรมา = ผังปัจจุบันคือชุดนั้น (แทนที่ทั้งชุด) · ห้ามส่งอาเรย์ว่างเด็ดขาด (= ถอดผังทั้งเกม) */
+var GP2_STD = {
+  KEY: 'gp2_std_sent_v1',
+  _saidWhy: 0,
+  /* ตัวชี้วัด 10 ตัว — คำต่อคำเดียวกับไฟล์ 51_STD_KAN2.sql ที่เว็บกลางเคยกรอกมือ (จากคำตอบ #50 ข้อ 5)
+     note = ด่านที่เก็บหลักฐาน (รหัสด่านชุดเดียวกับคีย์ unit_scores ในใบรายงานผล) */
+  IND: [
+    ['ส 4.1 ป.4/1', 'นับช่วงเวลาเป็นทศวรรษ ศตวรรษ และสหัสวรรษ', 'วัดที่ด่าน mg1 · สมรรถนะ HT', 411],
+    ['ส 4.1 ป.4/2', 'อธิบายยุคสมัยในการศึกษาประวัติของมนุษยชาติโดยสังเขป', 'วัดที่ด่าน mg1 · สมรรถนะ HT', 412],
+    ['ส 4.1 ป.4/3', 'แยกแยะประเภทหลักฐานที่ใช้ในการศึกษาความเป็นมาของท้องถิ่น', 'วัดที่ด่าน 1 · hellfire · สมรรถนะ HT · CZ', 413],
+    ['ส 4.2 ป.4/2', 'ยกตัวอย่างหลักฐานทางประวัติศาสตร์ที่พบในท้องถิ่นฯ', 'วัดที่ด่าน 1 · 3 · 7 · hellfire · สมรรถนะ HT · CZ · NS', 422],
+    ['ส 5.1 ป.4/1', 'สืบค้นและอธิบายข้อมูลลักษณะทางกายภาพในจังหวัดด้วยแผนที่และรูปถ่าย', 'วัดที่ด่าน 3 · 8 · mg3 · สมรรถนะ HT · NS', 511],
+    ['ส 5.1 ป.4/2', 'ระบุแหล่งทรัพยากรและสถานที่สำคัญในจังหวัดด้วยแผนที่และรูปถ่าย', 'วัดที่ด่าน 1 · 4 · 5 · 6 · 7 · 8 · pilok · mg3 · สมรรถนะ HT · NS · CZ', 512],
+    ['ส 5.1 ป.4/3', 'อธิบายลักษณะทางกายภาพที่ส่งผลต่อแหล่งทรัพยากรและสถานที่สำคัญ', 'วัดที่ด่าน 3 · 4 · 8 · pilok · สมรรถนะ HT · NS', 513],
+    ['ส 5.2 ป.4/1', 'วิเคราะห์สิ่งแวดล้อมทางกายภาพที่ส่งผลต่อการดำเนินชีวิต', 'วัดที่ด่าน 4 · 5 · 8 · pilok · mg2 · balance2050 · สมรรถนะ HT · NS · CM', 521],
+    ['ส 5.2 ป.4/2', 'อธิบายการเปลี่ยนแปลงสิ่งแวดล้อมในจังหวัดและผลที่เกิด', 'วัดที่ด่าน 6 · 7 · balance2050 · สมรรถนะ HT · NS · CZ', 522],
+    ['ส 5.2 ป.4/3', 'นำเสนอแนวทางการจัดการสิ่งแวดล้อมในจังหวัด', 'วัดที่ด่าน 6 · mg2 · balance2050 · สมรรถนะ HT · NS · CZ · CM', 523]
+  ],
+  /* สมรรถนะ 6 ด้านที่เกมวัดจริง — ด่านเรือธงตาม FLAGSHIP ของเกม (1 HT · 3 CM · 4 SM · 5 TW · 6 NS · 7 CZ)
+     SM/TW ยังไม่มีขารวบยอดในรุ่นนี้ (NO_SUMM ชุดเดียวกับใบรายงานผล) — note ต้องบอกตรง ๆ */
+  items() {
+    var S = null; try { S = CBE8.set; } catch (e) {}
+    var lvTxt = S ? (S.lvBase + '-' + (S.lvBase + 3)) : '3-6';
+    var mix = 'หลักฐานระหว่างเรียน ' + (S ? S.wMinor : 30) + '% + รวบยอดกาญ 2050 ' + (S ? S.wSum : 70) + '% → ระดับ ' + lvTxt;
+    var m100 = 'ฐานหลักฐานระหว่างเรียน 100% (รุ่นนี้ยังไม่มีขารวบยอด) → ระดับ ' + lvTxt;
+    var out = this.IND.map(function (v) {
+      return { code: v[0], name: v[1], subject: 'SO', note: v[2], sort: v[3] };
+    });
+    [['HT', 'ด่านเรือธง 1 นักสืบสะพานแคว · ' + mix],
+     ['CM', 'ด่านเรือธง 3 ถ้ำกระแซ สะพานเลียบผา · ' + mix],
+     ['SM', 'ด่านเรือธง 4 น้ำตกเอราวัณ & เขื่อนศรีนครินทร์ · ' + m100],
+     ['TW', 'ด่านเรือธง 5 เขื่อนวชิราลงกรณ & น้ำพุร้อนหินดาด · ' + m100],
+     ['NS', 'ด่านเรือธง 6 ต้นจามจุรียักษ์ · ' + mix],
+     ['CZ', 'ด่านเรือธง 7 สะพานมอญ & เมืองบาดาล & เจดีย์สามองค์ · ' + mix]
+    ].forEach(function (v) { out.push({ code: v[0], framework: 'cbe-core', note: v[1] }); });
+    return out;
+  },
+  /* จุดเรียก: ท้าย clsV8Render จุดเดียวกับใบรายงานผล (#54: "เรียกเมื่อผังเปลี่ยน หรือทุกครั้งก็ไม่เสียหาย") */
+  push() {
+    try {
+      if (window.DEMO && DEMO.on) return;                        /* โหมดตัวอย่างห้ามเขียนฐาน — เงียบ */
+      if (!/-p2-/.test(GP2_HUB.VER)) return;                     /* ผังภาค 2 ต้องติดป้ายภาคเสมอ */
+      var items = null;
+      try { items = this.items(); } catch (e) { items = null; }
+      if (!items || !items.length) return;                       /* ⚠️ #54: อาเรย์ว่าง = ถอดผังทั้งเกมจากเว็บ — ห้ามเกิดจากทางอัตโนมัติ */
+      var pay = { p_game_code: GP2_HUB.CODE, p_game_version: GP2_HUB.VER, p_items: items };
+      var sig = GP2_HUB._hash(JSON.stringify(items));            /* ลายเซ็นจาก p_items ตาม #54 — รุ่นเปลี่ยนแต่ผังเดิม = ไม่ยิงซ้ำ */
+      var memo = null; try { memo = JSON.parse(localStorage.getItem(this.KEY) || 'null'); } catch (e) {}
+      if (memo && memo.sig === sig) return;                      /* ผังชุดนี้เคยส่งสำเร็จครบแล้ว */
+      var self = this;
+      sbEnsure()
+        .then(function () { return sbFetch('/rest/v1/rpc/rpc_publish_standards', { method: 'POST', body: JSON.stringify(pay) }); })
+        .then(function (res) {
+          var acc = res ? Number(res.accepted) : NaN, sent = res ? Number(res.sent) : NaN;
+          if (res && res.ok && acc === sent) {
+            try { localStorage.setItem(self.KEY, JSON.stringify({ sig: sig, accepted: acc })); } catch (e) {}
+            return;
+          }
+          /* #54 สั่งตรง ๆ: sent ≠ accepted ต้องขึ้นเตือนหน้าครู ไม่งั้นครูไม่มีทางรู้ว่าตกหล่น
+             ไม่เก็บลายเซ็น — รอบหน้าลองส่งใหม่เอง เผื่อเว็บกลางเพิ่มสมรรถนะเข้ากรอบให้แล้ว */
+          var msg = 'ส่งผังตัวชี้วัด/สมรรถนะขึ้นเว็บกลางแล้ว แต่ถูกรับ ' + acc + '/' + sent
+            + ' รายการ — ที่เหลือถูกข้าม (รหัสไม่อยู่ในกรอบกลาง) · แจ้งแชตเกมเพื่อตามต่อ';
+          try { clsStatsWarn(msg); } catch (e) {}
+          try { toast('⚠️ ' + msg); } catch (e) {}
+          try { console.error('[บล็อก AK] rpc_publish_standards รับไม่ครบ:', JSON.stringify(res)); } catch (e) {}
+        })
+        .catch(function (e) {
+          try {
+            if (!self._saidWhy && /PGRST|function|not found|schema/i.test(String(e && e.message || ''))) {
+              self._saidWhy = 1;
+              console.error('[บล็อก AK] ส่งผังมาตรฐานเข้าเว็บกลางไม่ได้ — ฐานยังไม่มี rpc_publish_standards (ครูต้องรัน 53_STANDARDS_SYNC.sql ฝั่งเว็บกลางก่อน) · หน้าครูทำงานต่อปกติ');
+            }
+          } catch (e2) {}
+        });
+    } catch (e) {}
+  }
+};
 var _cv8Cache=null;
 function clsV8Render(studs, by){
   _cv8Cache={ studs:studs, by:by };
@@ -40440,7 +41622,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.19-p2-2569.83 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.23-p2-2569.87 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };
@@ -40472,6 +41654,8 @@ function clsV8Render(studs, by){
   /* [บล็อก V · พรอมต์ 45] เลข CBE8 ชุดที่เพิ่งวาดบนจอครู = ชุดเดียวกับที่ส่งเข้า Dashboard กลาง
      (เกณฑ์ตรวจรับข้อ 2) · ส่งเฉพาะคนที่ค่าเปลี่ยนจากที่ส่งสำเร็จครั้งก่อน · พลาด = เงียบ */
   try { GP2_HUB.schedule(studs, by); } catch (e) { }
+  /* [บล็อก AK · เอกสารกลาง #54] ผังมาตรฐาน/ตัวชี้วัดส่งจากจุดเดียวกัน — มีลายเซ็นกันยิงซ้ำของตัวเอง */
+  try { GP2_STD.push(); } catch (e) { }
 }
 function clsV8Detail(si, c){
   var det=$('cv8-det-'+si), td=$('cv8-det-td-'+si);
