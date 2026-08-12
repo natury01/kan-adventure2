@@ -3502,7 +3502,7 @@ body.lowfx .shadow-mon, body.lowfx .shadow-walk, body.lowfx .sm-defeat { display
 /* ══ [บล็อก AT] ประกาศนียบัตรแบบครู 12 ส.ค. — โลโก้จริง + หัวเรื่องยาวขึ้น + เว็บล่างสุด ══ */
 .cap-cert .cc-logo { display: block; height: calc(var(--cw)*7.2); max-width: 72%;
   object-fit: contain; margin: 0 auto; }
-.cap-cert .cc-title { font-size: max(13px, calc(var(--cw)*3.05)); }
+.cap-cert .cc-title { font-size: max(14px, calc(var(--cw)*4.2)); }   /* [บล็อก AV] หัวสั้นลง ขยายคืน */
 .cap-cert .cc-site { font-size: max(12px, calc(var(--cw)*1.9)); font-weight: 800;
   color: #8a6a1e; letter-spacing: 0.12em; }
 </style>
@@ -4598,7 +4598,7 @@ body.lowfx .shadow-mon, body.lowfx .shadow-walk, body.lowfx .sm-defeat { display
    ด่านที่ผ่านในภาคหนึ่งจะไปโผล่ว่า 'ผ่านแล้ว' ในอีกภาค (ตราหลุด/ประตูเปิดเอง/คะแนนเพี้ยน) */
 const GAME_PART = 2;
 const PART1_URL = 'https://www.gameplearn.com/kan-adventure';
-const GAME_VERSION = 'V.8.30-p2-2569.94'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
+const GAME_VERSION = 'V.8.31-p2-2569.95'; /* [เฟส 1 · 8 ส.ค. 2569] แก้ตามผลตรวจทั้งระบบ — 11 ข้อ ไม่แตะเกณฑ์คะแนน/คลังข้อสอบ/สคีมาวิจัยแม้แต่ฟิลด์เดียว:
     ฝั่งเกม (1) ลบปุ่มวิ่ง ◀▶ + ป้ายสอนปัดของ V.7 ที่ชี้ผิดด่าน (2) แว่นขยายด่านนิเวศแตะครั้งเดียวติด
     (3) ซ่อนหมวดไอเทมที่ยังต่อเข้าด่านเรือธงไม่ได้ (ของที่ซื้อแล้วยังอยู่ในเซฟครบ)
     (4) หรี่เพลงอัตโนมัติระหว่างอ่านออกเสียงแล้วคืนเมื่ออ่านจบ (5) หน้าเข้าระบบแยกช่องโค้ดห้องออกจากชื่อในเกมชัดเจน + เตือนเมื่อพิมพ์สลับ
@@ -26442,7 +26442,7 @@ const CERT = {
         c.drawImage(lg, (W - lw) / 2, 72, lw, lh);
       }
     } catch (e) {}
-    line('เกมเพลิน (www.GamePlearn.com) : ผจญภัยกาญจนบุรี ภาค 2', 46, '800', '#14406b', 246);
+    line('เกมเพลิน: ผจญภัยกาญจนบุรี ภาค 2', 54, '800', '#14406b', 246);
     line('ขอมอบประกาศนียบัตรฉบับนี้ไว้เพื่อแสดงว่า', 32, '400', '#5a5a45', 292);
 
     /* ชื่อผู้รับ */
@@ -26527,7 +26527,7 @@ const CERT = {
       if (!b) return this.download(data, statusEl);
       const file = new File([b], this._fileName(data), { type: 'image/png' });
       if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
-        navigator.share({ files: [file], title: 'ประกาศนียบัตร เกมเพลิน : ผจญภัยกาญจนบุรี ภาค 2' })
+        navigator.share({ files: [file], title: 'ประกาศนียบัตร เกมเพลิน: ผจญภัยกาญจนบุรี ภาค 2' })
           .then(() => { if (statusEl) statusEl.textContent = '📤 ส่งออกไปแล้ว'; })
           .catch(() => { if (statusEl) statusEl.textContent = 'ยกเลิกการแชร์'; });
       } else {
@@ -26611,7 +26611,7 @@ const CERT = {
        เนื้อความใหม่ → ระดับ → วันที่ล้วน → เว็บล่างสุด (โลโก้โหลดไม่ได้ = ถอดตัวเองเงียบ ๆ) */
     return '<div class="cap-cert" id="cap-cert-card">' +
       '<img class="cc-logo" src="' + V8ASSETS.url('logo_gameplearn') + '" alt="GamePlearn" onerror="this.remove()">' +
-      '<div class="cc-title">เกมเพลิน (www.GamePlearn.com) : ผจญภัยกาญจนบุรี ภาค 2</div>' +
+      '<div class="cc-title">เกมเพลิน: ผจญภัยกาญจนบุรี ภาค 2</div>' +
       '<div class="cc-line cc-intro">ขอมอบประกาศนียบัตรฉบับนี้ไว้เพื่อแสดงว่า</div>' +
       '<div class="cc-name">' + VK.esc(data.name) + '</div>' +
       '<div class="cc-badges">' + VK.esc(data.badges) + '</div>' +
@@ -37127,7 +37127,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.30-p2-2569.94',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.31-p2-2569.95',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -42057,7 +42057,7 @@ var DASH4 = {
    เกมเป็นเจ้าของการคิดคะแนน — ตรงนี้คือ "รายงานผลที่คิดเสร็จแล้ว" ไม่มีการคิดใหม่แม้แต่ช่องเดียว
    ใช้ CBE8 เท่านั้น · run_id 'live' เท่านั้น · ส่งพลาด = เงียบ ไม่ขัดจังหวะครู (รอบหน้าส่งใหม่เอง) */
 var GP2_HUB = {
-  VER: 'V.8.30-p2-2569.94',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
+  VER: 'V.8.31-p2-2569.95',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
   CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
   KEY: 'gp2_hub_sent_v1',               /* ลายเซ็นผลที่ส่งสำเร็จแล้ว รายนักเรียน (กันยิงถี่) */
   LVNAME: ['เริ่มต้น', 'กำลังพัฒนา', 'สามารถ', 'เหนือความคาดหวัง'],
@@ -42287,6 +42287,88 @@ var GP2_STD = {
     } catch (e) {}
   }
 };
+/* ══ [บล็อก AU · หมุดงาน #58] ส่งสไลด์ภาพรายด่านขึ้นการ์ดเกมหน้าเว็บกลาง ══
+   เว็บกลางเก็บแค่ที่อยู่ภาพ — ภาพจริงอยู่ในโฟลเดอร์ assets ของเกมบนไซต์ทางการ
+   ส่งอะไรมา = สไลด์ปัจจุบันคือชุดนั้น (แทนที่ทั้งชุด) · ห้ามส่งอาเรย์ว่างเด็ดขาด */
+var GP2_MEDIA = {
+  KEY: 'gp2_media_sent_v1',
+  _saidWhy: 0,
+  BASE: 'https://www.gameplearn.com/kan-adventure2/assets/',
+  /* 9 ใบ เรียงตามลำดับที่เด็กเจอในเกม — ภาพหน้าจอจริง (แผนที่+ฉากเดิน 6 ด่าน) + ฉากใหญ่กาญ 2050
+     ทุกใบไม่มีหน้าเด็ก/ชื่อจริง/ชื่อโรงเรียน (จับจากบัญชีทดสอบ ชื่อบนจอถูกซ่อนก่อนถ่าย) */
+  DEFS: [
+    ['slide_map.webp', 'แผนที่การผจญภัย — 14 ด่านทั่วกาญจนบุรี',
+     'แผนที่โลกของเกม มีหมุดด่านครบ 14 จุดบนภูมิประเทศกาญจนบุรี'],
+    ['slide_stage1.webp', 'ด่าน 1 นักสืบสะพานข้ามแม่น้ำแคว',
+     'ฉากเดินสำรวจทางเข้าสะพานแคว เก็บหลักฐานประวัติศาสตร์'],
+    ['slide_stage3.webp', 'ด่าน 3 ถ้ำกระแซ สะพานเลียบผา',
+     'ฉากเดินสำรวจทางรถไฟเลียบหน้าผาริมแม่น้ำแควน้อย'],
+    ['slide_stage4.webp', 'ด่าน 4 น้ำตกเอราวัณ & เขื่อนศรีนครินทร์',
+     'ฉากเดินสำรวจเส้นทางขึ้นน้ำตกเอราวัณ'],
+    ['slide_stage5.webp', 'ด่าน 5 เขื่อนวชิราลงกรณ & น้ำพุร้อนหินดาด',
+     'ฉากเดินสำรวจท่าเรือหน่วยกู้ภัยริมเขื่อน'],
+    ['slide_stage6.webp', 'ด่าน 6 ต้นจามจุรียักษ์',
+     'ฉากเดินสำรวจลานใต้ต้นจามจุรียักษ์ เก็บร่องรอยธรรมชาติ'],
+    ['slide_stage7.webp', 'ด่าน 7 สะพานมอญ เมืองบาดาล & เจดีย์สามองค์',
+     'ฉากเดินสำรวจสะพานมอญยามรุ่งอรุณ'],
+    ['slide_2050.webp', 'ด่านรวบยอด กาญจนบุรี 2050 — เมืองมีชีวิต',
+     'เมืองกาญจนบุรีในปี 2050 ฉากใหญ่ของด่านรวบยอดสามองก์'],
+    ['slide_storm.webp', 'องก์ 3 คืนพายุ — ปกป้องเมืองด้วยแผนของเรา',
+     'คืนพายุใหญ่เหนือเมืองกาญจนบุรี 2050 ช่วงป้องกันเมืองเรียลไทม์']
+  ],
+  items() {
+    var self = this;
+    return this.DEFS.map(function (v, i) {
+      return { url: self.BASE + v[0], caption: v[1], alt: v[2], sort: i + 1 };
+    });
+  },
+  /* จุดเรียก: ท้าย clsV8Render ถัดจาก GP2_STD.push() (#58: จุดเดียวกับใบรายงานผล/ผังมาตรฐาน) */
+  push() {
+    try {
+      if (window.DEMO && DEMO.on) return;                        /* โหมดตัวอย่างห้ามเขียนฐาน — เงียบ */
+      if (!/-p2-/.test(GP2_HUB.VER)) return;                     /* สไลด์ภาค 2 ต้องติดป้ายภาคเสมอ */
+      var items = null;
+      try { items = this.items(); } catch (e) { items = null; }
+      if (!items || !items.length) return;                       /* ⚠️ #58: อาเรย์ว่าง = ถอดสไลด์ทั้งเกมจากเว็บ — ห้ามเกิดจากทางอัตโนมัติ */
+      items = items.filter(function (it) { return /^https:\/\//.test(String(it.url || '')); });  /* #58: https เท่านั้น */
+      if (!items.length) return;
+      if (items.length > 60) items = items.slice(0, 60);         /* เพดาน #58 */
+      var pay = { p_game_code: GP2_HUB.CODE, p_game_version: GP2_HUB.VER, p_items: items };
+      var sig = GP2_HUB._hash(JSON.stringify(items));            /* ลายเซ็นจาก p_items — รุ่นเปลี่ยนแต่สไลด์เดิม = ไม่ยิงซ้ำ */
+      var memo = null; try { memo = JSON.parse(localStorage.getItem(this.KEY) || 'null'); } catch (e) {}
+      if (memo && memo.sig === sig) return;                      /* สไลด์ชุดนี้เคยส่งสำเร็จครบแล้ว */
+      var self = this;
+      sbEnsure()
+        .then(function () { return sbFetch('/rest/v1/rpc/rpc_publish_media', { method: 'POST', body: JSON.stringify(pay) }); })
+        .then(function (res) {
+          var acc = res ? Number(res.accepted) : NaN, sent = res ? Number(res.sent) : NaN;
+          if (res && res.ok && acc === sent) {
+            try { localStorage.setItem(self.KEY, JSON.stringify({ sig: sig, accepted: acc })); } catch (e) {}
+            return;
+          }
+          /* #58: sent ≠ accepted ต้องขึ้นเตือนหน้าครู (บอกเหตุผลจาก skipped ด้วยถ้ามี)
+             ไม่เก็บลายเซ็น — รอบหน้าลองส่งใหม่เอง */
+          var sk = '';
+          try {
+            if (res && res.skipped && res.skipped.length)
+              sk = ' · ถูกข้าม: ' + res.skipped.map(function (s) { return (s && s.reason) || '?'; }).join(', ');
+          } catch (e) {}
+          var msg = 'ส่งสไลด์ภาพรายด่านขึ้นเว็บกลางแล้ว แต่ถูกรับ ' + acc + '/' + sent + ' ภาพ' + sk + ' — แจ้งแชตเกมเพื่อตามต่อ';
+          try { clsStatsWarn(msg); } catch (e) {}
+          try { toast('⚠️ ' + msg); } catch (e) {}
+          try { console.error('[บล็อก AU] rpc_publish_media รับไม่ครบ:', JSON.stringify(res)); } catch (e) {}
+        })
+        .catch(function (e) {
+          try {
+            if (!self._saidWhy && /PGRST|function|not found|schema/i.test(String(e && e.message || ''))) {
+              self._saidWhy = 1;
+              console.error('[บล็อก AU] ส่งสไลด์ภาพรายด่านเข้าเว็บกลางไม่ได้ — ฐานยังไม่มี rpc_publish_media (ครูต้องรัน 57_GAME_MEDIA.sql ฝั่งเว็บกลางก่อน) · หน้าครูทำงานต่อปกติ');
+            }
+          } catch (e2) {}
+        });
+    } catch (e) {}
+  }
+};
 var _cv8Cache=null;
 function clsV8Render(studs, by){
   _cv8Cache={ studs:studs, by:by };
@@ -42303,7 +42385,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.30-p2-2569.94 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.31-p2-2569.95 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };
@@ -42337,6 +42419,8 @@ function clsV8Render(studs, by){
   try { GP2_HUB.schedule(studs, by); } catch (e) { }
   /* [บล็อก AK · เอกสารกลาง #54] ผังมาตรฐาน/ตัวชี้วัดส่งจากจุดเดียวกัน — มีลายเซ็นกันยิงซ้ำของตัวเอง */
   try { GP2_STD.push(); } catch (e) { }
+  /* [บล็อก AU · หมุดงาน #58] สไลด์ภาพรายด่านส่งจากจุดเดียวกัน — ลายเซ็นแยกชุดของตัวเอง */
+  try { GP2_MEDIA.push(); } catch (e) { }
 }
 function clsV8Detail(si, c){
   var det=$('cv8-det-'+si), td=$('cv8-det-td-'+si);
