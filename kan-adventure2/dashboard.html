@@ -2417,9 +2417,51 @@ function clsErrBox(t){ return '<div class="card"><div class="err" style="display
    ใช้เฉพาะจุดที่ทำให้ตัวเลขผิดแบบเนียน ๆ (จุด 1 = โหลดคะแนนทั้งห้องล้ม · จุด 4 = คะแนนครูสังเกตหาย)
    ป้ายเป็นการ์ดแถวเดียวเหนือเนื้อหา รูปแบบเดียวกับแบนเนอร์โหมดสาธิตที่มีอยู่แล้ว
    จึงไม่ทับของเดิมและไม่ทำให้เกิดแถบเลื่อนใหม่ (หน้าครูเป็นหน้าเอกสารเลื่อนได้อยู่แล้ว) */
+/* [บล็อก BS1 · R8 · เอกสาร 66 ข้อ 3] กล่องข้อความถาวรของหน้าครู
+   ปัญหาเดิม: ป้ายเตือนถูกวาดอยู่ "ข้างใน" #cls-main ซึ่งถูกล้างทุกครั้งที่วาดใหม่
+   ⇒ เกิดเรื่องแล้วครูยังไม่เห็น ต้องรอหน้าจอวาดรอบถัดไป
+   ท่าที่เว็บกลางแนะนำ (และใช้อยู่จริงบนหน้าครูของเขา): วางกล่องไว้ "นอก" ตัวที่ถูกวาดใหม่
+   ⇒ ขึ้นทันที ค้างจนครูกดปิด และ **ไม่ต้องแตะโค้ดวาดตารางเลย** (ชุดวัดพิกเซลจึงไม่ขยับ)
+
+   สีสองแบบ แยกความหมายให้ชัด — เอกสาร 66 เตือนเรื่องนี้ไว้ตรง ๆ:
+     ส้ม = มีอะไรไม่ขึ้น ครูต้องไปทำอะไรต่อ
+     ฟ้า = ขึ้นเรียบร้อยแล้ว แค่บอกให้รู้ (เช่น kept_manual) ห้ามทำให้ครูตกใจ */
+var GP2_FLASH = {
+  W: {}, N: {},
+  host() {
+    var h = document.getElementById('cls-flash');
+    if (h) return h;
+    var pc = document.getElementById('page-cls');
+    if (!pc) return null;
+    h = document.createElement('div');
+    h.id = 'cls-flash';
+    pc.insertBefore(h, pc.firstChild);
+    return h;
+  },
+  has() { return Object.keys(this.W).length + Object.keys(this.N).length > 0; },
+  warn(m) { if (!m) return; this.W[String(m)] = 1; this.paint(); },
+  note(m) { if (!m) return; this.N[String(m)] = 1; this.paint(); },
+  clear() { this.W = {}; this.N = {}; this.paint(); },
+  _card(list, bg, bd, fg, ic, id) {
+    if (!list.length) return '';
+    return '<div class="card" id="' + id + '" style="margin-bottom:12px;background:' + bg + ';border:1px solid ' + bd +
+      ';display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px">' +
+      '<span style="font-size:18px">' + ic + '</span>' +
+      '<span style="flex:1;min-width:200px;font-size:12.5px;color:' + fg + ';line-height:1.65">' +
+        list.map(function (k) { return esc(k); }).join('<br>') + '</span>' +
+      '<button class="btn-ghost" style="padding:4px 10px;font-size:12px" onclick="clsWarnClear()">ปิด</button></div>';
+  },
+  paint() {
+    var h = this.host();
+    if (!h) return;
+    h.innerHTML =
+      this._card(Object.keys(this.W), '#fff7ed', '#fdba74', '#9a3412', '⚠️', 'cls-flash-warn') +
+      this._card(Object.keys(this.N), '#eff6ff', '#93c5fd', '#1e3a8a', 'ℹ️', 'cls-flash-note');
+  }
+};
 var clsWarn={};
-function clsStatsWarn(msg){ clsWarn[String(msg)]=1; }
-function clsWarnClear(){ clsWarn={}; try{ clsRender(); }catch(e){} }
+function clsStatsWarn(msg){ clsWarn[String(msg)]=1; try{ GP2_FLASH.warn(msg); }catch(e){} }
+function clsWarnClear(){ clsWarn={}; try{ GP2_FLASH.clear(); }catch(e){} try{ clsRender(); }catch(e){} }
 function clsWarnBannerHTML(){
   var ks=Object.keys(clsWarn); if(!ks.length) return '';
   return '<div class="card" id="cls-warn-banner" style="margin-bottom:12px;background:#fff7ed;border:1px solid #fdba74;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px">'+
@@ -2687,7 +2729,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.47-p2-2569.111',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.52-p2-2569.116',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -6097,7 +6139,9 @@ function clsRender(){
       '<span class="muted" style="font-size:12px;flex:1">ห้องเรียนของครู: '+cls.rooms.length+' ห้อง</span>'+
     '</div>');
   var h='';
-  try{ h+=clsWarnBannerHTML(); }catch(e){}   /* [บล็อก N10 · บั๊ก 6] โหลดคะแนนไม่ครบ = ต้องเห็นบนจอ ไม่ใช่รู้แค่ใน console */
+  /* [บล็อก BS1 · R8] กล่องถาวรขึ้นให้แล้ว → ไม่ต้องวาดซ้ำในเนื้อหา (กันครูเห็นข้อความเดียวกันสองที่)
+     ถ้ากล่องถาวรสร้างไม่ได้ด้วยเหตุใดก็ตาม ป้ายเดิมยังทำงานเหมือนเดิมทุกประการ */
+  try{ if(!(typeof GP2_FLASH!=='undefined'&&GP2_FLASH.has&&GP2_FLASH.has()&&document.getElementById('cls-flash'))) h+=clsWarnBannerHTML(); }catch(e){ try{ h+=clsWarnBannerHTML(); }catch(e2){} }
   try{ h+=DEMO.bannerHTML(); }catch(e){}   /* [แก้ตามครู ข้อ 6] เตือนตลอดเวลาว่ากำลังดูข้อมูลจำลอง */
   // [ตามคำขอ] แนะนำผูก Google เมื่อยังไม่ผูก — ข้อมูลจะได้อยู่ถาวรและเปิดได้ทุกเครื่อง
   if(!(cls.teacher&&cls.teacher.is_anonymous===false)){
@@ -7617,7 +7661,7 @@ var DASH4 = {
    เกมเป็นเจ้าของการคิดคะแนน — ตรงนี้คือ "รายงานผลที่คิดเสร็จแล้ว" ไม่มีการคิดใหม่แม้แต่ช่องเดียว
    ใช้ CBE8 เท่านั้น · run_id 'live' เท่านั้น · ส่งพลาด = เงียบ ไม่ขัดจังหวะครู (รอบหน้าส่งใหม่เอง) */
 var GP2_HUB = {
-  VER: 'V.8.47-p2-2569.111',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
+  VER: 'V.8.52-p2-2569.116',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
   CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
   KEY: 'gp2_hub_sent_v1',               /* ลายเซ็นผลที่ส่งสำเร็จแล้ว รายนักเรียน (กันยิงถี่) */
   LVNAME: ['เริ่มต้น', 'กำลังพัฒนา', 'สามารถ', 'เหนือความคาดหวัง'],
@@ -7771,6 +7815,71 @@ var GP2_HUB = {
 /* ══ [บล็อก AK · เอกสารกลาง #54] ส่งผังมาตรฐาน/ตัวชี้วัด/สมรรถนะขึ้นทะเบียนกลางเอง ══
    เว็บกลางเลิกกรอกผังด้วยมือแล้ว — เกมเป็นเจ้าของเนื้อหา ส่งเองผ่าน rpc_publish_standards
    ส่งอะไรมา = ผังปัจจุบันคือชุดนั้น (แทนที่ทั้งชุด) · ห้ามส่งอาเรย์ว่างเด็ดขาด (= ถอดผังทั้งเกม) */
+/* [บล็อก BQ0 · R6] ตัวช่วยกลางของท่อส่งขึ้นเว็บกลาง — ใช้ร่วมกันทั้งท่อผังและท่อสไลด์ */
+var GP2_SAFE = {
+  /* เพดานความยาวรายฟิลด์ของฝั่งฐาน (ภาค 1 ยืนยันตัวเลขชุดนี้มาแล้ว) */
+  CAP: { code: 60, name: 400, note: 400, evidence: 600, criteria: 600, caption: 120, alt: 400, url: 600 },
+  /* ข้อความที่เขียนไว้แสดงบนหน้าเว็บมี entity ปนอยู่ · ทะเบียนกลางเก็บเป็นข้อความล้วน
+     ส่งดิบไปครูจะเห็น &amp; บนจอ — คลายด้วยตารางตายตัว ไม่ผ่าน innerHTML กันมาร์กอัปเล็ดลอด */
+  text(v, max) {
+    var t = String(v == null ? '' : v).replace(/<[^>]*>/g, ' ');
+    t = t.replace(/&(amp|lt|gt|quot|apos|nbsp|#39);/g, function (m, k) {
+      return ({ amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', '#39': "'" })[k] || ' ';
+    });
+    t = t.replace(/\s+/g, ' ').trim();
+    var n = Number(max) || 400;
+    return t.length > n ? t.slice(0, n - 1) + '…' : t;
+  },
+  /* ยามรวม: ตอบ true = ห้ามส่งรอบนี้ */
+  blocked() {
+    try { if (window.DEMO && DEMO.on) return true; } catch (e) {}
+    /* ไม่ได้เปิดจากเว็บจริง (https) = ฐานปฏิเสธอยู่ดี ไม่ต้องเปลืองคำขอ และกันลิงก์ localhost หลุด */
+    try { if (!/^https:$/.test(location.protocol)) return true; } catch (e) { return true; }
+    /* โหมดดูห้องครูท่านอื่น / ห้องสาธารณะ / อ่านอย่างเดียว = ข้อมูลของคนอื่น ห้ามเขียนทับทะเบียนกลาง */
+    try { if (typeof CLSPART !== 'undefined' && CLSPART.get && CLSPART.get() !== 'p2') return true; } catch (e) {}
+    try { if (typeof clsIsPublicScope === 'function' && clsIsPublicScope()) return true; } catch (e) {}
+    try { if (typeof clsIsPublicRoom === 'function' && clsIsPublicRoom()) return true; } catch (e) {}
+    try {
+      if (typeof cls !== 'undefined' && cls &&
+          (cls.roRoom || (cls.pubSel && typeof clsPubActive === 'function' && clsPubActive()))) return true;
+    } catch (e) {}
+    return false;
+  },
+  /* หน้าตารางห้องเรียนถูกวาดใหม่ได้หลายครั้งต่อการเปิดหน้าหนึ่งครั้ง
+     ถ้ารับไม่ครบแล้วไม่เก็บลายเซ็น (ซึ่งถูกต้อง) มันจะยิงใหม่ทุกครั้งที่วาด — จำกัดไว้ 3 ครั้ง */
+  _n: {},
+  overTry(k) { this._n[k] = (this._n[k] || 0) + 1; return this._n[k] > 3; },
+  /* อ่านจำนวนที่ถูกข้ามให้ตรง: อาเรย์ skipped ถูกตัดที่ 25 รายการ ต้องนับจาก skipped_total */
+  skipTxt(res, sent, acc) {
+    var list = (res && res.skipped && res.skipped.length) ? res.skipped : [];
+    var tot = (res && res.skipped_total != null) ? Number(res.skipped_total)
+            : (isNaN(sent) || isNaN(acc) ? list.length : (sent - acc));
+    if (!list.length) return tot ? (' · ถูกข้าม ' + tot + ' รายการ') : '';
+    /* เอาเหตุผลจากเซิร์ฟเวอร์ขึ้นคำต่อคำ ไม่แปลใหม่ — จะได้ตรงกับที่ผู้ดูแลเห็นใน log */
+    var show = list.slice(0, 5).map(function (s) { return (s && s.reason) || '?'; }).join(', ');
+    var more = tot > list.length ? (' และอีก ' + (tot - list.length) + ' รายการ')
+             : (list.length > 5 ? (' และอีก ' + (list.length - 5) + ' รายการ') : '');
+    return ' · ถูกข้าม: ' + show + more;
+  },
+  /* [บล็อก BS2 · R8 · เอกสาร 66 ข้อ 1] ช่องใหม่ kept_manual
+     🔴 กับดักที่เว็บกลางเตือนไว้: มัน **ไม่ใช่ของตก** — ถูกนับใน accepted แล้ว และ skipped_total = 0
+        ถ้าเอามารวมกับ skipped แล้วรายงานครูว่า "ตก N รายการ" ครูจะตกใจฟรี ๆ
+     ⇒ ฟังก์ชันนี้แยกออกมาเป็นข้อความคนละก้อน คนละสี และไม่ยุ่งกับตัวเลข accepted/sent เลย
+     ⇒ ปกติ kept_manual_total = 0 แทบตลอด → คืนสตริงว่าง ไม่ขึ้นอะไรให้ครูรก */
+  keptTxt(res) {
+    try {
+      var list = (res && res.kept_manual && res.kept_manual.length) ? res.kept_manual : [];
+      var tot = (res && res.kept_manual_total != null) ? Number(res.kept_manual_total) : list.length;
+      if (!tot) return '';
+      var code = list.slice(0, 5).map(function (s) { return (s && s.code) || '?'; }).join(', ');
+      var more = tot > list.length ? (' และอีก ' + (tot - list.length) + ' รายการ')
+               : (list.length > 5 ? (' และอีก ' + (list.length - 5) + ' รายการ') : '');
+      return 'ขึ้นทะเบียนกลางครบแล้ว — แต่มี ' + tot + ' รายการ' + (code ? (' (' + code + more + ')') : '') +
+        ' ที่หน้าเว็บกลางใช้ข้อความซึ่งผู้ดูแลเว็บกลางแก้ไว้เอง ไม่ใช่ข้อความจากเกม' +
+        ' · ไม่ใช่ของตกหล่น ไม่ต้องแก้อะไร — ถ้าอยากให้ใช้ข้อความของเกม ต้องให้ผู้ดูแลลบข้อความในช่องนั้นบนหน้า Admin';
+    } catch (e) { return ''; }
+  }
+};
 var GP2_STD = {
   KEY: 'gp2_std_sent_v1',
   _saidWhy: 0,
@@ -7795,8 +7904,11 @@ var GP2_STD = {
     var lvTxt = S ? (S.lvBase + '-' + (S.lvBase + 3)) : '3-6';
     var mix = 'หลักฐานระหว่างเรียน ' + (S ? S.wMinor : 30) + '% + รวบยอดกาญ 2050 ' + (S ? S.wSum : 70) + '% → ระดับ ' + lvTxt;
     var m100 = 'ฐานหลักฐานระหว่างเรียน 100% (รุ่นนี้ยังไม่มีขารวบยอด) → ระดับ ' + lvTxt;
+    var C = GP2_SAFE.CAP;
     var out = this.IND.map(function (v) {
-      return { code: v[0], name: v[1], subject: 'SO', note: v[2], sort: v[3] };
+      /* [บล็อก BQ3 · R6] ตัดตามเพดานฐาน + คลาย entity (รหัส 60 · ชื่อ 400 · หมายเหตุ 400) */
+      return { code: GP2_SAFE.text(v[0], C.code), name: GP2_SAFE.text(v[1], C.name),
+               subject: 'SO', note: GP2_SAFE.text(v[2], C.note), sort: v[3] };
     });
     [['HT', 'ด่านเรือธง 1 นักสืบสะพานแคว · ' + mix],
      ['CM', 'ด่านเรือธง 3 ถ้ำกระแซ สะพานเลียบผา · ' + mix],
@@ -7812,9 +7924,14 @@ var GP2_STD = {
     try {
       if (window.DEMO && DEMO.on) return;                        /* โหมดตัวอย่างห้ามเขียนฐาน — เงียบ */
       if (!/-p2-/.test(GP2_HUB.VER)) return;                     /* ผังภาค 2 ต้องติดป้ายภาคเสมอ */
+      /* [บล็อก BQ2 · R6] ยามที่ยังขาดตามเช็กลิสต์ภาค 1 */
+      if (GP2_SAFE.blocked()) return;                            /* ไม่ใช่ https · หรือกำลังดูห้องของครูท่านอื่น */
+      if (GP2_SAFE.overTry('std')) return;                       /* กันยิงรัวตอนหน้าตารางถูกวาดใหม่หลายรอบ */
+      if (!this.IND || this.IND.length < 10) return;             /* ตารางต้นทางพร่อง = ไม่ส่งดีกว่าส่งผังพิการ */
       var items = null;
       try { items = this.items(); } catch (e) { items = null; }
       if (!items || !items.length) return;                       /* ⚠️ #54: อาเรย์ว่าง = ถอดผังทั้งเกมจากเว็บ — ห้ามเกิดจากทางอัตโนมัติ */
+      if (items.length > 200) return;                            /* [บล็อก BQ2] เพดาน #54 — เกินแล้วฐาน raise ทั้งชุด */
       var pay = { p_game_code: GP2_HUB.CODE, p_game_version: GP2_HUB.VER, p_items: items };
       var sig = GP2_HUB._hash(JSON.stringify(items));            /* ลายเซ็นจาก p_items ตาม #54 — รุ่นเปลี่ยนแต่ผังเดิม = ไม่ยิงซ้ำ */
       var memo = null; try { memo = JSON.parse(localStorage.getItem(this.KEY) || 'null'); } catch (e) {}
@@ -7826,13 +7943,26 @@ var GP2_STD = {
           var acc = res ? Number(res.accepted) : NaN, sent = res ? Number(res.sent) : NaN;
           if (res && res.ok && acc === sent) {
             try { localStorage.setItem(self.KEY, JSON.stringify({ sig: sig, accepted: acc })); } catch (e) {}
+            /* [บล็อก BS2 · R8] ส่งสำเร็จครบ = เก็บลายเซ็นตามเดิม (kept_manual ไม่ใช่ความล้มเหลว)
+               แต่ถ้ามีรายการที่เว็บกลางใช้คำของผู้ดูแล ต้องบอกครูด้วยข้อความ "บอกให้รู้" ไม่ใช่ "เตือน"
+               ⇒ กันเจ้าของเกมงงว่า "แก้ข้อความในเกมแล้วทำไมหน้าเว็บกลางไม่เปลี่ยน" (เหตุผลที่เว็บกลางทำช่องนี้มา) */
+            try {
+              var kp = GP2_SAFE.keptTxt(res);
+              if (kp) { try { GP2_FLASH.note('ผังตัวชี้วัด: ' + kp); } catch (e2) {} console.info('[บล็อก BS2] kept_manual:', JSON.stringify(res.kept_manual || [])); }
+            } catch (e) {}
             return;
           }
           /* #54 สั่งตรง ๆ: sent ≠ accepted ต้องขึ้นเตือนหน้าครู ไม่งั้นครูไม่มีทางรู้ว่าตกหล่น
              ไม่เก็บลายเซ็น — รอบหน้าลองส่งใหม่เอง เผื่อเว็บกลางเพิ่มสมรรถนะเข้ากรอบให้แล้ว */
+          /* [บล็อก BQ4 · R6] เอาเหตุผลจากเซิร์ฟเวอร์ขึ้นคำต่อคำ เลิกเดาแทนเซิร์ฟเวอร์
+             ของเดิมเขียนเหตุผลตายตัวไว้เองในโค้ด ซึ่งถ้าถูกข้ามด้วยเหตุอื่น
+             (ข้อความยาวเกิน · รหัสซ้ำ) ครูจะได้ข้อความที่พาไปแก้ผิดที่ */
           var msg = 'ส่งผังตัวชี้วัด/สมรรถนะขึ้นเว็บกลางแล้ว แต่ถูกรับ ' + acc + '/' + sent
-            + ' รายการ — ที่เหลือถูกข้าม (รหัสไม่อยู่ในกรอบกลาง) · แจ้งแชตเกมเพื่อตามต่อ';
+            + ' รายการ' + GP2_SAFE.skipTxt(res, sent, acc) + ' · แจ้งแชตเกมเพื่อตามต่อ';
           try { clsStatsWarn(msg); } catch (e) {}
+          /* [บล็อก BS2 · R8] ถ้ารอบเดียวกันมี kept_manual ด้วย ต้องเป็นข้อความคนละก้อนคนละสี
+             ห้ามเอาไปรวมในประโยค "ถูกรับ x/y" เด็ดขาด — คนละเรื่องกันโดยสิ้นเชิง */
+          try { var kp2 = GP2_SAFE.keptTxt(res); if (kp2) GP2_FLASH.note('ผังตัวชี้วัด: ' + kp2); } catch (e) {}
           try { toast('⚠️ ' + msg); } catch (e) {}
           try { console.error('[บล็อก AK] rpc_publish_standards รับไม่ครบ:', JSON.stringify(res)); } catch (e) {}
         })
@@ -7853,7 +7983,19 @@ var GP2_STD = {
 var GP2_MEDIA = {
   KEY: 'gp2_media_sent_v1',
   _saidWhy: 0,
-  BASE: 'https://www.gameplearn.com/kan-adventure2/assets/',
+  /* [บล็อก BQ1 · R6] เลิกฝังโดเมนตาย — คิดจากหน้าเว็บที่เปิดอยู่จริง
+     V8.ASSET_DIR คือตัวเดียวกับที่เกมใช้โหลดภาพของตัวเองทุกใบ (คิดจาก location.pathname)
+     ⇒ ย้ายโดเมนเมื่อไร ลายเซ็นเปลี่ยนเอง แล้วเปิดหน้าห้องเรียนครั้งเดียวก็ส่งใหม่ให้เอง
+     ไม่ต้องแก้โค้ด ไม่ต้องส่งรุ่นใหม่ ไม่ต้องล้างแคช */
+  get BASE() {
+    /* หน้าครูเป็นคนละไฟล์กับตัวเกม จึงไม่มีวัตถุ V8 ให้ใช้ — คิดเองจากที่อยู่หน้าเว็บ
+       (dashboard.html วางอยู่โฟลเดอร์เดียวกับ assets/ เสมอ ตามโครงที่ส่งขึ้นเว็บ) */
+    try {
+      var dir = (typeof V8 !== 'undefined' && V8 && V8.ASSET_DIR) ? V8.ASSET_DIR : 'assets/';
+      return new URL(dir, location.href).href;
+    } catch (e) { return 'https://www.gameplearn.com/kan-adventure2/assets/'; }
+  },
+  EXPECT: 13,   /* จำนวนสไลด์ที่ผังจริงต้องมี — ไม่ตรง = ตารางต้นทางพัง ไม่ใช่ "เลิกส่งแล้ว" */
   /* 9 ใบ เรียงตามลำดับที่เด็กเจอในเกม — ภาพหน้าจอจริง (แผนที่+ฉากเดิน 6 ด่าน) + ฉากใหญ่กาญ 2050
      ทุกใบไม่มีหน้าเด็ก/ชื่อจริง/ชื่อโรงเรียน (จับจากบัญชีทดสอบ ชื่อบนจอถูกซ่อนก่อนถ่าย) */
   DEFS: [
@@ -7885,9 +8027,44 @@ var GP2_MEDIA = {
      'ทางเดินขึ้นหอคอยยามโพล้เพล้ ก่อนประลองกับปีศาจข้อสอบ']
   ],
   items() {
-    var self = this;
+    /* [บล็อก BQ3 · R6] ตัดความยาวตามเพดานฐาน + คลาย entity ก่อนส่ง
+       ยังไม่เกินเพดานวันนี้ แต่วันที่แก้ข้อความให้ยาวขึ้น เว็บกลางจะข้ามเงียบ ๆ ถ้าไม่ตัดเอง */
+    var self = this, C = GP2_SAFE.CAP;
     return this.DEFS.map(function (v, i) {
-      return { url: self.BASE + v[0], caption: v[1], alt: v[2], sort: i + 1 };
+      return {
+        url: GP2_SAFE.text(self.BASE + v[0], C.url),
+        caption: GP2_SAFE.text(v[1], C.caption),
+        alt: GP2_SAFE.text(v[2], C.alt),
+        sort: i + 1
+      };
+    });
+  },
+  /* [บล็อก BS3 · R8] เปิดของจริงดูทีละใบ — ใช้ HEAD ไม่โหลดตัวภาพ (เบากว่าโหลดจริงมาก)
+     ภาพอยู่โดเมนเดียวกับหน้าครูเสมอ (ที่อยู่คิดจาก location.href) จึงไม่ติดกำแพง CORS
+     เผื่อโฮสต์บางเจ้าไม่รับ HEAD → ถอยไปลองเปิดเป็นภาพจริงให้อีกชั้นหนึ่ง
+     ทุกใบมีเพดานเวลา 8 วินาที — เน็ตอืดต้องไม่ทำให้หน้าครูค้าง */
+  _alive(items) {
+    var urls = (items || []).map(function (it) { return String(it && it.url || ''); });
+    var one = function (u) {
+      return new Promise(function (res) {
+        var fin = 0, done = function (v) { if (!fin) { fin = 1; res(v); } };
+        setTimeout(function () { done(false); }, 8000);
+        var byImg = function () {
+          try { var im = new Image(); im.onload = function () { done(true); }; im.onerror = function () { done(false); }; im.src = u; }
+          catch (e) { done(false); }
+        };
+        try {
+          if (typeof fetch !== 'function') { byImg(); return; }
+          fetch(u, { method: 'HEAD', cache: 'no-store' })
+            .then(function (r) { if (r && r.ok) done(true); else byImg(); })
+            .catch(byImg);
+        } catch (e) { byImg(); }
+      });
+    };
+    return Promise.all(urls.map(one)).then(function (arr) {
+      var bad = [];
+      for (var i = 0; i < arr.length; i++) if (!arr[i]) bad.push(urls[i].split('/').pop());
+      return { n: urls.length, ok: arr.length - bad.length, bad: bad };
     });
   },
   /* จุดเรียก: ท้าย clsV8Render ถัดจาก GP2_STD.push() (#58: จุดเดียวกับใบรายงานผล/ผังมาตรฐาน) */
@@ -7895,6 +8072,10 @@ var GP2_MEDIA = {
     try {
       if (window.DEMO && DEMO.on) return;                        /* โหมดตัวอย่างห้ามเขียนฐาน — เงียบ */
       if (!/-p2-/.test(GP2_HUB.VER)) return;                     /* สไลด์ภาค 2 ต้องติดป้ายภาคเสมอ */
+      /* [บล็อก BQ2 · R6] ยามที่ยังขาดตามเช็กลิสต์ภาค 1 */
+      if (GP2_SAFE.blocked()) return;                            /* ไม่ใช่ https · หรือกำลังดูห้องของครูท่านอื่น */
+      if (GP2_SAFE.overTry('media')) return;                     /* กันยิงรัวตอนหน้าตารางถูกวาดใหม่หลายรอบ */
+      if (this.DEFS.length !== this.EXPECT) return;              /* จำนวนสไลด์ไม่ตรงผังจริง = ตารางต้นทางพัง */
       var items = null;
       try { items = this.items(); } catch (e) { items = null; }
       if (!items || !items.length) return;                       /* ⚠️ #58: อาเรย์ว่าง = ถอดสไลด์ทั้งเกมจากเว็บ — ห้ามเกิดจากทางอัตโนมัติ */
@@ -7906,12 +8087,41 @@ var GP2_MEDIA = {
       var memo = null; try { memo = JSON.parse(localStorage.getItem(this.KEY) || 'null'); } catch (e) {}
       if (memo && memo.sig === sig) return;                      /* สไลด์ชุดนี้เคยส่งสำเร็จครบแล้ว */
       var self = this;
+      /* [บล็อก BS3 · R8 · เอกสาร 66 ข้อ 2] 🔴 เปิดของจริงดูก่อนส่ง
+         เว็บกลางยืนยันว่า **ฐานเปิด URL ตรวจให้ไม่ได้ และจะไม่ทำ** (จะกลายเป็นช่องยิงคำขอออกจากฐาน)
+         ⇒ ถ้าเกมไม่ตรวจ ก็ไม่มีใครตรวจ แล้วฐานจะตอบ accepted = sent ให้กับลิงก์ตาย
+            เกมเก็บลายเซ็นว่า "สำเร็จ" ถาวร → การ์ดเกมบนเว็บกลางพังเงียบสนิท
+         ยาม 5 ตัวที่เพิ่งใส่ใน R6 ไม่มีตัวไหนจับเคสนี้ได้เลย — นี่คือชั้นที่ขาดไปจริง */
       sbEnsure()
-        .then(function () { return sbFetch('/rest/v1/rpc/rpc_publish_media', { method: 'POST', body: JSON.stringify(pay) }); })
+        .then(function () { return self._alive(pay.p_items); })
+        .then(function (rep) {
+          if (!rep.ok) {
+            /* เปิดไม่ได้เลยสักใบ = ที่อยู่ไฟล์ผิดทั้งชุด → ห้ามขึ้นทะเบียนลิงก์ตาย
+               ไม่เก็บลายเซ็น ⇒ พอครูอัปโหลดภาพครบแล้วเปิดหน้านี้อีกครั้ง มันส่งเองทันที */
+            var m1 = 'ยังไม่ส่งสไลด์ภาพรายด่านขึ้นเว็บกลาง เพราะเปิดไฟล์ภาพจากที่อยู่จริงไม่ได้เลยสักใบ ('
+              + rep.bad.length + '/' + rep.n + ' ใบ) — ที่อยู่ไฟล์หรือโฟลเดอร์ assets น่าจะยังไม่ถูกอัปโหลด'
+              + ' · แก้แล้วเปิดหน้านี้อีกครั้ง ระบบจะส่งให้เอง';
+            try { clsStatsWarn(m1); } catch (e) {}
+            try { console.error('[บล็อก BS3] ลิงก์ภาพเปิดไม่ได้ทั้งชุด — ไม่ส่ง:', rep.bad.join(', ')); } catch (e) {}
+            return null;
+          }
+          if (rep.bad.length) {
+            /* บางใบหาย: เว็บกลางข้ามใบเสียให้เอง (เขายืนยันมา) → ส่งต่อได้ แต่ครูต้องรู้ว่าใบไหนหาย
+               ไม่งั้นครูจะเห็นการ์ดที่ "ดูปกติ" แต่ภาพไม่ครบ โดยไม่มีอะไรบอก */
+            try {
+              GP2_FLASH.note('สไลด์ภาพรายด่าน: ส่งขึ้นเว็บกลางแล้ว แต่มี ' + rep.bad.length + ' ใบที่เปิดไม่ได้ ('
+                + rep.bad.slice(0, 6).join(', ') + (rep.bad.length > 6 ? ' และอีก ' + (rep.bad.length - 6) + ' ใบ' : '')
+                + ') — เว็บกลางจะข้ามใบที่เปิดไม่ได้ให้เอง อัปโหลดภาพเหล่านี้แล้วจะครบเอง');
+            } catch (e) {}
+          }
+          return sbFetch('/rest/v1/rpc/rpc_publish_media', { method: 'POST', body: JSON.stringify(pay) });
+        })
         .then(function (res) {
+          if (res === null) return;   /* [บล็อก BS3 · R8] ด่านเปิดของจริงไม่ผ่าน — ไม่ได้ยิงเลย ไม่เก็บลายเซ็น */
           var acc = res ? Number(res.accepted) : NaN, sent = res ? Number(res.sent) : NaN;
           if (res && res.ok && acc === sent) {
             try { localStorage.setItem(self.KEY, JSON.stringify({ sig: sig, accepted: acc })); } catch (e) {}
+            try { var kpm = GP2_SAFE.keptTxt(res); if (kpm) GP2_FLASH.note('สไลด์ภาพรายด่าน: ' + kpm); } catch (e) {}
             return;
           }
           /* #58: sent ≠ accepted ต้องขึ้นเตือนหน้าครู (บอกเหตุผลจาก skipped ด้วยถ้ามี)
@@ -7953,7 +8163,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.47-p2-2569.111 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.52-p2-2569.116 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };
