@@ -2447,8 +2447,9 @@ var GP2_FLASH = {
     return '<div class="card" id="' + id + '" style="margin-bottom:12px;background:' + bg + ';border:1px solid ' + bd +
       ';display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px">' +
       '<span style="font-size:18px">' + ic + '</span>' +
-      '<span style="flex:1;min-width:200px;font-size:12.5px;color:' + fg + ';line-height:1.65">' +
-        list.map(function (k) { return esc(k); }).join('<br>') + '</span>' +
+      '<span style="flex:1;min-width:200px;font-size:12.5px;color:' + fg +
+        ';line-height:1.65;max-height:38vh;overflow-y:auto">' +
+        list.map(function (k) { return esc(k).replace(/\n/g, '<br>'); }).join('<br>') + '</span>' +
       '<button class="btn-ghost" style="padding:4px 10px;font-size:12px" onclick="clsWarnClear()">ปิด</button></div>';
   },
   paint() {
@@ -2729,7 +2730,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.57-p2-2569.121',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.63-p2-2569.127',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -7661,7 +7662,7 @@ var DASH4 = {
    เกมเป็นเจ้าของการคิดคะแนน — ตรงนี้คือ "รายงานผลที่คิดเสร็จแล้ว" ไม่มีการคิดใหม่แม้แต่ช่องเดียว
    ใช้ CBE8 เท่านั้น · run_id 'live' เท่านั้น · ส่งพลาด = เงียบ ไม่ขัดจังหวะครู (รอบหน้าส่งใหม่เอง) */
 var GP2_HUB = {
-  VER: 'V.8.57-p2-2569.121',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
+  VER: 'V.8.63-p2-2569.127',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
   CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
   KEY: 'gp2_hub_sent_v1',               /* ลายเซ็นผลที่ส่งสำเร็จแล้ว รายนักเรียน (กันยิงถี่) */
   LVNAME: ['เริ่มต้น', 'กำลังพัฒนา', 'สามารถ', 'เหนือความคาดหวัง'],
@@ -7879,12 +7880,27 @@ var GP2_SAFE = {
          ทั้งที่หน้า Admin ยังไม่มีช่องนั้น ⇒ ครูจะไปหาช่องที่ไม่มีอยู่จริง
          ตอนนี้: เกมพูดเฉพาะเรื่องที่เกมรู้จริง (จำนวน · รหัส · ไม่ใช่ของตก)
                  ส่วนวิธีแก้ ยกจาก reason ของเว็บกลางคำต่อคำ — เขาแก้เมื่อไร ครูเห็นทันที */
-      var why = this.text(list.slice(0, 3).map(function (s) { return (s && s.reason) || ''; })
-        .filter(Boolean).join(' · '), 600);
+      /* [บล็อก CD1 · R19 · เอกสาร 71 ข้อ 6] 🔴 ตัด reason ที่ซ้ำกันออกก่อนต่อสตริง
+         ของเดิมต่อ reason ของ 3 รายการแรกด้วย ' · ' ตรง ๆ
+         แต่ในโลกจริงผู้ดูแลมักแก้หลายรายการ "ด้วยเหตุผลเดียวกัน" ⇒ reason เหมือนกันเป๊ะ
+         ครูจึงอ่านประโยคเดิมสามรอบติดกัน (วัดจริง: 586 ตัวอักษร · 15 บรรทัด · 39% ของจอมือถือ)
+         ตัดซ้ำแล้วเหลือ ~340 ตัวอักษร โดยไม่เสียข้อมูลอะไรเลย —
+         ถ้าเว็บกลางส่ง reason ต่างกันจริง ก็ยังขึ้นครบทุกอันเหมือนเดิม
+         (ใช้ — นำหน้าบรรทัดใหม่ ไม่ใช่ ↳ เพราะฟอนต์ไทยบางตัววาดลูกศรนั้นเพี้ยนเป็นตัวเลขไทย
+          ส่วน — มีอยู่ในประโยคเดียวกันอยู่แล้วจึงมั่นใจได้ว่าวาดออกแน่นอน) */
+      var seen = {}, uniq = [];
+      list.slice(0, 3).forEach(function (s) {
+        var t = (s && s.reason) ? String(s.reason).replace(/\s+/g, ' ').trim() : '';
+        if (!t || seen[t]) return;
+        seen[t] = 1; uniq.push(t);
+      });
+      var why = this.text(uniq.join(' · '), 600);
+      /* ขึ้นบรรทัดใหม่ให้คำของเว็บกลาง — reason ของเขามี ' · ' อยู่ข้างในอยู่แล้ว
+         ถ้าเกมใช้ ' · ' คั่นประโยคตัวเองด้วย ครูจะแยกไม่ออกว่าจุดไหนคั่นอะไร */
       return 'ขึ้นทะเบียนกลางครบแล้ว — แต่มี ' + tot + ' รายการ' + (code ? (' (' + code + more + ')') : '') +
         ' ที่หน้าเว็บกลางใช้ข้อความซึ่งผู้ดูแลเว็บกลางเป็นผู้กำหนด ไม่ใช่ข้อความจากเกม' +
         ' · ไม่ใช่ของตกหล่น ไม่ต้องแก้อะไร' +
-        (why ? (' · เว็บกลางแจ้งว่า: ' + why) : '');
+        (why ? ('\n— เว็บกลางแจ้งว่า: ' + why) : '');
     } catch (e) { return ''; }
   }
 };
@@ -7943,10 +7959,17 @@ var GP2_STD = {
       var pay = { p_game_code: GP2_HUB.CODE, p_game_version: GP2_HUB.VER, p_items: items };
       var sig = GP2_HUB._hash(JSON.stringify(items));            /* ลายเซ็นจาก p_items ตาม #54 — รุ่นเปลี่ยนแต่ผังเดิม = ไม่ยิงซ้ำ */
       var memo = null; try { memo = JSON.parse(localStorage.getItem(this.KEY) || 'null'); } catch (e) {}
-      if (memo && memo.sig === sig) return;                      /* ผังชุดนี้เคยส่งสำเร็จครบแล้ว */
+      /* [บล็อก CE1 · R20 · เอกสาร 71 ข้อ 5.5] 🔴 เดิมข้ามการส่งถาวรถ้าลายเซ็นผังเดิม
+         แต่ผู้ดูแลแก้ "ข้อความที่ครูอ่าน" ฝั่งเว็บกลาง — ผังฝั่งเกมไม่เปลี่ยนสักตัวอักษร
+         ⇒ ลายเซ็นเดิม ⇒ ไม่ส่ง ⇒ ไม่มีคำตอบ ⇒ ไม่มี kept_manual ⇒ ครูไม่เห็นกล่องฟ้า
+            ทั้งที่ทำตามขั้นตอนถูกทุกข้อ (พิสูจน์ด้วยการรันจริง: รอบสองยิง 0 ครั้ง)
+         ⇒ เปลี่ยนเป็น "ไม่ส่งซ้ำภายในการเปิดหน้าครั้งนี้" แทน "ไม่ส่งซ้ำตลอดกาล"
+            เปิดหน้าครูใหม่ = ได้ส่งอีกหนึ่งครั้ง ตรงกับที่เอกสาร 71 สั่งครูไว้พอดี
+            ส่วนการกันยิงรัวตอนตารางวาดใหม่หลายรอบ ยังทำงานเหมือนเดิมทุกประการ */
+      if (memo && memo.sig === sig && this._sentThisLoad) return;
       var self = this;
       sbEnsure()
-        .then(function () { return sbFetch('/rest/v1/rpc/rpc_publish_standards', { method: 'POST', body: JSON.stringify(pay) }); })
+        .then(function () { self._sentThisLoad = 1; return sbFetch('/rest/v1/rpc/rpc_publish_standards', { method: 'POST', body: JSON.stringify(pay) }); })
         .then(function (res) {
           var acc = res ? Number(res.accepted) : NaN, sent = res ? Number(res.sent) : NaN;
           if (res && res.ok && acc === sent) {
@@ -8093,8 +8116,10 @@ var GP2_MEDIA = {
       var pay = { p_game_code: GP2_HUB.CODE, p_game_version: GP2_HUB.VER, p_items: items };
       var sig = GP2_HUB._hash(JSON.stringify(items));            /* ลายเซ็นจาก p_items — รุ่นเปลี่ยนแต่สไลด์เดิม = ไม่ยิงซ้ำ */
       var memo = null; try { memo = JSON.parse(localStorage.getItem(this.KEY) || 'null'); } catch (e) {}
-      if (memo && memo.sig === sig) return;                      /* สไลด์ชุดนี้เคยส่งสำเร็จครบแล้ว */
+      /* [บล็อก CE2 · R20] เหตุผลเดียวกับ CE1 — สไลด์ก็มี kept_manual ขึ้นทางนี้ได้ */
+      if (memo && memo.sig === sig && this._sentThisLoad) return;
       var self = this;
+      self._sentThisLoad = 1;   /* [บล็อก CE2 · R20] */
       /* [บล็อก BS3 · R8 · เอกสาร 66 ข้อ 2] 🔴 เปิดของจริงดูก่อนส่ง
          เว็บกลางยืนยันว่า **ฐานเปิด URL ตรวจให้ไม่ได้ และจะไม่ทำ** (จะกลายเป็นช่องยิงคำขอออกจากฐาน)
          ⇒ ถ้าเกมไม่ตรวจ ก็ไม่มีใครตรวจ แล้วฐานจะตอบ accepted = sent ให้กับลิงก์ตาย
@@ -8175,7 +8200,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.57-p2-2569.121 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.63-p2-2569.127 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };
