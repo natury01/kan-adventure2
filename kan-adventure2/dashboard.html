@@ -2730,7 +2730,7 @@ var DEMO = {
   ],
   SUBS: { HT:['HT-CTC','HT-STM','HT-CRT','HT-PRB'], CM:['CM-A','CM-B','CM-C'], SM:['SM-A','SM-B','SM-C'],
           TW:['TW-A','TW-B','TW-C'], CZ:['CZ-A','CZ-B','CZ-C'], NS:['NS-A','NS-B','NS-C'] },
-  _ver: 'V.8.64-p2-2569.128',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
+  _ver: 'V.8.67-p2-2569.131',   /* ต้องมี -p2- ในเลขรุ่น ไม่งั้นตัวกรองภาคจะไม่นับเป็นข้อมูลภาค 2 */
   _iso(daysAgo){ var d=new Date(); d.setDate(d.getDate()-daysAgo); return d.toISOString(); },
   /* รหัสข้อสอบจริงของด่านนั้น (ดึงจากตารางที่ตัวคิดคะแนนใช้เอง) */
   _qidsFor(stage){
@@ -4614,7 +4614,10 @@ function clsKruSave(){
    ============================================================ */
 var CLSPART = {
   KEY: 'cls_part_view',
-  get(){ try{ return localStorage.getItem(this.KEY) || 'p2'; }catch(e){ return 'p2'; } },
+  /* [บล็อก R22-P1] หน้าครูของภาค 2 ดูข้อมูลภาค 2 อย่างเดียว — คืน 'p2' ตายตัว
+     ไม่อ่าน localStorage แล้ว เพราะค่าที่ครูเคยกดค้างไว้ทำให้เปิดมาเจอมุมมองภาค 1 โดยไม่ตั้งใจ
+     (ตัวกรอง keep() ด้านล่างยังทำงานเต็มที่ — นี่คือสิ่งที่กันข้อมูลภาค 1 ปนเข้าตัวเลขภาค 2) */
+  get(){ return 'p2'; },
   set(v){ try{ localStorage.setItem(this.KEY, v); }catch(e){}
     cls.stats=null; cls.statsReady=false; clsRender();
     /* [แก้ตามครู ข้อ 5] มุมมองห้องครูท่านอื่นใช้คนละเส้นทางโหลดข้อมูล — ต้องสั่งโหลดให้ถูกอัน */
@@ -4633,7 +4636,10 @@ var CLSPART = {
   },
   /* คะแนนสรุปในตาราง students เป็นยอดรวมของทั้งสองภาค แยกไม่ได้ → ใช้ได้เฉพาะตอนดู "ทั้งหมด" */
   useLegacyTotals(){ return this.get()==='all'; },
-  barHTML(){
+  /* [บล็อก R22-P1] ถอดแถบเลือกภาคออกตามคำสั่งครู — คืนสตริงว่าง
+     คงชื่อฟังก์ชันเดิมไว้เพื่อไม่ต้องแก้จุดเรียกในหน้าจอ (กันพลาด) */
+  barHTML(){ return ''; },
+  _barHTML_removed(){
     var p=this.get();
     var b=function(k,label,tip){ return '<button class="btn-ghost cls-part-btn'+(p===k?' on':'')+'" title="'+tip+'" onclick="CLSPART.set(\''+k+'\')">'+label+'</button>'; };
     return '<div class="cls-part-bar">📚 <b>ดูข้อมูลของ:</b>'+
@@ -6045,7 +6051,7 @@ function clsScoresHtml(r){
       try{ anyP1=studs.some(function(s0){ var st0=cls.stats&&cls.stats[s0.id];
         return !!(st0 && (Number(s0.collected_score)>0 || Number(s0.boss_score)>0)); }); }catch(e){}
       return '<div class="cls-empty-note">📭 <b>ยังไม่มีนักเรียนคนไหนเล่นเกมภาค 2 ในห้องนี้</b> — ตัวเลขทั้งหมดจึงเป็น 0 ตามความจริง'+
-        (anyP1?'<br><span class="muted">ห้องนี้มีข้อมูลของ <b>ภาค 1</b> อยู่ — กดปุ่ม "ภาค 1 (V.7.80)" ด้านบนเพื่อดู</span>':'')+
+        (anyP1?'<br><span class="muted">ห้องนี้มีข้อมูลเก่าของภาค 1 อยู่ในฐาน แต่หน้านี้แสดงเฉพาะภาค 2 (คนละเครื่องมือวัด)</span>':'')+
         '</div>';
     })()+
     '<table class="cls-tbl cls-scores-tbl" style="width:100%;table-layout:fixed">'+
@@ -7491,6 +7497,82 @@ function clsV8Fetch(ids){
     return by;
   });
 }
+/* [บล็อก R22-P2] ตัวรับคำสั่ง "อัปเดตผล" จากเว็บกลาง (โดเมนเดียวกันเท่านั้น)
+   ติดตั้งครั้งเดียวตอนสคริปต์หน้าครูถูกอ่าน — ไม่แตะจอ ไม่แตะข้อมูล จนกว่าจะถูกสั่ง */
+(function(){
+  if (window.__gp2RefreshReady) return;
+  window.__gp2RefreshReady = 1;
+  var BUSY = false;
+  try {
+    window.addEventListener('message', function(ev){
+      /* ยาม 1 · คนละต้นทาง = ทิ้งเงียบ */
+      if (!ev || ev.origin !== location.origin) return;
+      var m = ev.data;
+      if (!m || m.gp2 !== 'gp2-refresh') return;          /* ยาม 2 · รับคำสั่งเดียวเท่านั้น */
+      var rid = m.room || null;
+      var send = function(type, ok, why, n){
+        try { ev.source && ev.source.postMessage({
+          gp2: type, room: rid, ok: !!ok, why: why || null, students: n || 0,
+          ver: (typeof GP2_HUB !== 'undefined' ? GP2_HUB.VER : null)
+        }, ev.origin); } catch (e) {}
+      };
+      var done = function(ok, why, n){ BUSY = false; send('gp2-refresh-done', ok, why, n); };
+      try {
+        /* ยาม 5 · โหมดตัวอย่างห้ามเขียนฐาน */
+        if (window.DEMO && DEMO.on) return done(false, 'demo');
+        /* ต้องระบุห้อง — ท่อส่งผูกกับห้องที่กางอยู่ ไม่มีห้อง = ทำอะไรไม่ได้จริง
+           (ตอบไปตรง ๆ ดีกว่าเงียบแล้วให้เว็บกลางเข้าใจว่าสำเร็จ) */
+        if (!rid) return done(false, 'no-room');
+        if (BUSY) return;   /* กำลังทำรอบก่อนอยู่ — เว็บกลางยิงซ้ำระหว่างรอ ไม่ต้องเริ่มใหม่ */
+        BUSY = true;
+        /* ตอบรับทันทีที่ "รับคำสั่งไว้แล้ว" — ต้องมาก่อนการรอสายบูต
+           เว็บกลางใช้สัญญาณนี้แยก "เกมรุ่นเก่าไม่มีตัวรับ" ออกจาก "เกมกำลังทำงานอยู่"
+           ถ้าไปตอบรับหลังบูตเสร็จ เครื่องที่บูตช้าจะถูกตัดสินว่าเป็นเกมรุ่นเก่าทั้งที่ไม่ใช่ */
+        send('gp2-refresh-ack', true, null, 0);
+        var t0 = Date.now();
+        var start = function(){
+          /* ยาม 3 · ต้องมีเซสชันครูจริง — แต่ "ยังบูตไม่เสร็จ" ไม่ใช่ "ไม่มีเซสชัน"
+             iframe เพิ่งเปิด กว่า cls.rooms จะมาใช้เวลาไม่แน่นอน จึงรอได้ถึง 12 วิ ก่อนตัดสิน */
+          if (!window.cls || !cls.rooms || !cls.rooms.length) {
+            if (Date.now() - t0 > 12000) return done(false, 'no-session');
+            return setTimeout(start, 500);
+          }
+          /* ยาม 3.1 · ห้องนั้นต้องเป็นของครูคนนี้ */
+          if (!cls.rooms.some(function(r){ return r.id === rid; })) return done(false, 'room-not-mine');
+          var n = (cls.students || []).filter(function(x){ return x.classroom_id === rid; }).length;
+          if (!n) return done(false, 'no-students', 0);
+          var before = 0; try { before = window.__gp2Published || 0; } catch (e) {}
+          /* ยาม 4 · ทำได้แค่สิ่งที่ครูกดเองได้อยู่แล้ว = "กางห้องนั้น + กดแท็บ 🧪"
+             ต้องกางห้องจริง ไม่ใช่เรียก clsV8Load() เปล่า ๆ เพราะท่อส่งทั้งสามอยู่ท้าย
+             clsV8Render() ซึ่งออกก่อนถ้าไม่มี #cv8-body บนจอ (ดูบรรทัดที่ 3 ของฟังก์ชันนั้น)
+             เส้นทางนี้ = เส้นเดียวกับที่ clsOpenV8() พาครูไปทุกประการ */
+          try { cls.open = null; cls.openReview = null; cls.openKru = null; cls.openScores = rid; } catch (e) {}
+          CLSTAB.set('v8', rid);
+          /* ตอบว่าสำเร็จจาก "งานเสร็จจริง" ไม่ใช่จากนาฬิกา:
+             __gp2Published ขยับ = clsV8Render วิ่งจนถึงท่อส่งแล้ว
+             GP2_HUB._busy = false = คิวยิงใบรายงานผลระบายหมดแล้ว
+             เพดาน 40 วิ เผื่อ GP2_HUB รอ cls.statsReady ได้เองสูงสุด ~18 วิ */
+          var t1 = Date.now();
+          var tick = function(){
+            var pub = 0, busy = false;
+            try { pub = window.__gp2Published || 0; } catch (e) {}
+            try { busy = !!GP2_HUB._busy; } catch (e) {}
+            if (pub > before && !busy) return done(true, null, n);
+            if (Date.now() - t1 > 40000)
+              return done(pub > before, pub > before ? 'timeout-partial' : 'timeout', n);
+            setTimeout(tick, 400);
+          };
+          setTimeout(tick, 400);
+        };
+        start();
+      } catch (e) {
+        /* ห้ามส่งข้อความ error ดิบกลับไป — เว็บกลางเอาไปขึ้นจอครู (กฎกลาง: ขึ้นจอได้เฉพาะ reason) */
+        done(false, 'error');
+      }
+    });
+  } catch (e) {}
+})();
+
 function clsV8Load(roomId){
   var studs=(cls.students||[]).filter(function(x){ return !roomId || x.classroom_id===roomId; });
   if(!studs.length){ var b0=$('cv8-body'); if(b0) b0.innerHTML='<div class="muted">ยังไม่มีนักเรียนในห้องนี้</div>'; return; }
@@ -7662,7 +7744,7 @@ var DASH4 = {
    เกมเป็นเจ้าของการคิดคะแนน — ตรงนี้คือ "รายงานผลที่คิดเสร็จแล้ว" ไม่มีการคิดใหม่แม้แต่ช่องเดียว
    ใช้ CBE8 เท่านั้น · run_id 'live' เท่านั้น · ส่งพลาด = เงียบ ไม่ขัดจังหวะครู (รอบหน้าส่งใหม่เอง) */
 var GP2_HUB = {
-  VER: 'V.8.64-p2-2569.128',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
+  VER: 'V.8.67-p2-2569.131',                     /* ปั๊มจาก P3_VERSION — มีป้าย -p2- เสมอ ฐานใช้แยกภาค */
   CODE: (typeof SB_GAME_CODE !== 'undefined' ? SB_GAME_CODE : 'kanchanaburi2050'),
   KEY: 'gp2_hub_sent_v1',               /* ลายเซ็นผลที่ส่งสำเร็จแล้ว รายนักเรียน (กันยิงถี่) */
   LVNAME: ['เริ่มต้น', 'กำลังพัฒนา', 'สามารถ', 'เหนือความคาดหวัง'],
@@ -8200,7 +8282,7 @@ function clsV8Render(studs, by){
         '<span style="color:#475569">'+L[1]+'</span></span>'; }).join('');
   var head='<div style="font-size:11.5px;line-height:1.8;margin-bottom:6px">'+legend+'</div>'+
     '<div class="muted" style="font-size:11.5px;margin-bottom:8px">คะแนนหลัก M = หลักฐานระหว่างเรียน '+CBE8.set.wMinor+'% + กาญ 2050 '+CBE8.set.wSum+'% · ระดับ '+CBE8.set.lvBase+'-'+(CBE8.set.lvBase+3)+' (ช่วง '+CBE8.set.r1+'/'+CBE8.set.r2+'/'+CBE8.set.r3+') · เกณฑ์ความต่าง ±'+CBE8.set.diff+' ระดับ · '+
-    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.64-p2-2569.128 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
+    '📖 ภาค 2 (V.8) — หลักฐานพฤติกรรมครบ 6 สมรรถนะ + รวบยอดกาญ 2050 สามองก์ (เกณฑ์ PD EE ST SD CD PA ชุดเดิม ข้อมูลวิจัยต่อเนื่อง) · ปรนัยอยู่ฝั่งผลสัมฤทธิ์/ท้าประลอง ไม่ปนคะแนนหลัก · แถวข้อมูลของภาค 2 ติดป้ายเวอร์ชัน V.8.67-p2-2569.131 ทุกแถว (แยกจากภาค 1 ได้เสมอ)</div>';
   var rows=studs.map(function(s,si){
     var nm=((s.first_name||'')+' '+(s.last_name||'')).trim()||s.character_name||('เลขที่ '+(s.student_number||'?'));
     var stu=by[s.id]||{ evd:[],cap:[],pr:[] };
@@ -8236,6 +8318,9 @@ function clsV8Render(studs, by){
   try { GP2_STD.push(); } catch (e) { }
   /* [บล็อก AU · หมุดงาน #58] สไลด์ภาพรายด่านส่งจากจุดเดียวกัน — ลายเซ็นแยกชุดของตัวเอง */
   try { GP2_MEDIA.push(); } catch (e) { }
+  /* [บล็อก R22-P2] หมุดบอกว่า "ท่อส่งถูกเรียกจริงแล้ว" — ตัวรับคำสั่งจากเว็บกลางใช้หมุดนี้
+     ตอบว่าสำเร็จตามความจริง แทนการเดาเวลา · ไม่มีผลต่อการคำนวณหรือหน้าจอใด ๆ */
+  try { window.__gp2Published = (window.__gp2Published || 0) + 1; } catch (e) { }
 }
 function clsV8Detail(si, c){
   var det=$('cv8-det-'+si), td=$('cv8-det-td-'+si);
